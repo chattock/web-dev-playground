@@ -87,7 +87,7 @@ const PG = (function () {
 })();
 <\/script>`;
 
-  function buildDoc(files, answers) {
+  function buildDoc(files, answers, previewBase) {
     let html = files.html != null ? files.html : '<!DOCTYPE html>\n<html><head></head><body>\n</body></html>';
     const css = files.css || '';
     const js  = files.js  || '';
@@ -102,9 +102,15 @@ const PG = (function () {
     const answersJs = `<script>window.__PG_ANSWERS__=${JSON.stringify(answers || [])};<\/script>`;
     // if the page pulls Bootstrap off a CDN, load the vendored copy first as an
     // offline fallback — the CDN version overrides it identically when online
+    // absolute so it survives a <base> tag below
+    const bsHref = new URL('vendor/bootstrap/bootstrap.min.css', location.href).href;
     const bsFallback = /bootstrap[^"']*\.min\.css/i.test(html)
-      ? '<link rel="stylesheet" href="vendor/bootstrap/bootstrap.min.css">' : '';
-    const head = answersJs + bsFallback + SHIM + (css ? `\n<style>\n${css}\n</style>` : '');
+      ? `<link rel="stylesheet" href="${bsHref}">` : '';
+    // a lesson can pretend its page lives somewhere else, so that relative paths
+    // like ./cat.png and ../dog.png resolve against a real folder structure
+    const baseTag = previewBase
+      ? `<base href="${new URL(previewBase, location.href).href}">` : '';
+    const head = baseTag + answersJs + bsFallback + SHIM + (css ? `\n<style>\n${css}\n</style>` : '');
 
     if (/<head[^>]*>/i.test(html)) html = html.replace(/<head([^>]*)>/i, `<head$1>\n${head}`);
     else html = head + html;
@@ -358,7 +364,9 @@ const PG = (function () {
     };
     document.getElementById('popBtn').onclick = () => {
       const w = window.open('', '_blank');
-      w.document.open(); w.document.write(buildDoc(readFiles(), getAnswers())); w.document.close();
+      w.document.open();
+      w.document.write(buildDoc(readFiles(), getAnswers(), lesson.previewBase));
+      w.document.close();
     };
     document.getElementById('resetBtn').onclick = () => {
       if (!confirm('Put the original exercise back? Your edits to this lesson will be lost.')) return;
@@ -422,7 +430,7 @@ const PG = (function () {
     const frame = document.getElementById('frame');
     if (!frame) return;
     document.getElementById('console').innerHTML = '';
-    frame.srcdoc = buildDoc(readFiles(), getAnswers());
+    frame.srcdoc = buildDoc(readFiles(), getAnswers(), current && current.previewBase);
   }
 
   function conRow(kind, text) {

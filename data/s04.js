@@ -2,12 +2,16 @@
 
 PG.add({
   id:'s04-file-paths', section:'s04', slug:'file-paths', lesson:'4.1',
+  // the preview pretends to live in Folder0/, so ./ and ../ resolve against
+  // the real folders in assets/paths/ — wrong paths genuinely break
+  previewBase:'assets/paths/Folder0/',
   title:'File Paths',
   blurb:'A path is directions from <b>the file you are in</b> to the file you want. <code>./</code> means this folder, <code>../</code> means go up one level, and a name with a slash means go down into that folder.',
   tasks:[
-    'Every image below is in a different place. Fix each <code>src</code> so all five pictures appear.',
-    'The page you are editing lives in <code>Folder0/index.html</code> — check the folder tree in the Explore tab.',
-    'Use the path resolver in Explore to check an answer before you commit to it.'
+    'Four of the five pictures are broken. Fix each <code>src</code> until all five appear — these are real files, so a correct path really does load the image.',
+    'The page you are editing lives in <code>Folder0/index.html</code>; the comment in the code shows where every file actually sits.',
+    'Notice the rabbit already works. <code>rabbit.png</code> and <code>./rabbit.png</code> mean the same thing — <code>./</code> is implied. Write it anyway: it makes the intent obvious.',
+    'Use the path resolver in the Explore tab to check an answer before you commit to it.'
   ],
   files:{
 html:`<!DOCTYPE html>

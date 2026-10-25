@@ -1,0 +1,129 @@
+{
+  "index": 299,
+  "lecture_id": 17039152,
+  "title": "Javascript ES6 Map/Filter/Reduce",
+  "section": "36. React.js",
+  "duration_min": 20,
+  "kind": "concept+exercise",
+  "summary": "Walks through the array methods map, filter, reduce, find and findIndex by comparing each with the equivalent forEach loop. Ends with a challenge: use map to turn the emojipedia array into an array of meaning strings capped at 100 characters.",
+  "concepts": [
+    {
+      "heading": "map: transform every item into a new array",
+      "points": [
+        "map is called on an array and takes a callback. The callback receives each item in turn and whatever it returns becomes the item at the same position in a brand-new array.",
+        "The new array always has the same length as the original, and the original is left unchanged. The result must be captured in a variable (e.g. newNumbers) or it is lost.",
+        "The callback can be a named function passed by name (numbers.map(double)) or an anonymous function written inline. Both behave the same.",
+        "Compared with forEach: forEach returns nothing, so you must create an empty array first and push into it. map builds and returns the array itself, which is why it is shorter.",
+        "This is the method used in React to turn an array of data into an array of components.",
+        "(Extra) The callback actually receives up to three arguments: the item, its index and the whole array, e.g. numbers.map((x, i) => x * i). The index is what people sometimes (riskily) use as a React key."
+      ]
+    },
+    {
+      "heading": "filter: keep only items that pass a test",
+      "points": [
+        "filter also takes a callback; the callback returns true or false for each item. Items that return true are copied into the new array, others are dropped.",
+        "The result can be shorter than the input (or empty), and items keep their original order and values.",
+        "Example condition: return num > 10 keeps only the larger numbers; flipping to num < 10 keeps the small ones.",
+        "forEach equivalent: declare an empty array, then inside the loop use an if and push the items that match."
+      ]
+    },
+    {
+      "heading": "reduce: collapse an array into one accumulated value",
+      "points": [
+        "The reduce callback receives two main parameters: the accumulator (the running result) and the current item. Whatever the callback returns becomes the accumulator for the next iteration.",
+        "Summing numbers: return accumulator + currentNumber. The result is a single value (a number here), not an array.",
+        "With no initial value supplied, the accumulator starts as the first array item and the first iteration's current item is the second one. Logging both inside the callback shows the running total growing each pass.",
+        "(Extra) A second argument to reduce sets an explicit starting accumulator, e.g. numbers.reduce(fn, 0). It is safer for empty arrays, which otherwise throw an error.",
+        "forEach equivalent: a variable initialised to 0 outside the loop, with each pass adding the current item to it.",
+        "(Extra) With the sample array [3, 56, 2, 48, 5] the trace is: 3+56=59, 59+2=61, 61+48=109, 109+5=114. Four callback calls for five items because the first item seeds the accumulator."
+      ]
+    },
+    {
+      "heading": "find and findIndex: locate the first match",
+      "points": [
+        "find returns the first item for which the callback returns true. Unlike filter it stops looping as soon as a match is found, and it returns the item itself, not an array.",
+        "findIndex works the same but returns the position (zero-based) of the first match. With the sample array and the test num > 10 it gives index 1.",
+        "(Extra) If nothing matches, find returns undefined and findIndex returns -1.",
+        "Use MDN for the details and the browser-compatibility table of each method. (Extra) map, filter and reduce date from ES5 and run everywhere; find and findIndex were added in ES6 (ES2015), which only matters for very old browsers such as Internet Explorer."
+      ]
+    },
+    {
+      "heading": "How to learn these",
+      "points": [
+        "Do not memorise every method. Understand what each is for (transform, select, accumulate, locate one, locate position) so you recognise when one fits, then look up the details in MDN."
+      ]
+    },
+    {
+      "heading": "Challenge solution: truncated meanings with map",
+      "points": [
+        "Import the emojipedia array from ./emojipedia. It is an array of objects with id, emoji, name and meaning.",
+        "Because the goal is a new array with one output per entry, map is the right tool. The callback receives each emoji entry object and works on entry.meaning.",
+        "String.prototype.substring(start, end) returns the characters from start up to but not including end, so substring(0, 100) keeps the first 100 characters.",
+        "The callback must return the cut string. Forgetting the return (or using braces on an arrow function without return) gives an array of undefined values.",
+        "Truncating text like this keeps cards or boxes a uniform size in a layout."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "map vs forEach for doubling",
+      "language": "javascript",
+      "code": "var numbers = [3, 56, 2, 48, 5];\n\n// map builds the new array for you\nconst doubled = numbers.map(function (x) {\n  return x * 2;\n});\n\n// forEach needs a manual array and push\nconst doubled2 = [];\nnumbers.forEach(function (x) {\n  doubled2.push(x * 2);\n});"
+    },
+    {
+      "caption": "filter, reduce, find, findIndex",
+      "language": "javascript",
+      "code": "const small = numbers.filter(function (num) {\n  return num < 10;\n}); // [3, 2, 5]\n\nconst total = numbers.reduce(function (accumulator, currentNumber) {\n  return accumulator + currentNumber;\n}); // 114\n\nconst firstBig = numbers.find(function (num) {\n  return num > 10;\n}); // 56\n\nconst firstBigIndex = numbers.findIndex(function (num) {\n  return num > 10;\n}); // 1"
+    },
+    {
+      "caption": "reduce vs forEach for a total, with a trace and an explicit start value",
+      "language": "javascript",
+      "code": "var numbers = [3, 56, 2, 48, 5];\n\n// forEach: keep a running total yourself\nlet total = 0;\nnumbers.forEach(function (currentNumber) {\n  total += currentNumber;\n});\n\n// reduce: the return value becomes the next accumulator\nconst sum = numbers.reduce(function (accumulator, currentNumber) {\n  console.log(\"accumulator:\", accumulator, \"current:\", currentNumber);\n  return accumulator + currentNumber;\n});\n// logs 3/56, 59/2, 61/48, 109/5 -> sum is 114\n\n// (Extra) explicit initial value: safe on empty arrays\nconst safeSum = [].reduce((acc, n) => acc + n, 0); // 0"
+    },
+    {
+      "caption": "Challenge solution: 100-character meanings",
+      "language": "javascript",
+      "code": "import emojipedia from \"./emojipedia\";\n\nconst meaningsArray = emojipedia.map(function (emojiEntry) {\n  return emojiEntry.meaning.substring(0, 100);\n});\n\nconsole.log(meaningsArray);"
+    }
+  ],
+  "task": {
+    "name": "Truncate emoji meanings with map",
+    "starting_point": "Starter CodeSandbox (fork it) containing the numbers demo code and an emojipedia.js file exporting an array of three emoji objects with a long meaning string each.",
+    "goal": "Produce a new array holding only each entry's meaning text, cut to at most 100 characters, and log it.",
+    "steps": [
+      "Comment out the earlier number demos (keep them for reference).",
+      "Import the emojipedia array at the top of the file: import emojipedia from \"./emojipedia\";",
+      "Decide which method fits: one output per input item means map.",
+      "Call emojipedia.map with a callback whose parameter (e.g. emojiEntry) is one emoji object.",
+      "Inside the callback read emojiEntry.meaning and call substring(0, 100) on it.",
+      "Return that string from the callback, store the result of map in a const such as meaningsArray, and console.log it."
+    ],
+    "expected_result": "The console shows an array of three strings, each exactly 100 characters long (the original meanings are 121, 155 and 169 characters).",
+    "solution_code": {
+      "language": "javascript",
+      "code": "const meaningsArray = emojipedia.map(function (emojiEntry) {\n  return emojiEntry.meaning.substring(0, 100);\n});\nconsole.log(meaningsArray);"
+    },
+    "reference_repo_path": "Section 36 - React.js/36.23 Javascript ES6 Map, Filter, Reduce/map-filter-reduce/src/App.jsx"
+  },
+  "pitfalls": [
+    "Reference repo diverges: its solution uses substring(0, 101) and an arrow function with braces but no return, so meaningsArray ends up full of undefined. Fix by returning the value and using 100.",
+    "Using map when you do not need the resulting array (use forEach for side effects only).",
+    "Expecting filter or find to return the same thing: filter gives an array, find gives a single item or undefined.",
+    "Calling reduce on an empty array without an initial value throws a TypeError.",
+    "Forgetting to store the result: none of these methods mutate the original array."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "New lesson 'Array methods: map, filter, reduce, find, findIndex' (s36). Blurb: transform, select, accumulate and search arrays without writing manual loops, and see why React leans on map.",
+      "Task 1: double [3, 56, 2, 48, 5] with map and compare it to a forEach + push version.",
+      "Task 2: keep numbers under 10 with filter (expected [3, 2, 5]), then flip the condition to > 10 ([56, 48]).",
+      "Task 3: sum the array with reduce (114); log accumulator and current on each pass; then add an initial value of 0 and try it on an empty array.",
+      "Task 4: use find and findIndex for the first number over 10 (56 and 1); test a condition that matches nothing (undefined and -1).",
+      "Task 5: map emojipedia to an array of meanings cut with substring(0, 100).",
+      "Starter code: the numbers array, a three-item emojipedia array, and empty const declarations with TODO comments for each method; tests check the resulting values.",
+      "Interactive demo: a step-through visualiser where each array item flows through the callback one at a time, showing the returned value landing in the output array (map), being kept or dropped (filter), updating an accumulator box (reduce), or stopping the loop early (find/findIndex)."
+    ]
+  }
+}

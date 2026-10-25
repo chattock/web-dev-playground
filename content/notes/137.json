@@ -1,0 +1,95 @@
+{
+  "index": 137,
+  "lecture_id": 12383962,
+  "title": "Higher Order Functions and Passing Functions as Arguments",
+  "section": "18. Advanced Javascript and DOM Manipulation",
+  "duration_min": 13,
+  "kind": "concept+exercise",
+  "summary": "Uses Chrome DevTools and a small calculator to show that functions can be passed as arguments to other functions (higher order functions), which is exactly what addEventListener relies on. Ends with a challenge to complete a four-operation calculator and step through it in the debugger.",
+  "concepts": [
+    {
+      "heading": "Experimenting on a live page with DevTools",
+      "points": [
+        "Right-click an element, choose Inspect, and the selected element is available in the console as $0.",
+        "Assigning to a property such as $0.innerHTML = \"...\" changes the text on the page instantly. Only the local copy in your browser changes; a reload restores the original from the server.",
+        "$0.addEventListener(\"click\", function () { console.log(...) }) attaches a listener to a page you did not write, and clicking the element then logs to the console every time."
+      ]
+    },
+    {
+      "heading": "addEventListener takes a function as input",
+      "points": [
+        "The first input is the event type string; the second is the function to run once that event is detected.",
+        "The second input can be an anonymous function or a named function such as respondToClick.",
+        "Unlike earlier functions that receive strings or numbers, this one receives a function as data. The browser's own implementation is hidden, so the lecture rebuilds the same pattern with a calculator."
+      ]
+    },
+    {
+      "heading": "Why pass a function: the calculator",
+      "points": [
+        "A calculator(num1, num2) that hard-codes + must be edited to switch to *, which is clumsy.",
+        "Better: make small single-purpose functions (add, multiply, and later subtract, divide), each taking two numbers and returning a result.",
+        "Give calculator a third parameter, operator. Inside it, call operator(num1, num2) and return the result.",
+        "At the call site the operator argument is the function's name only, with no parentheses, e.g. calculator(4, 5, add) returns 9 and calculator(4, 5, multiply) returns 20. Passing the name hands over the function; parentheses would call it first and pass its result instead.",
+        "Trace of calculator(4, 5, multiply): 4 binds to num1, 5 to num2, the multiply function binds to operator; the body calls operator with the two numbers; its return value becomes calculator's return value."
+      ]
+    },
+    {
+      "heading": "Higher order functions",
+      "points": [
+        "A function that accepts another function as an argument (like calculator, and like addEventListener) is called a higher order function.",
+        "This is available in many modern languages (JavaScript, Swift, Pascal) but not all. It is used constantly in DOM scripting."
+      ]
+    },
+    {
+      "heading": "Using the Chrome debugger",
+      "points": [
+        "Type the keyword debugger in the console (Shift+Enter for a new line), then a call such as calculator(3, 4, multiply), and execution pauses in the Sources panel.",
+        "Use the step-into button (down arrow) to advance one call at a time. The scope panel shows num1 = 3, num2 = 4 and operator shown as a function (marked with f).",
+        "Stepping shows control enter calculator, jump into multiply, then return 12 back out through both functions.",
+        "Use this when code misbehaves, instead of simulating execution mentally, which can be wrong."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Passing functions into calculator (matches the reference repo)",
+      "language": "javascript",
+      "code": "function addition(num1, num2) {\n  return num1 + num2;\n}\nfunction subtraction(num1, num2) {\n  return num1 - num2;\n}\nfunction multiplication(num1, num2) {\n  return num1 * num2;\n}\nfunction division(num1, num2) {\n  return num1 / num2;\n}\n\nfunction calculator(num1, num2, operator) {\n  return operator(num1, num2);\n}\n\nconsole.log(calculator(4, 5, addition));       // 9\nconsole.log(calculator(5, 4, subtraction));    // 1\nconsole.log(calculator(3, 4, multiplication)); // 12\nconsole.log(calculator(10, 2, division));      // 5"
+    },
+    {
+      "caption": "DevTools experiments",
+      "language": "javascript",
+      "code": "$0.innerHTML = \"New title\";\n$0.addEventListener(\"click\", function () {\n  console.log(\"I got clicked\");\n});"
+    }
+  ],
+  "task": {
+    "name": "Complete the four-operation calculator",
+    "starting_point": "A calculator(num1, num2, operator) function plus add and multiply functions, in the console or a script file.",
+    "goal": "Add divide and subtract so any of the four operations can be selected by passing a function to calculator.",
+    "steps": [
+      "Write add, subtract, multiply and divide, each with two parameters and a return value.",
+      "Write calculator(num1, num2, operator) that returns operator(num1, num2).",
+      "Call it for each operation, passing the function by name (no parentheses), e.g. calculator(6, 3, subtract).",
+      "Use the debugger keyword and step-through to follow one call."
+    ],
+    "expected_result": "Each call returns the right arithmetic result (e.g. 6 and 3 with subtract gives 3).",
+    "solution_code": {
+      "language": "javascript",
+      "code": "function calculator(num1, num2, operator) {\n  return operator(num1, num2);\n}\nconsole.log(calculator(10, 2, division)); // 5"
+    },
+    "reference_repo_path": "Section 18 - Advanced Javascript and DOM Manipulation/18.02 - Higher Order Functions and Passing Functions as Arguments/script.js"
+  },
+  "pitfalls": [
+    "Writing calculator(4, 5, add()) which calls add immediately with undefined arguments and passes NaN or a result instead of a function.",
+    "Forgetting the return statement inside calculator, so it yields undefined.",
+    "(Extra) $0 only refers to the most recently inspected element, and edits made in DevTools vanish on reload."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (section 18 has no playground file).",
+    "gaps_and_ideas": [
+      "Proposed lesson 'Functions as values': tasks: (1) write add/subtract/multiply/divide, (2) write calculator taking an operator function, (3) pass an anonymous arrow function as operator, (4) predict outputs of calculator(4,5,add) vs calculator(4,5,add()), (5) write your own higher order function that calls a callback twice.",
+      "Interactive demo: pick an operator from a dropdown and see which function is passed, with a visual trace of the call stack mimicking the debugger steps."
+    ]
+  }
+}

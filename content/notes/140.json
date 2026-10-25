@@ -1,0 +1,65 @@
+{
+  "index": 140,
+  "lecture_id": 12384090,
+  "title": "How to Use Switch Statements in Javascript",
+  "section": "18. Advanced Javascript and DOM Manipulation",
+  "duration_min": 5,
+  "kind": "concept",
+  "summary": "Introduces the switch statement as a tidier alternative to a long if-else chain, then uses it to map each drum button's letter to a different sound file.",
+  "concepts": [
+    {
+      "heading": "Why switch",
+      "points": [
+        "With seven possible letters, an if / else if chain would be long and repetitive. A switch picks one branch based on the value of a single expression.",
+        "Editors can autocomplete the switch skeleton when you type the keyword."
+      ]
+    },
+    {
+      "heading": "Switch syntax",
+      "points": [
+        "switch (expression) { ... } evaluates the expression once; here it is a variable holding the clicked button's text.",
+        "Store the value first: var buttonInnerHTML = this.innerHTML; this is the button that fired the listener.",
+        "Each case label is followed by a colon and the statements to run when the value matches (a strict comparison against the case value).",
+        "break ends the case and exits the switch so execution carries on after it. Without it, execution would fall through into the next case.",
+        "default is the catch-all, like a final else. It handles values no case matched, such as an unexpected character.",
+        "Even if default seems unreachable, include it; here it just logs the unexpected value, which helps debugging later."
+      ]
+    },
+    {
+      "heading": "Applying it to the drum kit",
+      "points": [
+        "Cases: w plays tom-1, a tom-2, s tom-3, d tom-4, j snare, k crash, l kick-bass (these match the images chosen in the previous lesson).",
+        "Name each Audio variable after its sound (tom1, tom2, snare...) rather than reusing the name audio, and call play() on the same variable you created.",
+        "After saving, each button now plays a different sound.",
+        "Next lesson adds keyboard events so keys trigger the same sounds."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Switch inside the click listener (reference repo)",
+      "language": "javascript",
+      "code": "var numberOfDrumButtons = document.querySelectorAll(\".drum\").length;\n\nfor (var i = 0; i < numberOfDrumButtons; i++) {\n  document.querySelectorAll(\".drum\")[i].addEventListener(\"click\", function () {\n    var buttonInnerHTML = this.innerHTML;\n    switch (buttonInnerHTML) {\n      case \"w\":\n        var tom1 = new Audio(\"./sounds/tom-1.mp3\");\n        tom1.play();\n        break;\n      case \"a\":\n        var tom2 = new Audio(\"./sounds/tom-2.mp3\");\n        tom2.play();\n        break;\n      case \"s\":\n        var tom3 = new Audio(\"./sounds/tom-3.mp3\");\n        tom3.play();\n        break;\n      case \"d\":\n        var tom4 = new Audio(\"./sounds/tom-4.mp3\");\n        tom4.play();\n        break;\n      case \"j\":\n        var snare = new Audio(\"./sounds/snare.mp3\");\n        snare.play();\n        break;\n      case \"k\":\n        var crash = new Audio(\"./sounds/crash.mp3\");\n        crash.play();\n        break;\n      case \"l\":\n        var kick = new Audio(\"./sounds/kick-bass.mp3\");\n        kick.play();\n        break;\n      default:\n        console.log(buttonInnerHTML);\n    }\n  });\n}"
+    },
+    {
+      "caption": "Bare switch skeleton",
+      "language": "javascript",
+      "code": "switch (value) {\n  case \"a\":\n    // do something\n    break;\n  default:\n    // fallback\n}"
+    }
+  ],
+  "task": null,
+  "pitfalls": [
+    "Forgetting break, so execution falls through and runs the next case's code too.",
+    "Mismatch between the variable declared in a case and the one on which play() is called (e.g. tom1 declared but audio.play()).",
+    "Case values are strings, so the letters need quotes and match case-sensitively.",
+    "(Extra) The sound files tom-2.mp3 etc. exist in the course starter's sounds folder; the reference lesson 18.03 folder includes only tom-1.mp3, while 18.04 has the full set."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (section 18 has no playground file).",
+    "gaps_and_ideas": [
+      "Proposed lesson 'Switch statements': tasks: (1) convert a three-branch if/else chain to switch, (2) add a default that logs, (3) remove a break and observe fall-through, (4) group two cases sharing a result, (5) map drum letters to sound names.",
+      "Interactive demo: type a letter and highlight the case that matches in a rendered switch, with a toggle to remove break."
+    ]
+  }
+}

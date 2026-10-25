@@ -1,0 +1,56 @@
+{
+  "index": 371,
+  "lecture_id": 12614104,
+  "title": "AAA 3 - How to Start Freelancing and more...",
+  "section": "43. Optional Module: Ask Angela Anything",
+  "duration_min": 25,
+  "kind": "qa",
+  "summary": "Q&A episode with no code. Covers a staged route into freelancing, the instructor's daily work routine, native versus cross-platform mobile development, and a few productivity tools.",
+  "concepts": [
+    {
+      "heading": "Starting as a freelancer",
+      "points": [
+        "Keep the day job at first; grow into freelancing gradually to limit risk.",
+        "Stage 1: set aside roughly 15 hours a week for a personal project that is genuinely useful to at least one person (not a hello-world or API experiment), deploy it, and treat it as portfolio material.",
+        "Stage 2: add roughly another 12-15 hours a week on small paid gigs from marketplaces such as Fiverr, Upwork or oDesk. Aim for experience, testimonials and references rather than income; keep early jobs under about a week.",
+        "Good starter work is what bigger agencies skip: bug fixes, updates, maintenance, small improvements.",
+        "Clear, regular communication with clients is the habit most likely to make or break a freelance career; repeat clients and word of mouth follow."
+      ]
+    },
+    {
+      "heading": "Daily schedule ideas",
+      "points": [
+        "Spend a protected block (about 1.5 hours) at your personal best time of day learning something new.",
+        "Put high-concentration creative work next, lighter tasks (editing, client meetings) later in the day.",
+        "Check email in one fixed slot rather than reacting to notifications; switching notifications off is the simple protection.",
+        "Walking meetings and matching tasks to your energy level are suggested for productivity."
+      ]
+    },
+    {
+      "heading": "Native vs cross-platform apps",
+      "points": [
+        "Native pros: best performance, strongest for animation and graphics, full access to platform APIs (push notifications, HealthKit), more community help.",
+        "Native cons: a separate Android build means a near-total rewrite, so more cost, time and developers.",
+        "Cross-platform tools (PhoneGap, Cordova, React Native) let web developers reuse JavaScript skills; React Native sits in the middle but sometimes needs custom native code for standard features, and its licence terms were seen as a drawback.",
+        "Conclusion: no blanket rule; judge each project's needs."
+      ]
+    },
+    {
+      "heading": "Tools mentioned",
+      "points": [
+        "Product Hunt for discovering products; Duet (turn an iPad/iPhone into a second screen); Alfred (faster Mac launcher than Spotlight); Momentum (new-tab dashboard with to-do and focus task); CheatSheet (hold Cmd to list an app's shortcuts)."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [
+    "Quitting a job to freelance before building a portfolio and client base is the main risk called out.",
+    "Taking large, ambitious first gigs instead of small ones."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "Not applicable (Q&A video)",
+    "gaps_and_ideas": []
+  }
+}

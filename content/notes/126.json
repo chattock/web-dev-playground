@@ -1,0 +1,54 @@
+{
+  "index": 126,
+  "lecture_id": 12400562,
+  "title": "Dicee Challenge Step 2 - Add Dice Images",
+  "section": "17. Boss Level Challenge 1 - The Dicee Game",
+  "duration_min": 1,
+  "kind": "article-task",
+  "summary": "Step 2: point both img elements at the dice6.png file from the images folder.",
+  "concepts": [
+    {
+      "heading": "Setting image sources",
+      "points": [
+        "The project has an images folder with dice1.png to dice6.png.",
+        "Each player's img element needs a src value of the relative path to dice6.png.",
+        "The reference markup gives each img its own class (img1 and img2) so JavaScript can select them separately, and an alt attribute for accessibility.",
+        "(Extra) Relative paths start from the HTML file's location, so ./images/dice6.png is correct when images sits next to index.html."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Player 1 image element",
+      "language": "html",
+      "code": "<div class=\"dice\">\n  <p>Player 1</p>\n  <img class=\"img1\" src=\"./images/dice6.png\" alt=\"Dice showing six\" />\n</div>"
+    }
+  ],
+  "task": {
+    "name": "Step 2: dice images",
+    "starting_point": "Dicee page with img elements.",
+    "goal": "Both dice show the six face.",
+    "steps": [
+      "Set src on the first img to the dice6.png path.",
+      "Do the same for the second img.",
+      "Open the page and confirm two six-faced dice."
+    ],
+    "expected_result": "Two dice images appear, one per player.",
+    "solution_code": {
+      "language": "html",
+      "code": "<img class=\"img1\" src=\"./images/dice6.png\" alt=\"Dice showing six\" />\n<img class=\"img2\" src=\"./images/dice6.png\" alt=\"Dice showing six\" />"
+    },
+    "reference_repo_path": "Section 17 - Boss Level Challenge 1 - The Dicee Game"
+  },
+  "pitfalls": [
+    "Broken image icon from a wrong relative path.",
+    "The reference repo has a garbled alt text ('Given Away' split over lines), which should be a proper description."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (no s17.js data file); covered by the proposed Dicee project lesson.",
+    "gaps_and_ideas": [
+      "Add a task asking the learner to write meaningful alt text and note the broken-path symptom."
+    ]
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "index": 63,
+  "lecture_id": 37368588,
+  "title": "[Project] Mondrian Painting",
+  "section": "10. Grid",
+  "duration_min": 7,
+  "kind": "project",
+  "summary": "Section project: rebuild a Piet Mondrian composition as a to-scale web page using CSS Grid, with the container centred in the window by Flexbox. The second half walks through the sample solution: nine divs, fixed-pixel tracks, a black background showing through the gap, and a few span/grid-area placements.",
+  "concepts": [
+    {
+      "heading": "Project brief",
+      "points": [
+        "Recreate Mondrian's Composition No. III (red, blue, yellow and black blocks on white) using only CSS grid. A dimensions image gives measured sizes for every block, and index.html lists the hex colours in a comment.",
+        "Optional: pick a different Mondrian composition (image search 'Mondrian compositions') and judge track sizes by eye, or do several.",
+        "The starter has no HTML body and no CSS written; everything is up to the learner. The goal page is centred in the window.",
+        "Skills being reviewed: sizing tracks, placing items with span / grid-area, and centring with Flexbox."
+      ]
+    },
+    {
+      "heading": "How the sample solution is built",
+      "points": [
+        "One div per rectangle in the painting: nine divs inside a single grid container. Divs that differ in colour get an extra class (red, blue, yellow, black); the rest share a white class.",
+        "The container gets a fixed width and height matching the dimensions image (748px square), display: grid and a black background-color.",
+        "The black lines are not borders: grid lines cannot be coloured, so the container's black background shows through the gap. A gap of 9px therefore produces the thick lines.",
+        "Tracks use fixed pixel sizes taken from the measurements. Four columns (320px 198px 153px 50px) and four rows (414px 130px 155px 22px). Some blocks are made of two column tracks, which is why there are four columns rather than three.",
+        "Every item defaults to the off-white background (#f0f1ec); the coloured ones override it.",
+        "Placement: the wide white block uses grid-column: span 3. A tall white block uses grid-row: span 2. A square white block uses grid-area: 2 / 2 / 4 / 4 (row-start / column-start / row-end / column-end) because that was easier to express as coordinates.",
+        "To centre the painting on screen, the body is a flex container with justify-content: center, align-items: center and height: 100vh (margin 0)."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Sample solution CSS (colours in the starter: red #E72F24, black #232629, blue #004592, yellow #F9D01E, white #f0f1ec)",
+      "language": "css",
+      "code": "body {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  height: 100vh;\n  margin: 0;\n}\n\n.container {\n  height: 748px;\n  width: 748px;\n  display: grid;\n  background-color: #000;\n  grid-template-columns: 320px 198px 153px 50px;\n  grid-template-rows: 414px 130px 155px 22px;\n  gap: 9px;\n}\n\n.item { background-color: #f0f1ec; }\n.red { background-color: #e72f24; }\n.white1 { grid-column: span 3; }\n.white2 { grid-row: span 2; }\n.white3 { grid-area: 2 / 2 / 4 / 4; }\n.blue { background-color: #004592; border-bottom: 10px solid #000; }\n.white4 { grid-row: span 2; }\n.yellow { background-color: #f9d01e; }\n.black { background-color: #232629; }"
+    },
+    {
+      "caption": "HTML: nine items in source order",
+      "language": "html",
+      "code": "<div class=\"container\">\n  <div class=\"item red\"></div>\n  <div class=\"item white1\"></div>\n  <div class=\"item white2\"></div>\n  <div class=\"item white3\"></div>\n  <div class=\"item blue\"></div>\n  <div class=\"item white4\"></div>\n  <div class=\"item white5\"></div>\n  <div class=\"item yellow\"></div>\n  <div class=\"item black\"></div>\n</div>"
+    }
+  ],
+  "task": {
+    "name": "10.4 Mondrian Project",
+    "starting_point": "Starter folder with an empty index.html (colour hex codes in a comment), dimensions.png showing every measurement, goal.png and solution.html.",
+    "goal": "Build a to-scale Mondrian painting with CSS grid, centred on the screen.",
+    "steps": [
+      "Read the dimensions image and count the distinct column and row boundaries; one block spanning two column widths means extra tracks.",
+      "Write one div per block inside a grid container. Add classes for the coloured ones.",
+      "Give the container a fixed width/height, display: grid, a black background and a gap sized for the black lines.",
+      "Define grid-template-columns and grid-template-rows with the measured pixel sizes.",
+      "Set default white, then override with red, blue, yellow and black colours.",
+      "Position blocks that cover several tracks with grid-column / grid-row span or grid-area.",
+      "Centre the container in the viewport using Flexbox on the body (height: 100vh).",
+      "Compare with solution.html."
+    ],
+    "expected_result": "A 748px square painting with thick black lines from the gap, centred in the window, matching goal.png.",
+    "solution_code": {
+      "language": "css",
+      "code": ".container {\n  width: 748px; height: 748px;\n  display: grid;\n  background-color: #000;\n  grid-template-columns: 320px 198px 153px 50px;\n  grid-template-rows: 414px 130px 155px 22px;\n  gap: 9px;\n}\n.white1 { grid-column: span 3; }\n.white2, .white4 { grid-row: span 2; }\n.white3 { grid-area: 2 / 2 / 4 / 4; }"
+    },
+    "reference_repo_path": "Section 10 - Grid/10.04 - Mondrian Project"
+  },
+  "pitfalls": [
+    "Trying to colour the grid lines directly; use the container background plus gap.",
+    "Forgetting body margin: 0 and height: 100vh, so the centring is off.",
+    "Miscounting tracks: a block made of two widths needs two columns, so there are four columns rather than three.",
+    "(Extra) In the reference repo, index.html is a student's finished solution rather than a blank starter, with a slightly different layout from solution.html. Its blue box has a border-bottom, an odd extra that the sample also has. The footer line in both files is the author's personal addition; ignore it."
+  ],
+  "playground": {
+    "match": "s10-mondrian (lesson 10.4, data/s10.js)",
+    "coverage": "Covers the black-gap trick, grid-area placement and a notes section. Uses a simplified 460px painting with fr tracks and six blocks.",
+    "gaps_and_ideas": [
+      "The playground version uses fr units and a different layout; add an optional 'to scale' mode with the measured pixel tracks (320 198 153 50 / 414 130 155 22, gap 9px).",
+      "Add a task for centring the painting with Flexbox on the body (100vh), which the course project includes.",
+      "Add a dimensions diagram image or overlay showing track sizes, since reading measurements is the core skill.",
+      "The solution relies on !important for colours; use classes with higher specificity or order instead.",
+      "Offer a stretch task: pick another Mondrian composition."
+    ]
+  }
+}

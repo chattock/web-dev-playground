@@ -1,0 +1,67 @@
+{
+  "index": 102,
+  "lecture_id": 12373992,
+  "title": "Combining Comparators",
+  "section": "15. Intermediate Javascript",
+  "duration_min": 3,
+  "kind": "concept",
+  "summary": "Shows the three logical operators (&&, ||, !) and uses && to give the love calculator three message bands: low, middle and high.",
+  "concepts": [
+    {
+      "heading": "Logical operators",
+      "points": [
+        "&& (AND) is true only when both conditions are true.",
+        "|| (OR), typed with two pipe characters, is true when at least one condition is true.",
+        "! (NOT) inverts a boolean.",
+        "They combine several comparisons into one condition inside if (...)."
+      ]
+    },
+    {
+      "heading": "Three bands for the love score",
+      "points": [
+        "Above 70: the special message.",
+        "Greater than 30 AND at most 70: the plain score alert.",
+        "At most 30: a message that the pair mixes badly.",
+        "The reference solution uses three separate if statements. Using >= and <= carefully keeps boundary values 30 and 70 in exactly one band.",
+        "(Extra) An else if chain would also work and avoids rechecking conditions."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Three bands",
+      "language": "javascript",
+      "code": "if (loveScore > 70) {\n  alert(\"Your love score is \" + loveScore + \"%, indicating genuine love\");\n}\nif (loveScore > 30 && loveScore <= 70) {\n  alert(\"Your love score is \" + loveScore + \"%\");\n}\nif (loveScore <= 30) {\n  alert(\"Your love score is \" + loveScore + \"%, you go together like oil and water\");\n}"
+    }
+  ],
+  "task": {
+    "name": "Extend the love calculator to three bands",
+    "starting_point": "Love calculator with a single if/else on loveScore > 70.",
+    "goal": "Give different alerts for scores above 70, from 31 to 70 and 30 or below.",
+    "steps": [
+      "Keep the score generation and prompts.",
+      "Add a condition combining loveScore > 30 and loveScore <= 70 with &&.",
+      "Add one for loveScore <= 30.",
+      "Run repeatedly to see all three messages."
+    ],
+    "expected_result": "Exactly one of three alerts appears depending on the score.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "var loveCalculator = Math.random() * 100;\nloveCalculator = Math.floor(loveCalculator) + 1;\nif (loveCalculator > 70) {\n  alert(\"Your love score is \" + loveCalculator + \"%, indicating genuine love\");\n}\nif (loveCalculator > 30 && loveCalculator <= 70) {\n  alert(\"Your love score is \" + loveCalculator + \"%\");\n}\nif (loveCalculator <= 30) {\n  alert(\"Your love score is \" + loveCalculator + \"%, you go together like oil and water\");\n}"
+    },
+    "reference_repo_path": "Section 15 - Intermediate Javascript/15.04 - Combining Comparators/script.js"
+  },
+  "pitfalls": [
+    "Overlapping or gapped ranges, e.g. > 30 and < 70 loses exactly 70.",
+    "Writing a single | or & instead of || and &&.",
+    "Typing 30 < loveScore < 70, which does not work as a range check."
+  ],
+  "playground": {
+    "match": "s15-combining (lesson 15.4, data/s15.js)",
+    "coverage": "Covers &&, ||, !, truth tables, precedence and short-circuiting, but not the three-band love score.",
+    "gaps_and_ideas": [
+      "Add a task to apply && to the three-band love calculator.",
+      "Add a boundary-test task for scores 30, 31, 70 and 71."
+    ]
+  }
+}

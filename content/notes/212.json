@@ -1,0 +1,108 @@
+{
+  "index": 212,
+  "lecture_id": 38911802,
+  "title": "EJS Partials and Layouts",
+  "section": "25. EJS",
+  "duration_min": 18,
+  "kind": "concept+exercise",
+  "summary": "Explains why static assets (CSS, images) need a public folder served by express.static, and how EJS partials pulled in with the include tag remove repeated header/footer markup across pages. Ends with a four-step exercise that builds a three-page site (home, about, contact) with shared partials.",
+  "concepts": [
+    {
+      "heading": "Static files vs dynamic files",
+      "points": [
+        "Styling a server-rendered site means adding stylesheets, Bootstrap, icon fonts, a navbar and so on into the head of the EJS templates. Just linking local CSS in an EJS file does not work by default.",
+        "Reason: Express treats EJS views as dynamic (they are rendered into HTML at request time), while CSS, images, favicons and client-side JS never change on the server, so they are static files that Express must be told to serve as-is.",
+        "Convention in Node/Express projects: a folder named public at the top level of the project holds every static asset (public/styles/..., public/images/...).",
+        "Register it with the built-in middleware: app.use(express.static(\"public\")). The argument is the folder path relative to where the server is launched. If the folder lived elsewhere (for example src/public) the path string changes accordingly.",
+        "Once registered, everything inside public is served from the site root. The word public is NOT part of the URL: public/styles/layout.css is linked as /styles/layout.css (href=\"/styles/layout.css\").",
+        "In other words link paths for static files are written relative to the public folder, not relative to the EJS file.",
+        "(Extra) express.static only serves files that exist; a missing file falls through to the next route and returns a 404, so a broken style link usually means the path or folder name is off by one segment."
+      ]
+    },
+    {
+      "heading": "Routes are how pages are reached",
+      "points": [
+        "Dynamic pages are not found by file path. The navbar links (href=\"/about\", href=\"/contact\") make the browser send a GET request to that route, and the server must have an app.get handler for it that calls res.render.",
+        "A link click is effectively a GET request. A multi-page site is therefore just one app.get handler per page.",
+        "res.render(\"about.ejs\") resolves the file relative to the views folder. If a template lived in views/main/, the call would be res.render(\"main/index.ejs\")."
+      ]
+    },
+    {
+      "heading": "Partials with include",
+      "points": [
+        "Multi-page sites repeat the same head, navbar and footer on every page; only the main content changes. Partials let that shared markup live in one file.",
+        "Syntax: <%- include(\"partials/header.ejs\") %>. The tag is the unescaped-output scriptlet (<%-) followed by the function name include (singular, not includes) and the path in quotes.",
+        "<%- (with a minus) is used because the included output is HTML that must be inserted raw. The escaping tag <%= would turn the markup into visible text.",
+        "The path given to include is also relative to the views folder, so views/partials/header.ejs is written partials/header.ejs, the same rule as for res.render.",
+        "Typical layout: header include at the very top of each page template, page content in the middle, footer include at the end. Each page file then only contains what is unique to it.",
+        "(Extra) In the reference code the header partial contains the doctype, html and head tags, the navbar and the opening main tag; the footer partial closes main, holds the footer markup and scripts, and closes body and html. The two partials are therefore a matched pair that wrap the page content, so they cannot be used separately.",
+        "(Extra) Partials can also receive local data as a second argument, include(\"partials/header.ejs\", { title: \"About\" }), which is useful for per-page titles."
+      ]
+    },
+    {
+      "heading": "Project setup workflow",
+      "points": [
+        "Download the lesson zip, run npm i in the folder to install the packages listed in package.json, then start the finished version with nodemon solution.js to see the target at localhost:3000.",
+        "Work in index.js (the starter file). The finished reference is solution.js; compare only after trying."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Serving the public folder and a route per page",
+      "language": "javascript",
+      "code": "import express from \"express\";\n\nconst app = express();\nconst port = 3000;\n\n// every file in ./public is now served from the site root\napp.use(express.static(\"public\"));\n\napp.get(\"/\", (req, res) => {\n  res.render(\"index.ejs\");\n});\n\napp.get(\"/about\", (req, res) => {\n  res.render(\"about.ejs\");\n});\n\napp.get(\"/contact\", (req, res) => {\n  res.render(\"contact.ejs\");\n});\n\napp.listen(port, () => {\n  console.log(`Server running on port ${port}`);\n});"
+    },
+    {
+      "caption": "A page template wrapped by header and footer partials",
+      "language": "html",
+      "code": "<%- include(\"partials/header.ejs\") %>\n\n<h1>About Me</h1>\n<p>Page-specific content only.</p>\n\n<%- include(\"partials/footer.ejs\") %>"
+    },
+    {
+      "caption": "Static asset links in the header partial (paths start at the public folder's contents)",
+      "language": "html",
+      "code": "<link rel=\"stylesheet\" href=\"/styles/layout.css\">\n<link rel=\"stylesheet\" href=\"/styles/content.css\">"
+    },
+    {
+      "caption": "Project layout",
+      "language": "text",
+      "code": "project/\n  index.js\n  package.json\n  public/\n    images/cat.jpeg\n    styles/layout.css\n    styles/content.css\n  views/\n    index.ejs\n    about.ejs\n    contact.ejs\n    partials/\n      header.ejs\n      footer.ejs"
+    }
+  ],
+  "task": {
+    "name": "4.3 EJS Partials: fix the multi-page portfolio",
+    "starting_point": "Zip with index.js (empty route section with comments), a views folder containing index.ejs (already using the partials), about.ejs, contact.ejs, partials/header.ejs and partials/footer.ejs, and a public folder with styles and an image. Run npm i, then nodemon solution.js to preview the target. In the starter, the about and contact pages are broken/unstyled.",
+    "goal": "Home, About and Contact pages all render with the same styled navbar, footer and CSS.",
+    "steps": [
+      "Step 1: add a GET handler for \"/\" that renders index.ejs.",
+      "Step 2: tell Express where static files live with app.use(express.static(\"public\")) so the CSS and images load.",
+      "Step 3: read the navbar hrefs in header.ejs (/about and /contact) and add a GET route for each that renders about.ejs and contact.ejs.",
+      "Step 4: in about.ejs and contact.ejs add the header include at the top and the footer include at the bottom, using paths relative to views (partials/header.ejs, partials/footer.ejs).",
+      "Run with nodemon index.js and click through the nav links to confirm all three pages look identical in layout."
+    ],
+    "expected_result": "All three pages show the animated navbar, the wave footer and styling; navigating via the nav links works without 404s.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "import express from \"express\";\n\nconst app = express();\nconst port = 3000;\n\napp.use(express.static(\"public\"));\n\napp.get(\"/\", (req, res) => {\n  res.render(\"index.ejs\");\n});\n\napp.get(\"/about\", (req, res) => {\n  res.render(\"about.ejs\");\n});\n\napp.get(\"/contact\", (req, res) => {\n  res.render(\"contact.ejs\");\n});\n\napp.listen(port, () => {\n  console.log(`Server running on port ${port}`);\n});"
+    },
+    "reference_repo_path": "Section 25 - EJS/25.04 - EJS Partials and Layouts/solution.js (templates in views/, partials in views/partials/)"
+  },
+  "pitfalls": [
+    "Forgetting express.static, so the page renders as plain unstyled HTML.",
+    "Writing /public/styles/layout.css in the href; the public folder name is not part of the URL.",
+    "Using <%= include(...) %> (escaped) instead of <%- include(...) %>, which prints the HTML as text.",
+    "Writing includes instead of include, or a path that is relative to the current file rather than to views.",
+    "Adding the header partial but forgetting the footer; the header opens main and html/body tags that the footer closes.",
+    "(Extra) The reference repo's footer contains a personal credit line by the student author; omit it when copying the partial."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "New lesson 'EJS partials and static files': blurb on public folder, express.static, include with <%-, and one route per page.",
+      "Tasks: (1) serve a public folder and link a stylesheet, (2) add GET routes for /about and /contact, (3) extract the shared nav into partials/header.ejs, (4) add a footer partial, (5) pass a title to the header include.",
+      "Starter code: three views with duplicated head/nav, an index.js with only the home route.",
+      "Interactive demo idea: a side-by-side file tree and rendered output where the learner toggles express.static on/off and edits the href path to see which URL resolves or 404s."
+    ]
+  }
+}

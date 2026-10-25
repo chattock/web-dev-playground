@@ -1,7 +1,7 @@
 /* ===== Section 8 — Advanced CSS ===== */
 
 PG.add({
-  id:'s08-display', section:'s08', slug:'display', lesson:'8.1',
+  id:'s08-display', index:48, udemyId:37368052, minutes:12, section:'s08', slug:'display', lesson:'8.1',
   title:'CSS Display',
   blurb:'<code>display</code> decides how an element behaves in the flow. <b>block</b> takes a whole row; <b>inline</b> sits in the text and ignores width/height; <b>inline-block</b> is the hybrid that does both; <b>none</b> removes it entirely.',
   tasks:[
@@ -119,7 +119,7 @@ css:`.red {
 
 
 PG.add({
-  id:'s08-float', section:'s08', slug:'float', lesson:'8.2',
+  id:'s08-float', index:49, udemyId:37368102, minutes:12, section:'s08', slug:'float', lesson:'8.2',
   title:'Float & Clear',
   blurb:'<code>float</code> pushes an element to one side and lets the text wrap around it — like a picture in a magazine article. <code>clear</code> is the escape hatch that forces an element back <em>below</em> the floated ones.',
   tasks:[
@@ -266,7 +266,7 @@ footer {
 
 
 PG.add({
-  id:'s08-responsive', section:'s08', slug:'responsiveness', lesson:'8.3',
+  id:'s08-responsive', index:50, udemyId:37368124, minutes:19, section:'s08', slug:'responsiveness', lesson:'8.3',
   title:'Responsiveness',
   blurb:'One page, every screen size. There are four ways to get there: <b>media queries</b>, <b>flexbox</b>, <b>grid</b> and a framework like <b>Bootstrap</b>. First, the tag that makes any of it work.',
   tasks:[
@@ -392,7 +392,7 @@ css:`body {
 
 
 PG.add({
-  id:'s08-media-query', section:'s08', slug:'media-query', lesson:'8.4',
+  id:'s08-media-query', index:51, udemyId:37368166, minutes:11, section:'s08', slug:'media-query', lesson:'8.4',
   title:'Media Queries',
   blurb:'A media query wraps a block of CSS in a condition — usually a screen-width range. Below that width the rules apply; above it they do not.',
   tasks:[
@@ -517,7 +517,7 @@ css:`body {
 
 
 PG.add({
-  id:'s08-agency', section:'s08', slug:'agency-project', lesson:'8.5', project:true,
+  id:'s08-agency', index:52, udemyId:37368196, minutes:7, section:'s08', slug:'agency-project', lesson:'8.5', project:true,
   title:'Web Design Agency Project',
   blurb:'A full landing page pulling together floats, the box model, and <code>&lt;span&gt;</code> for colouring part of a headline.',
   tasks:[

@@ -1,0 +1,71 @@
+{
+  "index": 104,
+  "lecture_id": 18143372,
+  "title": "Leap Year Solution",
+  "section": "15. Intermediate Javascript",
+  "duration_min": 3,
+  "kind": "solution",
+  "summary": "Translates the leap year flowchart into nested if statements using the modulo operator, one decision per nesting level.",
+  "concepts": [
+    {
+      "heading": "From flowchart to nested ifs",
+      "points": [
+        "Each question in the flowchart becomes an if; each answer path becomes a branch.",
+        "Modulo (%) returns the remainder of a division, so year % 4 === 0 means 'divides cleanly by 4'.",
+        "Level 1: if year % 4 === 0 continue; else return \"Not leap year.\".",
+        "Level 2 (inside level 1): if year % 100 === 0 continue; else return \"Leap year.\".",
+        "Level 3 (inside level 2): if year % 400 === 0 return \"Leap year.\"; else return \"Not leap year.\".",
+        "Every path ends in a return with the exact required string.",
+        "Going from the written rules to code is a big jump; the flowchart is the stepping stone, and the logic is the hard part."
+      ]
+    },
+    {
+      "heading": "Compact alternative",
+      "points": [
+        "(Extra) The reference repo collapses the logic into one condition: (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0. It is equivalent but denser to read."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Nested version mirroring the flowchart",
+      "language": "javascript",
+      "code": "function isLeap(year) {\n  if (year % 4 === 0) {\n    if (year % 100 === 0) {\n      if (year % 400 === 0) {\n        return \"Leap year.\";\n      } else {\n        return \"Not leap year.\";\n      }\n    } else {\n      return \"Leap year.\";\n    }\n  } else {\n    return \"Not leap year.\";\n  }\n}"
+    },
+    {
+      "caption": "Reference-repo single-condition version",
+      "language": "javascript",
+      "code": "function leapYear(year) {\n  if ((year % 4 === 0 && year % 100 !== 0) || year % 400 === 0) {\n    return \"Leap year.\";\n  } else {\n    return \"Not leap year.\";\n  }\n}"
+    }
+  ],
+  "task": {
+    "name": "Leap Year (solution)",
+    "starting_point": "Function receiving year with the flowchart as a guide.",
+    "goal": "Return \"Leap year.\" or \"Not leap year.\".",
+    "steps": [
+      "Check year % 4 === 0; otherwise return Not leap year.",
+      "Inside, check year % 100 === 0; otherwise return Leap year.",
+      "Inside that, check year % 400 === 0 to choose between the two results.",
+      "Run the course's check and confirm all tests pass."
+    ],
+    "expected_result": "2000 and 2024 give Leap year.; 1900 and 2023 give Not leap year.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "function isLeap(year) {\n  if (year % 4 === 0) {\n    if (year % 100 === 0) {\n      return year % 400 === 0 ? \"Leap year.\" : \"Not leap year.\";\n    }\n    return \"Leap year.\";\n  }\n  return \"Not leap year.\";\n}"
+    },
+    "reference_repo_path": "Section 15 - Intermediate Javascript/15.06 - Leap Year Challenge Exercise/script.js"
+  },
+  "pitfalls": [
+    "Missing the else path so the function returns undefined for some years.",
+    "Wrong nesting order of 4, 100 and 400.",
+    "Differences in the output strings."
+  ],
+  "playground": {
+    "match": "s15-leap-year (lesson 15.6, data/s15.js)",
+    "coverage": "Solution includes the nested version and a one-liner; closely matches the lecture.",
+    "gaps_and_ideas": [
+      "Add a note on how each nesting level maps to a flowchart diamond.",
+      "Add a test table task (1900, 2000, 2023, 2024, 2100)."
+    ]
+  }
+}

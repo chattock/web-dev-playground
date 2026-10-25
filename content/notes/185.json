@@ -1,0 +1,62 @@
+{
+  "index": 185,
+  "lecture_id": 12371166,
+  "title": "Install Git Bash on Windows",
+  "section": "21. The Unix Command Line",
+  "duration_min": 3,
+  "kind": "setup",
+  "summary": "Windows-only setup of Git for Windows so VS Code can use Git Bash as its terminal. Mac users skip it because Bash is already available.",
+  "concepts": [
+    {
+      "heading": "Installing Git for Windows",
+      "points": [
+        "Download the installer from gitforwindows.org (Git SCM) and run it, accepting the admin prompt and licence.",
+        "Pick an install location; on the components screen make sure Git Bash stays ticked.",
+        "Accept the defaults on every remaining screen, including the default start-menu folder, and keep pressing Next until it finishes."
+      ]
+    },
+    {
+      "heading": "Verifying in VS Code",
+      "points": [
+        "Open Terminal > New Terminal, then use the dropdown beside the + button to choose Git Bash.",
+        "A working Git Bash terminal shows a $ prompt.",
+        "(Extra) The dropdown is a list of shell profiles; Git Bash only appears once Git for Windows is installed."
+      ]
+    },
+    {
+      "heading": "Making Git Bash the default",
+      "points": [
+        "Open View > Command Palette and run Terminal: Select Default Profile, then choose Git Bash.",
+        "Close the current terminal and open a new one; the profile label now reads bash.",
+        "(Extra) Shortcut for the palette is Ctrl+Shift+P."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": {
+    "name": "Set up Git Bash in VS Code (Windows)",
+    "starting_point": "Windows machine with VS Code installed.",
+    "goal": "New VS Code terminals open in Git Bash by default.",
+    "steps": [
+      "Download and install Git for Windows with Git Bash selected.",
+      "Open a terminal in VS Code and choose Git Bash from the profile dropdown.",
+      "Run Select Default Profile from the Command Palette and pick Git Bash.",
+      "Open a fresh terminal and confirm it shows bash with a $ prompt.",
+      "(Extra) Optionally run git --version in the new terminal; a version number confirms Git for Windows is installed and on the PATH."
+    ],
+    "expected_result": "A bash terminal opens by default in VS Code.",
+    "solution_code": null,
+    "reference_repo_path": null
+  },
+  "pitfalls": [
+    "Mac users do not need this lesson.",
+    "Existing terminals keep their old profile; open a new one after changing the default."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "(Extra) Optional: a short 'Terminal setup check' card at the start of a future command-line lesson, with Windows (Git Bash) and macOS (Terminal/zsh) tabs and a first command to try (pwd), so learners confirm their shell works before the simulator exercises."
+    ]
+  }
+}

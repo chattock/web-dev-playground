@@ -1,0 +1,62 @@
+{
+  "index": 359,
+  "lecture_id": 31673744,
+  "title": "What You'll Build - A Website to Mint, Buy and Sell NFTs",
+  "section": "42. Minting NFTs and Building an NFT Marketplace like OpenSea",
+  "duration_min": 10,
+  "kind": "theory",
+  "summary": "Project overview for OpenD, an OpenSea-style NFT marketplace on the Internet Computer. Explains what fungibility means, how real NFTs reference off-chain storage, and the features the finished app will have.",
+  "concepts": [
+    {
+      "heading": "Fungible vs non-fungible",
+      "points": [
+        "Fungible assets are interchangeable: any banknote of a given value can be swapped for another with no loss. The coins/tokens built earlier (Bitcoin, Ethereum, the course's DANG token) behave this way.",
+        "A non-fungible token (NFT) has a unique identifier and unique data, so no two are equivalent, like an original painting versus a perfect copy.",
+        "NFTs most often represent digital images; ownership is recorded on a blockchain."
+      ]
+    },
+    {
+      "heading": "Marketplace context",
+      "points": [
+        "OpenSea is the model: users list NFTs and others buy them, prices quoted in a crypto currency (ETH there), and the platform keeps a small percentage fee per sale (about 2.5%).",
+        "Takeaway for developers: running the marketplace platform can be more lucrative than being one creator.",
+        "Large mainstream sales (an auction-house sale of a digital art collection for tens of millions of dollars) show demand."
+      ]
+    },
+    {
+      "heading": "Where NFT data usually lives",
+      "points": [
+        "On most chains the token is a smart contract that stores a token URI pointing to the image, commonly on IPFS or even a company server. The image itself is not on-chain.",
+        "The demo follows an OpenSea item: its contract address leads to Etherscan, the contract exposes a token URI function, and passing the token id returns an IPFS identifier that resolves to a publicly accessible image URL.",
+        "In OpenD the image bytes are stored on-chain inside the Internet Computer canister, so the asset does not depend on an outside host."
+      ]
+    },
+    {
+      "heading": "What OpenD will do",
+      "points": [
+        "Inspired by CryptoPunks pixel-art characters. The course supplies six pixel-art images (drawn by the instructor, downloadable from the lecture resources) so no purchase is needed.",
+        "Minting: the user uploads an image and a name; this programmatically creates a new canister holding the NFT data (name, owner, image bytes).",
+        "My collection page: shows NFTs the logged-in user owns; each has a Sell button that asks for a price in DANG (the token from the previous project).",
+        "Discover page: lists all NFTs put up for sale; a user cannot buy their own listing but can buy others', paying in DANG, after which the NFT appears in their collection.",
+        "Simplified feature set compared with OpenSea, focusing on core ideas: programmatic canister creation, ownership transfer, and payment using a third-party token.",
+        "Stack: React frontend, Motoko backend on the Internet Computer.",
+        "(Extra) Skills practised: Motoko classes as canisters, actor classes, HashMaps and lists, React Router, authenticated calls from the previous lesson."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [
+    "(Extra) Do not assume an NFT's image is on-chain elsewhere: URI-based NFTs can break if the host disappears; that is the weakness OpenD avoids."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (section 42 has no playground file).",
+    "gaps_and_ideas": [
+      "Proposed lesson 'Fungible vs non-fungible': blurb comparing a token balance map to a unique-id ownership map.",
+      "Tasks: 1) classify examples as fungible or not; 2) sketch the data of one NFT (id, name, owner, image); 3) list the pages of OpenD and what each shows; 4) decide where each piece of data would live.",
+      "Starter code: a JS object mapping ids to owners for tokens vs NFTs.",
+      "Interactive demo idea: swap two coins (identical) versus two NFT cards (the swap changes ownership but not identity), with an on-chain vs URL storage toggle."
+    ]
+  }
+}

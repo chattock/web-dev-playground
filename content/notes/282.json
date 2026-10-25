@@ -1,0 +1,78 @@
+{
+  "index": 282,
+  "lecture_id": 17038694,
+  "title": "JSX Code Practice",
+  "section": "36. React.js",
+  "duration_min": 8,
+  "kind": "concept+exercise",
+  "summary": "Practice challenge: build a React app from scratch that renders a heading and an unordered list of three items, then a walkthrough of the solution including the single-parent rule and how the editor's auto-format handles empty elements.",
+  "concepts": [
+    {
+      "heading": "Setup of the challenge",
+      "points": [
+        "Fork the provided CodeSandbox so changes are saved to your account. index.html already contains the div#root; index.js has been emptied so the whole React app is written from scratch.",
+        "The code comments in the sandbox list the steps to complete one by one."
+      ]
+    },
+    {
+      "heading": "Solution walkthrough",
+      "points": [
+        "Import React from 'react' and ReactDOM from 'react-dom' (both packages are already installed in the sandbox, but must be imported before use).",
+        "Call ReactDOM.render with two minimum arguments: what to show and where to show it. Start with an h1 heading, with document.getElementById('root') as the target.",
+        "To add a ul next to the h1, wrap both in a div, because render takes one element only; the div can have any number of children.",
+        "Add three li elements inside the ul with content (bacon, noodles, a third food).",
+        "Saving (Cmd/Ctrl+S) runs the formatter (prettifier). An li with nothing inside gets rewritten as a self-closing tag (<li />), like img or link; adding text content avoids that rewrite."
+      ]
+    },
+    {
+      "heading": "Learning approach",
+      "points": [
+        "Repeating the from-scratch render steps builds muscle memory. A completed sandbox is linked in the resources for comparison."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Solution in the lecture's older React API",
+      "language": "jsx",
+      "code": "import React from \"react\";\nimport ReactDOM from \"react-dom\";\n\nReactDOM.render(\n  <div>\n    <h1>My Favourite Foods</h1>\n    <ul>\n      <li>Bacon</li>\n      <li>Noodles</li>\n      <li>Mushrooms</li>\n    </ul>\n  </div>,\n  document.getElementById(\"root\")\n);"
+    },
+    {
+      "caption": "Equivalent from the reference repo (Vite, App.jsx; author's extra content stripped)",
+      "language": "jsx",
+      "code": "function App() {\n  return (\n    <>\n      <h1>My Favourite Foods</h1>\n      <ul>\n        <li>Bacon</li>\n        <li>Noodles</li>\n        <li>Jamon</li>\n      </ul>\n    </>\n  );\n}\nexport default App;"
+    }
+  ],
+  "task": {
+    "name": "JSX code practice: favourite foods list",
+    "starting_point": "Forked CodeSandbox with empty index.js and a div#root in index.html",
+    "goal": "Create a React app from scratch showing an h1 and an unordered list with three list items",
+    "steps": [
+      "Fork the sandbox.",
+      "Import React and ReactDOM.",
+      "Call ReactDOM.render with a wrapper div as the first argument, containing an h1 heading and a ul.",
+      "Add three li elements with text to the ul.",
+      "Pass document.getElementById('root') as the second argument.",
+      "Save and check the preview."
+    ],
+    "expected_result": "Page with a heading and a bulleted list of three favourite foods.",
+    "solution_code": {
+      "language": "jsx",
+      "code": "import React from \"react\";\nimport ReactDOM from \"react-dom\";\n\nReactDOM.render(\n  <div>\n    <h1>My Favourite Foods</h1>\n    <ul>\n      <li>Bacon</li>\n      <li>Noodles</li>\n      <li>Mushrooms</li>\n    </ul>\n  </div>,\n  document.getElementById(\"root\")\n);"
+    },
+    "reference_repo_path": "Section 36 - React.js/36.06 JSX Code Practice/JSX-Code-Practice"
+  },
+  "pitfalls": [
+    "Rendering a heading and a list as siblings without a wrapper throws a syntax error.",
+    "Empty elements are rewritten as self-closing tags by the formatter; give list items text.",
+    "The reference repo's App.jsx goes beyond the task (variables, extra ol, notes text); the core requirement (h1, ul, 3 li) is satisfied."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (no data file exists for section 36)",
+    "gaps_and_ideas": [
+      "Add this as a task in a 'JSX' lesson: build a heading plus ul of three items, then a stretch task turning it into an ol or adding a second list.",
+      "Checker idea: a live preview that verifies one h1 and three li exist."
+    ]
+  }
+}

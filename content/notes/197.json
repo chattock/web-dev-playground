@@ -1,0 +1,42 @@
+{
+  "index": 197,
+  "lecture_id": 48853823,
+  "title": "A note about the next lesson",
+  "section": "23. Node.js",
+  "duration_min": 0,
+  "kind": "admin",
+  "summary": "Short heads-up that the newest version of the superheroes npm package changed its API, so the code in the next lesson must use a named import instead of the default import.",
+  "concepts": [
+    {
+      "heading": "API change in the superheroes package",
+      "points": [
+        "Installing the current release of superheroes gives a package that exposes a named export, randomSuperhero, rather than a default export object with a random method.",
+        "Old pattern: default-import the package, then call its random() method. New pattern: named-import randomSuperhero and call it directly.",
+        "(Extra) This is the general ESM distinction: a default import takes whatever the module exports as default, while a named import in braces must match an exported name exactly. When a package updates, a lecture's import line can break even though the logic is the same.",
+        "(Extra) Importing with the ES module syntax requires \"type\": \"module\" in package.json (or a .mjs extension) when running under Node."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Updated usage for the current superheroes package",
+      "language": "javascript",
+      "code": "import { randomSuperhero } from \"superheroes\";\nconst name = randomSuperhero();\nconsole.log(name);"
+    },
+    {
+      "caption": "Older usage the video shows (superheroes v3 default export; fails with v4)",
+      "language": "javascript",
+      "code": "import superheroes from \"superheroes\";\nconst name = superheroes.random();"
+    }
+  ],
+  "task": null,
+  "pitfalls": [
+    "Copying the default-import line shown in the next video fails with the latest package version: Node throws a SyntaxError saying the module does not provide an export named 'default'.",
+    "Mixing up default and named imports produces errors such as a missing export."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": []
+  }
+}

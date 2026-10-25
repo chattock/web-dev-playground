@@ -1,0 +1,56 @@
+{
+  "index": 169,
+  "lecture_id": 12640242,
+  "title": "Step 4 - Check Which Button is Pressed",
+  "section": "20. Boss Level Challenge 2 - The Simon Game",
+  "duration_min": 1,
+  "kind": "article-task",
+  "summary": "Detect the user's button clicks and record the clicked colour in userClickedPattern.",
+  "concepts": [
+    {
+      "heading": "Click handling",
+      "points": [
+        "All four buttons share class btn, so $(\".btn\").click(handler) attaches one handler to all.",
+        "The handler is an anonymous function.",
+        "Inside it, this is the clicked element; $(this).attr(\"id\") reads its id, e.g. 'green'."
+      ]
+    },
+    {
+      "heading": "Storing",
+      "points": [
+        "Declare userClickedPattern = [] at the top and push userChosenColour into it.",
+        "Log the array to confirm it builds up as you click."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Handler",
+      "language": "javascript",
+      "code": "var userClickedPattern = [];\n\n$(\".btn\").click(function () {\n  var userChosenColour = $(this).attr(\"id\");\n  userClickedPattern.push(userChosenColour);\n});"
+    }
+  ],
+  "task": {
+    "name": "Record user clicks",
+    "starting_point": "gamePattern logic done",
+    "goal": "userClickedPattern fills as buttons are clicked",
+    "steps": [
+      "Add click handler on .btn",
+      "Store id in userChosenColour via $(this).attr(\"id\")",
+      "Create empty userClickedPattern at top",
+      "Push the colour",
+      "console.log to check"
+    ],
+    "expected_result": "Console shows e.g. ['red','blue'] after two clicks.",
+    "solution_code": null,
+    "reference_repo_path": "Section 20 - Boss Level Challenge 2 - The Simon Game/script.js"
+  },
+  "pitfalls": [
+    "Arrow functions change this in the handler; use function() so $(this) works."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (web-dev-playground has no files for sections 19-20)",
+    "gaps_and_ideas": []
+  }
+}

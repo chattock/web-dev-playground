@@ -1,0 +1,74 @@
+{
+ "index": 90,
+ "lecture_id": 12372000,
+ "title": "Functions Part 1 Challenge - The Karel Robot",
+ "section": "14. Introduction to Javascript ES6",
+ "duration_min": 9,
+ "kind": "concept+exercise",
+ "summary": "Practises writing and calling your own functions in the Stanford Karel robot simulator: reach the far corner of a 5x5 world, draw a diagonal line of beepers using a reusable function, and optionally build a chessboard pattern.",
+ "concepts": [
+  {
+   "heading": "The Karel environment",
+   "points": [
+    "Karel is a simple robot in an online editor; set the world size to 5 x 5 for a smaller grid.",
+    "Code placed in function main() runs when Run is pressed; reset returns Karel to the start between runs.",
+    "Built-in commands: move() steps one square forward in the facing direction, turnLeft() rotates 90 degrees left, putBeeper() drops a marker on the square, pickBeeper() removes one.",
+    "Each command is a function call, so it needs brackets and a semicolon.",
+    "You can define extra functions outside main and call them from main; the spelling at the call must match the declaration exactly.",
+    "(Extra) If no turnRight() is available in your Karel editor, define one as three turnLeft() calls."
+   ]
+  },
+  {
+   "heading": "Using functions to avoid repetition",
+   "points": [
+    "A repeated group of commands (four move() calls in a row) can be extracted into a named function such as moveFourTimes(), then called in several places.",
+    "Benefits: shorter code, and bugs are easier to localise because a wrong step count lives in one function.",
+    "Example demo function goInCircle() combines move() and turnLeft() calls and is called from main; calling it twice completes a full loop."
+   ]
+  }
+ ],
+ "code_examples": [
+  {
+   "caption": "Challenge 1: bottom-left to top-right corner using a helper",
+   "language": "javascript",
+   "code": "function moveFourTimes() {\n    move();\n    move();\n    move();\n    move();\n}\n\nfunction main() {\n    moveFourTimes();   // along the bottom row\n    turnLeft();\n    moveFourTimes();   // up the right column\n}"
+  },
+  {
+   "caption": "Challenge 2: diagonal of five beepers with a repeated unit",
+   "language": "javascript",
+   "code": "function diagonalMoveAndBeeper() {\n    move();\n    turnLeft();\n    move();\n    putBeeper();\n    turnRight();\n}\n\nfunction main() {\n    putBeeper();             // starting corner\n    diagonalMoveAndBeeper();\n    diagonalMoveAndBeeper();\n    diagonalMoveAndBeeper();\n    diagonalMoveAndBeeper(); // 5 beepers in total\n}"
+  }
+ ],
+ "task": {
+  "name": "Karel challenges",
+  "starting_point": "Karel editor via the link in the lesson resources, world set to 5 x 5, main() emptied.",
+  "goal": "Three tasks of increasing difficulty using functions.",
+  "steps": [
+   "Challenge 1: write code moving Karel from the bottom-left to the top-right corner. Any route counts; one route is four moves, turn left, four moves.",
+   "Refactor the repeated move() calls into moveFourTimes() and call it twice.",
+   "Challenge 2: make Karel place a diagonal of five beepers from bottom-left to top-right, with as little repeated code as possible: put the repeating unit (move, turnLeft, move, putBeeper, turn right) into a named function and call it four times after the first putBeeper().",
+   "Optional challenge 3: create a chessboard pattern of alternating beeper squares (solution is in the lesson resources)."
+  ],
+  "expected_result": "Karel ends in the top-right corner; a diagonal line of five beepers; optionally an alternating chessboard of beepers.",
+  "solution_code": {
+   "language": "javascript",
+   "code": "function diagonalMoveAndBeeper() {\n    move();\n    turnLeft();\n    move();\n    putBeeper();\n    turnRight();\n}\n\nfunction main() {\n    putBeeper();             // starting corner\n    diagonalMoveAndBeeper();\n    diagonalMoveAndBeeper();\n    diagonalMoveAndBeeper();\n    diagonalMoveAndBeeper(); // 5 beepers in total\n}"
+  },
+  "reference_repo_path": null
+ },
+ "pitfalls": [
+  "Misspelling a function name between its declaration and call.",
+  "Forgetting that Karel keeps facing the new direction after turnLeft(), so the order of moves matters.",
+  "Forgetting the first putBeeper() before the repeated unit, giving only four beepers.",
+  "Reference repo has no Karel code for this lesson; the chess-board solution is given in the next article lecture."
+ ],
+ "playground": {
+  "match": "s14-functions-1 (lesson 14.11, data/s14.js), partly",
+  "coverage": "The playground lesson covers define/call with a milk robot, but has no Karel task.",
+  "gaps_and_ideas": [
+   "Add a mini Karel-style grid widget (canvas or divs) with move(), turnLeft(), putBeeper() exposed so learners can run the corner-to-corner and diagonal challenges in the page.",
+   "Add tasks: corner-to-corner, refactor to moveFourTimes, diagonal of beepers, chessboard.",
+   "Include a link to the Stanford Karel editor as an alternative."
+  ]
+ }
+}

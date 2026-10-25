@@ -1,0 +1,168 @@
+{
+  "index": 364,
+  "lecture_id": 31673780,
+  "title": "Listing NFTs for Sale",
+  "section": "42. Minting NFTs and Building an NFT Marketplace like OpenSea",
+  "duration_min": 34,
+  "kind": "project",
+  "summary": "Adds a Sell flow to each owned NFT card: a reusable Button component, a price input, a new Motoko listItem function with a Listing record and HashMap, and a transferOwnership function that hands the NFT to the OpenD canister. Includes debugging of a Nat conversion error and a certificate verification error on the local replica.",
+  "concepts": [
+    {
+      "heading": "Overall flow being built",
+      "points": [
+        "Each NFT card under My NFTs gets a Sell button. Clicking it reveals a price input and turns the button into Confirm.",
+        "Confirm calls the backend to record the listing (owner + price) in a map, then moves ownership of the NFT canister to the OpenD marketplace canister.",
+        "Ownership is moved at listing time because only the current owner can call the NFT's transfer function; the marketplace cannot wait around for a buyer and then ask the seller to transfer. OpenD can later pass the NFT to the buyer."
+      ]
+    },
+    {
+      "heading": "Reusable Button component (Button.jsx)",
+      "points": [
+        "Create components/Button.jsx: a functional component Button that returns the button markup supplied in the project README (copy only the content between the outer div tags), wrapped in return ( ... ), then export default Button.",
+        "It needs import React from \"react\"; the useEffect/useState imports are not needed here.",
+        "The span's onClick is wired to props.handleClick, so the parent decides what a click does (a callback passed as a prop).",
+        "The label is hard-coded at first, then replaced with {props.text} so the same component can read Sell and later Confirm."
+      ]
+    },
+    {
+      "heading": "Item.jsx state and handlers",
+      "points": [
+        "New state: button (the JSX for the current button) and priceInput (JSX for the input, empty until Sell is clicked). Both are rendered inside the card content, with priceInput above button, after the owner paragraph.",
+        "At the end of loadNFT, setButton(<Button handleClick={handleSell} text={\"Sell\"} />) puts the Sell button on the card.",
+        "handleSell first just logs 'Sell clicked' to prove the callback prop works, then calls setPriceInput with a number input (placeholder 'Price in DANG', className price-input; markup is in the README) and swaps the button via setButton to a Button with text Confirm and handleClick={sellItem}.",
+        "The price is held in a plain let variable (let price;) declared in the component, and the input's onChange does price = e.target.value. A state hook is avoided here because the later async calls cannot rely on state having updated by the time sellItem reads it.",
+        "sellItem is an async function because it talks to the backend; first it only logs the price to confirm the variable is reachable."
+      ]
+    },
+    {
+      "heading": "Motoko: Listing type and listings map",
+      "points": [
+        "Define a custom record type with the type keyword: private type Listing = { itemOwner : Principal; itemPrice : Nat; }; Fields are separated by semicolons. Type names start with a capital letter.",
+        "(Extra) The record could later carry sale history or timestamps; it is kept to two fields for simplicity.",
+        "Add a third map next to mapOfNFTs and mapOfOwners: a HashMap keyed by the NFT's Principal with Listing values, created with initial capacity 1, Principal.equal and Principal.hash. The lecture calls it mapOfListings; the reference repo spells it mapOfListing."
+      ]
+    },
+    {
+      "heading": "Motoko: listItem(id, price)",
+      "points": [
+        "Declared as public shared (msg) func so the caller's identity is available as msg.caller. Takes id : Principal and price : Nat and returns async Text so the frontend gets a readable status.",
+        "Look up the NFT with a switch on mapOfNFTs.get(id). The result is an optional, so handle case null (return a 'does not exist' text, which exits the function early) and case (?result) result.",
+        "Fetch the real owner with await item.getOwner(). Forgetting await produces a type error complaining that an async Principal cannot be used as a Principal.",
+        "Authorisation check: if Principal.equal(owner, msg.caller) the caller owns the NFT; otherwise return a 'you don't own the NFT' message.",
+        "On success build a Listing (itemOwner = owner, itemPrice = price), call mapOfListings.put(id, newListing) and return \"Success\". The success return belongs inside the if branch so it is only returned when a listing was made."
+      ]
+    },
+    {
+      "heading": "Frontend call and the Nat bug",
+      "points": [
+        "Import the backend: import { OPEND_backend } from \"../../../declarations/OPEND_backend\" (the lecture refers to it as opend, the reference repo uses the OPEND_backend export).",
+        "In sellItem: const listingResult = await OPEND_backend.listItem(props.id, Number(price)).",
+        "The backend was changed, so redeploy all canisters (command in the README) before testing; this resets state, so mint a fresh NFT first.",
+        "Error 'Invalid Nat argument: \"12\"' means the price reached Candid as a string (e.target.value is always a string). Wrapping it in Number() fixes it."
+      ]
+    },
+    {
+      "heading": "Motoko: transferOwnership in nft.mo",
+      "points": [
+        "Another public shared (msg) func, taking the new owner's Principal and returning async Text.",
+        "Guard: only proceed if msg.caller equals the stored nftOwner; otherwise return an error text saying the call was not initiated by the owner.",
+        "To change the owner, nftOwner must be declared var (not let), and the update uses the := assignment operator, then returns \"Success\".",
+        "Make the NFT's fields private so only code inside the actor, and for the owner only this function, can change them.",
+        "(Extra) The reference repo also adds a Bool parameter isListing and a listedForSale flag in the NFT actor; this is groundwork for later lectures and is not in this lecture's walkthrough."
+      ]
+    },
+    {
+      "heading": "Giving the frontend OpenD's own ID",
+      "points": [
+        "Add public query func getOpenDCanisterID() : async Principal { return Principal.fromActor(OpenD); } to the main actor. Principal.fromActor takes the actor name and returns its canister ID.",
+        "In sellItem, once listingResult is the success text, fetch it with await OPEND_backend.getOpenDCanisterID() and pass it as the new owner to NFTActor.transferOwnership(...), then log the returned text.",
+        "To make the NFT actor reachable from sellItem, declare let NFTActor; at component level and change the assignment inside loadNFT from const to plain assignment so both functions share it.",
+        "Status strings are plain text only for readability; error codes or variants would work too."
+      ]
+    },
+    {
+      "heading": "Local replica certificate error",
+      "points": [
+        "After the transfer was added the console showed 'Fail to verify certificate'. By default HttpAgent assumes the live Internet Computer and checks responses with a built-in root public key, which does not match a local replica.",
+        "Fix: call agent.fetchRootKey() right after creating the HttpAgent when running locally.",
+        "This line must be removed before deploying to the real network (leave a TODO comment).",
+        "Testing locally also avoids paying cycles for each minted NFT canister."
+      ]
+    },
+    {
+      "heading": "Verifying the result",
+      "points": [
+        "Mint a new NFT, open My NFTs, click Sell, enter a price, click Confirm. The console should show 'listing: Success' then 'transfer: Success'.",
+        "Redeploy after each backend edit (both nft.mo and main.mo saved first).",
+        "Next lecture tidies the UI and shows listed items on the Discover page."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Button.jsx (reference repo)",
+      "language": "jsx",
+      "code": "import React from \"react\";\n\nexport default function Button(props) {\n  return (\n    <div className=\"Chip-root makeStyles-chipBlue-108 Chip-clickable\">\n      <span onClick={props.handleClick} className=\"form-Chip-label\">\n        {props.text}\n      </span>\n    </div>\n  );\n}"
+    },
+    {
+      "caption": "Item.jsx: sell flow handlers",
+      "language": "jsx",
+      "code": "let price;\nfunction handleSell() {\n  setPriceInput(\n    <input\n      placeholder=\"Price in DANG\"\n      type=\"number\"\n      className=\"price-input\"\n      value={price}\n      onChange={(e) => (price = e.target.value)}\n    />\n  );\n  setButton(<Button handleClick={sellItem} text={\"Confirm\"} />);\n}\n\nasync function sellItem() {\n  const listingResult = await OPEND_backend.listItem(props.id, Number(price));\n  console.log(\"listing: \" + listingResult);\n  if (listingResult == \"Success\") {\n    const openDId = await OPEND_backend.getOpenDCanisterID();\n    const transferResult = await NFTActor.transferOwnership(openDId, true);\n    console.log(\"transfer: \" + transferResult);\n  }\n}"
+    },
+    {
+      "caption": "main.mo: Listing type, map and listItem",
+      "language": "motoko",
+      "code": "private type Listing = {\n  itemOwner : Principal;\n  itemPrice : Nat;\n};\n\ntransient var mapOfListing = HashMap.HashMap<Principal, Listing>(1, Principal.equal, Principal.hash);\n\npublic shared (msg) func listItem(id : Principal, price : Nat) : async Text {\n  var item : NFTActorClass.NFT = switch (mapOfNFTs.get(id)) {\n    case null return \"NFT does not exist.\";\n    case (?result) result;\n  };\n\n  let owner = await item.getOwner();\n\n  if (Principal.equal(owner, msg.caller)) {\n    let newListing : Listing = { itemOwner = owner; itemPrice = price };\n    mapOfListing.put(id, newListing);\n    return \"Success\";\n  } else {\n    return \"You don't own the NFT.\";\n  };\n};\n\npublic query func getOpenDCanisterID() : async Principal {\n  return Principal.fromActor(OpenD);\n};"
+    },
+    {
+      "caption": "nft.mo: owner-only transfer (lecture version, without the isListing flag)",
+      "language": "motoko",
+      "code": "private var nftOwner = owner;\n\npublic shared (msg) func transferOwnership(newOwner : Principal) : async Text {\n  if (msg.caller == nftOwner) {\n    nftOwner := newOwner;\n    return \"Success\";\n  } else {\n    return \"Error: Not initiated by the owner of the NFT.\";\n  };\n};"
+    },
+    {
+      "caption": "Local-only agent fix",
+      "language": "javascript",
+      "code": "const agent = new HttpAgent({ host: localHost });\n// TODO: remove when deploying to the live network\nagent.fetchRootKey();"
+    }
+  ],
+  "task": {
+    "name": "Add a Sell button that lists an NFT and transfers it to OpenD",
+    "starting_point": "Project from the previous lesson: Item.jsx shows name, owner and image of each owned NFT; main.mo has mapOfNFTs, mapOfOwners, mint and getOwnedNFTs; nft.mo has getters only. README holds the Button and price-input markup and the deploy commands.",
+    "goal": "Clicking Sell on an owned NFT shows a price input and Confirm button; Confirm records a listing in the backend and moves the NFT's ownership to the OpenD canister, logging two Success messages.",
+    "steps": [
+      "Create components/Button.jsx using README markup, props.handleClick on onClick and props.text as the label.",
+      "In Item.jsx add button and priceInput state, render both in the card, and set the Sell button at the end of loadNFT with handleSell as handleClick.",
+      "Write handleSell: log, set the price input JSX (onChange writes e.target.value into a let price), and switch the button to Confirm with sellItem.",
+      "In main.mo add the Listing type, the listings HashMap and listItem with the not-found and owner checks.",
+      "Import OPEND_backend in Item.jsx and call listItem(props.id, Number(price)) inside sellItem; redeploy, mint a fresh NFT and test.",
+      "Add transferOwnership to nft.mo (owner check, var nftOwner, := assignment) and make the fields private.",
+      "Add getOpenDCanisterID to main.mo; in sellItem fetch it and call NFTActor.transferOwnership after a successful listing (hoist NFTActor to a let).",
+      "Add agent.fetchRootKey() after creating the agent, redeploy, mint again and confirm 'listing: Success' and 'transfer: Success'."
+    ],
+    "expected_result": "Console shows listing: Success and transfer: Success; the NFT is in the listings map and owned by the OpenD canister.",
+    "solution_code": {
+      "language": "motoko",
+      "code": "public shared (msg) func listItem(id : Principal, price : Nat) : async Text {\n  var item : NFTActorClass.NFT = switch (mapOfNFTs.get(id)) {\n    case null return \"NFT does not exist.\";\n    case (?result) result;\n  };\n  let owner = await item.getOwner();\n  if (Principal.equal(owner, msg.caller)) {\n    mapOfListing.put(id, { itemOwner = owner; itemPrice = price });\n    return \"Success\";\n  } else {\n    return \"You don't own the NFT.\";\n  };\n};"
+    },
+    "reference_repo_path": "Section 42 - Minting NFTs and Building an NFT Marketplace like OpenSea/42.06 Listing NFTs for Sale/OPEND/src"
+  },
+  "pitfalls": [
+    "Passing the price as a string to a Nat parameter gives 'Invalid Nat argument'; convert with Number().",
+    "Forgetting await on item.getOwner() gives an async Principal type mismatch.",
+    "Missing agent.fetchRootKey() on a local replica gives 'Fail to verify certificate'; remove it for live deployment.",
+    "Redeploying resets local state, so previously minted NFTs vanish and must be re-minted.",
+    "Leaving nftOwner as a let prevents reassignment; it must be var and updated with :=.",
+    "Leaving NFT fields public lets other actors alter them; keep them private.",
+    "The success return must sit inside the owner-check branch only."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (section 42 has no playground file).",
+    "gaps_and_ideas": [
+      "New lesson: 'Marketplace listing flow'. Blurb: passing callbacks as props and gating actions by caller identity.",
+      "Tasks: build a Button with handleClick/text props; toggle Sell to Confirm via state; keep a price in a let variable; simulate listItem with a mock owner check; show an error message for non-owners.",
+      "Starter code: Item component with a fake async backend object returning Success or an error text.",
+      "Interactive demo: a mock NFT card where the viewer toggles 'I am the owner' to see listItem accept or reject, and a toggle showing string versus Number price causing an Invalid Nat style error."
+    ]
+  }
+}

@@ -1,0 +1,109 @@
+{
+  "index": 294,
+  "lecture_id": 17039094,
+  "title": "React Props",
+  "section": "36. React.js",
+  "duration_min": 17,
+  "kind": "concept+exercise",
+  "summary": "Shows why repeated JSX should become a reusable component and how props let each instance receive its own data. Compares props with fixed HTML attributes, then asks the learner to render a second contact card by passing different props.",
+  "concepts": [
+    {
+      "heading": "The problem: repetitive JSX and a Card component with no inputs",
+      "points": [
+        "The starting contacts app hard-codes three people (h2 name, img, two p elements for phone and email) directly in the render call, which is long and repetitive. Repeated markup like this is a signal to extract a component.",
+        "Step one is to move one contact's markup into a function named Card (capitalised) that returns a wrapping div. The render call then uses <Card /> three times.",
+        "Result: three identical cards, all showing the first contact. A component with hard-coded content cannot be reused, because there is no way yet to give each instance its own data."
+      ]
+    },
+    {
+      "heading": "Analogy: HTML attributes pass data into an element",
+      "points": [
+        "A plain <input /> placed in index.html (outside the root div) accepts attributes such as id, placeholder and value. placeholder shows grey hint text while empty; value pre-fills the field.",
+        "A React app does not own the whole page: the root div is just a mount point, and the rest of index.html stays ordinary HTML. This makes it easy to add React to an existing site.",
+        "In the console, document.getElementById('fName') returns the element object, and its attributes appear as properties (input.placeholder, input.value), which can be read or assigned.",
+        "HTML attributes come from a fixed, predefined list (documented on MDN). You cannot invent your own, e.g. a made-up attribute will not appear as a property on the element."
+      ]
+    },
+    {
+      "heading": "Props: custom attributes for your own components",
+      "points": [
+        "Think of a component as a custom HTML element. The attributes you write on it in JSX are called properties, shortened to props, and you choose their names freely.",
+        "Syntax on the usage side: <Card name=\"Beyonce\" />. Quoted strings pass text; use curly braces for anything that is a JavaScript expression (numbers, variables, objects).",
+        "React calls the component function with a single argument: an object holding every prop as a key/value pair. By convention the parameter is called props: function Card(props) { ... }.",
+        "Logging props shows an object such as { name: 'Beyonce' }, which confirms that the attributes are packaged into one object.",
+        "Inside the JSX that Card returns, read values with props.name, props.img, props.tel, props.email. These are JavaScript expressions in markup, so they must sit inside curly braces, including when used for an attribute like src={props.img}.",
+        "The names on the usage side and the property names read in the component must match exactly, and must be consistent across every <Card /> instance.",
+        "After this refactor Card contains no contact-specific data; it holds only structure (and any styling), while each call site supplies the content. Adding another contact is just another <Card ... /> with different prop values."
+      ]
+    },
+    {
+      "heading": "Props on custom components are not HTML attributes",
+      "points": [
+        "className=\"my-style\" works on a built-in element like a div, turning the text red via the stylesheet rule.",
+        "Putting className on <Card /> does nothing to the output by itself: React treats it as just another prop called className and passes it in the props object. The component would have to read props.className and apply it to an inner element.",
+        "Rule of thumb: predefined lowercase attribute names belong to real HTML elements; on your own components any name is allowed but means nothing until the component uses it."
+      ]
+    },
+    {
+      "heading": "Mental model",
+      "points": [
+        "Using a component is like calling a function: the attributes become an object argument, the function uses it to fill in a template, and the returned element is placed in the DOM.",
+        "Attributes on HTML elements: fixed names, set by the browser spec. Props on components: names you invent, defined by your own function."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Card component driven by props (illustrative; the wrapping div keeps each card's elements grouped)",
+      "language": "jsx",
+      "code": "function Card(props) {\n  return (\n    <div>\n      <h2>{props.name}</h2>\n      <img src={props.img} alt=\"avatar\" />\n      <p>{props.tel}</p>\n      <p>{props.email}</p>\n    </div>\n  );\n}"
+    },
+    {
+      "caption": "Rendering two cards with different data",
+      "language": "jsx",
+      "code": "function App() {\n  return (\n    <div>\n      <h1>My Contacts</h1>\n      <Card\n        name=\"Beyonce\"\n        img=\"https://blackhistorywall.files.wordpress.com/2010/02/picture-device-independent-bitmap-119.jpg\"\n        tel=\"+123 456 789\"\n        email=\"b@beyonce.com\"\n      />\n      <Card\n        name=\"Jack Bauer\"\n        img=\"https://pbs.twimg.com/profile_images/625247595825246208/X3XLea04_400x400.jpg\"\n        tel=\"+987 654 321\"\n        email=\"jack@nowhere.com\"\n      />\n    </div>\n  );\n}\n\nexport default App;"
+    },
+    {
+      "caption": "Console comparison: element attributes as properties",
+      "language": "javascript",
+      "code": "const input = document.getElementById('fName');\ninput.placeholder; // text from the placeholder attribute\ninput.value;       // current value, can be assigned too"
+    }
+  ],
+  "task": {
+    "name": "Add a second contact card by reusing Card",
+    "starting_point": "The Card component reads props.name, props.img, props.tel and props.email, and one Card is already rendered for the first contact.",
+    "goal": "Render a second Card below the first with a different name, image, phone number and email, without changing the Card function.",
+    "steps": [
+      "Add a second self-closing <Card /> in the render/App markup, directly after the first.",
+      "Give it the same four props (name, img, tel, email) so they match what Card reads.",
+      "Fill in new values: a different name, an image URL, a phone number and an email.",
+      "Save and check that two cards appear with different details.",
+      "(Extra) Optionally add a third Card (Chuck Norris in the reference data) to confirm the component scales without edits."
+    ],
+    "expected_result": "Two contact cards stacked vertically, each showing its own name, picture, phone and email, produced from one Card definition.",
+    "solution_code": {
+      "language": "jsx",
+      "code": "function Card(props) {\n  return (\n    <div>\n      <h2>{props.name}</h2>\n      <img src={props.img} alt=\"avatar\" />\n      <p>{props.tel}</p>\n      <p>{props.email}</p>\n    </div>\n  );\n}\n\nfunction App() {\n  return (\n    <div>\n      <h1>My Contacts</h1>\n      <Card name=\"Beyonce\" img=\"https://blackhistorywall.files.wordpress.com/2010/02/picture-device-independent-bitmap-119.jpg\" tel=\"+123 456 789\" email=\"b@beyonce.com\" />\n      {/* the new card: same four prop names, new values */}\n      <Card name=\"Jack Bauer\" img=\"https://pbs.twimg.com/profile_images/625247595825246208/X3XLea04_400x400.jpg\" tel=\"+987 654 321\" email=\"jack@nowhere.com\" />\n    </div>\n  );\n}\n\nexport default App;"
+    },
+    "reference_repo_path": "Section 36 - React.js/36.18 React Props/react-props/src/App.jsx"
+  },
+  "pitfalls": [
+    "Forgetting curly braces around props.x inside JSX, so the literal text is shown instead of the value.",
+    "Prop names that differ between the call site and the component (img versus imgSrc) produce undefined and blank output.",
+    "Expecting className or other HTML attributes placed on a custom component to style it automatically.",
+    "Using a lowercase component name (<card />); React treats it as an HTML tag.",
+    "(Extra) Props are read-only; a component should not assign to props.x.",
+    "Reference repo quirk: the student's Card uses different prop names (imgSrc, mobNum, eMail), returns a fragment instead of a div, and stores the contacts in an object keyed 1-3 rendered with Object.values(Data).map. The names are a free choice as long as both sides match; the mapping is a later lesson."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "New lesson 'Props': blurb about passing data into components so one definition renders many different outputs.",
+      "Tasks: (1) make a Card that reads props.name; (2) add img, tel and email props; (3) render three cards with different data; (4) log props to see the object; (5) put className on a Card and then forward it to the inner div.",
+      "Starter code idea: a hard-coded Card showing one contact, with three identical copies rendered.",
+      "Interactive demo idea: a form with name/phone/email inputs that live-updates the attributes of a rendered Card and shows the resulting props object as JSON beside it.",
+      "(Extra) Note the reference repo goes on to use Object.values(Data).map with key=index; that belongs to the later mapping lesson."
+    ]
+  }
+}

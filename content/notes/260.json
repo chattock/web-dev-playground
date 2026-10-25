@@ -1,0 +1,95 @@
+{
+  "index": 260,
+  "lecture_id": 40494274,
+  "title": "Many to Many Relationships & Aliases",
+  "section": "33. PostgreSQL",
+  "duration_min": 12,
+  "kind": "concept+exercise",
+  "summary": "Explains many to many relationships as two one-to-many links joined through a third (junction) table, builds student/class/enrollment, joins all three tables, and introduces aliases with AS for columns and tables.",
+  "concepts": [
+    {
+      "heading": "What many to many means",
+      "points": [
+        "A student takes many classes, and a class has many students. Two one-to-many relationships facing each other give many to many.",
+        "It is rarer and more complex than the other types.",
+        "A single foreign key cannot model it, so Postgres designs use a third table (a junction or link table) holding one row per pairing."
+      ]
+    },
+    {
+      "heading": "The enrollment junction table",
+      "points": [
+        "Each enrollment row has a student_id and a class_id, e.g. student 1 in class 1, student 1 in class 3, student 2 in class 1.",
+        "In a design diagram this appears as student (one) to enrollment (many) and class (one) to enrollment (many), rather than one direct many-to-many line.",
+        "enrollment declares student_id INTEGER REFERENCES student(id) and class_id INTEGER REFERENCES class(id): both are foreign keys.",
+        "PRIMARY KEY (student_id, class_id) is a composite key: the pair is unique, so the same student cannot be enrolled in the same class twice. No separate id column is needed.",
+        "class table: id SERIAL PRIMARY KEY, title VARCHAR(45) (a string capped at 45 characters)."
+      ]
+    },
+    {
+      "heading": "Sample data",
+      "points": [
+        "Add a second student (Jack Bauer, id 2) and three classes: English Literature (1), Maths (2), Physics (3), ids assigned in insertion order by SERIAL.",
+        "Enroll student 1 in classes 1 and 2, and student 2 in classes 2 and 3. Two separate INSERTs are used for readability but one could hold all four tuples."
+      ]
+    },
+    {
+      "heading": "Joining three tables",
+      "points": [
+        "Start FROM enrollment, then chain two JOINs: student ON student.id = enrollment.student_id, and class ON class.id = enrollment.class_id.",
+        "Result has one row per enrollment record, with student and class details repeated as needed.",
+        "Such a table can answer questions: how many students take maths (2), which classes one student takes, which classes two students share."
+      ]
+    },
+    {
+      "heading": "Aliases",
+      "points": [
+        "AS renames an output column: student.id AS stud makes that column header stud. Useful when several tables each have an id column.",
+        "Tables can also be aliased: FROM enrollment AS e JOIN student AS s ..., then use s.id and e.student_id in place of the full names. This shortens long queries.",
+        "The AS keyword is optional for tables: FROM enrollment e works the same.",
+        "Recommendation given: keep AS for column aliases in SELECT for readability, even though it is optional.",
+        "(Extra) Once a table is aliased, the original name can no longer be used for it in that query."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Many to many tables, joins and aliases",
+      "language": "sql",
+      "code": "CREATE TABLE class (\n  id SERIAL PRIMARY KEY,\n  title VARCHAR(45)\n);\n\nCREATE TABLE enrollment (\n  student_id INTEGER REFERENCES student(id),\n  class_id INTEGER REFERENCES class(id),\n  PRIMARY KEY (student_id, class_id)\n);\n\nINSERT INTO student (first_name, last_name) VALUES ('Jack', 'Bauer');\nINSERT INTO class (title) VALUES ('English Literature'), ('Maths'), ('Physics');\nINSERT INTO enrollment (student_id, class_id) VALUES (1, 1), (1, 2);\nINSERT INTO enrollment (student_id, class_id) VALUES (2, 2), (2, 3);\n\n-- Double join\nSELECT *\nFROM enrollment\nJOIN student ON student.id = enrollment.student_id\nJOIN class ON class.id = enrollment.class_id;\n\n-- Column alias\nSELECT student.id AS stud, first_name, last_name, title\nFROM enrollment\nJOIN student ON student.id = enrollment.student_id\nJOIN class ON class.id = enrollment.class_id;\n\n-- Table aliases (AS optional)\nSELECT s.id AS stud, first_name, last_name, title\nFROM enrollment e\nJOIN student s ON s.id = e.student_id\nJOIN class c ON c.id = e.class_id;"
+    }
+  ],
+  "task": {
+    "name": "Create the many-to-many tables and query them",
+    "starting_point": "school database with student, contact_detail and homework_submission tables.",
+    "goal": "Add class and enrollment, insert data, run the double join and experiment with aliases.",
+    "steps": [
+      "Create the class and enrollment tables.",
+      "Insert Jack Bauer as a student, the three classes and the four enrollment rows.",
+      "Run the three-table join with SELECT *.",
+      "Change the select to use AS stud for the student id.",
+      "Rewrite the query with table aliases e, s and c, with and without AS."
+    ],
+    "expected_result": "Four rows, each pairing a student with a class; the aliased versions return identical data with a renamed id column.",
+    "solution_code": {
+      "language": "sql",
+      "code": "SELECT s.id AS id, first_name, last_name, title\nFROM enrollment e\nJOIN student s ON s.id = e.student_id\nJOIN class c ON c.id = e.class_id;"
+    },
+    "reference_repo_path": "Section 33 - PostgreSQL/33.13 - Many to Many Relationships & Aliases/queries.sql"
+  },
+  "pitfalls": [
+    "Inserting an enrollment pair twice violates the composite primary key.",
+    "Referencing a student or class id that does not exist fails the foreign key.",
+    "Using the full table name after aliasing it.",
+    "Ambiguous id column when selecting without a prefix."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (section 33 has no playground data file).",
+    "gaps_and_ideas": [
+      "New lesson 'SQL many to many and aliases'.",
+      "Tasks: create class and enrollment; add a composite key; insert enrollments; join three tables; rewrite with aliases; try a duplicate enrollment to see the error.",
+      "Starter: student and class tables filled, enrollment empty.",
+      "Interactive demo: tick boxes in a student x class grid to add or remove enrollment rows and see the joined table update live."
+    ]
+  }
+}

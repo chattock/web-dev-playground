@@ -1,0 +1,28 @@
+{
+  "index": 374,
+  "lecture_id": 53534825,
+  "title": "Bonus",
+  "section": "45. Bonus Lecture - Succeed in the Age of AI",
+  "duration_min": 10,
+  "kind": "admin",
+  "summary": "A short promotional trailer for a separate bonus course on productivity and using AI tools well. It contains no coding content.",
+  "concepts": [
+    {
+      "heading": "What the bonus course promises",
+      "points": [
+        "Covers frameworks for keeping focus when many tasks feel urgent.",
+        "Covers using AI tools as a thinking partner, strategist and coach for coding, studying and work.",
+        "Claims a large coding-productivity gain from adopting current AI-assisted development practices.",
+        "Covers building habits that accumulate into long-term results."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": []
+  }
+}

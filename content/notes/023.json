@@ -1,0 +1,31 @@
+{
+  "index": 23,
+  "lecture_id": 17966364,
+  "title": "Tip from Angela - Habit Building with the Calendar Trick",
+  "section": "3. Intermediate HTML",
+  "duration_min": 3,
+  "kind": "tip",
+  "summary": "Study-habit tip: code a little every day and mark each day on a calendar so the growing streak keeps you going until coding becomes routine.",
+  "concepts": [
+    {
+      "heading": "Key takeaways",
+      "points": [
+        "Steady daily practice (for example an hour a day over 100 days) beats occasional bursts such as one weekend and then nothing.",
+        "The goal is a habit: once practice is automatic you stop deciding each day whether to do it.",
+        "Calendar method (the 'don't break the chain' idea credited to Jerry Seinfeld): cross off every day you code. The unbroken line becomes its own motivation not to skip a day.",
+        "After roughly 30-40 days the routine tends to stick and needs much less willpower.",
+        "Above all, keep showing up; consistent work produces results."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "Optional: a small streak tracker on the playground home page (days with a completed lesson shown as a chain), stored per learner, to support the calendar method."
+    ]
+  }
+}

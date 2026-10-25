@@ -1,0 +1,131 @@
+{
+  "index": 18,
+  "lecture_id": 37349778,
+  "title": "The List Element",
+  "section": "3. Intermediate HTML",
+  "duration_min": 11,
+  "kind": "concept+exercise",
+  "summary": "Opens the Intermediate HTML section with the two list types: <ul> (bullets, order irrelevant) and <ol> (automatic numbers, order matters), both built from <li> items. The exercise turns a plain-text cinnamon roll recipe into a page with headings, two unordered ingredient lists and one ordered list of steps.",
+  "concepts": [
+    {
+      "heading": "Why lists matter",
+      "points": [
+        "Lists are one of the most common structures on real websites: 'top 10' style articles, product grids and even photo galleries are often built as lists.",
+        "Example shown: a 'ten most wanted' page where right-click on a photo then Inspect (browser DevTools) reveals that each photo card is an <li> sitting inside a <ul>. So a list does not have to look like bullet points; CSS can turn it into a grid of cards (covered later).",
+        "Habit to build: when you wonder how a site is built, right-click > Inspect and read the element tree."
+      ]
+    },
+    {
+      "heading": "Unordered list: <ul> with <li> children",
+      "points": [
+        "<ul> opens an unordered list and </ul> closes it. Unlike h1 or p, you do not put text straight between these tags.",
+        "Between the opening and closing ul tags go one or more list item elements: <li>content</li>. Each li holds exactly one item's content.",
+        "Because a ul contains other elements rather than plain text, its opening and closing tags normally sit on separate lines with the li elements in between.",
+        "A list needs li elements to display anything as a list; the li is what produces each bullet line.",
+        "Default rendering: each li gets a bullet marker (a filled disc) and the whole list is indented from the left.",
+        "Use a ul when the order of items carries no meaning, e.g. a shopping list or a set of ingredients."
+      ]
+    },
+    {
+      "heading": "Ordered list: <ol> with <li> children",
+      "points": [
+        "Identical structure, but the container is <ol>...</ol>. The li elements inside are written exactly the same way.",
+        "The browser numbers the items automatically, starting at 1. You never type the numbers yourself.",
+        "The number an item gets depends only on its position in the source: move the third li to the top and it becomes number 1, and everything else renumbers.",
+        "Use an ol whenever sequence matters: instructions, step-by-step guides, rankings. Recipe steps are the classic case because you cannot bake before mixing.",
+        "Summary of the difference: ol gives numbers, ul gives bullets; the li items inside are the same in both.",
+        "(Extra) Only li elements should be direct children of ul or ol. Headings, paragraphs or other lists go inside an li, not between them.",
+        "(Extra) Useful ol attributes not shown in this lecture: start=\"5\" begins counting at 5, reversed counts down, type=\"a\" / \"A\" / \"i\" / \"I\" switches to letters or Roman numerals. An li can also take value=\"10\" to jump the count."
+      ]
+    },
+    {
+      "heading": "Writing li elements on one line or several",
+      "points": [
+        "When long text is pasted between an opening and closing tag, VS Code's formatter may move the closing tag (and the content) onto their own lines, so the content sits between two tag lines.",
+        "Both layouts are valid and render identically, because the browser ignores line breaks and extra spaces between tags.",
+        "It is a personal style choice. The instructor prefers each <li>...</li> on a single line, which makes it easy to count items at a glance and keeps the list compact.",
+        "The next lecture covers nesting and indentation in detail."
+      ]
+    },
+    {
+      "heading": "Exercise workflow tips",
+      "points": [
+        "Download the '3.1 List Elements' zip from the lecture's Resources, extract it, put the folder in your Web Development Projects folder and open it in VS Code.",
+        "index.html already contains all the recipe text as plain lines; the job is only to add tags. goal.png shows the target, solution.html the answer.",
+        "Open Live Preview next to the editor (right-click index.html > Show Preview) to see each change as you save.",
+        "Fast technique for pre-typed text: create an empty <li></li> pair, paste several copies, then drag each line of text (or cut and paste it) between a pair of tags. When writing a page from scratch you would simply type the content inside each li.",
+        "Heading levels are your choice in this exercise; the suggested outline is one h1, h2 for 'Ingredients' and 'Instructions', h3 for the two ingredient sub-headings. The lists are the part that matters."
+      ]
+    },
+    {
+      "heading": "(Extra) Reference repo notes",
+      "points": [
+        "The reference solution uses h3 for 'Instructions' while the lecture suggests h2; either is acceptable here, but h2 keeps it level with 'Ingredients'.",
+        "The reference adds a personal footer line (stripped below) and has a typo ('minuites') in step 4.",
+        "The reference keeps long steps split over several lines inside their li, which shows the formatter behaviour described above."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Unordered list: bullets, order does not matter",
+      "language": "html",
+      "code": "<ul>\n  <li>Milk</li>\n  <li>Eggs</li>\n  <li>Flour</li>\n</ul>"
+    },
+    {
+      "caption": "Ordered list: the browser adds 1, 2, 3 based on source order",
+      "language": "html",
+      "code": "<ol>\n  <li>Mix the ingredients</li>   <!-- shows as 1. -->\n  <li>Knead the dough</li>       <!-- shows as 2. -->\n  <li>Bake</li>                  <!-- shows as 3. -->\n</ol>"
+    },
+    {
+      "caption": "Same li, two formatting styles (identical output)",
+      "language": "html",
+      "code": "<!-- one line (instructor's preference) -->\n<li>Cut the roll into 3cm sections and place flat into a baking tray.</li>\n\n<!-- content on its own line, as the formatter sometimes produces -->\n<li>\n  Cut the roll into 3cm sections and place flat into a baking tray.\n</li>"
+    },
+    {
+      "caption": "(Extra) ol attributes",
+      "language": "html",
+      "code": "<ol start=\"3\">        <!-- 3, 4, 5 -->\n<ol reversed>         <!-- counts down -->\n<ol type=\"i\">         <!-- i, ii, iii -->\n<li value=\"10\">...</li> <!-- this item is 10, the next 11 -->"
+    }
+  ],
+  "task": {
+    "name": "3.1 List Elements: cinnamon roll recipe",
+    "starting_point": "index.html holds the recipe title, the labels Ingredients / For the dough: / For the filling: / Instructions, six dough ingredients, three filling ingredients and ten instruction steps, all as untagged text, so the preview is one long run-on line.",
+    "goal": "Turn the text into a structured recipe page matching goal.png: headings, a bulleted list of dough ingredients, a bulleted list of filling ingredients and a numbered list of the ten steps.",
+    "steps": [
+      "Wrap the recipe title in an h1.",
+      "Wrap 'Ingredients' and 'Instructions' in h2 elements.",
+      "Wrap 'For the dough:' and 'For the filling:' in h3 elements.",
+      "Below the dough heading add <ul></ul>; inside it create six <li></li> pairs and move one dough ingredient into each.",
+      "Below the filling heading add a second ul containing three li elements, one per filling ingredient.",
+      "Below 'Instructions' add an <ol></ol> (the steps must happen in sequence) and put each of the ten steps in its own li.",
+      "Do not type any numbers; let the ol generate them.",
+      "Save, compare the Live Preview with goal.png, then open solution.html to check."
+    ],
+    "expected_result": "A readable recipe page: title, two headings, two indented bullet lists (6 and 3 items) and an indented list numbered 1 to 10.",
+    "solution_code": {
+      "language": "html",
+      "code": "<body>\n  <h1>Wesley's Recipe for the Best Cinnamon Rolls</h1>\n  <h2>Ingredients</h2>\n  <h3>For the dough:</h3>\n  <ul>\n    <li>¾ cup warm milk</li>\n    <li>2 ¼ teaspoons yeast</li>\n    <li>¼ cup granulated sugar</li>\n    <li>1 egg plus 1 egg yolk</li>\n    <li>¼ cup butter</li>\n    <li>3 cups bread flour</li>\n  </ul>\n  <h3>For the filling:</h3>\n  <ul>\n    <li>2/3 cup dark brown sugar</li>\n    <li>1 ½ tablespoons ground cinnamon</li>\n    <li>¼ cup butter</li>\n  </ul>\n  <h2>Instructions</h2>\n  <ol>\n    <li>Mix the milk with the yeast, sugar, eggs.</li>\n    <li>Melt the butter and add to the mixture.</li>\n    <li>Add in the flour and mix until combined into a dough.</li>\n    <li>Knead the dough for 10 minutes.</li>\n    <li>Transfer the dough into a large bowl and cover with plastic wrap. Leave it somewhere to rise for 2 hours.</li>\n    <li>After the dough has doubled in size, roll it out into a large rectangle.</li>\n    <li>Melt the butter for the filling and mix in the sugar and cinnamon.</li>\n    <li>Spread the filling onto the dough then roll the dough into a swiss roll.</li>\n    <li>Cut the roll into 3cm sections and place flat into a baking tray.</li>\n    <li>Preheat the oven to 350F or 180C, then bake the rolls for 20-25min until lightly brown.</li>\n  </ol>\n</body>"
+    },
+    "reference_repo_path": "Section 03 - Intermediate HTML/03.01 - List Elements/solution.html"
+  },
+  "pitfalls": [
+    "Putting text directly inside <ul> or <ol> without wrapping each item in <li>.",
+    "Typing '1.' '2.' into ol items, which gives double numbering.",
+    "Choosing ul or ol for the look rather than the meaning (ingredients are unordered, steps are ordered).",
+    "Forgetting a closing </li> or closing the list before the last item.",
+    "Opening the still-zipped download instead of the extracted folder."
+  ],
+  "playground": {
+    "match": "s03-lists (lesson 3.1, data/s03.js)",
+    "coverage": "Blurb, tasks and solution match the exercise (two ul lists for dough and filling, one ol for instructions, every item in an li, Instructions as h2). The explore demo toggles ul/ol and list-style-type, and the notes cover the li-only rule and the Emmet ul>li*5 shortcut.",
+    "gaps_and_ideas": [
+      "The starter has only four condensed instruction steps; use the course's full ten so learners see the ol count past the point where hand-numbering gets tedious.",
+      "Add a reorder demo: buttons to move an li up or down in an ol and watch the numbers update, to show that numbering comes from source order.",
+      "Add an 'inspect a real site' task: open DevTools on any list-heavy page (a top-10 article or a product grid) and find the ul/li behind the cards, making the point that lists need not look like bullets.",
+      "Add a note (or a toggle in the explore demo) showing one-line vs multi-line li formatting with identical output, since the formatter will change learners' code on save.",
+      "Add an (Extra) knob for ol attributes: start, reversed, type, and li value.",
+      "Add a 'spot the bug' check that flags text placed directly inside ul without an li, and typed numbers inside ol items."
+    ]
+  }
+}

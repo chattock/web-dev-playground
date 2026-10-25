@@ -1,0 +1,127 @@
+{
+  "index": 360,
+  "lecture_id": 31673750,
+  "title": "Minting NFTs",
+  "section": "42. Minting NFTs and Building an NFT Marketplace like OpenSea",
+  "duration_min": 17,
+  "kind": "concept+exercise",
+  "summary": "Starts the OpenD project: downloads the starter, adds a separate NFT canister file registered in dfx.json, converts it from a plain actor to an actor class taking name, owner and image bytes, adds query getters, and mints a first NFT from the command line with dfx deploy --argument.",
+  "concepts": [
+    {
+      "heading": "Starter project and layout",
+      "points": [
+        "Download the opend starter zip from the lecture resources, unzip, move it into the projects folder and open in VS Code.",
+        "src contains an almost empty main.mo (the future marketplace backend: listing, buying) and a frontend assets folder with pre-written HTML/CSS; many long class names but each is just an element with styling.",
+        "The learning focus is making backend and frontend cooperate, not the styling."
+      ]
+    },
+    {
+      "heading": "Why the NFT gets its own canister file",
+      "points": [
+        "main.mo is the e-commerce backend. Each NFT, however, is a separately instantiated canister, so its code should not live in main.mo.",
+        "Create src/NFT/nft.mo.",
+        "Register it in dfx.json: add a new entry in the canisters object (placing it right after the first canister entry avoids comma mistakes) with 'main' set to src/NFT/nft.mo and 'type' set to motoko. The canister name used on the CLI is the key, e.g. nft."
+      ]
+    },
+    {
+      "heading": "Smoke test with a plain actor",
+      "points": [
+        "First write actor NFT { Debug.print(\"It works.\"); } with import Debug from mo:base/Debug.",
+        "Run npm install (installs the many dependencies in package.json, takes a few minutes), then dfx start in one terminal and dfx deploy in another.",
+        "The dfx start terminal should print the message from the nft canister. If not: restart dfx start, check dfx.json syntax, file names and the path."
+      ]
+    },
+    {
+      "heading": "Actor class = a canister factory",
+      "points": [
+        "Add the class keyword: actor class NFT(...) and give it constructor parameters. A plain actor takes no input; an actor class takes arguments when created, which lets code create canisters programmatically from user input (needed for minting later).",
+        "Parameters: name : Text, owner : Principal (requires import Principal from mo:base/Principal), content : [Nat8] (the image as an array of 8-bit natural numbers, i.e. raw bytes).",
+        "Inside the class, copy the parameters into fields: itemName = name, nftOwner = owner, imageBytes = content.",
+        "Every canister instance gets a unique principal id when created, which is what makes each NFT unique and non-interchangeable.",
+        "(Extra) Newer Motoko versions want the persistent keyword before actor class; the reference repo uses persistent actor class."
+      ]
+    },
+    {
+      "heading": "Query getters",
+      "points": [
+        "public query func getName() : async Text returns itemName.",
+        "getOwner() : async Principal returns nftOwner.",
+        "getAsset() : async [Nat8] returns imageBytes.",
+        "query functions read state quickly without going through consensus; fine for read-only access."
+      ]
+    },
+    {
+      "heading": "Deploying an actor class needs arguments",
+      "points": [
+        "Plain dfx deploy nft now fails with 'Invalid data: Expected arguments, but found none', because the init arguments are required.",
+        "Pass them with --argument followed by a single-quoted Candid tuple: three values separated by commas, a text in double quotes, the owner as principal \"...\", and the bytes as vec { ... } of numbers. The README in the lesson supplies the full command with the byte data of a 10x10 pixel hat image.",
+        "Get your own principal with dfx identity get-principal and replace the one in the command, keeping the formatting exactly (quotes after the word principal).",
+        "Run the whole deploy command; it deploys all canisters and hands the argument to the nft one.",
+        "NFT name in the demo: a CryptoDunks title with a number, mimicking OpenSea-style naming."
+      ]
+    },
+    {
+      "heading": "Verifying",
+      "points": [
+        "dfx canister call nft getName returns the name; getOwner returns the principal; getAsset returns a long list of numbers.",
+        "No parentheses are written after the function name on the CLI.",
+        "The bytes are raw image data and not readable; viewing it requires the frontend, built in the next lesson."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "dfx.json: register the nft canister",
+      "language": "json",
+      "code": "\"nft\": {\n  \"main\": \"src/NFT/nft.mo\",\n  \"type\": \"motoko\"\n}"
+    },
+    {
+      "caption": "src/NFT/nft.mo (final)",
+      "language": "motoko",
+      "code": "import Principal \"mo:base/Principal\";\n\nactor class NFT(name : Text, owner : Principal, content : [Nat8]) {\n  let itemName = name;\n  let nftOwner = owner;\n  let imageBytes = content;\n\n  public query func getName() : async Text {\n    return itemName;\n  };\n\n  public query func getOwner() : async Principal {\n    return nftOwner;\n  };\n\n  public query func getAsset() : async [Nat8] {\n    return imageBytes;\n  };\n};"
+    },
+    {
+      "caption": "Mint from the CLI and verify",
+      "language": "bash",
+      "code": "dfx identity get-principal\ndfx deploy nft --argument '(\"CryptoDunks #123\", principal \"<YOUR_PRINCIPAL>\", vec {10; 20; 30})'   # real command carries the full byte list from the README\ndfx canister call nft getName\ndfx canister call nft getOwner\ndfx canister call nft getAsset"
+    }
+  ],
+  "task": {
+    "name": "Create and mint the NFT canister",
+    "starting_point": "Unzipped opend starter with empty main.mo and prebuilt frontend.",
+    "goal": "A deployed nft canister, created with an actor class, that returns the name, owner and image bytes you gave it.",
+    "steps": [
+      "Create src/NFT/nft.mo and add the nft entry to dfx.json.",
+      "Write a plain actor that prints a message; run npm install, dfx start, dfx deploy and confirm the message.",
+      "Change it to actor class NFT(name, owner, content) and copy parameters into itemName, nftOwner, imageBytes.",
+      "Add query functions getName, getOwner, getAsset.",
+      "Get your principal with dfx identity get-principal.",
+      "Deploy with --argument using the README command, substituting your principal.",
+      "Call getName, getOwner and getAsset with dfx canister call and compare with what you passed."
+    ],
+    "expected_result": "getName returns the minted name, getOwner returns your principal, getAsset returns the byte vector.",
+    "solution_code": {
+      "language": "motoko",
+      "code": "import Principal \"mo:base/Principal\";\n\nactor class NFT(name : Text, owner : Principal, content : [Nat8]) {\n  let itemName = name;\n  let nftOwner = owner;\n  let imageBytes = content;\n\n  public query func getName() : async Text {\n    return itemName;\n  };\n\n  public query func getOwner() : async Principal {\n    return nftOwner;\n  };\n\n  public query func getAsset() : async [Nat8] {\n    return imageBytes;\n  };\n};"
+    },
+    "reference_repo_path": "Section 42 - Minting NFTs and Building an NFT Marketplace like OpenSea/42.02 Minting NFTs/OPEND/src/NFT/nft.mo"
+  },
+  "pitfalls": [
+    "Wrong path or JSON comma in dfx.json: canister not found or not deployed.",
+    "Deploying an actor class without --argument gives the 'Expected arguments' error.",
+    "Altering the spacing or quotes in the argument string.",
+    "Not replacing the sample principal with your own.",
+    "Typos in query function names; CLI call uses getName without ().",
+    "(Extra) The reference main.mo is still the default greet stub in this lesson, so it only matters for the nft canister."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (section 42 has no playground file).",
+    "gaps_and_ideas": [
+      "Proposed lesson 'Actor classes as canister factories': blurb comparing a singleton actor with a class that produces many instances, each with a unique id.",
+      "Tasks: 1) turn an actor into an actor class with three parameters; 2) add getters; 3) write the deploy --argument string for given values; 4) call the getters; 5) explain why two NFTs with identical data still differ.",
+      "Starter code: JavaScript class NFT with constructor(name, owner, bytes) and an id generator.",
+      "Explore demo idea: a 'mint' form that constructs instances with fresh random ids and lists them, plus a CLI-argument builder that prints the correctly formatted Candid string."
+    ]
+  }
+}

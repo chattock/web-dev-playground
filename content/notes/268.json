@@ -1,0 +1,70 @@
+{
+  "index": 268,
+  "lecture_id": 41780532,
+  "title": "Level 2 - Encryption and Hashing",
+  "section": "35. Authentication and Security",
+  "duration_min": 16,
+  "kind": "theory",
+  "summary": "Explains why plain-text password storage is unacceptable, how encryption (Caesar cipher, AES) works with a secret key, why a stolen key defeats it, and how hashing removes the key by using one-way functions that are compared rather than reversed. No code is written yet; implementation comes in later lessons.",
+  "concepts": [
+    {
+      "heading": "Why plain text is unacceptable",
+      "points": [
+        "Breaches of well-known companies are regularly reported; leaked data can lead to prosecution and fines, not only unhappy users.",
+        "Ordinary visitors cannot see the backend or database through the browser, but there is plenty of precedent of attackers getting in, so stored passwords need protection."
+      ]
+    },
+    {
+      "heading": "Encryption basics",
+      "points": [
+        "Encryption converts readable data into a coded form (ciphertext) using a cipher and a key, to stop unauthorised reading.",
+        "Caesar cipher: shift each letter along the alphabet by the key. With key 4, A becomes E, so abc becomes efg. Decrypting reverses the shift by the same key. Online tools such as cryptii let you experiment with shift values.",
+        "Every encryption setup has three ingredients: plain text, a key, and a cipher method, producing ciphertext. Whoever has the key can decrypt.",
+        "Weak ciphers are broken easily even without the key (letter-substitution ciphers fall to frequency analysis). A historical case of a substitution cipher being cracked, leading to a treason conviction, is used as the cautionary tale; the book The Code Book by Simon Singh is recommended for more.",
+        "Modern practice uses strong ciphers such as AES-256: same idea, much heavier maths, output longer and hides the original length; decryption needs the secret key (e.g. a passphrase)."
+      ]
+    },
+    {
+      "heading": "The weakness of encryption for passwords",
+      "points": [
+        "AES is symmetric: the same key encrypts and decrypts. If an attacker who reaches the database also finds the key (even in an environment variable or on the server), every password can be decrypted at once.",
+        "So the key is the weakest link; hashing removes the need for a key."
+      ]
+    },
+    {
+      "heading": "Hashing",
+      "points": [
+        "A hash function turns a password into a fixed fingerprint (hash) quickly, but is designed so that going backwards is practically impossible with today's computing power.",
+        "Intuition: multiplying 13 by 29 to get 377 is instant, but finding the factors of 377 by trial is slow. Real hash functions add much more complexity to the same one-way property.",
+        "Register: hash the chosen password and store only the hash. Login: hash the typed password with the same function and compare it to the stored hash. Equal hashes imply the same password.",
+        "The server never stores the plain password and cannot recover it; only the user knows it. This also means a 'forgot password' flow must reset, not remind.",
+        "Hashing has its own attack (shown next lesson), which later levels (salting) address."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "(Extra) Caesar cipher in JavaScript, to illustrate key-based encryption",
+      "language": "javascript",
+      "code": "function caesar(text, shift) {\n  return [...text.toLowerCase()].map(ch => {\n    if (ch < \"a\" || ch > \"z\") return ch;            // leave non-letters alone\n    const code = (ch.charCodeAt(0) - 97 + shift + 26) % 26;\n    return String.fromCharCode(code + 97);\n  }).join(\"\");\n}\ncaesar(\"abc\", 4);   // \"efg\"  (encrypt, key = 4)\ncaesar(\"efg\", -4);  // \"abc\"  (decrypt with the same key, reversed)"
+    },
+    {
+      "caption": "Hash-based login flow",
+      "language": "text",
+      "code": "REGISTER:  password --hash()--> hash  --> store hash in DB\nLOGIN:     typed password --hash()--> hash  --> compare with stored hash\n           equal => same password; the original is never stored or recovered"
+    }
+  ],
+  "task": null,
+  "pitfalls": [
+    "Do not rely on a weak or home-made cipher; and a strong cipher is only as safe as the key's secrecy.",
+    "Encrypted is not hashed: encrypted passwords can be reversed by anyone holding the key.",
+    "(Extra) Hashing does not need a key, but plain fast hashes (MD5, SHA-1) are still crackable by guessing; prefer a slow password hash such as bcrypt (used later in the module)."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (section 35 has no file).",
+    "gaps_and_ideas": [
+      "New lesson 'Encryption vs hashing': blurb contrasting reversible and one-way; tasks: (1) implement caesar(text, shift), (2) decrypt a given ciphertext, (3) hash a string with crypto.subtle.digest SHA-256, (4) simulate register/login by comparing hashes, (5) explain why changing one character changes the whole hash. Interactive demo: text box with shift slider showing Caesar output, next to a live SHA-256 hash output."
+    ]
+  }
+}

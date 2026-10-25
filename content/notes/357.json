@@ -1,0 +1,88 @@
+{
+  "index": 357,
+  "lecture_id": 31673712,
+  "title": "Authenticating with the Internet Identity",
+  "section": "41. Create Your Own Crypto Token",
+  "duration_min": 8,
+  "kind": "concept+exercise",
+  "summary": "Adds an Internet Identity login step to the React entry file using AuthClient from the auth-client package, skips the login when a cached session exists, and renders the app only after authentication. The backend still sees an anonymous caller until the next lesson.",
+  "concepts": [
+    {
+      "heading": "Starting point",
+      "points": [
+        "The frontend entry file (main.jsx in the reference repo, called index.jsx in the lecture) currently just renders the App component into the root element. App composes Header, Faucet, Balance and Transfer.",
+        "The @dfinity/auth-client package (with its supporting identity packages from DFINITY) provides the login class and opens the standard Internet Identity UI, so no login screen has to be written."
+      ]
+    },
+    {
+      "heading": "AuthClient.create and login",
+      "points": [
+        "Import { AuthClient } from \"@dfinity/auth-client\".",
+        "Inside an async init function, const authClient = await AuthClient.create(). create is asynchronous because it loads any stored session/key from the browser.",
+        "Call await authClient.login({ identityProvider, onSuccess }). identityProvider is the URL of the Internet Identity service that supplies the login page (reference repo: https://identity.ic0.app/#authorize). onSuccess is a callback run after login succeeds.",
+        "Move the existing render call into onSuccess so the app only appears for authenticated users.",
+        "login opens a popup, so the browser must allow popups for localhost (a 'popup blocked' message appears otherwise); refresh after allowing.",
+        "In the popup choose Authenticate, confirm with the device (e.g. Touch ID). A recovery-method prompt can be skipped with 'add recovery later'. The final screen shows which site is requesting the login and which identity is used; proceed to return to the app.",
+        "(Extra) Local dfx development typically still uses the mainnet identity service URL this way; a locally deployed identity canister would need a different URL."
+      ]
+    },
+    {
+      "heading": "Skipping login when already authenticated",
+      "points": [
+        "Without a check, every page load triggers login again. Use await authClient.isAuthenticated() (method on the AuthClient) to see if a valid session exists.",
+        "The session is cached in the browser, similar to staying logged in to webmail; coming back within about eight days should not ask again (as per the lecture).",
+        "Logic: if authenticated, go straight to the app; else call login, whose onSuccess goes to the same place.",
+        "Factor the rendering into async function handleAuthenticated(authClient) that creates the React root and renders App (inside StrictMode in the reference repo). Call it from both branches. The authClient parameter is not used yet but will be needed to obtain the identity next lesson.",
+        "Call init() at the end of the file."
+      ]
+    },
+    {
+      "heading": "Current limitation",
+      "points": [
+        "Even when logged in, clicking the faucet still says 'Already Claimed': the actor calls made by the generated declarations still use an anonymous identity, so msg.caller in payOut/transfer is the anonymous principal.",
+        "Passing the authenticated identity to the backend actor is the topic of the next lesson ('Live Deployment to Test Internet Identity Authentication')."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Entry file with Internet Identity login (reference repo)",
+      "language": "jsx",
+      "code": "import React from \"react\";\nimport ReactDOM from \"react-dom/client\";\nimport App from \"./App\";\nimport { AuthClient } from \"@dfinity/auth-client\";\n\nconst init = async () => {\n  const authClient = await AuthClient.create();\n\n  if (await authClient.isAuthenticated()) {\n    handleAuthenticated(authClient);\n  } else {\n    await authClient.login({\n      identityProvider: \"https://identity.ic0.app/#authorize\",\n      onSuccess: () => {\n        handleAuthenticated(authClient);\n      },\n    });\n  }\n};\n\nasync function handleAuthenticated(authClient) {\n  ReactDOM.createRoot(document.getElementById(\"root\")).render(\n    <React.StrictMode>\n      <App />\n    </React.StrictMode>\n  );\n}\n\ninit();"
+    }
+  ],
+  "task": {
+    "name": "Gate the app behind Internet Identity login",
+    "starting_point": "React frontend that renders App immediately on load.",
+    "goal": "Show the app only after the user logs in with Internet Identity, and skip the popup for returning users.",
+    "steps": [
+      "Import AuthClient from @dfinity/auth-client.",
+      "Create async init: const authClient = await AuthClient.create().",
+      "Check await authClient.isAuthenticated().",
+      "If true call handleAuthenticated(authClient).",
+      "Otherwise await authClient.login with identityProvider URL and an onSuccess that calls handleAuthenticated(authClient).",
+      "Define async handleAuthenticated that renders App into #root.",
+      "Call init(); allow popups from localhost and test login, then refresh to confirm it is skipped."
+    ],
+    "expected_result": "First visit opens the Internet Identity popup; after authenticating the app loads; reloads go straight to the app.",
+    "solution_code": {
+      "language": "jsx",
+      "code": "import React from \"react\";\nimport ReactDOM from \"react-dom/client\";\nimport App from \"./App\";\nimport { AuthClient } from \"@dfinity/auth-client\";\n\nconst init = async () => {\n  const authClient = await AuthClient.create();\n\n  if (await authClient.isAuthenticated()) {\n    handleAuthenticated(authClient);\n  } else {\n    await authClient.login({\n      identityProvider: \"https://identity.ic0.app/#authorize\",\n      onSuccess: () => {\n        handleAuthenticated(authClient);\n      },\n    });\n  }\n};\n\nasync function handleAuthenticated(authClient) {\n  ReactDOM.createRoot(document.getElementById(\"root\")).render(\n    <React.StrictMode>\n      <App />\n    </React.StrictMode>\n  );\n}\n\ninit();"
+    },
+    "reference_repo_path": "Section 41 - Create Your Own Crypto Token/41.10 Authenticating with the Internet Identity/DANG/src/DANG_frontend/src/main.jsx"
+  },
+  "pitfalls": [
+    "Popup blockers stop the login window.",
+    "Forgetting await on AuthClient.create or isAuthenticated (a promise is always truthy).",
+    "Leaving the render call outside the callback so the app shows before login.",
+    "Expecting the backend to see the logged-in principal; identity is not passed to the actor yet."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet.",
+    "gaps_and_ideas": [
+      "Add a task to a future auth lesson: wrap rendering in a login check with a mock AuthClient using localStorage.",
+      "Interactive demo: a fake login button with a cached-session flag; toggling it shows the popup flow vs direct render."
+    ]
+  }
+}

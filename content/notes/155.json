@@ -1,0 +1,47 @@
+{
+  "index": 155,
+  "lecture_id": 12384214,
+  "title": "Manipulating Attributes with jQuery",
+  "section": "19. jQuery",
+  "duration_min": 4,
+  "kind": "concept",
+  "summary": "Introduces .attr() for reading and writing HTML attributes such as img src and a href, noting that the class attribute can be read the same way.",
+  "concepts": [
+    {
+      "heading": ".attr() as getter and setter",
+      "points": [
+        "Attributes are the name/value pairs inside an opening tag: src on an img, href on an a, class on almost anything.",
+        "One argument reads: $(\"img\").attr(\"src\") returns the attribute value, e.g. the file name drum.png. Useful for diagnosing a broken image (the logged path shows what the browser tried to load).",
+        "Two arguments write: $(\"a\").attr(\"href\", \"https://www.yahoo.com\") changes every selected anchor's destination. Clicking the link then goes to the new URL.",
+        "Same rule as .css(): with a second argument it sets; without one it gets."
+      ]
+    },
+    {
+      "heading": "Class is an attribute too",
+      "points": [
+        "$(\"h1\").attr(\"class\") returns the full space-separated class string, e.g. big-title margin-50.",
+        "(Extra) For adding or removing individual classes prefer addClass/removeClass; attr(\"class\", ...) would overwrite the whole list.",
+        "(Extra) When getting, jQuery returns the value of the first matched element; when setting, it applies to all matches."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Get and set href (matches reference repo, which uses Bing)",
+      "language": "javascript",
+      "code": "console.log($(\"a\").attr(\"href\"));          // current URL\n$(\"a\").attr(\"href\", \"https://www.bing.com\"); // change it\n\nconsole.log($(\"h1\").attr(\"class\"));       // e.g. big-title margin-50"
+    }
+  ],
+  "task": null,
+  "pitfalls": [
+    "attr(\"class\", value) replaces all existing classes; use addClass to append.",
+    "A src that points at a missing file fails to load; logging attr(\"src\") is a quick way to see the path being requested."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "Tasks for a combined jQuery lesson: log a link's href, change it, swap an img src between two images, read the class attribute. Demo: a button that swaps the picture by changing src."
+    ]
+  }
+}

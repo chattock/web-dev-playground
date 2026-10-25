@@ -1,0 +1,95 @@
+{
+  "index": 40,
+  "lecture_id": 37350424,
+  "title": "Inspecting CSS",
+  "section": "6. CSS Properties",
+  "duration_min": 12,
+  "kind": "concept+exercise",
+  "summary": "A tour of Chrome DevTools for CSS: opening the inspector, the Elements and Styles panes, live editing, overridden (struck-out) rules, the Computed tab and CSS Overview. Ends with a four-question quiz on a practice site where answers are found with the inspector.",
+  "concepts": [
+    {
+      "heading": "Opening DevTools",
+      "points": [
+        "Chrome only (the course assumes Chrome so everyone sees the same tools). Menu: three-dots, More tools, Developer tools.",
+        "Shortcuts: Cmd+Option+I on Mac, Ctrl+Shift+I on Windows, or F12 on many keyboards. The menu shows the exact shortcut for your machine.",
+        "Right-click any element and choose Inspect: opens DevTools and selects that element in the HTML.",
+        "The element-picker (arrow icon at the top-left of DevTools) lets you click an item on the page and jump to its HTML."
+      ]
+    },
+    {
+      "heading": "Elements tab and Styles pane",
+      "points": [
+        "The Elements tab shows the live DOM. The Styles pane beside it lists every CSS rule that applies to the selected element.",
+        "Browsers give every element default styles (the user-agent stylesheet). Turning the site's CSS off shows only these defaults.",
+        "Your own rules appear above the defaults, labelled with the file and line they came from (e.g. styles.css); clicking the label opens that source.",
+        "When two rules set the same property, the later/more specific one wins and the loser is shown struck through. Example: an anchor's default blue colour is crossed out because the site sets white. Unticking the site rule re-activates the default."
+      ]
+    },
+    {
+      "heading": "Live editing is temporary",
+      "points": [
+        "Use the + button in the Styles pane to add a declaration to the selected element, e.g. color: black on an h1; the page updates instantly.",
+        "Each declaration has a checkbox (or crossing control) to toggle it off and on to compare.",
+        "Nothing you do in DevTools changes the source files or the real site. It only changes the copy loaded in your browser and disappears on reload. Editing a big site's text this way does not alter that site or other users' views.",
+        "Workflow: experiment in DevTools, then copy the rules you like into your own stylesheet.",
+        "Confirm by opening the file in the Sources tab: the new rule is not there."
+      ]
+    },
+    {
+      "heading": "Computed tab",
+      "points": [
+        "Computed shows the final resolved values for the element in one flat list, hiding crossed-out noise. For example the link colour appears as an rgb(red, green, blue) value.",
+        "Useful for inherited properties: a paragraph's font-family may not be set on the p at all but inherited from body or html, and Computed still shows the value in use.",
+        "(Extra) In the Styles pane, inherited rules appear under an 'Inherited from ...' heading."
+      ]
+    },
+    {
+      "heading": "CSS Overview",
+      "points": [
+        "Open the DevTools own three-dots menu (not Chrome's), More tools, CSS Overview, then press Capture overview.",
+        "It summarises the page's background colours, text colours, fonts (font families in use) and more (media queries and unused declarations are skipped for now).",
+        "Handy for studying sites you like: find which colours and fonts they use and copy the values."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Editing a rule in the Styles pane (temporary, browser-only)",
+      "language": "css",
+      "code": "element.style {\n  color: black; /* added with the + button; vanishes on reload */\n}"
+    }
+  ],
+  "task": {
+    "name": "CSS inspection quiz",
+    "starting_point": "Open the practice site at appbrewery.github.io/css-inspection/ in Chrome. It has an h1, an h2 and a paragraph, plus four answer fields and a Submit button.",
+    "goal": "Use DevTools to find four CSS values and submit them to see if each is correct.",
+    "steps": [
+      "Inspect the body and read its background colour (named colour).",
+      "Inspect the h1 and read its font-size.",
+      "Inspect the h2 and read its font-weight.",
+      "Inspect the paragraph and find its font-family. It is inherited, so look in the inherited section of Styles or switch to the Computed tab.",
+      "Type each answer into its field and press Submit."
+    ],
+    "expected_result": "All four answers marked correct.",
+    "solution_code": {
+      "language": "text",
+      "code": "body background-color: aliceblue\nh1 font-size: 3rem\nh2 font-weight: 500\np font-family: Arial, sans-serif (inherited; visible in Computed)"
+    },
+    "reference_repo_path": null
+  },
+  "pitfalls": [
+    "Expecting DevTools edits to be saved; they are lost on reload and never touch the real file.",
+    "Confusing Chrome's three-dots menu with DevTools' own three-dots menu when looking for CSS Overview.",
+    "Looking only at the paragraph's own rules and missing a font-family that is inherited.",
+    "Reading crossed-out declarations as active; the struck-through one is overridden."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (s06.js has colours, fonts, box model and the meme project only).",
+    "gaps_and_ideas": [
+      "New lesson 'Inspecting CSS': blurb about DevTools as a way to read any site's CSS, with 3-5 tasks: open the inspector on the playground preview, find an element's colour, toggle a declaration off, add a temporary rule, read an inherited font-family in Computed.",
+      "Starter code: a small page with a body background, an h1 with font-size in rem, an h2 with font-weight, and a p inheriting font-family from body, mirroring the quiz.",
+      "Interactive demo idea: a fake 'Styles pane' beside a sample element with checkboxes that toggle declarations live and show overridden ones struck through; plus a Computed list of final values."
+    ]
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "index": 38,
+  "lecture_id": 37350376,
+  "title": "CSS Colours",
+  "section": "6. CSS Properties",
+  "duration_min": 7,
+  "kind": "concept+exercise",
+  "summary": "Opens the CSS properties section with colour: background-color versus color, named colours, and hex codes (with a pointer to Color Hunt for palettes). Ends with a five-step exercise colouring a page with named colours and hex codes.",
+  "concepts": [
+    {
+      "heading": "Property and value recap",
+      "points": [
+        "A CSS declaration is property, colon, value. The property says what to change; the value says what to set it to.",
+        "background-color fills the area behind an element. Applied to body (the html content wrapper in practice), it colours the whole page.",
+        "color sets the colour of the text inside the element, not its background. Check MDN when unsure which property controls what.",
+        "background-color works on any element: it fills the element's own box (e.g. an h1's block area), not just the body."
+      ]
+    },
+    {
+      "heading": "Named colours",
+      "points": [
+        "CSS defines a built-in list of colour keywords such as cornflowerblue, cadetblue, dimgrey, olivedrab, antiquewhite, whitesmoke, darkseagreen.",
+        "The full list is on MDN (search 'MDN named color'). The table shows each name next to its hex code and a swatch.",
+        "The 'CSS Level 1/2/3' labels in that table only record when each name was added historically; ignore them when choosing.",
+        "Usage: copy the keyword and paste it as the value, no quotes, no hash."
+      ]
+    },
+    {
+      "heading": "Hex codes and custom palettes",
+      "points": [
+        "Named colours are limited, so for a custom look use a palette tool. The lecture recommends colorhunt.co: free designer-made palettes of several colours (background tone, heading tone, accent tones).",
+        "Palette tools give hex codes like #5D3891 rather than names. A hex code is a compact way of writing an RGB colour.",
+        "RGB: a colour is a mix of red, green and blue, each from 0 to 255. The example purple is 93 red, 56 green, 145 blue; its hex form is the same three numbers written in base 16.",
+        "Hex format: # followed by six hex digits, two each for red, green, blue (#RRGGBB).",
+        "In code a hex value goes exactly where a name would: color: #faf8f1;",
+        "(Extra) Hex digits run 0-9 then a-f, so 00 is none and ff is full (255). #000000 is black, #ffffff is white. Also valid: three-digit shorthand like #fff, rgb(), hsl().",
+        "Pick colours that work as a set: one for the background, one for headings, one for subtitles, plus accents."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Two properties, two kinds of value",
+      "language": "css",
+      "code": "body {\n  background-color: antiquewhite; /* named colour */\n}\n\nh2 {\n  color: #faf8f1;            /* text colour, hex */\n  background-color: #c58940; /* box fill, hex */\n}"
+    }
+  ],
+  "task": {
+    "name": "6.1 CSS Colors",
+    "starting_point": "index.html has a page with just an h1 and an h2 (Hello / World) and no colour; the preview is black text on white.",
+    "goal": "Add CSS so the page matches goal.png: a coloured page background, a coloured h1 with a background, and a coloured h2 with a background. The h1 must use named colours; the h2 must use hex codes, to practise both notations.",
+    "steps": [
+      "Set the body background-color to antiquewhite.",
+      "Set the h1 text colour (color) to whitesmoke.",
+      "Set the h1 background-color to darkseagreen.",
+      "Set the h2 text colour to the hex value #faf8f1.",
+      "Set the h2 background-color to the hex value #c58940. Save and check the preview against the goal image."
+    ],
+    "expected_result": "Antique-white page; h1 pale text on a sage-green band; h2 cream text on a tan/gold band.",
+    "solution_code": {
+      "language": "css",
+      "code": "body {\n  background-color: antiquewhite;\n}\n\nh1 {\n  color: whitesmoke;\n  background-color: darkseagreen;\n}\n\nh2 {\n  color: #faf8f1;\n  background-color: #c58940;\n}"
+    },
+    "reference_repo_path": "Section 06 - CSS Properties/06.01 - CSS Colors/index.html"
+  },
+  "pitfalls": [
+    "Using color when you meant background-color (or the reverse): color only affects text.",
+    "Forgetting the # before a hex code, which makes the declaration invalid and ignored.",
+    "Needing 'lateral thinking': background-color is allowed on h1/h2 too, not only on body.",
+    "Reference repo note: it carries an author footer ('Made with...') that is not part of the exercise; ignore it."
+  ],
+  "playground": {
+    "match": "s06-colors (lesson 6.1, data/s06.js)",
+    "coverage": "Tasks and solution match the exercise exactly (antiquewhite body, whitesmoke on darkseagreen h1, hex h2). Explore demo has colour pickers with a live CSS readout; notes cover named, hex, rgb, rgba.",
+    "gaps_and_ideas": [
+      "Notes recommend coolors.co, but the lecture uses colorhunt.co; mention both or correct it.",
+      "Add the lecture's point that color = text and background-color = fill, as a side-by-side explore toggle.",
+      "Explain hex as three RGB channels: show an explore demo with three 0-255 sliders producing both rgb() and the hex string (the 93/56/145 purple example).",
+      "Add a link or mini-table to MDN's named-colour list and a task to swap one named colour for its hex equivalent."
+    ]
+  }
+}

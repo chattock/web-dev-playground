@@ -1,0 +1,69 @@
+{
+  "index": 190,
+  "lecture_id": 12407820,
+  "title": "Backend Web Development Explained",
+  "section": "22. Backend Web Development",
+  "duration_min": 15,
+  "kind": "theory",
+  "summary": "Defines full-stack development and splits a web app into frontend and backend, with the backend made of server, application and database. Walks through the request/response cycle with a login example and a restaurant comparison.",
+  "concepts": [
+    {
+      "heading": "Why full-stack",
+      "points": [
+        "Early startup roles favour people who can build things; job listings for startups mostly ask for full-stack developers.",
+        "Full-stack means handling both the client-facing frontend and the invisible backend that holds the application logic."
+      ]
+    },
+    {
+      "heading": "Frontend vs backend",
+      "points": [
+        "Frontend: everything a user can see, hear or interact with (fonts, colours, buttons, forms).",
+        "Backend: what the user never sees or touches; it makes the app function."
+      ]
+    },
+    {
+      "heading": "The three backend parts",
+      "points": [
+        "Server: a computer that stays on and listens for browser requests. Any networked machine can be a server; during development localhost makes your own computer the server.",
+        "Application: code running on the server that decides how to answer each request. It can return an HTML page, data, or only a status code such as 404, which signals that the request is not something the app knows how to handle.",
+        "Database: persistent storage for user data. Without one, data held only in memory is lost when the machine loses power. Not every app needs one, but larger apps usually do."
+      ]
+    },
+    {
+      "heading": "Website vs web application",
+      "points": [
+        "So far the course built static sites: HTML, CSS and JS files stored somewhere (e.g. GitHub Pages) and returned unchanged on request.",
+        "A web app does more than show pages. Login is the simple example: the browser sends email and password in a request; the server routes it to login logic (e.g. a login.js); the app looks up the email in the database, compares passwords, and responds with the home page on a match or the login page again (with an error) otherwise."
+      ]
+    },
+    {
+      "heading": "Restaurant comparison",
+      "points": [
+        "Diner = client, menu = available interactions, waiter = the request/response carrier, kitchen = server, chef = application with recipes, pantry = database, plated dish = the response (HTML, CSS, JS or data).",
+        "The request/response loop repeats for every new action."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "(Extra) Login flow as runnable JavaScript with an in-memory stand-in for the database (illustrative only; plain-text passwords are for demonstration)",
+      "language": "javascript",
+      "code": "// Stand-in for the database\nconst users = [\n  { email: \"a@example.com\", password: \"secret123\" }\n];\n\n// The 'application' logic the server runs for a login request\nfunction handleLogin(email, password) {\n  const user = users.find(u => u.email === email); // look up by email\n  if (user && user.password === password) {\n    return { status: 200, page: \"home.html\" };     // match: send the home page\n  }\n  return { status: 401, page: \"login.html\", error: \"Wrong email or password\" };\n}\n\nconsole.log(handleLogin(\"a@example.com\", \"secret123\")); // home.html\nconsole.log(handleLogin(\"a@example.com\", \"nope\"));      // login.html with error"
+    }
+  ],
+  "task": null,
+  "pitfalls": [
+    "A static site hosted on GitHub Pages has no backend logic, so it cannot do login or store data by itself.",
+    "(Extra) Real apps never store or compare plain-text passwords; this is covered in the authentication section."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "Proposed new lesson 'Frontend vs backend'. Blurb: the frontend is what the user sees and clicks; the backend is a server that listens for requests, an application that decides the response, and a database that keeps data between sessions.",
+      "Tasks: (1) drag labels (client, server, application, database) onto a diagram; (2) sort a list of items (button colour, password check, saved user list, font) into frontend or backend; (3) trace a login request step by step and pick the response for a correct and an incorrect password; (4) match status codes 200, 404 and 401 to their meaning.",
+      "Starter code idea: the in-memory handleLogin() function above, editable in the lesson, with a form whose submit calls it and prints the returned status/page, so learners can add a user or change the logic.",
+      "Interactive demo: an animated request/response loop where pressing Log in sends a packet from the browser to the server, into the application, to the database and back, with a toggle that switches to a static GitHub Pages site to show the request returning the same file with no logic or database step."
+    ]
+  }
+}

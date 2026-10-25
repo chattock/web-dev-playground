@@ -1,0 +1,130 @@
+{
+  "index": 358,
+  "lecture_id": 31673726,
+  "title": "[Optional] Live Deployment to Test Internet Identity Authentication",
+  "section": "41. Create Your Own Crypto Token",
+  "duration_min": 18,
+  "kind": "concept+exercise",
+  "summary": "Wires the Internet Identity login into the token app: Faucet and Transfer build an authenticated actor so msg.caller becomes the logged-in user's principal. Because the local dfx replica cannot complete the Internet Identity sign-off, the project is deployed to the live Internet Computer to test it, and the user's principal is surfaced in the UI via props.",
+  "concepts": [
+    {
+      "heading": "Goal: make msg.caller the authenticated principal",
+      "points": [
+        "Until now Faucet.jsx called payOut() on the imported default actor (token), which talks to the canister anonymously, so the caller was always the anonymous principal.",
+        "To pay out to the real logged-in user, the component needs its own actor that carries the user's identity, then calls payOut() on that actor instead.",
+        "Inside the Motoko payOut, msg.caller then resolves to the authenticated user's principal, and that account receives the tokens."
+      ]
+    },
+    {
+      "heading": "Imports needed in the component",
+      "points": [
+        "AuthClient comes from the @dfinity/auth-client package (already used in index.jsx for login).",
+        "From the generated declarations folder, import canisterId and createActor in addition to the default token actor. These already exist in the declarations index.js generated for the project.",
+        "createActor builds a canister handle (an 'actor') for a given canister id; it accepts an options object. canisterId is filled in from an environment variable at build time, holding the backend canister's principal."
+      ]
+    },
+    {
+      "heading": "Building the authenticated actor inside the click handler",
+      "points": [
+        "After the button is disabled, call await AuthClient.create() to get a client. It restores the session saved by the earlier login.",
+        "Call await authClient.getIdentity() to get the identity object of the logged-in user. Both awaits are required; forgetting one yields a promise instead of the value.",
+        "Call createActor(canisterId, { agentOptions: { identity } }). The second argument is the options object; agentOptions is passed to the underlying HTTP agent, which signs requests with that identity.",
+        "Store the result in a const such as authenticatedCanister and call authenticatedCanister.payOut() in place of token.payOut().",
+        "Typo-prone spots: createActor, getIdentity, matching braces and commas around the nested objects."
+      ]
+    },
+    {
+      "heading": "Why it cannot be tested locally",
+      "points": [
+        "Clicking the faucet button against the local dfx replica returns a 403 error. The local replica is a simulation for development; the Internet Identity sign-off flow only works against the live network.",
+        "So the project must be deployed to the mainnet ('ic' network). Enough cycles are needed; if low, convert ICP to cycles as shown in earlier lessons.",
+        "Follow the README step by step by copying commands rather than retyping them, since they are error-prone."
+      ]
+    },
+    {
+      "heading": "Live deployment steps",
+      "points": [
+        "Deploy all canisters: dfx deploy --network ic. Takes a couple of minutes if cycles suffice.",
+        "Find the live backend canister id (differs from the local one): dfx canister --network ic id token.",
+        "Wrap it in a Candid principal literal and store in a shell variable (LIVE_CANISTER_KEY), then echo it to check that the format is principal \"...\".",
+        "Transfer half the supply to the canister so the faucet has tokens to give out: dfx canister --network ic call token transfer with the variable and the amount. A success result confirms it. The owner keeps the other half.",
+        "Find the frontend (assets) canister id: dfx canister --network ic id token_assets. Open it in a browser as <id>.raw.ic0.app, which serves the deployed React app.",
+        "Allow pop-ups first: the Internet Identity login opens in a pop-up window. On the first visit the user must authenticate again, because the live site is a different origin from the local one.",
+        "Click the faucet button: success may take longer than locally because the live network latency varies. A success message proves the authenticated path works, in contrast to the earlier error."
+      ]
+    },
+    {
+      "heading": "Inspecting the identity and getting the principal",
+      "points": [
+        "Debug.print output from Motoko does not appear in a terminal on the live network, so logging is done on the frontend instead.",
+        "console.log(await authClient.getIdentity()) in the login handler shows an identity object with four main fields; the one of interest is _principal.",
+        "Take const identity = await authClient.getIdentity(); then const userPrincipal = identity._principal.toString(). The raw property is an object; toString() converts it to the familiar readable text id.",
+        "Checking that principal's balance in the Balance component shows the 10,000 tokens claimed from the faucet, confirming the call was made as the authenticated user.",
+        "After each frontend change, redeploy with dfx deploy --network ic and refresh."
+      ]
+    },
+    {
+      "heading": "Showing the principal in the UI with props",
+      "points": [
+        "Pass the string down as a prop: in index.jsx render <App loggedInPrincipal={userPrincipal} />. The pattern is propName={value}.",
+        "In App, read props.loggedInPrincipal and hand it to the faucet as <Faucet userPrincipal={props.loggedInPrincipal} />.",
+        "Faucet takes props as its function parameter (a common typo is writing 'pops') and renders {props.userPrincipal} in the label text instead of the generic 'your account' wording.",
+        "Result: the faucet label displays the logged-in user's principal id without opening the console."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Faucet.jsx: claim through an authenticated actor",
+      "language": "jsx",
+      "code": "import React, { useState } from \"react\";\nimport { canisterId, createActor } from \"../../../declarations/token\";\nimport { AuthClient } from \"@dfinity/auth-client\";\n\nfunction Faucet(props) {\n  const [isDisable, setDisable] = useState(false);\n  const [buttonText, setText] = useState(\"Gimme gimme\");\n\n  async function handleClick() {\n    setDisable(true);\n    const authClient = await AuthClient.create();\n    const identity = await authClient.getIdentity();\n    const authenticatedCanister = createActor(canisterId, {\n      agentOptions: { identity },\n    });\n    const result = await authenticatedCanister.payOut();\n    setText(result);\n  }\n  // ...label shows {props.userPrincipal}\n}"
+    },
+    {
+      "caption": "index.jsx: derive the principal string and pass it down",
+      "language": "jsx",
+      "code": "async function handleAuthenticated(authClient) {\n  const identity = await authClient.getIdentity();\n  const userPrincipal = identity._principal.toString();\n  ReactDOM.createRoot(document.getElementById(\"root\")).render(\n    <React.StrictMode>\n      <App loggedInPrincipal={userPrincipal} />\n    </React.StrictMode>\n  );\n}"
+    },
+    {
+      "caption": "Live network commands (from the project README)",
+      "language": "bash",
+      "code": "dfx deploy --network ic\ndfx canister --network ic id token\nLIVE_CANISTER_KEY=\"principal \\\"$( dfx canister --network ic id token )\\\"\"\necho $LIVE_CANISTER_KEY\ndfx canister --network ic call token transfer \"($LIVE_CANISTER_KEY, 500_000_000)\"\ndfx canister --network ic id token_assets\n# open https://<assets-id>.raw.ic0.app"
+    }
+  ],
+  "task": {
+    "name": "Hook the Transfer component up to the authenticated canister",
+    "starting_point": "Faucet already uses the authenticated actor and shows the principal. Transfer.jsx still calls token.transfer on the anonymous default actor, so transferring from the logged-in account fails with insufficient funds.",
+    "goal": "Transfer tokens from the logged-in user's account to another principal (for example an earlier anonymous account) using the same authentication pattern as the Faucet.",
+    "steps": [
+      "In Transfer.jsx, import AuthClient from @dfinity/auth-client and canisterId plus createActor from the declarations; the old token import can be dropped.",
+      "In the click handler, just before the transfer call, create the client with await AuthClient.create().",
+      "Get the identity with await authClient.getIdentity().",
+      "Build const authenticatedCanister = createActor(canisterId, { agentOptions: { identity } }).",
+      "Replace token.transfer(...) with authenticatedCanister.transfer(recipient, amountToTransfer), keeping the recipient principal and amount from the form.",
+      "Deploy to the live network, refresh, enter a recipient principal and an amount, press Transfer."
+    ],
+    "expected_result": "After a noticeable wait the feedback says Success instead of Insufficient funds; the sender's balance drops by the amount sent (200 in the demo) and the recipient's balance rises accordingly.",
+    "solution_code": {
+      "language": "jsx",
+      "code": "async function handleClick() {\n  setHidden(true);\n  setDisable(true);\n  const recipient = Principal.fromText(recipientId);\n  const amountToTransfer = Number(amount);\n\n  const authClient = await AuthClient.create();\n  const identity = await authClient.getIdentity();\n  const authenticatedCanister = createActor(canisterId, {\n    agentOptions: { identity },\n  });\n\n  const result = await authenticatedCanister.transfer(recipient, amountToTransfer);\n  setFeedback(result);\n  setHidden(false);\n  setDisable(false);\n}"
+    },
+    "reference_repo_path": "Section 41 - Create Your Own Crypto Token/41.11 Live Deployment to Test Internet Identity Authentication/DANG/src/DANG_frontend/src/components/Transfer.jsx"
+  },
+  "pitfalls": [
+    "Testing locally: the Internet Identity sign-off gives a 403 on the local replica; deploy to the ic network.",
+    "Missing an await on AuthClient.create() or getIdentity().",
+    "Forgetting to redeploy after each frontend change, or running low on cycles.",
+    "Popups blocked, so the login window never appears.",
+    "Writing props as 'pops' or mismatching the prop name between index.jsx, App and Faucet.",
+    "(Extra) The reference repo is a newer dfx scaffold: canisters are DANG_backend and DANG_frontend (not token and token_assets), it has a typo prop loogedInPrincipal used consistently, and Faucet is the only component that displays the principal."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (section 41 has no playground file).",
+    "gaps_and_ideas": [
+      "Proposed lesson 'Acting as a logged-in user': blurb explaining anonymous vs authenticated callers and why a backend needs msg.caller.",
+      "Tasks: 1) create an AuthClient and read its identity; 2) build an actor with createActor and agentOptions; 3) pass a principal down as props and render it; 4) convert a second component to the authenticated actor; 5) predict what msg.caller would be before and after.",
+      "Starter code: a small React component with a stub 'api' object whose methods return the caller id.",
+      "Explore demo idea: a mock identity switcher (anonymous vs logged in) that shows which principal the fake canister sees and how balances change after a payOut and transfer."
+    ]
+  }
+}

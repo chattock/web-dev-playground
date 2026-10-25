@@ -1,0 +1,113 @@
+{
+  "index": 255,
+  "lecture_id": 40494228,
+  "title": "UNIQUE and NOT NULL - Travel Tracker Part 1",
+  "section": "33. PostgreSQL",
+  "duration_min": 19,
+  "kind": "project",
+  "summary": "Starts the Travel Tracker app: create a visited_countries table with NOT NULL and UNIQUE constraints, add rows by hand in pgAdmin, then make the Express route query the codes and colour the matching countries on an SVG world map.",
+  "concepts": [
+    {
+      "heading": "App idea and starter project",
+      "points": [
+        "The app records countries you have visited, stores them in Postgres, and shades them on a world map. Part 1 only displays stored countries; adding new ones via the form is later.",
+        "Starter zip: unzip, then npm install. index.js is a bare Express skeleton. A finished version of this part is provided as solution1.js (run it with nodemon at localhost:3000 to see the target).",
+        "The world map is a huge inline SVG in index.ejs where each country is a path whose id is its two-letter ISO code. Collapse the ag-canvas section in the editor to make the file manageable."
+      ]
+    },
+    {
+      "heading": "Table design: constraints",
+      "points": [
+        "Table visited_countries has two columns: id SERIAL PRIMARY KEY and country_code CHAR(2).",
+        "CHAR(2) holds exactly two characters, matching ISO country codes (FR, GB, US).",
+        "NOT NULL: the database rejects any row where country_code is missing, so no half-empty rows.",
+        "UNIQUE: the same code cannot be stored twice, so a country is never double counted.",
+        "NOT NULL and UNIQUE are two of the most common column modifiers; they push data validation into the database itself."
+      ]
+    },
+    {
+      "heading": "Adding rows manually in pgAdmin",
+      "points": [
+        "Open the table's data grid and use the add-row button. Leave id empty so the SERIAL default fills it in.",
+        "country_code must be filled; saving a row with null fails because of NOT NULL.",
+        "Enter a few codes (e.g. FR, GB, US). Edits are not persisted until the Save data changes button is pressed; refreshing before saving discards them.",
+        "A rejected insert still consumes a serial value, so ids may skip numbers. That is fine because ids only need to be unique."
+      ]
+    },
+    {
+      "heading": "Front end: how index.ejs uses the data",
+      "points": [
+        "EJS gets countries (an array of codes) and total (a count). Inside the script tag, the template output is inserted as text, so the browser receives a comma-joined string, not an array. Logging typeof confirms this.",
+        "Therefore the script calls .split(',') to rebuild an array of codes.",
+        "It then loops with forEach, finds each element with document.getElementById(code) and sets style.fill to teal.",
+        "total is printed in the heading 'Total Countries'."
+      ]
+    },
+    {
+      "heading": "Back end solution walkthrough",
+      "points": [
+        "Install the driver with npm i pg (already in the starter's dependencies) and import it.",
+        "Create a pg Client with user, host (localhost), database (world), password and port 5432, then call db.connect().",
+        "In the GET / handler (async), run await db.query('SELECT country_code FROM visited_countries'). This is the same SELECT column FROM table form from the previous lesson.",
+        "result.rows is an array of objects such as { country_code: 'FR' }. Log it to inspect the shape.",
+        "Loop over result.rows with forEach and push each row's country_code into a plain countries array.",
+        "Render index.ejs passing countries and total: countries.length.",
+        "(Extra) The reference code calls db.end() at the end of the handler, which closes the connection after the first request, so a second page load fails. Later parts of the project drop it; keep the client open for the lifetime of the server."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Create the table",
+      "language": "sql",
+      "code": "CREATE TABLE visited_countries (\n  id SERIAL PRIMARY KEY,\n  country_code CHAR(2) NOT NULL UNIQUE\n);"
+    },
+    {
+      "caption": "index.js solution for Part 1 (essential parts)",
+      "language": "javascript",
+      "code": "import express from \"express\";\nimport bodyParser from \"body-parser\";\nimport pg from \"pg\";\n\nconst app = express();\nconst port = 3000;\n\nconst db = new pg.Client({\n  user: \"postgres\",\n  host: \"localhost\",\n  database: \"world\",\n  password: \"your_password\",\n  port: 5432,\n});\ndb.connect();\n\napp.use(bodyParser.urlencoded({ extended: true }));\napp.use(express.static(\"public\"));\n\napp.get(\"/\", async (req, res) => {\n  const result = await db.query(\"SELECT country_code FROM visited_countries\");\n  let countries = [];\n  result.rows.forEach((row) => {\n    countries.push(row.country_code);\n  });\n  res.render(\"index.ejs\", { countries: countries, total: countries.length });\n});\n\napp.listen(port, () => {\n  console.log(`Server running on http://localhost:${port}`);\n});"
+    },
+    {
+      "caption": "Client-side colouring in index.ejs",
+      "language": "javascript",
+      "code": "const country_codes = \"<%= countries %>\".split(\",\");\ncountry_codes.forEach((code) => {\n  document.getElementById(code).style.fill = \"teal\";\n});"
+    }
+  ],
+  "task": {
+    "name": "Travel Tracker Part 1: display visited countries",
+    "starting_point": "Travel Tracker starter with a skeleton index.js, index.ejs containing the SVG map and fill script, countries.csv, and a solution1.js to compare against.",
+    "goal": "Create the table, add a few rows manually, and make the home route read them and render them coloured on the map with the correct total.",
+    "steps": [
+      "Unzip, npm install.",
+      "In pgAdmin create visited_countries with id SERIAL PRIMARY KEY and country_code CHAR(2) NOT NULL UNIQUE.",
+      "Add rows (e.g. FR, GB, US) and save.",
+      "Read index.ejs to see what it expects (countries and total).",
+      "In index.js import pg, configure the client and connect.",
+      "In the GET / route query country_code from visited_countries, log result.rows, flatten to an array of codes, and render with countries and total.",
+      "Run with nodemon, open localhost:3000, compare with solution1.js."
+    ],
+    "expected_result": "Each stored country is filled teal on the map and the heading shows the number of rows.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "app.get(\"/\", async (req, res) => {\n  const result = await db.query(\"SELECT country_code FROM visited_countries\");\n  let countries = [];\n  result.rows.forEach((row) => countries.push(row.country_code));\n  res.render(\"index.ejs\", { countries: countries, total: countries.length });\n});"
+    },
+    "reference_repo_path": "Section 33 - PostgreSQL/33.08 - UNIQUE and NOT NULL - Travel Tracker Part 1/Travel Tracker/solution1.js"
+  },
+  "pitfalls": [
+    "Forgetting to click Save in the pgAdmin grid so rows vanish on refresh.",
+    "Assuming the EJS value is a real array in the browser; it is a string and needs split.",
+    "Lowercase or invalid codes make getElementById return null and the forEach throw.",
+    "Calling db.end() inside the route breaks later requests.",
+    "Using a different database name or password from your own setup."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "New lesson 'Constraints and a first database-backed page': blurb on NOT NULL, UNIQUE and rendering rows.",
+      "Tasks: write a CREATE TABLE with both constraints, predict which inserts fail, loop rows into an array, render counts.",
+      "Starter idea: mock db.query returning rows so it runs in the browser.",
+      "Interactive demo: a clickable world map where adding a code tries an INSERT and shows the constraint error on duplicates or blanks, plus a typeof demo of the EJS string pitfall."
+    ]
+  }
+}

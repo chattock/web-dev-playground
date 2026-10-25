@@ -1,0 +1,30 @@
+{
+  "index": 3,
+  "lecture_id": 12398824,
+  "title": "Download the 12 Rules to Learn to Code eBook [Latest Edition]",
+  "section": "1. Front-End Web Development",
+  "duration_min": 1,
+  "kind": "admin",
+  "summary": "Resource page offering a free eBook of twelve study habits the instructor has seen in her strongest students. The page itself is a short motivational note plus a download link; it contains no technical content.",
+  "concepts": [
+    {
+      "heading": "Key takeaways",
+      "points": [
+        "The eBook collects 12 study tips for learning to code, drawn from the App Brewery's experience teaching bootcamp students.",
+        "The download link sits at the bottom of the lecture page (visible once enrolled).",
+        "The Udemy mobile app may not handle the download; open the lecture on a desktop browser to get the PDF.",
+        "(Extra) A copy is in the reference repo at 'Section 01 - Front-End Web Development/01.02 - 12 Rules to Learn to Code.pdf', alongside a Cornell-notes template PDF (01.03) that pairs with the note-taking advice in lecture 7."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [
+    "Trying to download from the Udemy mobile app instead of a desktop browser."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (download page only).",
+    "gaps_and_ideas": []
+  }
+}

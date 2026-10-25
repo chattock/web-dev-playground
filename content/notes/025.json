@@ -1,0 +1,140 @@
+{
+  "index": 25,
+  "lecture_id": 37349942,
+  "title": "Computer File Paths",
+  "section": "4. Multi-Page Websites",
+  "duration_min": 19,
+  "kind": "concept+exercise",
+  "summary": "Explains what a file path is, the difference between absolute paths (measured from the drive root) and relative paths (measured from the file you are editing), and the two special path tokens ./ and ../. The exercise has learners display five animal images stored in a deliberately tangled folder tree using only relative src paths.",
+  "concepts": [
+    {
+      "heading": "What a file path is",
+      "points": [
+        "A file path is an address that points to exactly one file or folder in the computer's storage. It is written as a chain of folder names separated by slashes, ending at the target.",
+        "Comparable to giving street directions: country, then city, then district, then street, then building. Each step narrows the location until it is unique.",
+        "Everyday users rarely type paths because the file browser (Finder / Explorer) lets them click through folders. A path is the text version of that same clicking journey.",
+        "The destination of a path can be a file (cat.png, index.html) or a folder (Images/)."
+      ]
+    },
+    {
+      "heading": "The root of the file system",
+      "points": [
+        "The root is the top of the storage tree, i.e. the hard drive itself: C: on Windows, Macintosh HD on a Mac.",
+        "Every folder and file on the machine sits somewhere underneath the root, so the root is the natural starting point for an absolute path."
+      ]
+    },
+    {
+      "heading": "Absolute file paths",
+      "points": [
+        "An absolute path starts at the root and lists every folder down to the target, e.g. Windows: C:\\Project\\Images\\cat.png, Mac: /Project/Images/cat.png.",
+        "Windows separates folders with backslashes and names the drive letter; macOS/Linux use forward slashes and a leading / for the root.",
+        "Because it always begins at the root, an absolute path works no matter which folder or file you are currently in.",
+        "Downside for websites: if the project folder is moved, renamed, or put on another machine/server, every absolute path breaks."
+      ]
+    },
+    {
+      "heading": "Relative file paths (the one used in web development)",
+      "points": [
+        "A relative path is measured from the location of the file containing the code (e.g. the index.html you are writing in), not from the root.",
+        "Example tree: Project/ contains index.html, dog.png and Images/cat.png. From index.html the cat is simply Images/cat.png: go into Images, then pick cat.png.",
+        "Relative paths are usually shorter than absolute ones.",
+        "Key advantage: they survive moves. If the whole Project folder is nested inside another folder or copied to a server, the internal journey from index.html to Images/cat.png is unchanged, so the links still work.",
+        "Use relative paths whenever a page refers to your own resources: images, audio, video, or other HTML pages."
+      ]
+    },
+    {
+      "heading": "Special characters: ../ (parent folder)",
+      "points": [
+        "Two dots followed by a slash at the start of a relative path mean: climb out of the current folder to the one above it, then continue from there.",
+        "Example: index.html lives in Project/, and essay.docx lives in the root above Project. From index.html the path is ../essay.docx: up one level into the root, then the file.",
+        "../ can be repeated to climb more than one level (../../file).",
+        "After climbing you can go back down into other folders: ../Folder1/fish.png means up one, then into Folder1, then fish.png."
+      ]
+    },
+    {
+      "heading": "Special characters: ./ (current folder)",
+      "points": [
+        "A single dot followed by a slash means: start in the folder that directly contains the current file (the current directory).",
+        "Example: index.html and dog.png are both in Project/, so ./dog.png reaches the dog from index.html.",
+        "Anything at the same level of the tree as the current file can be reached with ./name.",
+        "The ./ can be left off (dog.png works the same in most cases) and you will see that style in other people's code. The course recommends always writing ./ because the shortened form does not resolve correctly in every environment.",
+        "(Extra) The browser treats a path with no prefix as relative to the current document's folder, so ./dog.png and dog.png resolve to the same URL; tooling such as JavaScript module imports and some bundlers do require the explicit ./ though, which is why the habit is worth forming."
+      ]
+    },
+    {
+      "heading": "Working out where a file sits in VS Code",
+      "points": [
+        "To find which folder contains a file, collapse folders in the Explorer sidebar. If collapsing a folder hides the file, that folder is its parent. If the file stays visible after collapsing everything, it lives in the top-level project folder.",
+        "Start typing a path inside src=\"\" and VS Code's autocomplete lists the files and folders reachable from that point. Selecting from the dropdown avoids typos (a single extra letter breaks the path).",
+        "Use the suggestions as a sanity check: if the dropdown does not show the folder you expect (e.g. typing ../ when you meant ./ lists dog.png, Folder0 and Folder1 instead of Folder3), the path prefix is wrong.",
+        "In the preview, a broken-image icon means the path does not point at a real file; rethink the path rather than the img tag."
+      ]
+    },
+    {
+      "heading": "Reminder on the img element",
+      "points": [
+        "Images are added with the self-closing <img> element; src holds the path to the image and alt holds a text description.",
+        "Always add alt text so screen-reader users and anyone whose image fails to load still know what the picture shows."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Example tree used on the slides, with absolute and relative paths to the same files",
+      "language": "text",
+      "code": "Root (C:  or  Macintosh HD)\n├── essay.docx\n└── Project/\n    ├── index.html      <- you are writing code here\n    ├── dog.png\n    └── Images/\n        └── cat.png\n\nAbsolute (Windows):  C:\\Project\\Images\\cat.png\nAbsolute (Mac):      /Project/Images/cat.png\nRelative from index.html:\n  Images/cat.png      (or ./Images/cat.png)\n  ./dog.png           same folder as index.html\n  ../essay.docx       up one level to the root"
+    },
+    {
+      "caption": "The three path building blocks",
+      "language": "html",
+      "code": "<!-- ./  = the folder this HTML file is in -->\n<img src=\"./dog.png\" alt=\"Dog\" />\n\n<!-- folder/ = go down into a sub-folder -->\n<img src=\"./Images/cat.png\" alt=\"Cat\" />\n\n<!-- ../ = go up one folder (stack them to go higher) -->\n<a href=\"../essay.docx\">Essay</a>"
+    },
+    {
+      "caption": "Folder layout of the 4.0 File Paths exercise (reference repo folder '04.01 - File Paths')",
+      "language": "text",
+      "code": "4.0 File Paths/\n├── dog.png\n├── Folder0/\n│   ├── index.html      <- write the code here\n│   ├── solution.html\n│   ├── goal.png\n│   ├── rabbit.png\n│   └── Folder3/\n│       └── cat.png\n└── Folder1/\n    ├── fish.png\n    └── Folder2/\n        └── bird.png"
+    }
+  ],
+  "task": {
+    "name": "4.0 File Paths: All the Animals",
+    "starting_point": "Folder0/index.html contains an h1 'All the Animals' and five h2 headings (Rabbit:, Cat:, Dog:, Fish:, Bird:) with nothing under them. The five images are scattered across the folder tree shown above, and goal.png shows the finished page.",
+    "goal": "Under each h2, add an img whose src is a relative path from Folder0/index.html to the correct animal picture, so every image displays as in goal.png.",
+    "steps": [
+      "Extract the download, open it inside the Web Development Projects folder in VS Code, and expand every folder so the full tree is visible.",
+      "Rabbit (easiest, same folder as index.html): <img src=\"./rabbit.png\" alt=\"Rabbit\" />.",
+      "Cat (one folder down): start in the current folder, go into Folder3, pick the file: ./Folder3/cat.png.",
+      "Dog (in the top-level exercise folder): collapse folders to confirm dog.png sits directly in 4.0 File Paths. From Folder0 climb one level with ../ and select the file: ../dog.png.",
+      "Fish: climb out of Folder0, then go into its sibling Folder1: ../Folder1/fish.png.",
+      "Bird: same route as the fish, one folder deeper: ../Folder1/Folder2/bird.png (copy the fish path and extend it).",
+      "Give every img an alt attribute naming the animal and close each with the self-closing />.",
+      "Use VS Code's path autocomplete while typing each src, and check the preview after each image; a broken-image icon means the path is wrong.",
+      "Compare with goal.png and then with solution.html."
+    ],
+    "expected_result": "The page shows the heading 'All the Animals' followed by Rabbit, Cat, Dog, Fish and Bird, each with its photo underneath and no broken-image icons.",
+    "solution_code": {
+      "language": "html",
+      "code": "<body>\n  <h1>All the Animals</h1>\n\n  <h2>Rabbit:</h2>\n  <!-- same folder as index.html -->\n  <img src=\"./rabbit.png\" alt=\"Rabbit\" />\n\n  <h2>Cat:</h2>\n  <!-- down into Folder3 -->\n  <img src=\"./Folder3/cat.png\" alt=\"Cat\" />\n\n  <h2>Dog:</h2>\n  <!-- up out of Folder0 into the exercise root -->\n  <img src=\"../dog.png\" alt=\"Dog\" />\n\n  <h2>Fish:</h2>\n  <!-- up one, then down into Folder1 -->\n  <img src=\"../Folder1/fish.png\" alt=\"Fish\" />\n\n  <h2>Bird:</h2>\n  <!-- up one, down into Folder1, then Folder2 -->\n  <img src=\"../Folder1/Folder2/bird.png\" alt=\"Bird\" />\n</body>"
+    },
+    "reference_repo_path": "Section 04 - Multi-Page Websites/04.01 - File Paths/Folder0/index.html (the repo's index.html and solution.html are identical apart from a personal footer line, which is omitted above)"
+  },
+  "pitfalls": [
+    "Confusing ./ with ../: ./ stays in the folder that holds the current file; ../ climbs one level above it. The lecture sometimes phrases ./ as moving 'up to the parent folder', meaning the folder that contains index.html, not the one above it.",
+    "Measuring the path from the project root or from where the image 'feels' it should be, rather than from the HTML file being edited.",
+    "Typos in folder or file names (one extra letter breaks the path). Prefer selecting from VS Code's autocomplete.",
+    "Using absolute paths like C:\\Users\\...\\cat.png in a web page: they only work on your own machine and break once the site is moved or deployed.",
+    "Leaving out alt text on the images."
+  ],
+  "playground": {
+    "match": "s04-file-paths (lesson 4.1, data/s04.js)",
+    "coverage": "Same five-animal exercise with the same folder layout (Folder0 as the page's folder, Folder3, Folder1, Folder2) and the same solution paths. Starter code pre-fills broken src values and a comment listing every file's location; the Explore tab has an interactive path resolver that walks the tree and reports found / not found. Notes cover ./, ../, folder/, ../../, relative vs absolute and case sensitivity.",
+    "gaps_and_ideas": [
+      "Correct the 'absolute' definition in the notes: the lecture defines an absolute path as a file-system path from the drive root (C:\\Project\\Images\\cat.png on Windows, /Project/Images/cat.png on Mac). The notes currently give /images/cat.png as an absolute example, which on the web is a root-relative URL (relative to the site root, not the hard drive). Show all three side by side: OS absolute path, full URL, root-relative URL.",
+      "Add the lecture's slide example (root with essay.docx, Project/ with index.html and dog.png, Images/cat.png) as a second preset tree in the path resolver, with ../essay.docx, ./dog.png and Images/cat.png as presets.",
+      "Add the 'why relative paths survive moves' idea as a demo: a button that nests the whole tree inside another folder and shows that relative paths still resolve while an absolute path like C:/Project/Images/cat.png fails.",
+      "Task text currently says rabbit.png and ./rabbit.png mean the same; also add the course's recommendation to always write ./ (some tools, such as JavaScript module imports, require it).",
+      "Add the two VS Code techniques from the lecture as tips: collapse folders to discover a file's parent, and use path autocomplete as a check (if the expected folder is missing from the dropdown, the prefix is wrong).",
+      "The starting files in the course have no img tags at all (learners write each img from scratch); consider removing the pre-filled broken src values for a harder 'build it yourself' variant, and add an alt-text check to the task list.",
+      "The playground tree labels the root 'website/'; mention that in the course download the root is the '4.0 File Paths' folder so learners can map between the two."
+    ]
+  }
+}

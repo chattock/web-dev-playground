@@ -1,0 +1,94 @@
+{
+  "index": 310,
+  "lecture_id": 17039540,
+  "title": "React Forms",
+  "section": "36. React.js",
+  "duration_min": 14,
+  "kind": "concept+exercise",
+  "summary": "Covers reading input values in React via onChange and event.target.value, storing them in state, controlled components, delaying the heading update until Submit, and using a form's onSubmit with event.preventDefault() to stop the page refresh.",
+  "concepts": [
+    {
+      "heading": "onChange and the event object",
+      "points": [
+        "Inputs accept an onChange prop; the handler runs on every change, i.e. each keystroke.",
+        "React passes the handler an event object. event.target is the element that fired it, so event.target.value is the current text, and event.target.placeholder / event.target.type expose other attributes.",
+        "Logging only the fact that a change happened is not useful; reading event.target.value is what matters."
+      ]
+    },
+    {
+      "heading": "Storing the typed value in state",
+      "points": [
+        "const [name, setName] = useState(\"\") holds the text, starting empty. Import useState from react.",
+        "handleChange calls setName(event.target.value). Rendering <h1>Hello {name}</h1> then updates live as the user types.",
+        "(Extra) The handler reads the value synchronously from event.target, so read it inside the handler, not in a delayed callback."
+      ]
+    },
+    {
+      "heading": "Controlled components",
+      "points": [
+        "In plain HTML the input element tracks its own value. In React the recommended approach is to set the input's value prop to the state variable (value={name}) so state is the single source of truth.",
+        "An input whose displayed value comes from state and whose changes go back into state through onChange is a controlled component. The lecture points to the React docs on controlled components.",
+        "(Extra) If you set value without onChange, the field becomes read-only and React warns."
+      ]
+    },
+    {
+      "heading": "Updating the heading only on Submit",
+      "points": [
+        "Use two state values: name (updates on each keystroke) and headingText (starts empty, shown in the h1).",
+        "A button onClick handler, handleClick, runs setHeadingText(name), copying the current typed value into the heading at that moment.",
+        "Inside handlers write the variable name plainly: setHeadingText(name). Writing { name } there would create an object instead of the string; console.log both to see the difference."
+      ]
+    },
+    {
+      "heading": "Real form elements and preventDefault",
+      "points": [
+        "Wrapping the input and button in a <form> is the normal HTML pattern, and the button gets type=\"submit\" to mark its role. (Extra) A button inside a form already defaults to type submit; being explicit helps when a form has several buttons.",
+        "Clicking it makes the browser submit the form (a GET or POST request) which reloads the page and wipes React state, so the heading flashes the new value and then resets.",
+        "Put the handler on the form's onSubmit prop instead of the button's onClick. It receives the event, and calling event.preventDefault() at the end of the handler cancels the page reload.",
+        "(Extra) Pressing Enter inside the input also fires the form's onSubmit, which a bare button onClick would not catch."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Form with controlled input and delayed heading update (reference repo plus value={name}, which the repo omits)",
+      "language": "jsx",
+      "code": "import { useState } from \"react\";\n\nfunction App() {\n  const [name, setName] = useState(\"\");\n  const [headingText, setHeadingText] = useState(\"\");\n\n  function handleChange(event) {\n    setName(event.target.value);\n  }\n\n  function handleClick(event) {\n    setHeadingText(name);\n    event.preventDefault();\n  }\n\n  return (\n    <div className=\"container\">\n      <h1>Hello {headingText}</h1>\n      <form onSubmit={handleClick}>\n        <input\n          onChange={handleChange}\n          type=\"text\"\n          placeholder=\"What's your name?\"\n          value={name}\n        />\n        <button type=\"submit\">Submit</button>\n      </form>\n    </div>\n  );\n}\n\nexport default App;"
+    }
+  ],
+  "task": {
+    "name": "Show the name only after Submit",
+    "starting_point": "The Hello heading, text input and Submit button from the events lecture, plus the live-updating name state.",
+    "goal": "Typing should not change the heading; clicking Submit (or submitting the form) copies the typed name into the heading without a page refresh.",
+    "steps": [
+      "Give the input onChange={handleChange}; write handleChange(event) and console.log(event.target.value) to see the text on each keystroke.",
+      "Create const [name, setName] = useState(\"\") and call setName(event.target.value) inside handleChange.",
+      "Add value={name} to the input so it is a controlled component.",
+      "Add a second state value headingText initialised to an empty string and render it after Hello in the h1 (instead of name).",
+      "Add onClick={handleClick} to the button and make handleClick call setHeadingText(name) (the plain variable, not { name }).",
+      "Wrap the input and button in a <form> and give the button type=\"submit\"; notice the heading flashes and the page reloads.",
+      "Move the handler to the form: <form onSubmit={handleClick}>, accept event as a parameter and call event.preventDefault() so the page does not reload."
+    ],
+    "expected_result": "The heading reads Hello until Submit; then it reads Hello followed by the typed name, and the page does not refresh.",
+    "solution_code": {
+      "language": "jsx",
+      "code": "import { useState } from \"react\";\n\nfunction App() {\n  const [name, setName] = useState(\"\");\n  const [headingText, setHeadingText] = useState(\"\");\n\n  function handleChange(event) {\n    setName(event.target.value);   // runs on every keystroke\n  }\n\n  function handleClick(event) {\n    setHeadingText(name);          // copy typed text into the heading\n    event.preventDefault();        // stop the browser's form submit/reload\n  }\n\n  return (\n    <div className=\"container\">\n      <h1>Hello {headingText}</h1>\n      <form onSubmit={handleClick}>\n        <input\n          onChange={handleChange}\n          type=\"text\"\n          placeholder=\"What's your name?\"\n          value={name}\n        />\n        <button type=\"submit\">Submit</button>\n      </form>\n    </div>\n  );\n}\n\nexport default App;"
+    },
+    "reference_repo_path": "Section 36 - React.js/36.34 React Forms/react-forms/src/App.jsx"
+  },
+  "pitfalls": [
+    "The reference repo's input omits value={name}, so it is uncontrolled; the lecture recommends adding it (added in the snippet above).",
+    "Using { name } in a setter call stores an object, not the text.",
+    "Forgetting preventDefault inside a form handler reloads the page and resets all state.",
+    "(Extra) Setting value without onChange freezes the input and React logs a warning."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (playground data covers only sections 1-11, 14, 15).",
+    "gaps_and_ideas": [
+      "New 'React forms' lesson (blurb: read typed text through onChange and event.target.value, keep it in state as a controlled input, and handle submission with onSubmit plus preventDefault). Tasks: (1) log event.target.value on each keystroke, (2) mirror the input into the heading live, (3) make it controlled with value={name}, (4) update the heading only on submit using a second headingText state, (5) wrap it in a form and use onSubmit with event.preventDefault().",
+      "Starter code idea: App with h1 'Hello', a text input and a Submit button outside any form, and an empty handleChange(event) function.",
+      "Demo idea: side-by-side panels showing the live name state and headingText state while typing, with a toggle that removes preventDefault so the learner sees the reload wipe both values."
+    ]
+  }
+}

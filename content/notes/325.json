@@ -1,0 +1,62 @@
+{
+  "index": 325,
+  "lecture_id": 31673284,
+  "title": "What is the Internet Computer (ICP)?",
+  "section": "37. Web3 Decentralised App (DApp) Development with the Internet Computer",
+  "duration_min": 9,
+  "kind": "theory",
+  "summary": "Introduces the Internet Computer: a blockchain designed to host an entire application stack (compute, storage, front end) on-chain via canisters. Contrasts it with Ethereum's cost and throughput limits and explains why canister state persistence simplifies development.",
+  "concepts": [
+    {
+      "heading": "Goal: run the whole web stack on-chain",
+      "points": [
+        "The Internet Computer (IC) aims to be one secure protocol that covers hosting, storage and services, so apps do not lean on AWS, Azure or browser-extension wallets for the bulk of their logic.",
+        "Current DApps are only partly decentralised: a small slice of logic and data is on-chain while most sits with big Web2 providers, which can shut a project down. (Extra) A DApp with a centralised dependency inherits that provider's censorship and outage risk.",
+        "The lecture notes that Ethereum's founder named the IC a leading competitor in 2019; treat as a quoted claim."
+      ]
+    },
+    {
+      "heading": "Why existing chains cannot do it",
+      "points": [
+        "Ethereum was built mainly as a ledger, not for heavy computation or bulk storage.",
+        "Cost illustration: storing one gigabyte (roughly 300 phone photos) on Ethereum was quoted at hundreds of millions of dollars at the time, and a day's worth of Instagram photo uploads would cost trillions. Figures are 2022-era estimates.",
+        "Throughput: every state change (for example a post in an on-chain social app) is a transaction, and transactions per second (TPS) caps how fast the app can update. Ethereum then produced a block every ~14 seconds at ~15 TPS, so an on-chain Twitter clone would allow only a handful of posts per minute at high fees."
+      ]
+    },
+    {
+      "heading": "How the Internet Computer is built",
+      "points": [
+        "DFINITY researched scalable smart contracts from about 2015 and produced a consensus design called threshold relay, enabling much faster finality than other layer-one chains.",
+        "The IC pools capacity from many independent data centres worldwide using the Internet Computer Protocol, forming one decentralised 'world computer'.",
+        "The unit of deployment is the canister (canister smart contract): it runs code and stores that code's data. Users reach canisters over normal HTTPS requests.",
+        "Each canister holds a WebAssembly module plus its memory pages. Developers write in languages that compile to WebAssembly, such as Rust or DFINITY's own language Motoko (used in this course).",
+        "Canisters behave like sandboxed containers (similar in spirit to Docker) but their program state is preserved indefinitely, as though the process never exits. Variables, arrays and dictionaries just keep their values, so there is no need to write database code for persistence. (Extra) This is called orthogonal persistence; state survives upgrades only when written to be stable."
+      ]
+    },
+    {
+      "heading": "Ecosystem facts mentioned",
+      "points": [
+        "Over 30,000 canisters were running at recording time, with hundreds of applications including decentralised Reddit-style and TikTok-style apps.",
+        "CanCan example: liking a video that later goes viral rewards early likers with tokens, showing how on-chain logic enables token-economy features directly in the app.",
+        "DFINITY grants of 25,000 to 100,000 dollars were advertised for builders. (Extra) Programme terms change; check the current DFINITY grants page."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [
+    "Believing hosting a front end on AWS is compatible with a fully decentralised DApp.",
+    "Treating canister memory like a free database: upgrades need stable memory handling (Extra).",
+    "Treating quoted costs and counts as current."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (the playground has no section 37 data file).",
+    "gaps_and_ideas": [
+      "Proposed lesson 'Canisters 101': blurb on canister as code plus persistent state reachable over HTTPS.",
+      "Tasks: (1) in a JS demo, keep a counter in a module-level variable and explain what normally resets it; (2) compare with a canister that never resets; (3) list what a canister replaces (server, database, hosting); (4) calculate TPS-limited posts per minute for given TPS.",
+      "Starter idea: a tiny in-browser 'canister' object with state and methods, with a Restart button that either wipes or keeps state.",
+      "Interactive demo: side-by-side normal server (state lost on restart) vs canister (state kept)."
+    ]
+  }
+}

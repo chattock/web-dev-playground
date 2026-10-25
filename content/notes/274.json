@@ -1,0 +1,139 @@
+{
+  "index": 274,
+  "lecture_id": 41780566,
+  "title": "Level 6 - OAuth: Implement \"Sign In with Google\"",
+  "section": "35. Authentication and Security",
+  "duration_min": 31,
+  "kind": "concept+exercise",
+  "summary": "Explains what OAuth is and why delegating login to a big provider is safer than storing passwords yourself, then adds a Google login strategy to the Passport/Express/Postgres Secrets app, along with the callback route and a working logout route.",
+  "concepts": [
+    {
+      "heading": "What OAuth is",
+      "points": [
+        "OAuth is an open standard for token-based authorization: a user lets one site (the client) access chosen data held by another service without handing over their password to the client.",
+        "Two uses: pull data from the provider (e.g. a friends list or Gmail contacts to pre-populate a new social app), and authenticate the user by letting a trusted company verify identity.",
+        "Main security benefit for the developer: password storage, hashing, salting, peppering and database protection become the provider's problem, which reduces your liability and development time. Many sites now offer only social login.",
+        "You can run it next to the email/password local strategy, or instead of it."
+      ]
+    },
+    {
+      "heading": "Three properties that make OAuth special",
+      "points": [
+        "Granular access: the app requests only specific scopes (e.g. profile and email only, versus also a friends list).",
+        "Read-only or read-and-write access: the app asks for read access to data, or additionally write access (e.g. posting on the user's behalf).",
+        "Revocable: the user can withdraw the permission from the provider's own account settings without visiting your site."
+      ]
+    },
+    {
+      "heading": "The OAuth flow step by step",
+      "points": [
+        "1. Register the app with the provider (Google Cloud console, done in the previous setup lesson). You receive a client ID and client secret; your site is the 'client'.",
+        "2. The user clicks 'sign in with Google' and is sent to the provider's own page, so credentials are only ever typed on a domain they trust.",
+        "3. The user logs in and reviews the permissions (scopes) the app asks for, then consents.",
+        "4. The provider redirects back to your registered callback URL with an authorization code, which proves the user authenticated.",
+        "5. Optionally, the code is exchanged for an access token, which is stored and used later to request the user's data. (Extra) In the Passport strategy this exchange is done by the library; it hands you accessToken, refreshToken and profile.",
+        "Auth code vs access token: the code is single-use proof of login (like a one-time ticket); the access token lasts much longer and is the credential for fetching data (like a season pass)."
+      ]
+    },
+    {
+      "heading": "Configuring the Google strategy",
+      "points": [
+        "The only new package is passport-google-oauth2; install with npm install (already in package.json). Import it as GoogleStrategy.",
+        ".env must hold GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET from the earlier setup lesson; spelling of the env names and option names must match exactly.",
+        "Register it with passport.use('google', new GoogleStrategy(options, verifyCallback)), placed below the local strategy. The first argument is the strategy name.",
+        "Options object: clientID and clientSecret (from process.env); callbackURL (must exactly equal one of the redirect URIs registered in the Google console, here http://localhost:3000/auth/google/secrets); userProfileURL (Google's userinfo endpoint, https://www.googleapis.com/oauth2/v3/userinfo, used to fetch the profile).",
+        "Verify callback signature: (accessToken, refreshToken, profile, cb). The course does not use accessToken or refreshToken; the refresh token would help keep a user's access alive. profile contains name, picture, email and more; first it is just console.logged to inspect it.",
+        "cb follows Passport convention: cb(err) on error, cb(null, user) on success, cb(null, false) on a failed login."
+      ]
+    },
+    {
+      "heading": "Naming strategies and the two routes",
+      "points": [
+        "With more than one strategy, name each one ('local', 'google') in passport.use and pass the matching name to passport.authenticate so Passport runs the right verify function. With only one strategy the name is optional.",
+        "GET /auth/google: both the register and login pages' 'Sign in/up with Google' buttons point here. It runs passport.authenticate('google', { scope: ['profile','email'] }), which redirects to Google's consent screen and tells the user which data is being requested.",
+        "GET /auth/google/secrets: this is the callback URL Google redirects to after consent. It runs passport.authenticate('google', { successRedirect: '/secrets', failureRedirect: '/login' }); this is the moment the verify callback executes.",
+        "For an unverified app Google shows a warning screen. Verification takes weeks, which is irrelevant on localhost for a tutorial but required for production; click Continue past the warning."
+      ]
+    },
+    {
+      "heading": "Saving the Google user in the database",
+      "points": [
+        "Inside the verify callback, use try/catch with async/await.",
+        "Look up by email: SELECT * FROM users WHERE email = $1 with [profile.email].",
+        "If result.rows.length === 0 the user is new: INSERT INTO users (email, password) VALUES ($1, $2) with [profile.email, 'google'], then call cb(null, newUser.rows[0]).",
+        "Else the user exists: cb(null, result.rows[0]) so they are not asked to log in again.",
+        "In catch: cb(err).",
+        "There is no password from Google, so the password column holds a placeholder. Choices: a marker string like 'google' (also blocks logging in via the local form with that email in a meaningful way, as bcrypt compare will fail), or the Google user id. It is the developer's choice.",
+        "The user passed to cb goes through the existing serializeUser/deserializeUser so req.user and req.isAuthenticated() work exactly as for local logins; the session persists across browser restarts."
+      ]
+    },
+    {
+      "heading": "Comparing against the solution in VS Code",
+      "points": [
+        "Right-click your index.js and choose Select for Compare, then right-click solution.js and choose Compare with Selected. Red lines are in yours but not the solution; green lines exist only in the solution. Ordering differences also show up. The env-driven Google strategy block should match."
+      ]
+    },
+    {
+      "heading": "Logout route",
+      "points": [
+        "The secrets page's Log Out link requests GET /logout.",
+        "Use req.logout (lowercase) with a callback: if err, handle it; otherwise res.redirect('/'). It ends the session login, so /secrets then redirects to /login.",
+        "(Extra) Since Passport 0.6 logout is asynchronous and requires the callback; forward errors with next(err) so Express handles them."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Google strategy added next to the local strategy",
+      "language": "javascript",
+      "code": "import GoogleStrategy from \"passport-google-oauth2\";\n\npassport.use(\n  \"google\",\n  new GoogleStrategy(\n    {\n      clientID: process.env.GOOGLE_CLIENT_ID,\n      clientSecret: process.env.GOOGLE_CLIENT_SECRET,\n      callbackURL: \"http://localhost:3000/auth/google/secrets\",\n      userProfileURL: \"https://www.googleapis.com/oauth2/v3/userinfo\",\n    },\n    async (accessToken, refreshToken, profile, cb) => {\n      try {\n        const result = await db.query(\"SELECT * FROM users WHERE email = $1\", [\n          profile.email,\n        ]);\n        if (result.rows.length === 0) {\n          const newUser = await db.query(\n            \"INSERT INTO users (email, password) VALUES ($1, $2) RETURNING *\",\n            [profile.email, \"google\"]\n          );\n          return cb(null, newUser.rows[0]);\n        } else {\n          return cb(null, result.rows[0]);\n        }\n      } catch (err) {\n        return cb(err);\n      }\n    }\n  )\n);"
+    },
+    {
+      "caption": "Routes: Google redirect, callback, logout",
+      "language": "javascript",
+      "code": "// 1) Button on login/register pages links here; sends the user to Google\napp.get(\n  \"/auth/google\",\n  passport.authenticate(\"google\", {\n    scope: [\"profile\", \"email\"],\n  })\n);\n\n// 2) Google redirects back here after consent\napp.get(\n  \"/auth/google/secrets\",\n  passport.authenticate(\"google\", {\n    successRedirect: \"/secrets\",\n    failureRedirect: \"/login\",\n  })\n);\n\n// 3) Logout (lowercase req.logout, needs a callback in Passport 0.6+)\napp.get(\"/logout\", (req, res, next) => {\n  req.logout((err) => {\n    if (err) return next(err);\n    res.redirect(\"/\");\n  });\n});\n\n// Name the local strategy too, now that two exist\npassport.use(\"local\", new Strategy(async function verify(username, password, cb) { /* unchanged */ }));"
+    }
+  ],
+  "task": {
+    "name": "Add Sign in with Google to the Secrets app",
+    "starting_point": "Express + Passport + pg project from the previous lessons with local strategy, sessions, bcrypt, .env filled with Google credentials, and login/register pages that already contain Google buttons linking to /auth/google. index.js lacks the Google strategy and the logout route; solution.js is the finished file.",
+    "goal": "Let users register or log in via Google, store them in the users table, keep the session, and log out.",
+    "steps": [
+      "Run npm install and confirm GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET are in .env.",
+      "Import GoogleStrategy from passport-google-oauth2.",
+      "Name the existing strategy 'local' in passport.use.",
+      "Add passport.use('google', new GoogleStrategy({...options}, verify)) below it; first just console.log(profile).",
+      "Add GET /auth/google with scope ['profile','email'].",
+      "Add GET /auth/google/secrets with successRedirect '/secrets' and failureRedirect '/login'.",
+      "Test by clicking the Google button, passing the unverified-app warning, and inspecting the logged profile.",
+      "Replace the log with the select-then-insert logic and call cb with the user row.",
+      "Add GET /logout using req.logout with a callback and redirect to '/'.",
+      "Compare with solution.js and test: new Google user appears in the table, session survives a browser restart, logout blocks /secrets."
+    ],
+    "expected_result": "Google users appear in the users table with password 'google', land on /secrets after consent, and Log Out returns to the home page.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "import GoogleStrategy from \"passport-google-oauth2\";\n\npassport.use(\n  \"google\",\n  new GoogleStrategy(\n    {\n      clientID: process.env.GOOGLE_CLIENT_ID,\n      clientSecret: process.env.GOOGLE_CLIENT_SECRET,\n      callbackURL: \"http://localhost:3000/auth/google/secrets\",\n      userProfileURL: \"https://www.googleapis.com/oauth2/v3/userinfo\",\n    },\n    async (accessToken, refreshToken, profile, cb) => {\n      try {\n        const result = await db.query(\"SELECT * FROM users WHERE email = $1\", [\n          profile.email,\n        ]);\n        if (result.rows.length === 0) {\n          const newUser = await db.query(\n            \"INSERT INTO users (email, password) VALUES ($1, $2) RETURNING *\",\n            [profile.email, \"google\"]\n          );\n          return cb(null, newUser.rows[0]);\n        } else {\n          return cb(null, result.rows[0]);\n        }\n      } catch (err) {\n        return cb(err);\n      }\n    }\n  )\n);"
+    },
+    "reference_repo_path": "Section 35 - Authentication and Security - Handling Credentials & Designing a Secure Login/35.09 Level 6 - OAuth - Implement 'Sign In with Google'/solution.js"
+  },
+  "pitfalls": [
+    "callbackURL must match the redirect URI registered in Google console exactly (port, path, scheme), otherwise Google returns an error.",
+    "Typos in option names or env variable names fail silently or give a confusing OAuth error.",
+    "(Extra) The reference solution.js omits RETURNING * on the Google INSERT, so newUser.rows[0] is undefined and cb is called with no user. Add RETURNING * (as shown above) so req.user gets the new row. Its logout handler also calls next without declaring it in the route parameters.",
+    "Use lowercase req.logout, not Logout-style variants, and always provide the callback.",
+    "Not naming strategies when two exist makes it unclear which verify function runs.",
+    "Unverified-app warning is expected in development, not an error.",
+    "A stored placeholder password like 'google' is not a hash; make sure the local login can never accept it for real users."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (section 35 has no playground file).",
+    "gaps_and_ideas": [
+      "Proposed lesson 'OAuth: Sign in with Google': blurb explaining auth code vs access token and why delegating passwords reduces risk.",
+      "Tasks: (1) draw the 5-step OAuth flow in order, (2) add the Google strategy options, (3) add /auth/google and the callback route, (4) write the find-or-create-user logic, (5) add a working logout.",
+      "Starter code: the finished local-strategy app with a TODO where the Google strategy goes.",
+      "Interactive demo idea: a step-through sequence diagram (browser, app, Google) with buttons to advance through redirect, consent, code, token, and highlighting which values are visible to each party; plus a toggle for scopes showing which profile fields would be returned."
+    ]
+  }
+}

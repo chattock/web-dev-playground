@@ -1,0 +1,54 @@
+{
+  "index": 154,
+  "lecture_id": 12384208,
+  "title": "Manipulating Text with jQuery",
+  "section": "19. jQuery",
+  "duration_min": 4,
+  "kind": "concept",
+  "summary": "Shows the two jQuery methods for changing element content: .text() for plain text and .html() for content that includes markup. Both act on every matched element.",
+  "concepts": [
+    {
+      "heading": ".text()",
+      "points": [
+        "$(\"h1\").text(\"Bye\") replaces the content of the h1 with that string.",
+        "Because a jQuery selection covers all matches, $(\"button\").text(\"Don't Click Me\") updates all five buttons in one statement; no loop is needed.",
+        "Any HTML tags in the string are treated as literal text, not markup."
+      ]
+    },
+    {
+      "heading": ".html()",
+      "points": [
+        "$(\"h1\").html(\"<em>Bye</em>\") parses the string as HTML, so the em tag renders the word in italics.",
+        "It is the jQuery equivalent of setting innerHTML in vanilla JavaScript; .text() corresponds roughly to textContent / innerText.",
+        "(Extra) Avoid passing untrusted user input to .html(), as it can inject scripts; use .text() for that."
+      ]
+    },
+    {
+      "heading": "How jQuery relates to JavaScript",
+      "points": [
+        "Almost everything in jQuery is a method reached with dot notation, such as .css, .addClass, .text.",
+        "jQuery is itself written in JavaScript; its methods are wrappers that shorten common tasks, in the same spirit as writing your own functions to cut repetition.",
+        "Understanding vanilla JavaScript first makes jQuery understandable rather than magic."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Text and HTML (matches reference repo)",
+      "language": "javascript",
+      "code": "$(\"h1\").text(\"Bye\");\n$(\"h1\").html(\"<em>Bye</em>\");\n$(\"button\").text(\"Don't Click Me\");\n$(\"button\").html(\"<em>Don't Click Me</em>\");"
+    }
+  ],
+  "task": null,
+  "pitfalls": [
+    ".text() will show tags literally, e.g. an em tag appears as visible characters.",
+    "Calling .text(value) with an argument is a setter; with no argument it returns the current text."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "Could be part of one 'jQuery content & attributes' lesson with tasks: change heading text, make it italic with html(), change all five buttons, then read text back with no argument. Demo: input box feeding .text vs .html to show the difference."
+    ]
+  }
+}

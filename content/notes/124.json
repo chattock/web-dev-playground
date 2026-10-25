@@ -1,0 +1,41 @@
+{
+  "index": 124,
+  "lecture_id": 12400466,
+  "title": "Dicee Challenge Step 0 - Download the Skeleton Project",
+  "section": "17. Boss Level Challenge 1 - The Dicee Game",
+  "duration_min": 1,
+  "kind": "admin",
+  "summary": "Admin article: the Dicee starter files are available from the course's shared resources list page; download and unzip them before starting.",
+  "concepts": [
+    {
+      "heading": "Getting the starter files",
+      "points": [
+        "Starter files come from the course's resource list site (appbrewery.co web development resources page), linked in the lecture.",
+        "Download the zip and extract it before opening it in the editor.",
+        "The skeleton contains the Dicee HTML, CSS and dice images (dice1 to dice6)."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": {
+    "name": "Step 0: Get the skeleton",
+    "starting_point": "Nothing yet.",
+    "goal": "Have the skeleton project unzipped locally and open in the editor.",
+    "steps": [
+      "Open the resources list page linked in the lecture.",
+      "Download the Dicee skeleton zip.",
+      "Unzip it into your projects folder and open the folder in VS Code."
+    ],
+    "expected_result": "A folder containing index.html, styles.css and an images folder.",
+    "solution_code": null,
+    "reference_repo_path": "Section 17 - Boss Level Challenge 1 - The Dicee Game"
+  },
+  "pitfalls": [
+    "Opening the zip without extracting it first."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "Not applicable (admin).",
+    "gaps_and_ideas": []
+  }
+}

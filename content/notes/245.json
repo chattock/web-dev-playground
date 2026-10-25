@@ -1,0 +1,40 @@
+{
+  "index": 245,
+  "lecture_id": 12385718,
+  "title": "SQL Commands: DELETE",
+  "section": "32. SQL",
+  "duration_min": 2,
+  "kind": "concept",
+  "summary": "Completes CRUD with DELETE FROM ... WHERE, and warns about omitting the WHERE clause.",
+  "concepts": [
+    {
+      "heading": "DELETE FROM",
+      "points": [
+        "Syntax: DELETE FROM table_name WHERE condition removes every row that matches the condition.",
+        "Example: remove the pencil with DELETE FROM products WHERE name = 'Pencil'. Matching on the unique id is safer and clearer: DELETE FROM products WHERE id = 2. Names can repeat; a primary key cannot.",
+        "Without WHERE the statement deletes all rows in the table, so the data is lost. Re-read the statement before running it.",
+        "After the delete only the pen row remains. With INSERT, SELECT, UPDATE and DELETE the full CRUD set has now been covered in SQL.",
+        "(Extra) DELETE removes rows only; the table and its columns stay. Removing the table itself is a separate command (DROP TABLE)."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Delete by id (preferred) and the dangerous form",
+      "language": "sql",
+      "code": "DELETE FROM products WHERE id = 2;\n\n-- DANGER: no WHERE, empties the whole table\n-- DELETE FROM products;"
+    }
+  ],
+  "task": null,
+  "pitfalls": [
+    "Running DELETE with no WHERE clause wipes the table's rows.",
+    "Filtering on a non-unique column (such as name) can remove more than one record."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "Include in the combined SQL CRUD lesson: delete the pencil by id, then predict the outcome of DELETE without WHERE (do it only on a throwaway table in the demo)."
+    ]
+  }
+}

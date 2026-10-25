@@ -1,0 +1,28 @@
+{
+  "index": 24,
+  "lecture_id": 12399306,
+  "title": "Get Access to the Monthly App Brewery Newsletter",
+  "section": "3. Intermediate HTML",
+  "duration_min": 1,
+  "kind": "admin",
+  "summary": "Optional sign-up article for the instructor's monthly email newsletter (the L.A.B. Report). No course content or exercise.",
+  "concepts": [
+    {
+      "heading": "Key takeaways",
+      "points": [
+        "The newsletter is a once-a-month personal email covering what the instructor has been learning, side projects, and conversations with people in the tech industry about tools and trends.",
+        "Each issue includes three recommended reads picked that month, on subjects like design, programming, productivity and startup growth.",
+        "A sample issue is linked so you can judge it before subscribing.",
+        "Signing up is entirely optional and uses a Udemy-student sign-up link in the article; only join if you actually want the emails."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": []
+  }
+}

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Web Dev Playground — Angela Yu course</title>
+<title>Web Dev Playground — every lecture of the Web Development Bootcamp</title>
 <link rel="stylesheet" href="vendor/codemirror/codemirror.min.css" />
 <link rel="stylesheet" href="vendor/codemirror/theme-material.css" />
 <link rel="stylesheet" href="app/style.css" />
@@ -14,7 +14,7 @@
   <a class="brand" href="#/">⌘ Web Dev Playground</a>
   <nav id="sectionNav"></nav>
   <span class="spacer"></span>
-  <span class="hint">⌘/Ctrl + Enter to run · edits save automatically</span>
+  <span class="hint">⌘/Ctrl + Enter to run · edits save automatically · press / to search</span>
 </header>
 
 <div id="layout">
@@ -27,24 +27,24 @@
 <script src="vendor/codemirror/mode/css.js"></script>
 <script src="vendor/codemirror/mode/javascript.js"></script>
 <script src="vendor/codemirror/mode/htmlmixed.js"></script>
+<script src="vendor/codemirror/mode/jsx.js"></script>
+<script src="vendor/codemirror/mode/sql.js"></script>
+<script src="vendor/codemirror/mode/shell.js"></script>
 <script src="vendor/codemirror/closebrackets.js"></script>
 <script src="vendor/codemirror/closetag.js"></script>
 <script src="vendor/codemirror/active-line.js"></script>
+<script src="vendor/codemirror/runmode.js"></script>
 
-<script src="app/app.js"></script>
-<script src="data/s01.js"></script>
-<script src="data/s02.js"></script>
-<script src="data/s03.js"></script>
-<script src="data/s04.js"></script>
-<script src="data/s05.js"></script>
-<script src="data/s06.js"></script>
-<script src="data/s07.js"></script>
-<script src="data/s08.js"></script>
-<script src="data/s09.js"></script>
-<script src="data/s10.js"></script>
-<script src="data/s11.js"></script>
-<script src="data/s14.js"></script>
-<script src="data/s15.js"></script>
+<script src="app/sandbox/shell-sim.js"></script>
+<script src="app/core.js"></script>
+<script src="app/kit-build.js"></script>
+<script src="app/kit-read.js"></script>
+<script src="app/kit-react.js"></script>
+<script src="app/kit-node.js"></script>
+<script src="app/kit-sql.js"></script>
+<script src="app/kit-terminal.js"></script>
+<script src="app/selftest.js"></script>
+<script src="data/index.js"></script>
 <script>PG.start();</script>
 </body>
 </html>

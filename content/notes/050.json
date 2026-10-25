@@ -1,0 +1,115 @@
+{
+  "index": 50,
+  "lecture_id": 37368124,
+  "title": "How to Create Responsive Websites",
+  "section": "8. Advanced CSS",
+  "duration_min": 19,
+  "kind": "theory",
+  "summary": "Overview of the four main ways to make a page respond to screen width: media queries, CSS Grid, Flexbox and the Bootstrap framework. Each gets a short demo; Grid, Flexbox and Bootstrap are previewed ahead of their own sections, and the lesson ends by suggesting you experiment with the provided demo files.",
+  "concepts": [
+    {
+      "heading": "What 'responsive' means",
+      "points": [
+        "Pages must look right on desktops, laptops, tablets and phones, so the layout has to adapt to the viewport width.",
+        "Try resizing a real site's window: navigation items collapse into a menu at some width, and a search box may vanish on narrow screens. Those switch-over widths are breakpoints.",
+        "Four techniques: media queries, CSS Grid, Flexbox, and an external framework such as Bootstrap. There is no single best one; they are tools with different strengths."
+      ]
+    },
+    {
+      "heading": "1. Media queries",
+      "points": [
+        "Written where a selector would go, starting with @media followed by a condition in parentheses, then a block of normal rules.",
+        "@media (max-width: 600px) { ... } applies the inner rules whenever the viewport is 600px wide or narrower.",
+        "Different widths and different rule sets can be defined, one block per breakpoint. Detailed in the next lesson."
+      ]
+    },
+    {
+      "heading": "2. CSS Grid (2D layout)",
+      "points": [
+        "Put display: grid on a container; its direct children become grid items.",
+        "grid-template-columns: 1fr 1fr defines two equal columns. fr is a fraction of the available space.",
+        "grid-template-rows: 100px 200px 200px defines three rows with fixed heights (rows are often given in px).",
+        "gap: 30px sets spacing between rows and columns.",
+        "grid-column: span 2 on one item (class .first) makes it cover both columns, producing a wide header-like cell.",
+        "Example uses a container div with five .card children. Described as flexible for complex layouts with only a few lines. A whole section follows."
+      ]
+    },
+    {
+      "heading": "3. Flexbox (1D layout)",
+      "points": [
+        "Flexbox lays items along one axis, either a row or a column. Put display: flex on the container.",
+        "flex: 1 on each child gives all children equal share of the width. flex: 2 makes a child twice as wide as a flex: 1 sibling; flex: 0.5 makes it half as wide.",
+        "Sizes are ratios, not pixels, so they scale with the container automatically. In a vertical flexbox the same ratios divide the height (for example header 1, main 3, footer 1 = 5 parts).",
+        "Demo has four cards with a fixed height of 100px; the first gets flex 2, the second flex 0.5."
+      ]
+    },
+    {
+      "heading": "4. Bootstrap framework",
+      "points": [
+        "A framework is external CSS (and JS) brought into the page; it defines many ready-made class names such as card, row, container.",
+        "Loaded through a link tag to its stylesheet CDN; adding class names applies rounded corners, fonts and layout without writing the CSS.",
+        "Its grid is built on Flexbox and divides the width into 12 columns. col-6 spans 6 of 12 (50%), col-2 spans 2, col-4 spans 4; 6+2+4 = 12 fills the row.",
+        "Widths are percentages, so col-6 is 500px in a 1000px container and 1000px in 2000px."
+      ]
+    },
+    {
+      "heading": "Choosing a method",
+      "points": [
+        "Because each technique is suited to different jobs, learn all of them and mix as needed; later sections cover Grid, Flexbox and Bootstrap in depth.",
+        "(Extra) In real projects they are combined, for example Flexbox for a nav bar, Grid for the page, media queries for tweaks at breakpoints."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Media query breakpoint",
+      "language": "css",
+      "code": "div { background-color: rebeccapurple; height: 500px; width: 500px; }\n@media (max-width: 600px) {\n  div { height: 200px; width: 200px; }\n}"
+    },
+    {
+      "caption": "CSS Grid container with a spanning item",
+      "language": "css",
+      "code": ".grid-container {\n  display: grid;\n  grid-template-columns: 1fr 1fr;\n  grid-template-rows: 100px 200px 200px;\n  gap: 30px;\n}\n.first { grid-column: span 2; }\n.card { background-color: blue; }"
+    },
+    {
+      "caption": "Flexbox container with equal children",
+      "language": "css",
+      "code": ".flex-container { display: flex; }\n.card { background: blue; border: 30px solid white; height: 100px; flex: 1; }\n/* in the demo: .first { flex: 2 }  .second { flex: 0.5 } */"
+    },
+    {
+      "caption": "Bootstrap 12-column row",
+      "language": "html",
+      "code": "<link href=\"https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css\" rel=\"stylesheet\" />\n<div class=\"container\">\n  <div class=\"row\">\n    <div class=\"card col-6\">Card</div>\n    <div class=\"card col-2\">Card</div>\n    <div class=\"card col-4\">Card</div>\n  </div>\n</div>"
+    }
+  ],
+  "task": {
+    "name": "Explore the four responsiveness demos",
+    "starting_point": "Download '8.2 Responsiveness'. index.html links to media-query.html, grid.html, flexbox.html and bootstrap.html.",
+    "goal": "Open each demo, resize the preview and tweak values to see how each technique reacts. No fixed solution.",
+    "steps": [
+      "Open index.html in the preview and follow the links.",
+      "In media-query.html change the 600px breakpoint and the sizes.",
+      "In grid.html, change the column fractions, row heights, gap and the span.",
+      "In flexbox.html, change flex values on .first and .second.",
+      "In bootstrap.html, change the col-N numbers (keep a row to 12 total) and resize the window."
+    ],
+    "expected_result": "Familiarity with how each technique rescales the layout; nothing to submit.",
+    "solution_code": null,
+    "reference_repo_path": "Section 08 - Advanced CSS/08.03 - Responsiveness/"
+  },
+  "pitfalls": [
+    "Expecting a single 'best' technique.",
+    "Using fixed px widths for everything, so layouts cannot adapt.",
+    "(Extra) Forgetting the viewport meta tag, which stops media queries behaving properly on phones.",
+    "(Extra) Repo demo files carry an author footer; ignore it."
+  ],
+  "playground": {
+    "match": "s08-responsive (lesson 8.3, data/s08.js)",
+    "coverage": "Covers the viewport meta tag, a fixed vs fluid width demo and a list of the four techniques with pointers to later sections. Tasks make cards fluid with percentage widths.",
+    "gaps_and_ideas": [
+      "Add small live side-by-side demos of the four methods (media query, grid with 1fr 1fr and span 2, flex 2/0.5/1/1, Bootstrap col-6/2/4) that the user can resize, as the lecture does.",
+      "Add the 12-column arithmetic as a mini quiz (which col-N values fill a row).",
+      "Add a task to find a real site's breakpoint by resizing the window."
+    ]
+  }
+}

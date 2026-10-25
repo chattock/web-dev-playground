@@ -1,0 +1,88 @@
+{
+  "index": 221,
+  "lecture_id": 12386684,
+  "title": "Branching and Merging",
+  "section": "27. Git, Github and Version Control",
+  "duration_min": 10,
+  "kind": "concept+exercise",
+  "summary": "Introduces branches as parallel lines of commits that let you experiment without touching the main project, and merging as the way to bring a finished experiment back. Walks through a full local example with a story repo: create a branch, commit on it, switch back, commit on main, merge, push, and view the result in GitHub's network graph.",
+  "concepts": [
+    {
+      "heading": "Why branches exist",
+      "points": [
+        "A branch is a separate line of commits that starts from some existing commit. Main keeps receiving stable updates while an experimental branch receives work on a new feature or idea.",
+        "Both lines can advance at the same time without affecting each other.",
+        "On large projects several branches are normally active at once (features, bug fixes), because unfinished work can break the project and should not land on main until it works.",
+        "When the experiment succeeds, merge it into main. Git checks for conflicts, and if there are any they are resolved by editing before the merge completes. Hosted services expose this as a merge/pull request."
+      ]
+    },
+    {
+      "heading": "Branch commands",
+      "points": [
+        "git branch <name> creates a new branch at the current commit. It does not switch to it.",
+        "git branch with no argument lists local branches; the asterisk marks the branch you are on. Use it whenever you are unsure where you are.",
+        "git checkout <name> switches branches. The working-directory files change to match that branch, so edits made on one branch are absent on the other.",
+        "git add . then git commit -m \"message\" record work on whichever branch is checked out. Keeping add and commit as separate steps is recommended while learning, although they can be combined.",
+        "git log shows the history reachable from the current branch, so the log differs per branch."
+      ]
+    },
+    {
+      "heading": "Merging",
+      "points": [
+        "To merge branch X into main: first git checkout main, then git merge X. The merge always goes into the branch you are currently on.",
+        "If the branches have diverged, git creates a merge commit and opens the default text editor (Vim) for the commit message. Leaving the message as is and typing :q! quits without changes and finishes the merge with the default message (the lecture's flow). Typing :wq is the usual save-and-quit alternative.",
+        "After merging, the feature branch still exists; merging does not delete it.",
+        "git log on main afterwards shows the earlier commits plus the merge commit.",
+        "Publishing the result: git push -u origin main. The -u flag sets the upstream so later pushes and pulls need no arguments."
+      ]
+    },
+    {
+      "heading": "Seeing it on GitHub",
+      "points": [
+        "The repo's commit count rises to include the branch commit, the new-file commit and the merge commit.",
+        "Insights then Network shows a graph of the branch splitting off main and rejoining at the merge."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Full branch and merge sequence from the lecture",
+      "language": "bash",
+      "code": "git log                       # see current history\ngit branch alien-plot         # create branch\ngit branch                    # list branches, * marks current\ngit checkout alien-plot       # switch to it\n# edit chapter1.txt and chapter2.txt\ngit add .\ngit commit -m \"modify chapter 1 and 2 to have alien theme\"\ngit checkout main             # back to main: files revert\n# create chapter4.txt\ngit add .\ngit commit -m \"add chapter 4\"\ngit merge alien-plot          # Vim opens for merge message\n# type :q! to leave the editor\ngit push origin main -u"
+    }
+  ],
+  "task": {
+    "name": "Practise branching with your own repo",
+    "starting_point": "A local git repository with a few text files (the lecture uses a story with chapter files), optionally linked to a GitHub remote.",
+    "goal": "Create a feature branch, commit on it, commit separately on main, merge, and push.",
+    "steps": [
+      "Create a repo (local and on GitHub) holding a story or poem split into files.",
+      "Create a branch with git branch and switch with git checkout.",
+      "Edit files and commit on the branch.",
+      "Switch back to main and confirm the edits are not there.",
+      "Add a new file on main and commit it.",
+      "Merge the branch into main and push with -u.",
+      "Open Insights then Network on GitHub to view the graph."
+    ],
+    "expected_result": "Main contains both the branch's edits and the new file, the log shows a merge commit, and GitHub's network graph shows the split and rejoin.",
+    "solution_code": null,
+    "reference_repo_path": "Section 27 - Git, Github and Version Control/27.04 - Branching and Merging/Explanation.txt"
+  },
+  "pitfalls": [
+    "Merging from the wrong branch: run the merge while on the branch that should receive the changes.",
+    "Getting stuck in Vim after git merge; exit with :q! (or :wq to save).",
+    "Assuming the remote already has local commits; only pushed commits appear on GitHub.",
+    "Editing files while on the wrong branch because you did not check git branch first.",
+    "(Extra) Newer git also offers git switch <name> and git switch -c <name> as clearer alternatives to checkout."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "New lesson 'Branches and merging' with a blurb on parallel work lines.",
+      "Tasks: (1) predict which files exist after git checkout main, (2) order the command sequence for branch, commit, merge, (3) fix a merge run on the wrong branch, (4) explain what the asterisk means.",
+      "Starter idea: a commit-graph widget with Create branch, Commit and Merge buttons.",
+      "Interactive demo: draw the commit graph live as the learner issues the commands."
+    ]
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "index": 242,
+  "lecture_id": 12385674,
+  "title": "SQL Commands: CREATE Table and INSERT Data",
+  "section": "32. SQL",
+  "duration_min": 14,
+  "kind": "concept+exercise",
+  "summary": "First hands-on SQL lesson in an online SQLite playground. Recreates a products table with CREATE TABLE (including data types, PRIMARY KEY and NOT NULL), then adds rows with INSERT INTO using both the full-values and the named-columns forms, and shows the NOT NULL error.",
+  "concepts": [
+    {
+      "heading": "Setup and vocabulary",
+      "points": [
+        "Docs: the W3Schools SQL reference (w3schools.com/sql) is the suggested place to look up syntax. Treat SQL as a new language with its own keywords.",
+        "SQL keywords (SELECT, FROM, CREATE, TABLE, INSERT INTO ...) are conventionally written in uppercase. The playground colours recognised keywords, which is a quick typo check.",
+        "CRUD: Create, Read, Update, Destroy (delete). Every database is first learned by practising these four operations.",
+        "Environment: sqliteonline.com, an in-browser SQLite playground linked in the lecture resources. It starts with a sample customers table (id, first name, last name, address, two rows). Right-click a table and choose Show table to view its rows, or SQL Schema to see its definition. Delete the sample code in the editor before writing your own.",
+        "Terminology: a table has columns (fields) that define its structure (the schema), and each row is a record."
+      ]
+    },
+    {
+      "heading": "CREATE TABLE",
+      "points": [
+        "Form: CREATE TABLE table_name ( column1 datatype, column2 datatype, ... ). Keywords first, then the table name, then round brackets listing each column with its data type.",
+        "A column definition is name, a space, then the type. No colons (that is JavaScript object syntax), and columns are separated by commas.",
+        "id INT: integer type, used as the unique identifier for each product.",
+        "name: a text column. The lecture writes it as a string type; the docs list text types such as CHAR(255), which limits a value to 255 characters. (Extra) In real schemas use TEXT or VARCHAR(n); SQLite is lenient about type names, but PostgreSQL later in the course is not.",
+        "price MONEY: a currency-style number type listed in the docs' data types section (alongside SMALLMONEY). (Extra) MONEY is not available in SQLite as a real type and is not recommended for exact decimals elsewhere; NUMERIC or DECIMAL are the usual choices.",
+        "PRIMARY KEY (id): a final line inside the brackets that marks id as the column uniquely identifying each record. Product 1 is then always one specific row and no other row can reuse that id.",
+        "NOT NULL after a column's type forbids a record without a value in that column. It is paired with the primary key because a record with no id could never be identified later.",
+        "Check before running: commas between columns, no colons, brackets balanced. If Run reports an error, read the message and compare against the code for typos."
+      ]
+    },
+    {
+      "heading": "INSERT INTO",
+      "points": [
+        "Two forms. Full: INSERT INTO table VALUES (v1, v2, v3) supplies a value for every column in schema order. Named: INSERT INTO table (colA, colB) VALUES (a, b) supplies only the listed columns.",
+        "Text values go in single quotes; numbers do not. Values are comma separated inside round brackets.",
+        "Columns left out of a named insert become NULL (no value). Example: a pencil with id and name but no price shows a NULL price when the table is shown.",
+        "The NOT NULL constraint is enforced: inserting only name and price, leaving id out, fails with 'NOT NULL constraint failed: products.id'. Constraints act as built-in validation so the data keeps to the structure declared at creation.",
+        "The lecture writes each statement without a trailing semicolon and notes that a statement is really one logical line even when split across lines for readability. (Extra) A closing semicolon is standard practice and required by many clients, including psql."
+      ]
+    },
+    {
+      "heading": "Result after the lesson",
+      "points": [
+        "products table with columns id, name, price.",
+        "Row 1: id 1, Pen, price 1.20. Row 2: id 2, Pencil, price NULL.",
+        "The next lesson covers reading and searching the table."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Create the products table (SQLite playground)",
+      "language": "sql",
+      "code": "CREATE TABLE products (\n  id INT NOT NULL,\n  name TEXT,\n  price MONEY,\n  PRIMARY KEY (id)\n);"
+    },
+    {
+      "caption": "Insert rows: all columns, then only some columns",
+      "language": "sql",
+      "code": "INSERT INTO products VALUES (1, 'Pen', 1.20);\n\n-- price unknown yet, so it becomes NULL\nINSERT INTO products (id, name) VALUES (2, 'Pencil');\n\n-- fails: id is NOT NULL and not supplied\nINSERT INTO products (name, price) VALUES ('Rubber', 1.30);"
+    }
+  ],
+  "task": {
+    "name": "Create and populate a products table",
+    "starting_point": "Open sqliteonline.com. It has a sample customers table. Clear the editor.",
+    "goal": "Recreate the products table from the previous lesson in real SQL and add two products.",
+    "steps": [
+      "Write CREATE TABLE products with id (integer, NOT NULL), name (text) and price (money), and finish with PRIMARY KEY (id).",
+      "Run it, then right-click products and choose Show table; it should be empty.",
+      "Insert the first product with the full-values form: id 1, 'Pen', 1.20.",
+      "Insert a second product, id 2 and 'Pencil', naming only id and name so price is NULL.",
+      "Show the table to confirm both rows, then deliberately insert a row without id and read the NOT NULL error."
+    ],
+    "expected_result": "A two-row products table, with a NULL price on the Pencil row, and an error when id is missing.",
+    "solution_code": {
+      "language": "sql",
+      "code": "CREATE TABLE products (id INT NOT NULL, name TEXT, price MONEY, PRIMARY KEY (id));\nINSERT INTO products VALUES (1, 'Pen', 1.20);\nINSERT INTO products (id, name) VALUES (2, 'Pencil');"
+    },
+    "reference_repo_path": "Section 32 - SQL/32.01 - SQL Commands CREATE Table and INSERT Data/README.md (text only, no code files)"
+  },
+  "pitfalls": [
+    "Using colons or JavaScript-style syntax in the column list.",
+    "Missing commas between column definitions.",
+    "Forgetting quotes around text values, or quoting numbers.",
+    "Omitting the NOT NULL id and then getting a constraint failure on insert.",
+    "(Extra) Using a full-values INSERT with values in the wrong order or count."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "New lesson 'SQL: CREATE TABLE and INSERT'. Blurb: build your first table and add rows. Tasks: (1) create products with PRIMARY KEY, (2) insert a full row, (3) insert a partial row and spot the NULL, (4) trigger and explain the NOT NULL error, (5) add a third product of your own.",
+      "Starter idea: an empty editor with the CREATE TABLE skeleton and the column list as comments.",
+      "Interactive demo idea: an in-browser SQL runner (sql.js/SQLite WASM) with a live table viewer that updates after each statement and shows constraint errors."
+    ]
+  }
+}

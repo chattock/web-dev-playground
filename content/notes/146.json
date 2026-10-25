@@ -1,0 +1,99 @@
+{
+  "index": 146,
+  "lecture_id": 12384170,
+  "title": "Adding Animation to Websites",
+  "section": "18. Advanced Javascript and DOM Manipulation",
+  "duration_min": 9,
+  "kind": "concept+exercise",
+  "summary": "Finishes the drum kit by flashing the pressed drum. A buttonAnimation(key) function finds the matching element by its class, adds a pressed CSS class, and uses setTimeout to remove it after 100 ms.",
+  "concepts": [
+    {
+      "heading": "Shared animation function",
+      "points": [
+        "Both click and keyboard paths already call makeSound with a single character, so a second function buttonAnimation(currentKey) is called beside it in both places.",
+        "Click handler: makeSound(buttonInnerHTML); buttonAnimation(buttonInnerHTML).",
+        "Key handler: makeSound(event.key); buttonAnimation(event.key).",
+        "Passing the same one-character value to both keeps the two input routes consistent."
+      ]
+    },
+    {
+      "heading": "Finding the right button",
+      "points": [
+        "In the HTML each drum button has the shared class drum plus a class equal to its letter (w, a, s, d, j, k, l).",
+        "querySelector uses CSS selector syntax, so a class needs a leading dot: document.querySelector(\".w\").",
+        "Because the key is only the bare letter, build the selector by concatenation: \".\" + currentKey. Store the result in activeButton.",
+        "(Extra) A key with no matching element (e.g. \"x\") makes querySelector return null, and the next line throws a TypeError. Guard with an if (activeButton) check."
+      ]
+    },
+    {
+      "heading": "Applying the visual state with classList",
+      "points": [
+        "styles.css already defines .pressed, giving the element a lighter box-shadow and 50% opacity.",
+        "Test the idea in the console first: document.querySelector(\"h1\").classList.add(\"pressed\") applies the style immediately.",
+        "activeButton.classList.add(\"pressed\") switches the button into its pressed look.",
+        "On its own, the class never goes away, so the effect only happens once."
+      ]
+    },
+    {
+      "heading": "setTimeout for the reset",
+      "points": [
+        "setTimeout(function, delayInMilliseconds) runs a function once after a delay; it is another callback-taking function.",
+        "First argument: the function to run later (an anonymous function here) which calls activeButton.classList.remove(\"pressed\").",
+        "Second argument: the delay in ms. 100 ms (0.1 s) was chosen by experimenting; it reads as a quick flash.",
+        "The code after setTimeout does not wait; the add runs immediately and the remove fires 100 ms later.",
+        "Because the animation lives in the shared function, it works for clicks and keys with no extra code."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "buttonAnimation (reference repo)",
+      "language": "javascript",
+      "code": "function buttonAnimation(currentKey) {\n  var activeButton = document.querySelector(\".\" + currentKey);\n  activeButton.classList.add(\"pressed\");\n  setTimeout(function () {\n    activeButton.classList.remove(\"pressed\");\n  }, 100);\n}"
+    },
+    {
+      "caption": "Calling both functions from both listeners",
+      "language": "javascript",
+      "code": "document.querySelectorAll(\".drum\")[i].addEventListener(\"click\", function () {\n  var buttonInnerHTML = this.innerHTML;\n  makeSound(buttonInnerHTML);\n  buttonAnimation(buttonInnerHTML);\n});\n\ndocument.addEventListener(\"keydown\", function (event) {\n  makeSound(event.key);\n  buttonAnimation(event.key);\n});"
+    },
+    {
+      "caption": "The provided CSS class",
+      "language": "css",
+      "code": ".pressed {\n  box-shadow: 0 3px 4px 0 #dbedf3;\n  opacity: 0.5;\n}"
+    }
+  ],
+  "task": {
+    "name": "Add the pressed class to the active button",
+    "starting_point": "Drum kit with makeSound working for clicks and keys; styles.css already contains .pressed.",
+    "goal": "When a drum is clicked or its key typed, the drum briefly shows the pressed style, then returns to normal.",
+    "steps": [
+      "Create buttonAnimation(currentKey) and call it next to makeSound in both listeners.",
+      "Select the element with document.querySelector(\".\" + currentKey) and store it in activeButton.",
+      "Challenge: add the pressed class using classList.add.",
+      "Look up setTimeout and use it to remove the class after about 100 ms.",
+      "Test with clicks and with each of the seven keys."
+    ],
+    "expected_result": "Each drum dims with a small shadow for a tenth of a second whenever triggered.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "function buttonAnimation(currentKey) {\n  var activeButton = document.querySelector(\".\" + currentKey);\n  activeButton.classList.add(\"pressed\");\n  setTimeout(function () {\n    activeButton.classList.remove(\"pressed\");\n  }, 100);\n}"
+    },
+    "reference_repo_path": "Section 18 - Advanced Javascript and DOM Manipulation/18.09 - Adding Animation to Websites/script.js"
+  },
+  "pitfalls": [
+    "Forgetting the dot when building the selector (querySelector(currentKey)).",
+    "Delay passed in seconds rather than milliseconds.",
+    "Calling the remove immediately outside setTimeout, so the class vanishes before painting.",
+    "Pressing a non-drum key throws an error because querySelector returns null."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (no section 18 data).",
+    "gaps_and_ideas": [
+      "New lesson 'Flash feedback with classList and setTimeout': blurb on temporary visual states.",
+      "Tasks: add and remove a class manually in the console; build selector from a key; flash after 100 ms; guard against null; try a CSS transition for a smoother fade.",
+      "Starter: three pad divs with letters and a .pressed rule.",
+      "Interactive demo: slider for the timeout delay that changes the flash length live."
+    ]
+  }
+}

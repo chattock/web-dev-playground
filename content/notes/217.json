@@ -1,0 +1,83 @@
+{
+  "index": 217,
+  "lecture_id": 12386660,
+  "title": "Version Control Using Git and the Command Line",
+  "section": "27. Git, Github and Version Control",
+  "duration_min": 14,
+  "kind": "concept",
+  "summary": "A terminal demo of local Git: create a folder with text files, git init, stage with git add, save with git commit -m, inspect with git status and git log, compare with git diff, and discard bad edits with git checkout. Introduces the vocabulary of working directory, staging area and local repository.",
+  "concepts": [
+    {
+      "heading": "Setup used in the demo",
+      "points": [
+        "Uses command-line basics from the earlier terminal module: cd to move into a folder, mkdir to create one, ls to list contents, touch to create an empty file.",
+        "Demo project: a folder called Story on the desktop with chapter1.txt, chapter2.txt and chapter3.txt, each edited in a text editor. The files are only stand-ins for source code.",
+        "ls -a also lists hidden entries, which is how the .git folder becomes visible (Finder hides it)."
+      ]
+    },
+    {
+      "heading": "Three places a change can live",
+      "points": [
+        "Working directory: the folder where git init was run (here Story). Git compares what is in this folder with what has been recorded.",
+        "Staging area: a holding zone where you select which changes go into the next save point. Files can sit in the working directory without being staged.",
+        "Local repository: the history of commits stored in the hidden .git folder on your machine.",
+        "Flow: edit files in the working directory, git add to stage, git commit to record in the repository.",
+        "Why staging exists: it lets you commit only some of your files or edits, leaving others out of the record."
+      ]
+    },
+    {
+      "heading": "Commands in order",
+      "points": [
+        "git init: turns the current directory into a repository by creating the hidden .git folder. Prints a message that an empty repository was initialised.",
+        "git status: shows the state of files. Untracked files (in the working directory, not yet staged) show in red; staged new files show in green under changes to be committed. Modified tracked files appear as modified.",
+        "git add <file>: stage one file, e.g. git add chapter1.txt.",
+        "git add . : stage everything in the current directory in one go; the dot means 'here'. Saves typing one name at a time.",
+        "git commit -m \"message\": record the staged changes as a save point; -m supplies the message inline. Without -m Git opens an editor for the message.",
+        "Commit messages should say what changed since the previous save point. Convention is the present tense, as in 'Complete chapter 1' or 'Initial commit' for the first one, as if you were submitting the change now.",
+        "git log: lists commits newest first, each with a unique hash identifying it, author, date and the message. The label HEAD marks the commit you are currently on.",
+        "git diff <file>: compares the file in the working directory with the last committed version. Removed lines are shown in red and added lines in green, so you can inspect or copy useful parts before deciding.",
+        "git checkout <file>: discards uncommitted changes to that file and restores it to its state in the last commit. In the demo, a chapter overwritten with gibberish is restored instantly."
+      ]
+    },
+    {
+      "heading": "Demo walk-through",
+      "points": [
+        "Commit 1: chapter1.txt is staged and committed with the message 'Complete chapter 1'.",
+        "Commit 2: chapter2.txt and chapter3.txt are created and filled, git status shows them untracked, git add . stages both, and git commit -m 'Complete chapter 2 and 3' makes the second save point. git log now shows two commits with different hashes.",
+        "Rollback demo: chapter3.txt is deliberately ruined and saved; git status reports it as modified but unstaged; git diff chapter3.txt shows the damage; git checkout chapter3.txt brings back the committed text.",
+        "(Extra) In current Git versions git restore <file> is the dedicated command for discarding working-tree changes, and git checkout <file> still works for it. git checkout -- <file> is a safer spelling if a branch has the same name as the file.",
+        "(Extra) git checkout only restores changes that were never committed; once changes are committed you move between versions using their hashes (for example git checkout <hash> or git revert)."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Full local workflow from the demo",
+      "language": "bash",
+      "code": "cd ~/Desktop\nmkdir Story\ncd Story\ntouch chapter1.txt     # then edit it in an editor\ngit init                # creates the hidden .git folder\nls -a                   # shows .git\ngit status              # chapter1.txt is untracked (red)\ngit add chapter1.txt    # stage it\ngit status              # now a new file to be committed (green)\ngit commit -m \"Complete chapter 1\"\n\ntouch chapter2.txt chapter3.txt   # then edit both\ngit add .\ngit commit -m \"Complete chapter 2 and 3\"\ngit log                 # two commits, HEAD on the latest"
+    },
+    {
+      "caption": "Inspecting and discarding changes",
+      "language": "bash",
+      "code": "git status                # shows chapter3.txt modified, not staged\ngit diff chapter3.txt     # lines removed vs added since last commit\ngit checkout chapter3.txt # restore last committed version\n# modern equivalent:\ngit restore chapter3.txt"
+    }
+  ],
+  "task": null,
+  "pitfalls": [
+    "Running git init in the wrong folder (for instance the home directory), making everything inside it part of the repository.",
+    "Forgetting git add before git commit; unstaged changes are not included in the commit.",
+    "Past-tense or vague commit messages such as 'stuff', which make the log useless.",
+    "git checkout <file> permanently discards uncommitted edits, so run git diff first if anything in the file might be worth keeping.",
+    "(Extra) Git does not track empty folders and ignores nothing by default; add a .gitignore for files you do not want recorded."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "New lesson 'Git basics: init, add, commit': blurb on working directory, staging area and repository.",
+      "Tasks: (1) init a repo in a new folder, (2) create and stage a file, (3) commit with a present-tense message, (4) edit the file, run git diff, then restore it, (5) read git log and identify HEAD.",
+      "Starter idea: a simulated terminal in the page with a virtual file system accepting touch, git init, add, commit, status, log, diff and checkout.",
+      "Interactive demo idea: a three-box diagram (working directory, staging area, repository) where each command animates a file card moving between boxes and git status output updates live."
+    ]
+  }
+}

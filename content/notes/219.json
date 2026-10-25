@@ -1,0 +1,84 @@
+{
+  "index": 219,
+  "lecture_id": 12386672,
+  "title": "Gitignore",
+  "section": "27. Git, Github and Version Control",
+  "duration_min": 11,
+  "kind": "concept",
+  "summary": "Explains why and how to keep files out of Git using a .gitignore file: secrets, OS and editor settings, and generated folders such as node_modules. Demonstrates ignoring individual files and patterns, undoing an accidental git add with git rm --cached, and starting a Node project from GitHub's pre-made .gitignore template.",
+  "concepts": [
+    {
+      "heading": "What should not be committed",
+      "points": [
+        "Secrets: passwords, API keys, cloud credentials. Once pushed to a public remote they can be harvested almost immediately, with real financial damage possible.",
+        "Personal or machine-specific files: editor settings, OS metadata such as macOS .DS_Store (a hidden file storing things like icon arrangement in a folder). They are useless to collaborators and clutter the repository.",
+        "(Extra) Generated or downloadable content such as node_modules, build output and logs; these can be recreated with npm install or a build."
+      ]
+    },
+    {
+      "heading": "Creating and writing .gitignore",
+      "points": [
+        "Create a plain file named exactly .gitignore (leading dot, lowercase) in the project root, e.g. with touch .gitignore. It is hidden, so use ls -a to see it. Git looks for this exact name.",
+        "One pattern per line. To ignore a single file, write its name exactly, matching case: .DS_Store, secrets.txt.",
+        "A line starting with # is a comment.",
+        "Wildcards: *.txt ignores every file ending in .txt anywhere under the repository. Use with care, since it will exclude files you actually want.",
+        "(Extra) A trailing slash such as logs/ matches directories; a leading ! re-includes a path that an earlier rule excluded.",
+        "The .gitignore file itself is normally committed so that collaborators share the same rules."
+      ]
+    },
+    {
+      "heading": "Demo sequence",
+      "points": [
+        "Project folder with file1.txt, file2.txt, file3.txt and a secrets file, plus a .DS_Store, and an empty .gitignore.",
+        "git init, then git add . stages everything; git status shows the unwanted secrets and .DS_Store would be committed.",
+        "To undo that staging: git rm --cached -r . removes everything from the staging area (index) while leaving the files on disk; -r makes it recursive. git status then shows nothing staged.",
+        "Add .DS_Store and secrets.txt to .gitignore, run git add . again and check git status: only .gitignore and the three file1-3 files are staged; the ignored ones no longer appear.",
+        "Committing and pushing now includes only those four files."
+      ]
+    },
+    {
+      "heading": "Templates for Node projects",
+      "points": [
+        "GitHub maintains a public repository named gitignore (under the github organisation) with ready-made templates per language and framework. The Node template already covers node_modules, logs, environment files and similar.",
+        "Copy the template contents into your .gitignore and add your own extras, for instance a '# Project-wide' comment followed by .DS_Store.",
+        "Flow shown: new Node project, npm install, create .gitignore with the template, then git init, git add ., git status, git commit -m 'Initial commit'.",
+        "Use .gitignore for API keys and other sensitive data before the first commit; list the files holding them (for instance .env)."
+      ]
+    },
+    {
+      "heading": "Important limitation",
+      "points": [
+        "(Extra) .gitignore only affects untracked files. A file that was already committed stays tracked and in history after you add it to .gitignore; remove it from tracking with git rm --cached <file>. A secret that was ever pushed should be treated as leaked and rotated, because it still exists in history."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Ignoring files in a fresh project",
+      "language": "bash",
+      "code": "cd ~/Desktop/Project\ntouch .gitignore\nls -a                  # .gitignore and .DS_Store visible\ngit init\ngit add .              # oops: secrets.txt and .DS_Store got staged\ngit status\ngit rm --cached -r .   # unstage everything (files stay on disk)\n# edit .gitignore, then:\ngit add .\ngit status             # secrets and .DS_Store no longer listed\ngit commit -m \"Initial commit\""
+    },
+    {
+      "caption": ".gitignore syntax",
+      "language": "text",
+      "code": "# Project-wide\n.DS_Store\nsecrets.txt\n\n# Logs\n*.log\n\n# Node\nnode_modules/\n.env"
+    }
+  ],
+  "task": null,
+  "pitfalls": [
+    "Wrong name or case (gitignore, .Gitignore); Git silently ignores it.",
+    "Adding a file to .gitignore after it was committed or staged; it keeps being tracked until removed with git rm --cached.",
+    "Overly broad wildcards like *.txt that exclude files you meant to keep.",
+    "Pushing secrets to a public repository before setting up .gitignore.",
+    "(Extra) git rm --cached -r . without a path argument unstages everything; it does not delete files from disk."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "Add to the proposed Git lesson series a .gitignore task: given a file list in a simulated repo, write patterns so git status shows only the intended files.",
+      "Demo idea: a pattern tester where the learner types .gitignore lines and sees which sample paths (node_modules/, .env, secrets.txt, app.log, notes.txt) are ignored or tracked.",
+      "Concept check: what happens if you add a file to .gitignore after committing it."
+    ]
+  }
+}

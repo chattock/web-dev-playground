@@ -1,0 +1,135 @@
+{
+  "index": 15,
+  "lecture_id": 37349664,
+  "title": "Self Closing Tags",
+  "section": "2. Introduction to HTML",
+  "duration_min": 12,
+  "kind": "concept+exercise",
+  "summary": "Introduces void (self-closing) elements, focusing on the horizontal rule <hr /> and line break <br />: how their single-tag syntax differs from a closing tag, when to use each, and why br must not replace p. The exercise formats a William Blake profile page with h1, p, br and hr, and the solution adds a diff-checking tip for finding bugs.",
+  "concepts": [
+    {
+      "heading": "Void vs non-void elements",
+      "points": [
+        "Non-void elements (h1-h6, p, ...) have an opening tag, content in between, and a closing tag.",
+        "A void element is one that is not allowed to contain any content. Because there's nothing to wrap, it is written as a single tag: no separate opening and closing tags.",
+        "The name of the element goes first, then a space (by convention), then a forward slash, then the closing angle bracket: <hr /> and <br />.",
+        "(Extra) Other void elements met later in the course include <img />, <input />, <meta /> and <link />."
+      ]
+    },
+    {
+      "heading": "Where the slash goes (and which slash)",
+      "points": [
+        "In a closing tag such as </p>, the slash comes right after the opening angle bracket, before the tag name.",
+        "In a void element such as <br />, the slash comes after the tag name, just before the final angle bracket. Easy to mix up, so check the position.",
+        "It must be a forward slash (/, leaning right), never a backslash (\\, leaning left)."
+      ]
+    },
+    {
+      "heading": "<hr />: horizontal rule",
+      "points": [
+        "Renders a horizontal line across the page at the point where it appears in the document.",
+        "Use it to divide content and signal that what follows is a separate, unrelated part, e.g. placing it between two paragraphs puts a line between them.",
+        "(Extra) Semantically, hr marks a thematic break in content; its look (thin grey inset line by default) can be restyled with CSS."
+      ]
+    },
+    {
+      "heading": "<br />: line break",
+      "points": [
+        "Forces the following text onto a new line without starting a new paragraph.",
+        "Meant for text that is still one paragraph but whose line divisions carry meaning: poems (line breaks control rhythm, rhyme and where to pause) and postal addresses.",
+        "Example used: the opening four lines of Blake's 'Auguries of Innocence'. Written inside a single p without br they run together into one line; with a br at the end of each line they display as proper verse.",
+        "The br itself holds no content; it only marks where the break goes."
+      ]
+    },
+    {
+      "heading": "Do's and don'ts",
+      "points": [
+        "Don't use br to fake new paragraphs (stacking breaks to push text down). It harms accessibility: screen-reader users rely on real p elements to understand and navigate content.",
+        "Create a new p for every real paragraph; reserve br for line breaks inside one paragraph (poem, address).",
+        "Both <br /> and <br> (and <hr /> and <hr>) are valid HTML. In HTML5 the trailing slash is ignored: the parser already knows br and hr are void after reading the tag name.",
+        "Recommended style in the course: keep the trailing slash, because it makes void elements easy to spot when reading code and avoids hunting for a closing tag that doesn't exist. Expect to see the slash-less form online too."
+      ]
+    },
+    {
+      "heading": "Debugging tip: diff your code against the solution",
+      "points": [
+        "Copy solution.html into one side of diffchecker.com and your index.html into the other, then click 'Find Difference'. Every mismatch gets highlighted.",
+        "Harmless differences also show up, e.g. an extra space between 'Blake' and </h1> changes nothing in the rendered page.",
+        "Real bugs stand out: if the closing tag is mistyped (e.g. the h is dropped so it reads </1>), the h1 never closes and everything after it renders as giant heading text. The diff points straight at the broken tag."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "hr between two paragraphs draws a dividing line",
+      "language": "html",
+      "code": "<p>First paragraph about one topic.</p>\n<hr />\n<p>Second paragraph about something unrelated.</p>"
+    },
+    {
+      "caption": "Closing tag vs void element: note where the slash sits",
+      "language": "html",
+      "code": "</p>    <!-- closing tag: slash BEFORE the name -->\n<br />  <!-- void element: slash AFTER the name, before > -->\n<hr />"
+    },
+    {
+      "caption": "A poem inside one paragraph, with br at each line end (Blake, public domain)",
+      "language": "html",
+      "code": "<p>\n  To see a World in a Grain of Sand<br />\n  And a Heaven in a Wild Flower,<br />\n  Hold Infinity in the palm of your hand<br />\n  And Eternity in an hour.\n</p>"
+    },
+    {
+      "caption": "Do / don't: real paragraphs vs stacked breaks",
+      "language": "html",
+      "code": "<!-- Don't: br used to fake paragraphs -->\n<p>Paragraph one text.<br /><br />Paragraph two text.</p>\n\n<!-- Do: one p per paragraph -->\n<p>Paragraph one text.</p>\n<p>Paragraph two text.</p>"
+    },
+    {
+      "caption": "Both spellings are valid HTML5; the course prefers the slash",
+      "language": "html",
+      "code": "<br />  <hr />   <!-- preferred in the course -->\n<br>    <hr>     <!-- also valid -->"
+    },
+    {
+      "caption": "The bug shown with the diff tool: an unclosed h1 swallows the rest of the page",
+      "language": "html",
+      "code": "<h1>William Blake</1>   <!-- typo: should be </h1> -->\n<p>17 south molton street <br /> ...</p>\n<!-- everything below now renders at h1 size -->"
+    }
+  ],
+  "task": {
+    "name": "2.3 Void Elements: William Blake profile",
+    "starting_point": "Download and extract the lesson's starter folder and open index.html. It contains plain, unformatted text: the name William Blake, his London address on four lines (17 south molton street / London / W1K 5QT / UK), and two Wikipedia paragraphs about him. In the preview it is one jumbled block.",
+    "goal": "Format the page with everything learned so far (h1, p, br, hr) so the preview matches goal.png.",
+    "steps": [
+      "Wrap 'William Blake' in an h1: it's the most important text on the page.",
+      "Wrap the four address lines together in one p (an address is a single paragraph).",
+      "Add <br /> at the end of each address line so each part sits on its own line within that paragraph. Typing it once and copy-pasting to the other lines is fine.",
+      "Wrap the first Wikipedia block in its own p, and the second block in another p, so the biography shows as two separate paragraphs.",
+      "Insert <hr /> between the address paragraph and the first biography paragraph, separating the name/address from the description.",
+      "Preview and compare with goal.png, then compare with solution.html. Optionally paste both into diffchecker.com to spot any differences."
+    ],
+    "expected_result": "Large 'William Blake' heading; the address on four stacked lines with no gaps between them; a grey horizontal line; then two separate biography paragraphs with a gap between them.",
+    "solution_code": {
+      "language": "html",
+      "code": "<body>\n  <h1>William Blake</h1>\n  <p>\n    17 south molton street <br />\n    London <br />\n    W1K 5QT <br />\n    UK <br />\n  </p>\n  <hr />\n  <p>\n    William Blake (28 November 1757 – 12 August 1827) was an English poet,\n    painter, and printmaker. ... (first Wikipedia paragraph)\n  </p>\n  <p>\n    Although Blake was considered mad by contemporaries for his idiosyncratic\n    views, ... (second Wikipedia paragraph)\n  </p>\n</body>"
+    },
+    "reference_repo_path": "Section 02 - Introduction to HTML/02.03 - Void Elements/solution.html"
+  },
+  "pitfalls": [
+    "Writing the slash in the closing-tag position (</br>) or using a backslash (<br \\>).",
+    "Trying to put content inside a void element, or adding a closing tag such as </hr>.",
+    "Using several br elements to create space between paragraphs instead of separate p elements (bad for screen readers).",
+    "Splitting the address into four separate p elements: it is one paragraph broken into lines.",
+    "A typo in a closing tag (e.g. </1>) leaves an element open and restyles everything after it; diff against the solution to find it quickly.",
+    "(Extra) The reference repo's files include a personal 'Made with ... by Harshit Soni' footer that is not part of the course; leave it out. Its index.html is already completed, so it doesn't show the unformatted starter."
+  ],
+  "playground": {
+    "match": "s02-void-elements (lesson 2.3, data/s02.js)",
+    "coverage": "Tasks cover br inside the address paragraph and an hr before the biography. Explore demo compares br with separate p elements. Notes list common void elements and explain that the trailing slash is optional in HTML5.",
+    "gaps_and_ideas": [
+      "Starter has one biography paragraph; the course file has two and expects them as separate p elements. Add the second paragraph and a task to split them.",
+      "Add the h1 step to the tasks (the course asks learners to mark up the name as h1; the playground starter pre-fills it). Consider shipping the starter as raw text so all four elements have to be added.",
+      "Add a 'slash position' callout: </p> (slash before name) vs <br /> (slash after name), and forward slash vs backslash. A tiny 'spot the valid tag' quiz (</br>, <br\\>, <br />, <br>) would test it.",
+      "State the definition explicitly: a void element cannot contain content, so it has no closing tag.",
+      "Add the poem example (Blake's 'Auguries of Innocence' opening lines, public domain) to the br explore demo as a second preset next to the address, showing one p with and without br.",
+      "Add an explicit accessibility note: never stack br to fake paragraphs, because screen readers use p elements.",
+      "Add a 'find the bug' explore or task based on the diff tip: a page where </h1> is typed as </1> so the whole page turns into heading text, with a built-in side-by-side diff against the solution.",
+      "Mention that HTML5 ignores the trailing slash, and why the course keeps it (readability). The current note already covers this; link it to the tag-position callout."
+    ]
+  }
+}

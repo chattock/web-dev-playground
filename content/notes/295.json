@@ -1,0 +1,102 @@
+{
+  "index": 295,
+  "lecture_id": 17039100,
+  "title": "React Props Practice",
+  "section": "36. React.js",
+  "duration_min": 13,
+  "kind": "concept+exercise",
+  "summary": "A four-step practice project that turns a hard-coded contact card into a styled, reusable Card component driven by props, then fills three cards from a contacts data file. The solution walkthrough finishes with the observation that indexing the array by hand is tedious and that map will replace it later.",
+  "concepts": [
+    {
+      "heading": "Step 1: apply the provided CSS classes",
+      "points": [
+        "styles.css already defines the needed classes; the job is to read it and attach the right ones in JSX using className (not class).",
+        "name class: goes on the h2 with the contact name; sets a larger font size, a colour and margin so it no longer touches the card edge.",
+        "circle-img class: goes on the img; gives it a round shape (border-radius 50%) plus a border. A second rule targets any img inside .card and is already applied automatically because the img sits inside the card div; this is why the image already had some positioning before the class was added.",
+        "info class: goes on both p elements (phone and email); changes colour and adds a small margin.",
+        "Comparing the running app against the finished demo and checking which CSS selector produces which effect is the recommended way to discover which class belongs where.",
+        "(Extra) How the rest of styles.css builds the card: .card is a rounded, shadowed teal box with position: relative and a fixed 200px height; .top is an absolutely positioned darker strip (top: 0, left: 0, height 100px, display: flex) holding the name and picture side by side; .name has flex: 1 so it fills the space left of the image; .bottom has margin-top: 120px to push the phone and email below the strip; .heading centres and enlarges the page title; body is fixed at 400px wide and centred with margin: 0 auto."
+      ]
+    },
+    {
+      "heading": "Step 2: extract a reusable Card component",
+      "points": [
+        "Everything inside the div with class card is the part that repeats. The outer wrapper div and the page h1 heading stay in App.",
+        "Create a new file inside a components folder (card.jsx in the lecture). In it: define a function component, return the copied card markup, and export it as the default export.",
+        "In App, import it by relative path (import Card from './components/Card' style), then use it as <Card /> with PascalCase and a self-closing tag.",
+        "Result after this step: the single Beyonce card renders exactly as before, but now through a component.",
+        "(Extra) Name the file Card.jsx so its casing matches the import path ./components/Card; a lowercase card.jsx imported as Card works on macOS/Windows but fails on case-sensitive Linux builds."
+      ]
+    },
+    {
+      "heading": "Step 3: replace hard-coded values with props",
+      "points": [
+        "Look through the card markup for anything specific to a person: name, image URL, phone and email. Each becomes a prop on the <Card /> element, written like an HTML attribute (key=\"value\"), even though it ends up as an object.",
+        "Delete the hard-coded text from the component and read the values from the function argument instead. The parameter can have any name but props is the universal convention.",
+        "Mapping used: {props.name} in the h2, src={props.img} on the image, {props.tel} and {props.email} in the two info paragraphs. Curly braces are required so JSX evaluates them as JavaScript instead of printing text like props.name.",
+        "If a prop name is forgotten, look back at where the Card is used in App."
+      ]
+    },
+    {
+      "heading": "Step 4: use contacts.js as the data source",
+      "points": [
+        "contacts.js holds an array of objects, each with name, imgURL, phone and email keys, matching what a card needs. Own data can replace it.",
+        "Export the array so other files can import it, then import it in App (a named export with braces, or a default export without; the file in the repo uses a named export). Logging it shows an array of three objects.",
+        "Create one Card per contact and feed values with indexes: name={contacts[0].name}, img={contacts[0].imgURL} and so on, changing the index to 1 and 2 for the next two cards. The expression is JavaScript so it sits in curly braces.",
+        "This works but is repetitive. The upcoming lessons on map, filter and reduce show how to generate the cards from the array automatically."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Card component after steps 1 to 3 (cleaned from the reference repo)",
+      "language": "jsx",
+      "code": "function Card(props) {\n  return (\n    <div className=\"card\">\n      <div className=\"top\">\n        <h2 className=\"name\">{props.name}</h2>\n        <img className=\"circle-img\" src={props.img} alt=\"avatar\" />\n      </div>\n      <div className=\"bottom\">\n        <p className=\"info\">{props.tel}</p>\n        <p className=\"info\">{props.email}</p>\n      </div>\n    </div>\n  );\n}\n\nexport default Card;"
+    },
+    {
+      "caption": "Step 4 in App using index access (illustrative)",
+      "language": "jsx",
+      "code": "import Card from \"./components/Card\";\nimport { contacts } from \"./contacts\";\n\nfunction App() {\n  return (\n    <div>\n      <h1 className=\"heading\">My Contacts</h1>\n      <Card name={contacts[0].name} img={contacts[0].imgURL} tel={contacts[0].phone} email={contacts[0].email} />\n      <Card name={contacts[1].name} img={contacts[1].imgURL} tel={contacts[1].phone} email={contacts[1].email} />\n      <Card name={contacts[2].name} img={contacts[2].imgURL} tel={contacts[2].phone} email={contacts[2].email} />\n    </div>\n  );\n}\n\nexport default App;"
+    },
+    {
+      "caption": "contacts.js (reference repo)",
+      "language": "javascript",
+      "code": "const contacts = [\n  {\n    name: \"Beyonce\",\n    imgURL: \"https://blackhistorywall.files.wordpress.com/2010/02/picture-device-independent-bitmap-119.jpg\",\n    phone: \"+123 456 789\",\n    email: \"b@beyonce.com\"\n  },\n  {\n    name: \"Jack Bauer\",\n    imgURL: \"https://pbs.twimg.com/profile_images/625247595825246208/X3XLea04_400x400.jpg\",\n    phone: \"+987 654 321\",\n    email: \"jack@nowhere.com\"\n  },\n  {\n    name: \"Chuck Norris\",\n    imgURL: \"https://i.pinimg.com/originals/e3/94/47/e39447de921955826b1e498ccf9a39af.png\",\n    phone: \"+918 372 574\",\n    email: \"gmail@chucknorris.com\"\n  }\n];\n\nexport { contacts };"
+    }
+  ],
+  "task": {
+    "name": "Contact list app with props",
+    "starting_point": "A CodeSandbox/Vite project where App.jsx holds one hard-coded, unstyled Beyonce card, plus styles.css and a contacts.js data file with three contacts.",
+    "goal": "Match the finished contact list: a heading and three styled, circular-avatar cards, all produced by one reusable Card component fed through props.",
+    "steps": [
+      "Add className values in App.jsx so the layout matches the demo: name on the h2, circle-img on the img, info on both p elements.",
+      "Extract the card div into its own Card component file in a components folder, export it by default and import it into App.",
+      "Turn the name, image, phone and email into props on <Card />, and read them via props.* inside the component.",
+      "Export the contacts array from contacts.js, import it in App and create three Cards using contacts[0], contacts[1] and contacts[2]."
+    ],
+    "expected_result": "Three cards, one per contact, each with name, round picture, phone and email, matching the finished version, with no hard-coded contact data left inside Card.",
+    "solution_code": {
+      "language": "jsx",
+      "code": "// components/Card.jsx\nfunction Card(props) {\n  return (\n    <div className=\"card\">\n      <div className=\"top\">\n        <h2 className=\"name\">{props.name}</h2>\n        <img className=\"circle-img\" src={props.img} alt=\"avatar\" />\n      </div>\n      <div className=\"bottom\">\n        <p className=\"info\">{props.tel}</p>\n        <p className=\"info\">{props.email}</p>\n      </div>\n    </div>\n  );\n}\nexport default Card;\n\n// App.jsx (lecture approach: one Card per array index)\nimport Card from \"./components/Card\";\nimport { contacts } from \"./contacts\";\n\nfunction App() {\n  return (\n    <div>\n      <h1 className=\"heading\">My Contacts</h1>\n      <Card name={contacts[0].name} img={contacts[0].imgURL} tel={contacts[0].phone} email={contacts[0].email} />\n      <Card name={contacts[1].name} img={contacts[1].imgURL} tel={contacts[1].phone} email={contacts[1].email} />\n      <Card name={contacts[2].name} img={contacts[2].imgURL} tel={contacts[2].phone} email={contacts[2].email} />\n    </div>\n  );\n}\nexport default App;\n\n// (Extra) Preview of the later mapping lesson, which replaces the three lines above:\n// {contacts.map((c, i) => (\n//   <Card key={i} name={c.name} img={c.imgURL} tel={c.phone} email={c.email} />\n// ))}"
+    },
+    "reference_repo_path": "Section 36 - React.js/36.19 React Props Practice/react-props-practice/src/App.jsx"
+  },
+  "pitfalls": [
+    "Using class instead of className in JSX.",
+    "Mismatch between exporting and importing (default export imported with braces, or named export imported without).",
+    "Wrong relative path in the import (./ versus ../) when the component or data file sits in a different folder.",
+    "Forgetting curly braces around props.* or contacts[0].* expressions.",
+    "Prop name differences between App and Card (img versus imgURL) leave fields blank.",
+    "Reference repo quirk: its ContactCard also contains the page h1 heading, so the heading repeats above every card, unlike the lecture where the heading stays in App. It names the props imgURL, phone and email, and loops with Object.values(contacts).map; Object.values is redundant on an array (contacts.map does the same), and mapping belongs to a later lesson, not this one."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "New lesson 'Props practice: contact cards': blurb on turning a hard-coded card into a reusable styled component fed by a data file.",
+      "Tasks: (1) attach name/circle-img/info classes; (2) move the card into its own file with a default export; (3) turn the four values into props; (4) import the contacts array and render three cards; (5) stretch: add a fourth contact by editing only the data file.",
+      "Starter code idea: single hard-coded card, a styles block, and a contacts array of three objects.",
+      "Interactive demo idea: a visual that highlights which part of the JSX each CSS class affects, with toggles that remove a class to show the visual change, plus a data editor whose changes update the rendered cards live."
+    ]
+  }
+}

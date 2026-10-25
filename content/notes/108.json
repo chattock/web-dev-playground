@@ -1,0 +1,78 @@
+{
+  "index": 108,
+  "lecture_id": 12374056,
+  "title": "Control Statements: While Loops",
+  "section": "15. Intermediate Javascript",
+  "duration_min": 8,
+  "kind": "concept+exercise",
+  "summary": "Introduces the while loop, which repeats a block while its condition is true. Used to make FizzBuzz fill the array up to 100 in one call, shows how an infinite loop freezes the tab, and sets the 99 Bottles of Beer challenge.",
+  "concepts": [
+    {
+      "heading": "How a while loop runs",
+      "points": [
+        "Syntax: while (condition) { body }. The condition is checked before every pass; the body runs again and again until the condition is false.",
+        "Step through: i = 1; check i < 2 (true); run body (log i, then i++ so i is 2); jump back; check again, now false, so skip to the code after the loop.",
+        "The body must change something that the condition depends on, otherwise it never ends.",
+        "If the condition is false from the start, the body never runs at all."
+      ]
+    },
+    {
+      "heading": "Applying it to FizzBuzz",
+      "points": [
+        "Wrap the existing if / else if chain in while (count <= 100) { ... }.",
+        "Keep count++ inside the loop after the checks, so each pass handles one number and moves on.",
+        "One call to fizzBuzz now fills output with 100 items. When count reaches 101 the condition fails and execution continues to console.log(output) after the loop.",
+        "The editor highlights the matching brace to show exactly what is inside the loop body."
+      ]
+    },
+    {
+      "heading": "Infinite loops",
+      "points": [
+        "While loops are error-prone: forgetting count++ leaves count at 1, so count <= 100 stays true forever.",
+        "In the browser this hangs or crashes the tab and disconnects DevTools. Reloading the page recovers.",
+        "Try it deliberately once in a throwaway snippet so you recognise the symptom later."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Minimal while loop",
+      "language": "javascript",
+      "code": "var i = 1;\nwhile (i < 2) {\n  console.log(i);   // 1\n  i++;\n}"
+    },
+    {
+      "caption": "FizzBuzz to 100",
+      "language": "javascript",
+      "code": "var output = [];\nvar count = 1;\n\nfunction fizzBuzz() {\n  while (count <= 100) {\n    if (count % 3 === 0 && count % 5 === 0) {\n      output.push(\"FizzBuzz\");\n    } else if (count % 3 === 0) {\n      output.push(\"Fizz\");\n    } else if (count % 5 === 0) {\n      output.push(\"Buzz\");\n    } else {\n      output.push(count);\n    }\n    count++;\n  }\n  console.log(output);\n}\nfizzBuzz();"
+    }
+  ],
+  "task": {
+    "name": "99 Bottles of Beer (introduced)",
+    "starting_point": "A browser DevTools snippet, with a function of your own name (for example beer).",
+    "goal": "Using a while loop, print the full lyrics of the song to the console when the function is called, decreasing the count by one each verse.",
+    "steps": [
+      "Create a function you can call from the console.",
+      "Use a while loop with a counter that starts at 99 and decreases.",
+      "Log each verse inside the loop instead of writing separate console.log lines.",
+      "Handle the final verse: no more bottles, go to the store, back to 99."
+    ],
+    "expected_result": "The console prints the whole song from 99 down to no more bottles when the function is called.",
+    "solution_code": null,
+    "reference_repo_path": "Section 15 - Intermediate Javascript/15.10 - Control Statements - While Loops/script.js"
+  },
+  "pitfalls": [
+    "Forgetting to update the loop variable, causing an infinite loop that freezes the tab.",
+    "Off-by-one conditions: < 100 versus <= 100 changes whether 100 is processed.",
+    "Declaring count inside the loop so it resets every pass.",
+    "Reference repo version matches the lecture's final FizzBuzz loop."
+  ],
+  "playground": {
+    "match": "s15-while (lesson 15.10, data/s15.js) and s15-bottles (15.11)",
+    "coverage": "Covers the loop shape, countdown, array walking, infinite-loop warning and while vs for. The bottles challenge is its own lesson.",
+    "gaps_and_ideas": [
+      "Add the FizzBuzz-to-100 loop as a task, since it is the lecture's main example.",
+      "Add a step-through task tracing i, the condition and the output on paper.",
+      "Demo idea: stepper that runs a loop one iteration at a time showing the variable, the condition result and the output."
+    ]
+  }
+}

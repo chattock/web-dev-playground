@@ -1,0 +1,105 @@
+{
+  "index": 110,
+  "lecture_id": 12374074,
+  "title": "Control Statements: For Loops",
+  "section": "15. Intermediate Javascript",
+  "duration_min": 6,
+  "kind": "concept+exercise",
+  "summary": "Introduces the for loop as a compact rearrangement of the while loop, walks through exactly when each of its three parts runs, and converts the FizzBuzz function from while to for. Ends with guidance on choosing between while and for.",
+  "concepts": [
+    {
+      "heading": "Anatomy of a for loop",
+      "points": [
+        "Syntax: the keyword for, then parentheses holding three parts separated by semicolons, then a block in curly braces.",
+        "Part 1, initialisation: declare and set the counter, e.g. var i = 0. It runs once, before the first round.",
+        "Part 2, condition: a boolean test such as i < 2. It is evaluated before every round, including the first; when it is false the loop ends and execution continues on the next line after the block.",
+        "Part 3, update: how the counter changes after each round, e.g. i++, i-- or a step of 2 or 3 (i += 2). It runs at the end of the block, right at the closing brace, not at the start.",
+        "A for loop is 'syntactic sugar' for a while loop: the counter creation, the exit test and the counter change are all gathered in the header instead of being spread around the loop."
+      ]
+    },
+    {
+      "heading": "Trace of a one-round loop",
+      "points": [
+        "Start: create i = 1. Check 1 < 2: true, so run the body, which logs 1.",
+        "End of the body: the update runs and i becomes 2. Jump back to the test: 2 < 2 is false, so the loop exits.",
+        "Takeaway: the condition is checked first each time, so a loop whose condition is false from the start never runs its body."
+      ]
+    },
+    {
+      "heading": "Converting the FizzBuzz function from while to for",
+      "points": [
+        "Replace the keyword while with for.",
+        "Move the counter declaration (starting at 1) from above the loop into the first slot of the header.",
+        "Condition: keep going up to and including 100.",
+        "Update: increment by 1 each time, so the line that changed the counter inside the old while body is removed.",
+        "Calling the function gives identical output to the while version, with less code, which is why most programmers prefer for when the number of rounds is known."
+      ]
+    },
+    {
+      "heading": "Direction and step size",
+      "points": [
+        "Counting down: start high, use a decrement as the update (count--) and test a lower bound, e.g. start at 100 and stop once it is no longer above 1.",
+        "Any step is allowed (by 2, 3, etc.), so for loops handle any counting pattern."
+      ]
+    },
+    {
+      "heading": "while vs for",
+      "points": [
+        "while tests a state: keep repeating while something remains true (e.g. while a player is alive) when the number of rounds is not known in advance.",
+        "for iterates: run code a defined number of times, with the counter set up in the header.",
+        "(Extra) Either can express the other; pick the one that reads most clearly for the job."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "For loop that logs once (trace example)",
+      "language": "javascript",
+      "code": "for (var i = 1; i < 2; i++) {\n  console.log(i);   // runs once with i = 1\n}\n// after the body i++ makes i 2, test 2 < 2 fails, loop ends"
+    },
+    {
+      "caption": "FizzBuzz with a for loop (reference repo, tidied)",
+      "language": "javascript",
+      "code": "var output = [];\n\nfunction fizzBuzz() {\n  for (var i = 1; i <= 100; i++) {\n    if (i % 3 === 0 && i % 5 === 0) {\n      output.push(\"FizzBuzz\");\n    } else if (i % 3 === 0) {\n      output.push(\"Fizz\");\n    } else if (i % 5 === 0) {\n      output.push(\"Buzz\");\n    } else {\n      output.push(i);\n    }\n  }\n  console.log(output);\n}\nfizzBuzz();"
+    },
+    {
+      "caption": "Counting down and stepping by 2",
+      "language": "javascript",
+      "code": "for (var count = 100; count >= 1; count--) { /* 100 down to 1 */ }\nfor (var n = 0; n <= 10; n += 2) { /* 0,2,4,...,10 */ }"
+    }
+  ],
+  "task": {
+    "name": "Refactor FizzBuzz from while to for",
+    "starting_point": "The FizzBuzz function from the earlier while-loop lecture, with a counter declared before the loop and changed inside it.",
+    "goal": "Rewrite it using a for loop and confirm the output is unchanged.",
+    "steps": [
+      "Change while to for.",
+      "Move the counter declaration into the first part of the header.",
+      "Put the end condition (up to 100) as the second part.",
+      "Add the increment as the third part and delete the old increment line from the body.",
+      "Call fizzBuzz() and compare the result with the while version."
+    ],
+    "expected_result": "Same FizzBuzz sequence for 1 to 100 as before, using fewer lines.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "for (var i = 1; i <= 100; i++) {\n  if (i % 3 === 0 && i % 5 === 0) output.push(\"FizzBuzz\");\n  else if (i % 3 === 0) output.push(\"Fizz\");\n  else if (i % 5 === 0) output.push(\"Buzz\");\n  else output.push(i);\n}"
+    },
+    "reference_repo_path": "Section 15 - Intermediate Javascript/15.12 - Control Statements - For Loops/script.js"
+  },
+  "pitfalls": [
+    "Believing the update runs at the start of a round; it runs after the body.",
+    "Using < versus <= and ending one iteration early or late.",
+    "Forgetting semicolons (not commas) between the three header parts.",
+    "Counting down but writing i++ (never ends) or a condition that is false immediately (never runs).",
+    "Reference repo diverges slightly: it declares output globally and uses var; fine, but let is preferred in modern code."
+  ],
+  "playground": {
+    "match": "s15-for (lesson 15.12, data/s15.js)",
+    "coverage": "Covers counting up, indexing an array, counting down, stepping by 2, for...of, FizzBuzz, and a table comparing loops. Notes show the setup/test/step diagram.",
+    "gaps_and_ideas": [
+      "Add the explicit 'condition is checked before the first round, update runs at the closing brace' trace; the playground notes list it only briefly.",
+      "Add a task to convert the existing while-loop FizzBuzz (s15-while) into a for loop, mirroring the lecture.",
+      "Explore demo idea: step-through visualiser highlighting init/test/body/update with the value of i."
+    ]
+  }
+}

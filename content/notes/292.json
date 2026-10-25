@@ -1,0 +1,96 @@
+{
+  "index": 292,
+  "lecture_id": 17038882,
+  "title": "Keeper App Project - Part 1 Challenge",
+  "section": "36. React.js",
+  "duration_min": 5,
+  "kind": "challenge-intro",
+  "summary": "Kicks off the section's capstone, the Keeper note-taking app. Part 1 asks for an App component that renders three child components (Header, Note, Footer), styled by matching the classes and element selectors already present in the supplied styles.css.",
+  "concepts": [
+    {
+      "heading": "Starting project contents",
+      "points": [
+        "index.html is minimal: a <title>, a Google Fonts stylesheet link (McLaren for the logo, Montserrat for body text), a link to styles.css, and the usual empty <div id=\"root\"> that React renders into. (Extra) In the react-scripts starter the bundled index.js is injected automatically; the Vite version in the reference repo loads it explicitly with <script type=\"module\" src=\"/src/main.jsx\">.",
+        "styles.css already holds every rule the finished app needs. The job is to write JSX whose element types and class names match those selectors, not to write CSS.",
+        "index.js contains the numbered challenge steps as comments."
+      ]
+    },
+    {
+      "heading": "Working locally instead of in CodeSandbox",
+      "points": [
+        "Open the starting sandbox from the lecture resources and export it as a zip, then unzip it to get a normal project folder.",
+        "Drag the folder into VS Code (add to workspace); older practice folders can be removed from the workspace.",
+        "In a terminal, cd into the project folder (e.g. Downloads/keeper-app-part-1) and run npm install. That pulls in react, react-dom and react-scripts as listed in package.json.",
+        "Run npm start to launch the dev server and view the app at localhost:3000.",
+        "(Extra) Newer Vite-based versions of the starter (as in the reference repo) use npm run dev instead, serve on localhost:5173, and have src/main.jsx as the entry file in place of index.js."
+      ]
+    },
+    {
+      "heading": "What the finished Part 1 must contain",
+      "points": [
+        "A new React app with an App component that acts as the root of the tree.",
+        "Header component: renders a <header> element with the app name (Keeper, or any name you like) inside an <h1>.",
+        "Footer component: renders a <footer> element holding a <p> copyright line. The year must be computed with the JavaScript Date object, not typed as a fixed number.",
+        "Note component: a <div> containing an <h1> for the note title and a <p> for the body text.",
+        "The page should look like the sample finished app linked in the challenge. To get there, read styles.css and work out which classes and which HTML elements each rule targets.",
+        "Optional: restyle by editing styles.css, or delete it and write your own stylesheet from scratch.",
+        "(Extra) In the reference repo styles.css lives in public/ and is linked from index.html with href=\"/styles.css\", so it applies globally without being imported into any component."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Shape of the component tree the challenge asks for (illustrative)",
+      "language": "text",
+      "code": "index.js  ->  <App />\n                ├── <Header />  -> <header><h1>Keeper</h1></header>\n                ├── <Note />    -> <div className=\"note\"><h1/><p/></div>\n                └── <Footer />  -> <footer><p>Copyright ⓒ {year}</p></footer>"
+    },
+    {
+      "caption": "The selectors in styles.css your JSX has to satisfy (excerpt)",
+      "language": "css",
+      "code": "header { background-color: #f5ba13; margin: auto -16px; padding: 16px 32px; }\nheader h1 { color: #fff; font-family: \"McLaren\", cursive; font-weight: 200; }\nfooter { position: absolute; text-align: center; bottom: 0; width: 100%; height: 2.5rem; }\nfooter p { color: #ccc; }\n.note { background: #fff; border-radius: 7px; box-shadow: 0 2px 5px #ccc; padding: 10px; width: 240px; margin: 16px; float: left; }\n.note h1 { font-size: 1.1em; margin-bottom: 6px; }\n.note p { font-size: 1.1em; margin-bottom: 10px; white-space: pre-wrap; word-wrap: break-word; }"
+    },
+    {
+      "caption": "Local setup commands (react-scripts starter)",
+      "language": "bash",
+      "code": "cd ~/Downloads/keeper-app-part-1\nnpm install   # installs react, react-dom, react-scripts\nnpm start     # dev server on http://localhost:3000"
+    }
+  ],
+  "task": {
+    "name": "Keeper App Part 1: Header, Note and Footer components",
+    "starting_point": "Starter sandbox (or exported local folder) with index.html, styles.css and an index.js listing the challenge steps as comments. No components exist yet.",
+    "goal": "Build an App component that renders Header, Note and Footer components so the page matches the sample Keeper app: yellow header bar with the app name, one white note card, and a grey copyright footer pinned to the bottom with the current year.",
+    "steps": [
+      "Create the React app entry: in index.js import React and ReactDOM and render into document.getElementById('root').",
+      "Create App.jsx exporting an App function component; render <App /> from index.js.",
+      "Create Header.jsx that returns a <header> element wrapping an <h1> with the app name.",
+      "Create Footer.jsx that returns a <footer> element wrapping a <p> copyright message; compute the year with new Date().getFullYear() and insert it with curly braces.",
+      "Create Note.jsx that returns a <div> with an <h1> title and a <p> of content.",
+      "Import Header, Note and Footer into App and render them in that order.",
+      "Open styles.css, note which selectors target elements (header, header h1, footer, footer p) and which target a class (.note), and add className=\"note\" on the Note component's <div> so the card styling applies.",
+      "Compare with the sample app and adjust until it matches; then optionally customise the styles."
+    ],
+    "expected_result": "A yellow header strip with white McLaren-font title, a single white rounded card with a bold title and body text floated to the left, and light grey footer text centred at the bottom of the page showing the current year.",
+    "solution_code": {
+      "language": "jsx",
+      "code": "// Key parts of the reference solution (full walkthrough in the Part 1 Solution notes)\n// components/Header.jsx\nfunction Header() {\n  return (\n    <header>\n      <h1>Keeper App</h1>\n    </header>\n  );\n}\nexport default Header;\n\n// components/Footer.jsx\nconst year = new Date().getFullYear();\nfunction Footer() {\n  return (\n    <footer>\n      <p>Copyright © {year}</p>\n    </footer>\n  );\n}\nexport default Footer;\n\n// components/Note.jsx\nfunction Note() {\n  return (\n    <div className=\"note\">\n      <h1>This is the note title</h1>\n      <p>This is the note content</p>\n    </div>\n  );\n}\nexport default Note;\n\n// App.jsx\nimport Header from \"./components/Header\";\nimport Footer from \"./components/Footer\";\nimport Note from \"./components/Note\";\nfunction App() {\n  return (\n    <>\n      <Header />\n      <Note />\n      <Footer />\n    </>\n  );\n}\nexport default App;"
+    },
+    "reference_repo_path": "Section 36 - React.js/36.16 Keeper App Project - Part 1 Challenge/keeper-app-part-1-challenge/src"
+  },
+  "pitfalls": [
+    "Hard-coding the year in the footer instead of computing it with the Date object.",
+    "Wrapping the Footer's text in a plain <div> or the Header's in a <div>: the CSS targets the header and footer elements themselves, so the styles won't apply.",
+    "Using class instead of className in JSX for the note card.",
+    "Forgetting npm install before npm start when running the exported project locally."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "New lesson 'Keeper App 1: split a page into components'. Blurb: build Header, Note and Footer components and compose them inside App so the supplied stylesheet applies.",
+      "Tasks: (1) render <App /> into #root; (2) Header returns <header><h1>; (3) Footer returns <footer><p> with new Date().getFullYear(); (4) Note returns <div className=\"note\"> with <h1> and <p>; (5) render all three inside App in order.",
+      "Starter code: index.html with #root and the Keeper styles.css preloaded, plus an index.js containing the numbered TODO comments and empty Header/Note/Footer files.",
+      "Interactive demo: a 'selector matcher' panel that lists each CSS rule from styles.css and lights up green when the learner's rendered DOM contains a matching element (header h1, footer p, .note h1), making the link between JSX element choice and CSS selectors visible.",
+      "Checker idea: assert that the footer text contains the current year computed at runtime, so a hard-coded year fails next January."
+    ]
+  }
+}

@@ -1,0 +1,89 @@
+{
+  "index": 223,
+  "lecture_id": 12386696,
+  "title": "Forking and Pull Requests",
+  "section": "27. Git, Github and Version Control",
+  "duration_min": 15,
+  "kind": "concept+exercise",
+  "summary": "Explains how strangers collaborate on a repository they cannot write to: fork it into their own account, change their copy, then open a pull request asking the owner to merge. Demonstrated end to end with two GitHub accounts, then illustrated with a large open-source library's pull request history.",
+  "concepts": [
+    {
+      "heading": "The four areas and the collaboration problem",
+      "points": [
+        "Recap of the four areas: working directory, staging area, local repository, remote repository.",
+        "The owner of a remote repo has write access. Giving write access to everybody online would invite unwanted or incompatible changes, so write access is reserved for trusted people, such as members of the same team.",
+        "Teammates with read and write rights can clone, commit, push and resolve conflicts directly. Everyone else needs another route: fork plus pull request."
+      ]
+    },
+    {
+      "heading": "Fork versus clone",
+      "points": [
+        "git clone copies a repository from GitHub to your local machine.",
+        "A fork copies a repository from one GitHub account to another, entirely on GitHub. The fork includes all files and all earlier commits.",
+        "You own the fork and have full permissions on it. You can then clone your fork locally, change it, commit and push to it.",
+        "Forking is done with the Fork button on the original repo's page; the copy appears under your username.",
+        "Commits made on the fork do not show on the original repository. In the original's Insights then Network graph, the fork appears as a separate branch, and the Members/Forks view lists who forked it."
+      ]
+    },
+    {
+      "heading": "Pull requests",
+      "points": [
+        "A pull request (PR) is a proposal asking the original owner to take your changes. It is called a pull request because the owner, who has write rights, pulls the changes in, rather than the contributor pushing to a repo they cannot write to.",
+        "Create one from your fork (Contribute / Pull request, or the prompt GitHub shows). GitHub reports whether the branches can merge automatically and shows a diff of the changed lines.",
+        "Fill in a title and description explaining what you changed and why, then press Create pull request.",
+        "Your proposed changes will not appear in the original repo until the owner merges them.",
+        "The owner sees a counter on the Pull requests tab, can read the description, inspect the commits and file differences, leave review comments and approve.",
+        "Pressing Merge pull request (optionally with a message) and confirming adds the changes as a new merge commit on the main repo; the network graph then shows the fork's branch merging back."
+      ]
+    },
+    {
+      "heading": "Contributing in the real world",
+      "points": [
+        "Popular projects have thousands of forks and hundreds of closed PRs. Contributions range from tiny (README updates) to code additions and fixes.",
+        "Good PRs document the goal, implementation details and tests performed. Maintainers often request tweaks before approving.",
+        "A good first contribution: take a library you already use, fix a bug or add a feature, and offer it back via a fork and PR."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Typical contributor flow (commands run locally after forking on GitHub)",
+      "language": "bash",
+      "code": "git clone https://github.com/<you>/<repo>.git\ncd <repo>\ngit checkout -b my-change\n# edit files\ngit add .\ngit commit -m \"Describe the change\"\ngit push -u origin my-change\n# then open a pull request on GitHub"
+    }
+  ],
+  "task": {
+    "name": "Fork a repo and open a pull request",
+    "starting_point": "A public GitHub repository you do not own (the lecture used a second account to fork the story repo).",
+    "goal": "Fork the repo, change a file in your copy, and open a pull request to the original.",
+    "steps": [
+      "Sign in with the contributing account and find the target repository.",
+      "Click Fork so the copy appears under your account.",
+      "Edit a file on your fork (for example a chapter) and commit with a clear message.",
+      "Check the Network graph to see your commit as a separate branch.",
+      "Open a pull request with a title and explanation, and create it.",
+      "As the owner, review the PR under Pull requests, comment, then Merge pull request and confirm.",
+      "Check the owner's Network graph to see the merge."
+    ],
+    "expected_result": "The PR appears in the owner's list, and after merging the original repo contains the contributor's commit and a merge commit.",
+    "solution_code": null,
+    "reference_repo_path": "Section 27 - Git, Github and Version Control/27.05 - Forking and Pull Requests/Fork.png, Pull Request.png"
+  },
+  "pitfalls": [
+    "Confusing fork with clone.",
+    "Expecting to push straight to someone else's repository; without write access only a PR is possible.",
+    "Expecting commits on the fork to show in the original before the owner merges.",
+    "Sending PRs without a description of what and why.",
+    "(Extra) The lecture commits to master; many repos now use main as default branch, and contributors usually work on a separate branch of their fork."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "New lesson 'Forks and pull requests': blurb on contributing without write access.",
+      "Tasks: (1) match terms (fork, clone, PR, merge) to definitions, (2) order the fork-edit-PR-merge steps, (3) decide fork or clone for given scenarios, (4) write a good PR description.",
+      "Starter idea: a mock GitHub page with Fork and Create PR buttons.",
+      "Interactive demo: a two-account diagram showing commits flowing from fork to original on merge."
+    ]
+  }
+}

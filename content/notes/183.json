@@ -1,0 +1,36 @@
+{
+  "index": 183,
+  "lecture_id": 12664354,
+  "title": "Download the Completed Project Code",
+  "section": "20. Boss Level Challenge 2 - The Simon Game",
+  "duration_min": 0,
+  "kind": "admin",
+  "summary": "Wrap-up page for the Simon Game challenge: a link to a live hosted version of the finished game and a pointer to the complete solution in Course Resources.",
+  "concepts": [
+    {
+      "heading": "Key takeaways",
+      "points": [
+        "A hosted copy of the finished game is at https://londonappbrewery.github.io/Simon-Game/ (a GitHub Pages site); use it to compare behaviour, timing and sounds with your own build.",
+        "The full completed project (index.html, styles.css, game.js and the sounds folder) is downloadable from the blue Course Resources button in the top-left corner of the lecture screen, with every challenge step marked in the code.",
+        "The project exercises the JavaScript and jQuery sections together: arrays, functions, conditionals, event listeners, setTimeout, jQuery selectors, class toggling, animations and the Audio object.",
+        "The complete reconstructed game.js and a list of differences in the reference repo are in the Step 10 Answer notes (lecture 182)."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Finished project layout",
+      "language": "text",
+      "code": "Simon Game/\n  index.html   (h1#level-title + 2x2 grid of .btn divs; loads jQuery, then game.js)\n  styles.css   (button colours, .pressed, .game-over, Press Start 2P font)\n  game.js      (all game logic)\n  sounds/      (red.mp3, blue.mp3, green.mp3, yellow.mp3, wrong.mp3)"
+    }
+  ],
+  "task": null,
+  "pitfalls": [
+    "(Extra) Opening the downloaded index.html from a zipped folder can stop the sound files loading; extract the archive first."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": []
+  }
+}

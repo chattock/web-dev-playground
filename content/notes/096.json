@@ -1,0 +1,60 @@
+{
+ "index": 96,
+ "lecture_id": 12373874,
+ "title": "Challenge: Create a BMI Calculator",
+ "section": "14. Introduction to Javascript ES6",
+ "duration_min": 2,
+ "kind": "challenge-intro",
+ "summary": "Introduces the interactive BMI calculator challenge: write a bmiCalculator function that takes weight then height and returns the BMI, then use the Check Solution button. The walkthrough comes in the next lecture.",
+ "concepts": [
+  {
+   "heading": "Challenge requirements",
+   "points": [
+    "BMI formula: weight divided by height squared, with weight in kilograms and height in metres.",
+    "The function must be named bmiCalculator and return the BMI so that a line such as var bmi = bmiCalculator(weight, height); stores the result.",
+    "Parameter order matters: weight first, then height, to match the provided calling line.",
+    "Workflow: copy the starter code from index.js into a DevTools Snippet (or any JS runner), write the function, console.log the bmi variable and compare with an online BMI calculator.",
+    "When satisfied, press Check Solution in the exercise page; the solution video follows in the next lecture."
+   ]
+  }
+ ],
+ "code_examples": [
+  {
+   "caption": "Reference repo solution (the lecture itself shows no code)",
+   "language": "javascript",
+   "code": "function bmiCalculator(weight, height) {\n    var bmi = weight / Math.pow(height, 2);\n    return Math.round(bmi);\n}\nvar bmi = bmiCalculator(60, 1.7);\nconsole.log(\"Your bmi is \" + bmi);"
+  }
+ ],
+ "task": {
+  "name": "BMI calculator function",
+  "starting_point": "Starter index.js with the calling line var bmi = bmiCalculator(weight, height); in the exercise page.",
+  "goal": "Create bmiCalculator(weight, height) returning the BMI.",
+  "steps": [
+   "Declare function bmiCalculator with parameters weight then height.",
+   "Compute weight / height squared (Math.pow(height, 2) or height * height).",
+   "Return the value (the reference solution rounds with Math.round).",
+   "Log the result and compare with an online BMI calculator.",
+   "Press Check Solution."
+  ],
+  "expected_result": "For example 65 kg and 1.8 m gives about 20 when rounded.",
+  "solution_code": {
+   "language": "javascript",
+   "code": "function bmiCalculator(weight, height) {\n    var bmi = weight / Math.pow(height, 2);\n    return Math.round(bmi);\n}\nvar bmi = bmiCalculator(60, 1.7);\nconsole.log(\"Your bmi is \" + bmi);"
+  },
+  "reference_repo_path": "Section 14 - Introduction to Javascript ES6/14.15 - Challenge - Create a BMI Calculator"
+ },
+ "pitfalls": [
+  "(Extra) Writing weight / height * height cancels out; the squared height needs grouping or Math.pow.",
+  "Passing arguments in the wrong order.",
+  "(Extra) The exercise says nothing about rounding in this video; the reference repo rounds to a whole number."
+ ],
+ "playground": {
+  "match": "s14-bmi (lesson 14.15, data/s14.js)",
+  "coverage": "Fully covers the task: bmiCalculator(weight, height), brackets warning, Math.round, test value of 65 kg and 1.8 m, and a pointer to section 15.",
+  "gaps_and_ideas": [
+   "Add the parameter-order requirement and that the result must match an online BMI calculator.",
+   "Add a live BMI form in the explore demo with inputs for kilograms and metres.",
+   "Mention Math.pow(height, 2) as an alternative to height * height."
+  ]
+ }
+}

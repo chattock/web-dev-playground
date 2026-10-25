@@ -1,0 +1,68 @@
+{
+  "index": 11,
+  "lecture_id": 37348056,
+  "title": "What is HTML?",
+  "section": "2. Introduction to HTML",
+  "duration_min": 4,
+  "kind": "theory",
+  "summary": "Explains the role of HTML among the three front-end file types, then unpacks the name Hypertext Markup Language: hypertext means linked documents, markup means tags that label parts of the content. Sets up the heading tag as the first element to learn.",
+  "concepts": [
+    {
+      "heading": "Where HTML fits in a website",
+      "points": [
+        "Every browser (Chrome, Safari, Brave, etc.) does the same job: it reads HTML, CSS and JavaScript files and renders them as a web page.",
+        "Modern sites combine all three, but only HTML can stand on its own. A CSS file alone or a JavaScript file alone does not make a page; an HTML file alone does.",
+        "The earliest websites were nothing but HTML.",
+        "HTML's job is the content and structure of the page. Example: a file containing just a heading element reading 'My Website' opens in the browser as that heading and nothing else.",
+        "(Extra) Rough division of labour used for the rest of the course: HTML = structure/content, CSS = appearance, JavaScript = behaviour."
+      ]
+    },
+    {
+      "heading": "Hypertext",
+      "points": [
+        "Hypertext is text that links to another document. Links (hyperlinks) are the core mechanism the whole web of HTML pages is built on.",
+        "The first website, built by Tim Berners-Lee, is mostly blue hyperlinks. Clicking one (e.g. from Project.html) loads a different HTML file. Navigating a site is just moving between linked HTML documents.",
+        "(Extra) Berners-Lee invented the World Wide Web (HTML, HTTP, URLs) rather than the Internet itself, which is the underlying network. The first site is still online at info.cern.ch."
+      ]
+    },
+    {
+      "heading": "Markup language",
+      "points": [
+        "Markup means adding symbols around content to say what that content is, rather than adding content itself. Quotation marks in English are a familiar example: they tell the reader a passage is a quote.",
+        "Another comparison is an editor annotating a manuscript with marks for bold, underline and so on.",
+        "HTML does its markup with tags: keywords inside angle brackets, wrapped around the content they label.",
+        "Early HTML had only a few tags. Today there are many, but day-to-day work uses a small core set, such as headings h1 to h6 and the paragraph tag p.",
+        "No need to memorise the full tag list. The course introduces each tag when a project or exercise needs it, and MDN's element reference lists the rest."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "(Extra) The smallest useful HTML file: one heading, which the browser renders on its own with no CSS or JS",
+      "language": "html",
+      "code": "<h1>My Website</h1>"
+    },
+    {
+      "caption": "(Extra) Markup in practice: tags label what each piece of text is; the a tag is the hypertext part",
+      "language": "html",
+      "code": "<h1>My Website</h1>\n<p>This is a paragraph of text.</p>\n<a href=\"about.html\">About me</a>  <!-- a hyperlink to another HTML document -->"
+    }
+  ],
+  "task": null,
+  "pitfalls": [
+    "Thinking a site can be built from CSS or JavaScript alone: there must always be an HTML document for them to attach to.",
+    "Trying to learn every HTML tag up front instead of learning them as they come up.",
+    "(Extra) Confusing the Web (documents linked by hypertext) with the Internet (the network it runs on)."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet. s02.js starts directly at 2.1 Heading Elements.",
+    "gaps_and_ideas": [
+      "Add a short intro lesson (e.g. id 's02-what-is-html', lesson '2.0') with blurb: 'HTML is the one file a website cannot do without. Hypertext = linked documents; markup = tags that label content.'",
+      "Tasks: (1) open a blank file and type <h1>My Website</h1>, see it render with no CSS/JS; (2) wrap a sentence in <p> and compare it to the unwrapped text; (3) add an <a href> link to a second page and click it to see hypertext in action; (4) list three tags you already recognise.",
+      "Starter code idea: an empty body with a TODO comment plus a second tiny page (page2.html) to link to, so the hyperlink task actually navigates.",
+      "Interactive demo idea: a three-toggle 'layer switcher' (HTML only / + CSS / + JS) on the same mini page so learners see that turning off CSS and JS still leaves readable content, but turning off HTML leaves nothing.",
+      "Second demo idea: a 'markup highlighter' that shows plain text on one side and the tagged version on the other, with each tag coloured, mirroring the quotation-marks analogy."
+    ]
+  }
+}

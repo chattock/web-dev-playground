@@ -1,0 +1,91 @@
+{
+  "index": 287,
+  "lecture_id": 17038752,
+  "title": "React Styling Practice",
+  "section": "36. React.js",
+  "duration_min": 10,
+  "kind": "concept+exercise",
+  "summary": "A challenge that combines JSX expressions, className and inline styles: render one h1 whose text and colour depend on the current hour. The solution reads the hour with Date, branches with if/else, and builds a style object.",
+  "concepts": [
+    {
+      "heading": "What the exercise combines",
+      "points": [
+        "Embedding a JavaScript variable inside JSX text using curly braces.",
+        "Applying a ready-made CSS class with className.",
+        "Choosing an inline style object at runtime so the colour follows the data.",
+        "Plain JavaScript logic (if / else if / else) placed above the return statement of the component."
+      ]
+    },
+    {
+      "heading": "Getting the current hour",
+      "points": [
+        "new Date() creates a Date for the current moment; calling .getHours() on it returns the hour as a number from 0 to 23 in local time (17 means 5 PM).",
+        "Logging the value to the console first is a quick way to confirm it before building on it.",
+        "The sandbox allowed setting a fixed date such as new Date(2019, 0, 1, 10) (month is zero-indexed) to test each branch without waiting for the real time."
+      ]
+    },
+    {
+      "heading": "Branching on the hour",
+      "points": [
+        "Declare a greeting variable first, then fill it from the hour: below 12 is morning, from 12 up to (not including) 18 is afternoon, everything else is evening/night.",
+        "Because else-if is only reached when earlier conditions fail, each later branch only needs an upper bound.",
+        "The variable is then dropped into the heading with {greeting}."
+      ]
+    },
+    {
+      "heading": "Class plus dynamic inline style",
+      "points": [
+        "The supplied .heading class (larger, bold, underlined with a bottom border) is applied with className=\"heading\".",
+        "A customStyle object with a color key is declared before the branches. Each branch sets customStyle.color to red, green or blue along with the greeting.",
+        "The h1 receives style={customStyle}. Class and inline style combine; the inline colour wins over any colour in the class if both exist (inline styles have higher specificity). (Extra)"
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Solution (reconstructed from the lecture and the reference repo)",
+      "language": "jsx",
+      "code": "function App() {\n  const currentTime = new Date().getHours();\n  const customStyle = { color: \"\" };\n  let greeting = \"\";\n\n  if (currentTime < 12) {\n    greeting = \"Good Morning\";\n    customStyle.color = \"red\";\n  } else if (currentTime < 18) {\n    greeting = \"Good Afternoon\";\n    customStyle.color = \"green\";\n  } else {\n    greeting = \"Good Night\";\n    customStyle.color = \"blue\";\n  }\n\n  return (\n    <h1 className=\"heading\" style={customStyle}>\n      {greeting}\n    </h1>\n  );\n}\n\nexport default App;"
+    },
+    {
+      "caption": "Provided stylesheet",
+      "language": "css",
+      "code": ".heading {\n  font-size: 50px;\n  font-weight: bold;\n  border-bottom: 5px solid black;\n}"
+    }
+  ],
+  "task": {
+    "name": "Time-of-day greeting",
+    "starting_point": "A blank React app with a styles.css that already contains a .heading class.",
+    "goal": "Show a single h1 whose message and colour depend on the local hour.",
+    "steps": [
+      "Render a lone h1 (no wrapper div is needed) into the root element.",
+      "Get the current hour with new Date().getHours().",
+      "Choose the text: before 12 'Good morning', 12 to 18 'Good afternoon', otherwise evening/night, and insert it in the h1 with curly braces.",
+      "Apply the provided heading class with className.",
+      "Make the text red in the morning, green in the afternoon and blue at night using an inline style object.",
+      "Test each branch by temporarily faking the date."
+    ],
+    "expected_result": "At about 4:55 PM the page shows a large, bold, green 'Good afternoon' with a black line under it; at 10 AM it is red and says morning; at 7 PM it is blue.",
+    "solution_code": {
+      "language": "jsx",
+      "code": "const currentTime = new Date().getHours();\nconst customStyle = { color: \"\" };\nlet greeting = \"\";\nif (currentTime < 12) { greeting = \"Good Morning\"; customStyle.color = \"red\"; }\nelse if (currentTime < 18) { greeting = \"Good Afternoon\"; customStyle.color = \"green\"; }\nelse { greeting = \"Good Night\"; customStyle.color = \"blue\"; }\n// <h1 className=\"heading\" style={customStyle}>{greeting}</h1>"
+    },
+    "reference_repo_path": "Section 36 - React.js/36.11 React Styling Practice/react-styling-practice"
+  },
+  "pitfalls": [
+    "The brief says 'evening' for 6 PM to midnight but the solution wording says 'Good night'; either is accepted, just be consistent.",
+    "Reference repo diverges slightly: it treats 4 AM to noon as morning and uses var, a default of black and a fragment wrapper; the 0-4 AM hours therefore fall into the evening branch.",
+    "Conditions like 'greater than 12' skip exactly 12 o'clock; use less-than checks in an else-if chain to avoid gaps.",
+    "The style attribute needs an object, so a string such as \"red\" will not work.",
+    "(Extra) The greeting is computed once per render, so it will not update as time passes without a re-render."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (section 36 is not in the playground data files).",
+    "gaps_and_ideas": [
+      "Add as the practice task of a 'Styling React' lesson: time-based greeting with class plus inline colour.",
+      "Interactive demo: an hour slider (0-23) that feeds the greeting logic and shows the chosen text, style object and rendered h1, avoiding the need to fake dates.",
+      "Extra task: add a fourth period (night, 0 to 5) and refactor the if chain into a lookup object."
+    ]
+  }
+}

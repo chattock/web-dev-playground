@@ -1,0 +1,99 @@
+{
+  "index": 54,
+  "lecture_id": 37368230,
+  "title": "Display: Flex",
+  "section": "9. Flexbox",
+  "duration_min": 14,
+  "kind": "concept+exercise",
+  "summary": "Opens the Flexbox section with a history of page-layout techniques (tables, inline-block, absolute positioning, floats) and why flexbox replaced them. Shows that display: flex on a container lays children in a row, introduces gap and inline-flex, then has the learner turn a list into a horizontal nav bar.",
+  "concepts": [
+    {
+      "heading": "Layout methods that came before flexbox",
+      "points": [
+        "HTML tables (table, tr, td) with set column widths can build a multi-column layout, but table markup should only be used for real tabular data, never for page layout.",
+        "display: inline-block with explicit widths puts boxes on one line, but vertical alignment is awkward and elements collapse down when space runs out, so it is fiddly to control.",
+        "position: absolute pulls boxes out of normal flow and offsets them (for example with left); it works but is inflexible: anything added later forces re-adjustment and it does not respond to screen size.",
+        "float (popular circa 2005-2010) can make columns by floating items left or right and clearing a footer; it needed workarounds such as the clearfix hack and is hard to reason about and debug.",
+        "Takeaway: keep float for its original job (wrapping text around an image) and use flexbox, grid or a framework for page structure. Floats can still be used inside individual blocks."
+      ]
+    },
+    {
+      "heading": "display: flex basics",
+      "points": [
+        "Wrap the elements in a container element and set display: flex on the container (the parent), not on the children.",
+        "The direct children become flex items and line up in a row, each normally sized by its content, regardless of whether they were block or inline elements before.",
+        "Flexbox is a separate layout system: the usual display rules (div is block, span is inline, etc.) no longer apply to the items; flexbox rules take over. The container itself behaves like a block (full available width).",
+        "gap sets spacing between items. A fixed value such as 10px is static; a rem value such as 1rem scales with the root font size.",
+        "display: inline-flex makes the container itself behave inline (only as wide as needed, other content can share its line), mirroring the block / inline-block distinction. The items inside behave the same either way.",
+        "Many more properties (axes, direction, alignment, wrapping) are covered in later lessons; the next lesson covers the flex axis and direction."
+      ]
+    },
+    {
+      "heading": "Demo files that come with the exercise",
+      "points": [
+        "index.html links to demo pages: html-table.html, inline-block.html, absolute-position.html, float.html and flex.html, each producing a three-column layout so you can compare the code needed. flex.html needs only a few lines.",
+        "(Extra) In the reference repo the three-column flex demo is just .container { display: flex; gap: 10px; } with the columns as divs inside."
+      ]
+    },
+    {
+      "heading": "Challenge walkthrough",
+      "points": [
+        "Starting page: a div.container holding a paragraph title and several li links, with list-style: none already removing the bullets, so everything stacks vertically.",
+        "Fix: in the .container rule change display to flex, which puts all items on one line like a nav bar.",
+        "Add a gap (for example 10px or 1rem) so the links are not touching.",
+        "The solution therefore only adds two declarations: display: flex and gap."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Flex container with gap",
+      "language": "css",
+      "code": ".container {\n  display: flex;\n  gap: 10px;   /* or 1rem to scale with root font size */\n}"
+    },
+    {
+      "caption": "Challenge solution: list items become a horizontal nav bar",
+      "language": "css",
+      "code": "p  { font-weight: 700; margin: 0; }\nli { list-style: none; }\n.container {\n  padding: 10px;\n  background-color: gold;\n  display: flex;\n  gap: 10px;\n}"
+    },
+    {
+      "caption": "inline-flex variant",
+      "language": "css",
+      "code": ".container { display: inline-flex; gap: 1rem; }"
+    }
+  ],
+  "task": {
+    "name": "Turn a list into a horizontal nav bar with flexbox",
+    "starting_point": "index.html with a div.container containing a title paragraph and five li links (list-style none already applied); items stack vertically. A goal image shows the target.",
+    "goal": "Display all items on one horizontal line with a gap between them, using flexbox.",
+    "steps": [
+      "Open index.html in preview and compare with goal.png.",
+      "In the .container rule set display: flex.",
+      "Add a gap (10px or a rem value) to space the items.",
+      "Toggle list-style to see what it does, then check solution.html."
+    ],
+    "expected_result": "Title and links sit in a single gold row separated by even gaps.",
+    "solution_code": {
+      "language": "css",
+      "code": ".container {\n  padding: 10px;\n  background-color: gold;\n  display: flex;\n  gap: 10px;\n}"
+    },
+    "reference_repo_path": "Section 09 - Flexbox/09.01 - Display Flex/solution.html"
+  },
+  "pitfalls": [
+    "Setting display: flex on the items instead of the container.",
+    "Expecting old block/inline rules to still apply to flex items.",
+    "Using HTML tables or floats for page layout.",
+    "The reference repo has an author footer ('Made with ... by ...') that is not part of the course; its index.html also already contains the finished flex solution."
+  ],
+  "playground": {
+    "match": "s09-display-flex (lesson 9.1, data/s09.js)",
+    "coverage": "Covers display: flex and gap on a container and adds a flex-basis step. Explore demo is a full flexbox property playground with a main/cross axis readout.",
+    "gaps_and_ideas": [
+      "Add the history: show the same three-column layout built with table, inline-block, absolute and float next to the flex version.",
+      "Add the nav-bar challenge from the course (list of links to a horizontal bar) as a second task, since the playground uses numbered boxes instead.",
+      "Add a display: flex vs inline-flex toggle in the explore demo, with a visible border around the container to show full-width vs shrink-wrapped.",
+      "Add a gap unit comparison (10px vs 1rem, changing root font size).",
+      "Note that flex ignores items' previous block/inline display, e.g. mix a span and a div as children."
+    ]
+  }
+}

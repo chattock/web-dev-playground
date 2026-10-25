@@ -1,0 +1,40 @@
+{
+  "index": 17,
+  "lecture_id": 21523656,
+  "title": "How to Ace this Course",
+  "section": "2. Introduction to HTML",
+  "duration_min": 1,
+  "kind": "tip",
+  "summary": "Short study-habits video at the end of the first module: write down why you are learning to code using the goal-setting worksheet in the next lesson, and keep it visible for when the material gets harder.",
+  "concepts": [
+    {
+      "heading": "Key takeaways",
+      "points": [
+        "Starting is already progress: many people who buy online courses never begin.",
+        "Expect the difficulty to rise later in the course; plan for motivation dips in advance.",
+        "Use the goal-setting worksheet (next lesson) to answer: why learn to code, what you want to achieve with the skill, and what life looks like once you have it.",
+        "Print the completed sheet and keep it where you study, so you can re-read your reasons when progress stalls."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": {
+    "name": "Goal-setting worksheet",
+    "starting_point": "The worksheet PDF attached to the following lesson (the reference repo also stores a copy as '02.05 - Goal Setting Questions.pdf').",
+    "goal": "Record personal reasons and goals for learning web development.",
+    "steps": [
+      "Open the worksheet from the next lesson's resources.",
+      "Answer each question about your motivation and the outcome you want.",
+      "Print it and place it somewhere visible from your study desk."
+    ],
+    "expected_result": "A filled-in sheet of goals on display while working through the course.",
+    "solution_code": null,
+    "reference_repo_path": "Section 02 - Introduction to HTML/02.05 - Goal Setting Questions.pdf"
+  },
+  "pitfalls": [],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": []
+  }
+}

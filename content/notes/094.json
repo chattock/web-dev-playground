@@ -1,0 +1,71 @@
+{
+ "index": 94,
+ "lecture_id": 18143204,
+ "title": "Life in Weeks Solution",
+ "section": "14. Introduction to Javascript ES6",
+ "duration_min": 4,
+ "kind": "solution",
+ "summary": "Walks through the Life in Weeks exercise: take an age as a function parameter, assume a lifespan of 90 and fixed unit counts, compute remaining days, weeks and months, and log an exact sentence built by concatenation.",
+ "concepts": [
+  {
+   "heading": "Exercise logic",
+   "points": [
+    "The function lifeInWeeks(age) receives the current age as its parameter.",
+    "Assumptions given by the exercise: 365 days, 52 weeks and 12 months per year, and a lifespan of 90 years.",
+    "Compute yearsRemaining = 90 - age first, then multiply by 365, 52 and 12 to get days, weeks and months left.",
+    "Build the output sentence by breaking the string at each placeholder and concatenating the numbers with +.",
+    "The automated checker compares the text exactly, so spacing, capitalisation, commas and the full stop must match the sample output."
+   ]
+  },
+  {
+   "heading": "Verifying",
+   "points": [
+    "Test with a known age: age 12 gives 78 years left, so 28470 days, 4056 weeks and 936 months.",
+    "The exercise runs in an online editor with a check-solution button; the code body goes inside the provided function and the call passes an actual age."
+   ]
+  }
+ ],
+ "code_examples": [
+  {
+   "caption": "Solution in the lecture's approach",
+   "language": "javascript",
+   "code": "function lifeInWeeks(age) {\n    var yearsRemaining = 90 - age;\n    var days = yearsRemaining * 365;\n    var weeks = yearsRemaining * 52;\n    var months = yearsRemaining * 12;\n    console.log(\"You have \" + days + \" days, \" + weeks + \" weeks, and \" + months + \" months left.\");\n}\nlifeInWeeks(12);   // You have 28470 days, 4056 weeks, and 936 months left."
+  },
+  {
+   "caption": "Reference repo version (same results, different arrangement)",
+   "language": "javascript",
+   "code": "function lifeInWeeks(age) {\n    var days = 365, weeks = 52, months = 12, yearsOld = 90;\n    var remainingDays = (yearsOld * days) - (days * age);\n    var remainingWeeks = (yearsOld * weeks) - (weeks * age);\n    var remainingMonths = (yearsOld * months) - (months * age);\n    console.log(\"You have \" + remainingDays + \" days, \" + remainingWeeks + \" weeks, and \" + remainingMonths + \" months left.\");\n}\nlifeInWeeks(18);"
+  }
+ ],
+ "task": {
+  "name": "Life in Weeks",
+  "starting_point": "Online coding exercise with an empty lifeInWeeks(age) function.",
+  "goal": "Log exactly: You have X days, Y weeks, and Z months left. for a lifespan of 90.",
+  "steps": [
+   "Create yearsRemaining as 90 minus age.",
+   "Compute days, weeks and months by multiplying by 365, 52 and 12.",
+   "console.log the sentence, concatenating the three values.",
+   "Call lifeInWeeks with a test age and compare the output text exactly."
+  ],
+  "expected_result": "lifeInWeeks(12) logs You have 28470 days, 4056 weeks, and 936 months left.",
+  "solution_code": {
+   "language": "javascript",
+   "code": "function lifeInWeeks(age) {\n    var yearsRemaining = 90 - age;\n    var days = yearsRemaining * 365;\n    var weeks = yearsRemaining * 52;\n    var months = yearsRemaining * 12;\n    console.log(\"You have \" + days + \" days, \" + weeks + \" weeks, and \" + months + \" months left.\");\n}\nlifeInWeeks(12);   // You have 28470 days, 4056 weeks, and 936 months left."
+  },
+  "reference_repo_path": "Section 14 - Introduction to Javascript ES6/14.13 - Life in Weeks Coding Exercise"
+ },
+ "pitfalls": [
+  "Typos or wrong punctuation in the sentence fail the exact-match checker.",
+  "Reference repo calls lifeInWeeks(18) and subtracts totals instead of computing years first; equivalent maths.",
+  "(Extra) Ages over 90 give negative results; not handled."
+ ],
+ "playground": {
+  "match": "s14-life-in-weeks (lesson 14.13, data/s14.js)",
+  "coverage": "Same exercise with the same sentence, yearsLeft approach, a template literal variant and extension ideas.",
+  "gaps_and_ideas": [
+   "Add the worked check (age 12 gives 28470/4056/936) as an expected-result line in the tasks.",
+   "Note the exact-match warning about punctuation.",
+   "Add an age input field to the explore demo."
+  ]
+ }
+}

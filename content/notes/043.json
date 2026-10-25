@@ -1,0 +1,125 @@
+{
+  "index": 43,
+  "lecture_id": 37350528,
+  "title": "The Cascade - Specificity and Inheritance",
+  "section": "7. Intermediate CSS",
+  "duration_min": 25,
+  "kind": "concept+exercise",
+  "summary": "Explains how the browser resolves conflicting CSS rules through four ranked categories: position, specificity, type and importance. Includes three quick quiz questions and an exercise that recolours nested boxes using only CSS, with no HTML changes.",
+  "concepts": [
+    {
+      "heading": "What the cascade is",
+      "points": [
+        "The cascade only matters when several rules target the same element and set the same property. The browser must decide which declaration wins; the rest are ignored.",
+        "Every matching rule is applied in turn, so a later or stronger one overwrites an earlier one. What the user sees is the result left at the end.",
+        "Worked example: li { color: green } in the external stylesheet turns an ordered list green; adding style=\"color: red\" to one li makes just that item red, because inline styles come last in the process.",
+        "Four categories decide the winner, listed from weakest to strongest: position, specificity, type, importance. Inside each category there is a smaller ranking of its own."
+      ]
+    },
+    {
+      "heading": "1. Position",
+      "points": [
+        "When two declarations are equal in every other respect, the one written lower in the file wins.",
+        "This applies inside one rule block (setting color twice, the second sticks) and across rules (a second li selector further down overrides the first).",
+        "It holds in both external stylesheets and internal <style> blocks."
+      ]
+    },
+    {
+      "heading": "2. Specificity",
+      "points": [
+        "Specificity measures how narrowly a selector aims at an element. Take an li with id=\"first-id\", class=\"first-class\" and the draggable attribute: four different selectors can all hit it.",
+        "Ranking from least to most specific as taught: element selector (li), class selector (.first-class), attribute selector (li[draggable]), id selector (#first-id).",
+        "An id is the strongest because a page should hold only one element with a given id, so it points to a single element. A class can be shared by many elements.",
+        "The lecture ranks attribute above class because in practice it overrode the class in her demo. (Extra) The official specificity rules give class, attribute and pseudo-class selectors the same weight, so ties between them fall back to position. Do not rely on attribute beating class.",
+        "(Extra) A common mental scoring is inline 1000, id 100, class/attribute 10, element 1, and the highest total wins. Selectors are really compared column by column rather than added in base 10, but the model is fine for everyday use.",
+        "If all four selectors were written and each set a different colour, the most specific one (the id rule, orange in her example) is what the page shows."
+      ]
+    },
+    {
+      "heading": "3. Type (where the CSS lives)",
+      "points": [
+        "External stylesheet via <link>, internal CSS in a <style> element, and inline CSS in a style attribute.",
+        "Strength order: inline beats internal, which beats external.",
+        "Reasoning: inline targets a single element, internal covers one page, external may be shared by many pages.",
+        "The browser conceptually checks external first, then internal, then inline, with each later layer overwriting the previous."
+      ]
+    },
+    {
+      "heading": "4. Importance (!important)",
+      "points": [
+        "Add !important after the value, before the semicolon, to make that declaration beat position, specificity and type.",
+        "It overrides even an inline style or an id selector, and works wherever the rule sits in the file.",
+        "(Extra) Use it sparingly: once several rules carry it, you are back to fighting over order and specificity, and debugging gets harder."
+      ]
+    },
+    {
+      "heading": "Using the cascade as a debugging checklist",
+      "points": [
+        "When a style is not showing, walk the categories from the top: is something marked !important, is an inline style overriding, is a more specific selector winning, is a later rule overriding?",
+        "Treat the summary diagram as a reference to keep beside you rather than something to memorise."
+      ]
+    },
+    {
+      "heading": "Quiz answers (worked through)",
+      "points": [
+        "Quiz 1: an h1 with a class and an id, two external rules, one by class (blue) and one by id (green). Specificity decides, the id wins, result green.",
+        "Quiz 2: an h1 with two classes (an element can carry several, separated by spaces), and two class rules of equal specificity. Position decides, the lower rule wins, result blue.",
+        "Quiz 3: an h1 with an id rule in CSS and also an inline style. Type outranks specificity, so inline wins, result blue.",
+        "Lesson from quiz 3: a rule that wins in one category can still lose to a higher-ranked category, so keep the order of the big categories in mind."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Position: later declaration wins",
+      "language": "css",
+      "code": "li {\n  color: red;\n  color: blue;   /* blue wins, it is lower */\n}\n\nli {\n  color: green;  /* lower still, green wins */\n}"
+    },
+    {
+      "caption": "Specificity ladder for one element",
+      "language": "css",
+      "code": "/* <li id=\"first-id\" class=\"first-class\" draggable=\"true\"> */\nli { color: red; }\n.first-class { color: blue; }\nli[draggable] { color: purple; }\n#first-id { color: orange; }   /* wins */"
+    },
+    {
+      "caption": "The three types of CSS and !important",
+      "language": "html",
+      "code": "<link rel=\"stylesheet\" href=\"style.css\"> <!-- external, weakest -->\n<style>h1 { color: green; }</style>      <!-- internal -->\n<h1 style=\"color: blue;\">Hi</h1>         <!-- inline, strongest of the three -->\n\n<style>h1 { color: red !important; }</style> <!-- beats the inline style -->"
+    }
+  ],
+  "task": {
+    "name": "7.1 CSS Cascade: recolour the nested boxes",
+    "starting_point": "index.html has an outer div with id outer-box and class box, which contains two div.box wrappers, each holding a yellow paragraph and an inner div with classes box and inner-box that holds a paragraph with class white-text. style.css already has rules for .box (blue background, 10px padding) and p (yellow, no margin or padding). HTML and existing CSS must stay unchanged.",
+    "goal": "Match the goal image: white text in the innermost paragraphs, red inner boxes, and a purple outer box, with 10px padding on every box.",
+    "steps": [
+      "Add a rule for .white-text setting color to white.",
+      "Add a rule for .inner-box setting background-color to red. Place it below the .box rule, otherwise the later .box rule overrides it.",
+      "Add a rule for #outer-box setting background-color to purple. The id is the only thing that distinguishes this div from the other .box divs.",
+      "Do not add padding: all three boxes already share the class box, which provides the 10px.",
+      "Compare the preview with the goal image."
+    ],
+    "expected_result": "Purple outer container, blue middle boxes, red inner boxes; yellow text in the middle boxes, white text in the red ones.",
+    "solution_code": {
+      "language": "css",
+      "code": ".box {\n  background-color: blue;\n  padding: 10px;\n}\n\n#outer-box {\n  background-color: purple;\n}\n\n.inner-box {\n  background-color: red;\n}\n\np {\n  color: yellow;\n  margin: 0;\n  padding: 0;\n}\n\n.white-text {\n  color: white;\n}"
+    },
+    "reference_repo_path": "Section 07 - Intermediate CSS/07.01 - CSS Cascade/solution/solution.css"
+  },
+  "pitfalls": [
+    "Putting .inner-box above .box: both are class selectors, so the later .box blue overrides red.",
+    "Expecting a p rule to beat .white-text just because p is written lower. Here .white-text is more specific than the element selector p, so it wins wherever it sits.",
+    "Adding extra padding to #outer-box changes the result, because the id rule outranks .box.",
+    "Overusing !important to force styles instead of fixing selector order or specificity.",
+    "Assuming specificity outranks everything: inline styles beat id selectors."
+  ],
+  "playground": {
+    "match": "s07-cascade (lesson 7.1, data/s07.js)",
+    "coverage": "Tasks and starter/solution files match the course exercise. Explore demos cover specificity scores with toggles (including !important) and an order-matters demo. Notes list the four weights and mention DevTools strikethroughs.",
+    "gaps_and_ideas": [
+      "The playground's weight order lists position, specificity, type, importance, which matches. Add a type demo showing external vs internal vs inline on one heading.",
+      "Add the three quizzes as a self-check widget (pick blue or green, reveal the reason).",
+      "Note the course ranks attribute above class; the playground scoring treats them as equal at 10, which is the spec-correct version. Add a short callout explaining the difference.",
+      "Add a task about multiple classes on one element (class=\"a-class another-class\") and the position tie-break.",
+      "Task 3 hints about moving .white-text above p; clarify that it still works because class beats element, to avoid confusing it with the .inner-box ordering case."
+    ]
+  }
+}

@@ -1,7 +1,7 @@
 /* ===== Section 7 — Intermediate CSS ===== */
 
 PG.add({
-  id:'s07-cascade', section:'s07', slug:'cascade', lesson:'7.1',
+  id:'s07-cascade', index:43, udemyId:37350528, minutes:25, section:'s07', slug:'cascade', lesson:'7.1',
   title:'The Cascade & Specificity',
   blurb:'When two rules touch the same element, which wins? The browser weighs four things: <b>position</b> (later beats earlier), <b>specificity</b> (id &gt; class &gt; element), <b>type</b> (inline beats stylesheets), and <b>importance</b> (<code>!important</code> trumps everything).',
   tasks:[
@@ -162,7 +162,7 @@ p {
 
 
 PG.add({
-  id:'s07-combining', section:'s07', slug:'combining-selectors', lesson:'7.2',
+  id:'s07-combining', index:44, udemyId:37350562, minutes:23, section:'s07', slug:'combining-selectors', lesson:'7.2',
   title:'Combining Selectors',
   blurb:'Selectors can be joined to be more precise: a <b>group</b> (comma), a <b>child</b> (<code>&gt;</code>), a <b>descendant</b> (space), or <b>chained</b> (no space at all).',
   tasks:[
@@ -300,7 +300,7 @@ li.done {
 
 
 PG.add({
-  id:'s07-positioning', section:'s07', slug:'positioning', lesson:'7.3',
+  id:'s07-positioning', index:45, udemyId:37350588, minutes:23, section:'s07', slug:'positioning', lesson:'7.3',
   title:'CSS Positioning',
   blurb:'<code>position</code> decides how <code>top</code>/<code>right</code>/<code>bottom</code>/<code>left</code> behave. <b>relative</b> nudges an element from where it would have been; <b>absolute</b> pulls it out of the flow and pins it inside the nearest positioned ancestor.',
   tasks:[
@@ -436,7 +436,7 @@ css:`.blue-box {
 
 
 PG.add({
-  id:'s07-flag', section:'s07', slug:'flag-project', lesson:'7.4', project:true,
+  id:'s07-flag', index:46, udemyId:37350652, minutes:18, section:'s07', slug:'flag-project', lesson:'7.4', project:true,
   title:'CSS Flag Project',
   blurb:'Build a flag out of nothing but positioned boxes — a proper test of the box model plus positioning.',
   tasks:[

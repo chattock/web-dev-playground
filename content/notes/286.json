@@ -1,0 +1,70 @@
+{
+  "index": 286,
+  "lecture_id": 17038734,
+  "title": "Inline Styling for React Elements",
+  "section": "36. React.js",
+  "duration_min": 9,
+  "kind": "concept",
+  "summary": "Explains inline styling in JSX: the style attribute takes a JavaScript object (not a string), which produces the double-curly-brace syntax. Properties are camelCased, values are strings, and the main benefit is that styles can change at runtime by updating the object.",
+  "concepts": [
+    {
+      "heading": "style takes an object, not a string",
+      "points": [
+        "In plain HTML, style=\"color: red\" is a string. In JSX, a string value triggers a console error saying style expects a mapping of properties to values.",
+        "The value must be a JavaScript object: { color: \"red\" }. Keys behave like property names (unquoted), values are usually strings, and pairs are separated by commas rather than semicolons.",
+        "Because a JSX attribute needs curly braces to hold JavaScript, and the object literal has its own braces, the result is style={{ color: \"red\" }}. The outer pair means 'JavaScript expression here'; the inner pair is the object itself."
+      ]
+    },
+    {
+      "heading": "Property names and values",
+      "points": [
+        "CSS properties written in kebab-case must be converted to camelCase as object keys: font-size becomes fontSize, background-color becomes backgroundColor.",
+        "Values are strings, including multi-part values such as \"1px solid black\" for border. Spaces are preserved inside the string.",
+        "(Extra) Plain numbers are allowed for many properties and React appends px (fontSize: 20 gives 20px), but unitless-capable properties such as lineHeight and opacity are left as numbers."
+      ]
+    },
+    {
+      "heading": "Pulling the style into a variable",
+      "points": [
+        "Move the object into a const (customStyle) declared above the component, then use style={customStyle}. This keeps the JSX readable and is the form used when the style needs to change.",
+        "The object can be changed before render, e.g. customStyle.color = \"blue\", and the element picks up the new value the next time it renders, with no change to the JSX itself.",
+        "This is the headline reason to use inline styles: styles driven by data such as user actions, the time of day or app state. In later lessons this combines with state so the UI restyles itself."
+      ]
+    },
+    {
+      "heading": "Class-based versus inline",
+      "points": [
+        "The React docs recommend classes in a stylesheet applied with className as the default approach; inline styles are the less common option reserved for dynamic values.",
+        "Inline styles cannot express pseudo-classes (:hover), media queries or keyframes, which is another reason classes stay the default. (Extra)"
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Style object stored in a const, then applied (from the reference repo, typos fixed)",
+      "language": "jsx",
+      "code": "const customStyle = {\n  color: \"red\",\n  fontSize: \"20px\",\n  border: \"1px solid black\"\n};\n\n// Changing the object changes the rendered style on the next render\ncustomStyle.color = \"blue\";\n\nfunction App() {\n  return (\n    <div>\n      <h1 style={customStyle}>My Favourite Foods</h1>\n    </div>\n  );\n}\n\nexport default App;"
+    },
+    {
+      "caption": "Inline form with double curly braces",
+      "language": "jsx",
+      "code": "<h1 style={{ color: \"red\" }}>My Favourite Foods</h1>"
+    }
+  ],
+  "task": null,
+  "pitfalls": [
+    "Passing a string to style raises an error in React.",
+    "Using font-size (kebab-case) as a key is a syntax error; write fontSize or quote the key.",
+    "Separating declarations with semicolons inside the object is invalid; use commas.",
+    "Forgetting to quote values such as \"20px\" or \"1px solid black\" causes a syntax error.",
+    "(Extra) Mutating a plain const object only shows up when the component re-renders; later lessons use state to trigger that properly."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (section 36 is not in the playground data files).",
+    "gaps_and_ideas": [
+      "Could be a second part of a 'Styling React' lesson. Tasks: convert a string style to an object, rename three kebab-case properties, move the style into a const, and switch its colour based on a time-of-day variable.",
+      "Interactive demo: sliders and a colour picker that edit a style object live and show both the object literal and the resulting element."
+    ]
+  }
+}

@@ -1,0 +1,133 @@
+{
+  "index": 202,
+  "lecture_id": 12384540,
+  "title": "Creating Our First Server with Express",
+  "section": "24. Express.js with Node.js",
+  "duration_min": 22,
+  "kind": "concept+exercise",
+  "summary": "Walks through the six steps to build and start a minimal Express server: project folder, index.js, npm init, installing express, writing the listen code and running it with node. Explains localhost, ports, how to see which ports are in use, and why the first visit to the server shows a Cannot GET / error.",
+  "concepts": [
+    {
+      "heading": "Back-end vocabulary recap",
+      "points": [
+        "A server is a computer that stays on and waits for requests for resources such as HTML, CSS or JavaScript files. The back end is that computer plus the application running on it (for example an index.js) and, in bigger sites, a database.",
+        "A client, usually a user's browser, sends a request across the internet to the server. The application finds the resource and sends it back.",
+        "Client-side means the user-facing front end. Server-side means everything on the back end; people often shorten this to just 'the server'.",
+        "In this lesson the developer's own machine acts as the server. It only needs to be on while testing, not 24/7."
+      ]
+    },
+    {
+      "heading": "The six steps",
+      "points": [
+        "1. Create a project directory. 2. Create index.js inside it. 3. Run npm init. 4. Install the express package. 5. Write the server code in index.js. 6. Start it with node and send it a request.",
+        "The terminal commands are assumed knowledge from the command line module: cd moves into a folder, mkdir creates one, touch creates an empty file. Tab completes names.",
+        "A folder name with spaces must be wrapped in quotes in mkdir, otherwise the shell treats each word as a separate argument."
+      ]
+    },
+    {
+      "heading": "npm setup",
+      "points": [
+        "npm init -y creates package.json using defaults, skipping the interactive questions.",
+        "The main field in package.json must point at the entry file. The default is index.js, so name the file index.js (a different name like app.js would not match the default).",
+        "npm i express installs the package (short for install; check the spelling). This creates node_modules containing express and all its dependencies, and adds an express entry under dependencies in package.json (package-lock.json is also generated).",
+        "Version numbers differ over time (4.x, 5.x); the code works the same.",
+        "Add \"type\": \"module\" to package.json so that ES module syntax (import/export) works."
+      ]
+    },
+    {
+      "heading": "The server code line by line",
+      "points": [
+        "import express from \"express\" loads the framework (lowercase e is the variable name).",
+        "const app = express() calls the imported function to create the application object. Everything else hangs off app.",
+        "const port = 3000 as a top-level constant keeps the port in one place; reuse it wherever needed rather than hard-coding the number.",
+        "app.listen(port, callback) takes two arguments: the port to listen on and a callback that runs once the server is up and ready.",
+        "The callback just logs a message such as 'Server running on port 3000.' using a template literal (backticks) so the port variable is interpolated.",
+        "No explicit Node code appears: Express handles the low-level parts.",
+        "Start the server with node index.js in the terminal. The log line proves it is running.",
+        "(Extra) express is a factory function, not a class, so it is called without new. Each call returns a fresh app object with methods such as get, post, use and listen.",
+        "(Extra) app.listen(port, callback) wraps Node's http.createServer(app).listen(port) and returns the underlying http.Server. The callback fires on the 'listening' event, i.e. only once the port is actually bound."
+      ]
+    },
+    {
+      "heading": "localhost and ports",
+      "points": [
+        "localhost means 'this computer'. Visiting http://localhost:3000 sends the request to your own machine instead of a remote server.",
+        "A port is like a numbered door into the computer. (Extra) Port numbers run from 0 to 65535; each service listens on its own number so that services do not interfere (a presentation remote app, a printer and the Express app can each use a different one).",
+        "The number after the colon in the URL selects which port to reach. Here the server listens on 3000, so the URL must use :3000.",
+        "To see which ports are listening: on macOS run sudo lsof -i -P -n | grep LISTEN (needs your login password); on Windows run netstat -ano | findstr \"LISTENING\". The | symbol is the pipe, which sends one command's output into the next. The Node process appears against port 3000.",
+        "While the server runs it occupies the terminal, so there is no prompt. Stop it with Ctrl+C, or open a second terminal with the + button to keep it running.",
+        "(Extra) localhost resolves to the loopback address 127.0.0.1 (IPv6 ::1), so the request never leaves the machine. Ports below 1024 usually need admin rights, which is one reason dev servers use numbers like 3000."
+      ]
+    },
+    {
+      "heading": "First response: Cannot GET /",
+      "points": [
+        "Visiting localhost:3000 shows an error saying Cannot GET /, because the server is running but has no route that answers a GET request for the home page yet.",
+        "Fixing this requires understanding HTTP requests and defining route handlers, covered in the next lesson."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Terminal setup commands",
+      "language": "bash",
+      "code": "cd Backend\nmkdir \"3.1 Express Server\"\ncd \"3.1 Express Server\"\ntouch index.js\nnpm init -y\nnpm i express"
+    },
+    {
+      "caption": "package.json after setup (key parts)",
+      "language": "json",
+      "code": "{\n  \"main\": \"index.js\",\n  \"type\": \"module\",\n  \"dependencies\": {\n    \"express\": \"^5.1.0\"\n  }\n}"
+    },
+    {
+      "caption": "index.js: minimal Express server",
+      "language": "javascript",
+      "code": "import express from \"express\";\n\nconst app = express();\nconst port = 3000;\n\napp.listen(port, () => {\n  console.log(`Server running on port ${port}.`);\n});"
+    },
+    {
+      "caption": "Listing listening ports",
+      "language": "bash",
+      "code": "# macOS\nsudo lsof -i -P -n | grep LISTEN\n# Windows\nnetstat -ano | findstr \"LISTENING\""
+    }
+  ],
+  "task": {
+    "name": "Build and run your first Express server",
+    "starting_point": "An empty folder inside your Web Development Projects folder, VS Code open with its terminal.",
+    "goal": "Create a working Express project that starts on port 3000 and can be reached at localhost:3000.",
+    "steps": [
+      "Open the terminal and cd to the folder that will hold the project.",
+      "mkdir a new project folder (quote the name if it has spaces) and cd into it.",
+      "touch index.js to create the entry file.",
+      "Run npm init -y, then npm i express.",
+      "Add \"type\": \"module\" to package.json.",
+      "In index.js import express, create app, define a port constant and call app.listen with a logging callback.",
+      "Run node index.js and confirm the log message appears.",
+      "Open http://localhost:3000 in a browser and observe the Cannot GET / message.",
+      "Optionally run the lsof or netstat command in a second terminal to find the Node process on port 3000, then stop the server with Ctrl+C."
+    ],
+    "expected_result": "Terminal prints the running message; the browser shows Cannot GET /, proving the server answered but has no route yet.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "import express from \"express\";\n\nconst app = express();\nconst port = 3000;\n\napp.listen(port, () => {\n  console.log(`Server running on port ${port}.`);\n});"
+    },
+    "reference_repo_path": "Section 24 - Express.js with Node.js/24.01 - Creating Our First Server with Express/index.js"
+  },
+  "pitfalls": [
+    "Unquoted folder names containing spaces in mkdir.",
+    "Naming the entry file something other than index.js while package.json main still says index.js.",
+    "Forgetting \"type\": \"module\": older Node versions throw 'Cannot use import statement outside a module'. (Extra) Recent Node versions may detect the ES module syntax and run anyway with a warning, but setting the field explicitly is still the correct fix.",
+    "Typing the wrong package name when installing.",
+    "Running the server in the only terminal and then expecting a prompt; use a second terminal or Ctrl+C.",
+    "(Extra) Starting a second copy while one is still running fails with an address-already-in-use error on port 3000.",
+    "Reference repo note: the repo's package.json carries the author's own name and extra metadata, which can be ignored."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (section 24 has no playground file).",
+    "gaps_and_ideas": [
+      "Proposed lesson 'Your first Express server': blurb on setting up a project and listening on a port.",
+      "Tasks: (1) write the six setup commands in order; (2) fill in the blanks in a four-line server; (3) change the port to 4000 and say which URL to visit; (4) explain why Cannot GET / appears.",
+      "Starter code idea: index.js with import and app creation, leaving app.listen as a gap.",
+      "Interactive demo idea: a mock terminal plus mock browser where typing node index.js lights up a port 3000 door and visiting a different port shows connection refused."
+    ]
+  }
+}

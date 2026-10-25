@@ -1,0 +1,28 @@
+{
+  "index": 133,
+  "lecture_id": 17966986,
+  "title": "Tip from Angela - Learning Before you Eat",
+  "section": "17. Boss Level Challenge 1 - The Dicee Game",
+  "duration_min": 2,
+  "kind": "tip",
+  "summary": "A focus tip: schedule the hardest study or work early in the day, before eating, since concentration tends to dip after a heavy meal.",
+  "concepts": [
+    {
+      "heading": "Study on an empty stomach",
+      "points": [
+        "Do the most demanding or most postponed task first thing in the morning, before a meal.",
+        "Heavy, carb-rich lunches tend to make people drowsy and less able to concentrate.",
+        "A lighter lunch can help sustain clearer thinking later in the day.",
+        "Personal suggestion only: skip it if you have a medical condition such as diabetes or anything else that makes fasting unsafe."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [],
+  "playground": {
+    "match": null,
+    "coverage": "Not applicable (study tip).",
+    "gaps_and_ideas": []
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "index": 122,
+  "lecture_id": 17966874,
+  "title": "Tip from Angela - The 20 Minute Method",
+  "section": "16. The Document Object Model (DOM)",
+  "duration_min": 3,
+  "kind": "tip",
+  "summary": "A study-habit tip: commit to only 20 minutes of work on the course when motivation is low, because starting is the hard part and momentum usually carries on afterwards.",
+  "concepts": [
+    {
+      "heading": "The 20 minute method",
+      "points": [
+        "Skills come from consistent practice, but tiredness and competing distractions make it hard to begin a session.",
+        "Set a small commitment: study for just 20 minutes, then you are free to stop and do something else.",
+        "Starting is the main obstacle. Once underway, people tend to carry on, so sessions often run longer than planned.",
+        "If you stop at 20 minutes anyway, that is still real progress.",
+        "Use it on evenings or mornings when the course feels overwhelming."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [],
+  "playground": {
+    "match": null,
+    "coverage": "Not applicable (study tip).",
+    "gaps_and_ideas": []
+  }
+}

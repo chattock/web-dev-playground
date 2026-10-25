@@ -1,0 +1,123 @@
+{
+  "index": 296,
+  "lecture_id": 17039112,
+  "title": "React DevTools",
+  "section": "36. React.js",
+  "duration_min": 17,
+  "kind": "concept+exercise",
+  "summary": "Splits the contact card into smaller components (Avatar, then Detail) and introduces the React Developer Tools for viewing the component tree and the props each component receives. Props that fail to arrive are diagnosed by inspecting them in DevTools.",
+  "concepts": [
+    {
+      "heading": "Why split into smaller components",
+      "points": [
+        "Parts of a card that could appear elsewhere (a circular, bordered picture) are good candidates for their own component. Any element or group you find yourself repeating with the same classes is a candidate too.",
+        "Thinking about the component tree up front pays off: small specialised components form a palette that can be reused and customised through props."
+      ]
+    },
+    {
+      "heading": "Extracting Avatar and passing props down two levels",
+      "points": [
+        "Create Avatar.jsx with the usual boilerplate (function, return, default export) and move the img element into it. Import Avatar in the Card file and use <Avatar /> where the image was.",
+        "The app breaks at first: the moved img still reads a prop, but Avatar does not declare a props parameter and nothing is passed to it.",
+        "The data travels App to Card to Avatar. App passes the contact's image URL to Card as a prop; Card must then pass it again to Avatar as a prop; Avatar receives it through its own props parameter and uses it as src.",
+        "Each component only sees what its direct parent hands it. Prop names can differ between levels, but keep them consistent to avoid confusion.",
+        "With many props and layers, tracing names by hand gets confusing, which is where DevTools helps."
+      ]
+    },
+    {
+      "heading": "React Developer Tools",
+      "points": [
+        "CodeSandbox has a built-in React DevTools panel, but it can be unreliable. The browser extension (Chrome Web Store, by Facebook/Meta; also available as a Firefox add-on) is preferred and is also needed for local development.",
+        "After installing, refresh the page. The extension icon colours itself to signal the build type: one colour for a development build, another for a production build. (Extra) Currently red/orange means a development build and blue means production; grey means no React was detected.",
+        "Open the normal browser DevTools; two extra tabs appear ((Extra) named Components and Profiler), with Components being the relevant one. It shows the React tree (App at the top, Cards under it, an Avatar inside each) rather than raw HTML.",
+        "Selecting a component shows its props with their values and which component rendered it, so you can read the exact prop names to use with props.something.",
+        "A picker (the component-select tool inside the Components tab, separate from the elements picker) lets you click on the page and jump to the matching component in the tree.",
+        "It also works on any React site, not just your own. On a production site with minified code, component names may be short and meaningless, but props such as image sources and alt text are still visible.",
+        "By default native elements (div, h2, p) are filtered out of the tree. A settings gear in the Components tab has a filter option to show them, but leaving it on keeps the tree tidy.",
+        "A source button opens the file that defines the selected component. Prop values can be edited live in the panel (for example pasting a different image URL) to experiment without changing code."
+      ]
+    },
+    {
+      "heading": "Debugging with the tree",
+      "points": [
+        "If Avatar reads props.imgURL while the parent actually passes img, no picture appears. Selecting the component in DevTools reveals the real prop name (img), so the code is fixed to match.",
+        "General pattern: blank output means check the received props first, then compare names against what the code reads."
+      ]
+    },
+    {
+      "heading": "Detail component (the challenge)",
+      "points": [
+        "The two p elements with class info are the same markup holding different text, so they become one Detail component rendered twice.",
+        "Detail takes one prop, named detailInfo in the lecture, and renders a single p with the info class showing it. In Card, <Detail detailInfo={props.tel} /> and <Detail detailInfo={props.email} /> replace the paragraphs.",
+        "After first extracting it, nothing appeared because the copied code still read props.tel; DevTools showed the prop was really detailInfo. Changing the component to props.detailInfo fixed it. Lesson: when pasting markup into a new component, rename the prop reads to match the new component's own props."
+      ]
+    },
+    {
+      "heading": "Reusing a component elsewhere",
+      "points": [
+        "Because Avatar is self-contained, it can be dropped anywhere. Importing it in App and placing <Avatar img=\"...\" /> under the main heading adds a standalone picture at the top of the tree, styled the same, with only the required prop to supply.",
+        "The lesson closes by pointing out that hand-indexing contacts[0], contacts[1] is ugly and that the next lesson replaces it with mapping."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Avatar.jsx",
+      "language": "jsx",
+      "code": "function Avatar(props) {\n  return <img className=\"circle-img\" src={props.img} alt=\"avatar\" />;\n}\n\nexport default Avatar;"
+    },
+    {
+      "caption": "Detail.jsx",
+      "language": "jsx",
+      "code": "function Detail(props) {\n  return <p className=\"info\">{props.detailInfo}</p>;\n}\n\nexport default Detail;"
+    },
+    {
+      "caption": "Card using both child components (reference repo structure, cleaned)",
+      "language": "jsx",
+      "code": "import Avatar from \"./Avatar\";\nimport Detail from \"./Detail\";\n\nfunction Card(props) {\n  return (\n    <div className=\"card\">\n      <div className=\"top\">\n        <h2 className=\"name\">{props.name}</h2>\n        <Avatar img={props.img} />\n      </div>\n      <div className=\"bottom\">\n        <Detail detailInfo={props.tel} />\n        <Detail detailInfo={props.email} />\n      </div>\n    </div>\n  );\n}\n\nexport default Card;"
+    },
+    {
+      "caption": "Avatar reused directly in App (excerpt of App's return)",
+      "language": "jsx",
+      "code": "import Avatar from \"./components/Avatar\";\n\nfunction App() {\n  return (\n    <div>\n      <h1 className=\"heading\">My Contacts</h1>\n      <Avatar img=\"https://example.com/me.jpg\" />\n      {/* ...the Card elements follow here */}\n    </div>\n  );\n}"
+    }
+  ],
+  "task": {
+    "name": "Extract Avatar, then build a Detail component",
+    "starting_point": "The finished props-practice project: a Card with the circular img and two info paragraphs inline.",
+    "goal": "Split Card into Avatar and Detail child components, pass the correct props down, and use React DevTools to verify the props each component receives.",
+    "steps": [
+      "Create Avatar.jsx, move the img into it, import it in Card and add a props parameter.",
+      "Pass the image URL from Card to Avatar as a prop and read it inside Avatar with the same name.",
+      "Install React Developer Tools, reload, open the Components tab and inspect the tree and each component's props.",
+      "Create Detail.jsx returning one p with class info and showing a single prop (detailInfo).",
+      "Replace the two paragraphs in Card with two Detail components, passing the phone and the email.",
+      "If nothing renders, select Detail in DevTools, read the prop name, and fix the mismatch in the component.",
+      "Optional: import Avatar into App and render it under the main heading with your own image URL."
+    ],
+    "expected_result": "The page looks identical to before the refactor, but the DevTools tree shows App, Card, Avatar and Detail components with the expected props.",
+    "solution_code": {
+      "language": "jsx",
+      "code": "// components/Avatar.jsx\nfunction Avatar(props) {\n  return <img className=\"circle-img\" src={props.img} alt=\"avatar\" />;\n}\nexport default Avatar;\n\n// components/Detail.jsx\nfunction Detail(props) {\n  return <p className=\"info\">{props.detailInfo}</p>;\n}\nexport default Detail;\n\n// components/Card.jsx: receives props from App and hands them on\nimport Avatar from \"./Avatar\";\nimport Detail from \"./Detail\";\n\nfunction Card(props) {\n  return (\n    <div className=\"card\">\n      <div className=\"top\">\n        <h2 className=\"name\">{props.name}</h2>\n        <Avatar img={props.img} />\n      </div>\n      <div className=\"bottom\">\n        <Detail detailInfo={props.tel} />\n        <Detail detailInfo={props.email} />\n      </div>\n    </div>\n  );\n}\nexport default Card;\n\n// App.jsx (still indexing the array by hand at this point)\nimport Card from \"./components/Card\";\nimport Avatar from \"./components/Avatar\";\nimport { contacts } from \"./contacts\";\n\nfunction App() {\n  return (\n    <div>\n      <h1 className=\"heading\">My Contacts</h1>\n      <Avatar img=\"https://example.com/me.jpg\" />\n      <Card name={contacts[0].name} img={contacts[0].imgURL} tel={contacts[0].phone} email={contacts[0].email} />\n      <Card name={contacts[1].name} img={contacts[1].imgURL} tel={contacts[1].phone} email={contacts[1].email} />\n      <Card name={contacts[2].name} img={contacts[2].imgURL} tel={contacts[2].phone} email={contacts[2].email} />\n    </div>\n  );\n}\nexport default App;"
+    },
+    "reference_repo_path": "Section 36 - React.js/36.20 React DevTools/react-props-practice/src/components/"
+  },
+  "pitfalls": [
+    "Moving markup into a new component without adding the props parameter or passing the props from the parent.",
+    "Prop name mismatches (img vs imgURL, tel vs detailInfo) cause empty output, with no error.",
+    "Forgetting to refresh the page after installing the extension, so the Components tab stays empty.",
+    "Not importing the new component into its parent.",
+    "Reference repo quirk: its App renders <Avatar imgURL=\"\" /> with an empty URL as a placeholder demo (this shows a broken image, and React warns about an empty src; supply a real URL), uses Object.values(...).map with imgURL, phone and email props, and its Avatar reads props.imgURL rather than props.img, so naming differs from the lecture.",
+    "(Extra) Component names in minified production builds appear as short letters, so DevTools is more readable on development builds."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "New lesson 'Component trees and React DevTools': blurb on splitting UI into small components and inspecting props in the browser.",
+      "Tasks: (1) extract Avatar; (2) pass the image prop down two levels; (3) extract Detail and render it twice; (4) deliberately mismatch a prop name and find the bug; (5) reuse Avatar in the page header.",
+      "Starter code idea: a Card with inline img and two paragraphs, and a data array.",
+      "Interactive demo idea: a mock component-tree panel that shows App, Card, Avatar, Detail with their props, where clicking a node highlights the matching part of the preview and lets the learner edit prop values live, as DevTools does."
+    ]
+  }
+}

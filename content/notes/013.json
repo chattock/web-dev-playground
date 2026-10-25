@@ -1,0 +1,94 @@
+{
+  "index": 13,
+  "lecture_id": 37348070,
+  "title": "HTML Heading Elements",
+  "section": "2. Introduction to HTML",
+  "duration_min": 14,
+  "kind": "concept+exercise",
+  "summary": "Introduces the h1–h6 heading elements, the difference between a tag and an element, and why headings describe a page's hierarchy. Ends with an exercise that turns a flat line of text into a book outline using h1–h4.",
+  "concepts": [
+    {
+      "heading": "Tags vs elements",
+      "points": [
+        "A tag is anything wrapped in angle brackets. <h1> is the opening tag; </h1> is the closing tag. The only difference between them is the forward slash after the <.",
+        "An element is the whole unit: opening tag + content + closing tag. So <h1>Hello World</h1> is one h1 element whose content is the text 'Hello World'.",
+        "The two terms get used loosely online, but the distinction matters when reading docs: 'tag' means the markup, 'element' means the thing in the page."
+      ]
+    },
+    {
+      "heading": "What headings are for: hierarchy, not size",
+      "points": [
+        "The idea is borrowed from a book's table of contents: a top-level title, chapters under it, sections under chapters, sub-sections under sections.",
+        "HTML gives exactly six levels: h1 (most important) to h6 (least). There is no h7. Anything below h6 in importance should use a different element (paragraphs etc., covered later).",
+        "Browsers style headings by default so h1 is the largest and h6 the smallest. That default styling is only a visual hint of the level; CSS can change the look later without changing the meaning.",
+        "Opening and closing tags must match: <h1>…</h6> is invalid. Each level uses the same number in both tags."
+      ]
+    },
+    {
+      "heading": "Heading best practices (conventions, not errors)",
+      "points": [
+        "Use only one h1 per page. Think of it as the book title. Every other heading goes underneath it as h2, h3, and so on.",
+        "Don't skip levels. If a page has an h3, it should also have an h2 above it. Go h1 → h2 → h3 in order as you need deeper levels.",
+        "Breaking these rules won't break the page visually. They're professional conventions, and they matter for accessibility and search engines, which read the heading outline."
+      ]
+    },
+    {
+      "heading": "Workflow introduced in this lecture",
+      "points": [
+        "Download the lesson's starting files from the Udemy 'Resources' button (zip named after the lesson, e.g. '2.1 Heading Element').",
+        "Unzip/extract the download first, then move the extracted folder into a single 'Web Development Projects' folder kept somewhere permanent. Unextracted zips are the most common reason the folder won't open properly in VS Code on Windows.",
+        "In VS Code: File → New Window → open the Web Development Projects folder in the Explorer.",
+        "Each exercise folder has index.html (where you write code), solution.html (check only after attempting), and a goal image showing the target result.",
+        "Preview with the Live Preview extension: right-click index.html → Show Preview. If it's missing, the VS Code setup lessons were skipped.",
+        "Saving (Cmd/Ctrl+S) may auto-format the file and change indentation. That's normal and doesn't affect the result.",
+        "MDN Web Docs is the reference to check whenever you meet an unfamiliar element. Don't read it cover to cover; look things up as you need them."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Anatomy of a heading element",
+      "language": "html",
+      "code": "<!-- opening tag   content     closing tag -->\n<h1>Hello World</h1>"
+    },
+    {
+      "caption": "All six heading levels (default browser sizes shrink from h1 to h6)",
+      "language": "html",
+      "code": "<h1>Heading 1</h1>\n<h2>Heading 2</h2>\n<h3>Heading 3</h3>\n<h4>Heading 4</h4>\n<h5>Heading 5</h5>\n<h6>Heading 6</h6>"
+    }
+  ],
+  "task": {
+    "name": "2.1 Heading Element: book outline",
+    "starting_point": "index.html contains the words Book, Chapter 1–3, Section 1/2 and Diagram 1 as plain text. In the preview they run together on one unformatted line with no hierarchy.",
+    "goal": "Mark up the text with heading elements so the preview matches the goal image: a clear book → chapter → section → diagram outline.",
+    "steps": [
+      "Wrap 'Book' in a single h1 (the page title).",
+      "Wrap each of 'Chapter 1', 'Chapter 2', 'Chapter 3' in h2.",
+      "Wrap each 'Section N' inside the chapters in h3.",
+      "Wrap 'Diagram 1', which belongs to Section 1 of Chapter 2, in h4. It's the deepest level used.",
+      "Save, check Live Preview against the goal image, then compare with solution.html."
+    ],
+    "expected_result": "Four visibly different heading sizes in the order h1, h2, h3, (h4), with one h1 and no skipped levels.",
+    "solution_code": {
+      "language": "html",
+      "code": "<body>\n  <h1>Book</h1>\n  <h2>Chapter 1</h2>\n  <h3>Section 1</h3>\n  <h3>Section 2</h3>\n  <h2>Chapter 2</h2>\n  <h3>Section 1</h3>\n  <h4>Diagram 1</h4>\n  <h2>Chapter 3</h2>\n  <h3>Section 1</h3>\n  <h3>Section 2</h3>\n</body>"
+    },
+    "reference_repo_path": "Section 02 - Introduction to HTML/02.01 - Heading Element/index.html"
+  },
+  "pitfalls": [
+    "Mismatched numbers in opening/closing tags (<h2>…</h3>).",
+    "Using more than one h1, or picking a heading level for its size rather than its place in the outline.",
+    "Jumping from h1 straight to h3.",
+    "Trying to open the still-zipped download in VS Code."
+  ],
+  "playground": {
+    "match": "s02-headings (lesson 2.1, data/s02.js)",
+    "coverage": "Task list matches the course exercise (one h1, h2 chapters, h3 sections, h4 diagram). Explore demo covers heading levels and why they matter.",
+    "gaps_and_ideas": [
+      "Add the tag-vs-element distinction explicitly (label the opening tag, content and closing tag in a diagram). The course leans on this vocabulary for the rest of the HTML section.",
+      "Add a 'rules' callout: one h1 per page, don't skip levels, and these are conventions, not errors.",
+      "Add a mismatched-tag example (<h1>…</h6>) to the explore demo so learners see what invalid markup does.",
+      "Mention that there is no h7, and that default sizes are only styling that CSS can override."
+    ]
+  }
+}

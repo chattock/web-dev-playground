@@ -1,0 +1,95 @@
+{
+  "index": 313,
+  "lecture_id": 17039566,
+  "title": "Changing Complex State Practice",
+  "section": "36. React.js",
+  "duration_min": 7,
+  "kind": "concept+exercise",
+  "summary": "A challenge and walkthrough: finish a form component whose state is an object with three fields (fName, lName, email) so each input updates only its own field. The long if/else-if version of the updater is built deliberately, to be shortened in the next lecture with the spread operator.",
+  "concepts": [
+    {
+      "heading": "The challenge setup",
+      "points": [
+        "App.jsx is provided with state renamed to `contact` and its setter `setContact`; the initial value is an object with fName, lName and email, all empty strings.",
+        "Three inputs and a Submit button sit inside a form. Typing in the first two inputs should fill the h1 greeting; typing in the third should fill a new paragraph beneath the h1.",
+        "Concepts to reuse from earlier lessons: object state, updating from the previous state, controlled form inputs, and event handling.",
+        "Use the React Developer Tools Components tab to watch the state object change while typing; it is the quickest way to spot a field being wiped or not updating."
+      ]
+    },
+    {
+      "heading": "Wiring up the change handler",
+      "points": [
+        "Give every input the same `onChange={handleChange}`. One shared function serves all three inputs. (Tip from the lecture: in VS Code, Option-click places several cursors so the identical attribute is typed once.)",
+        "handleChange receives the synthetic event. Destructure only what is needed: `const { name, value } = event.target;`. The `name` attribute on each input (fName, lName, email) tells the handler which field fired; `value` is the text currently typed.",
+        "Each input needs a `name` attribute matching the corresponding key in the state object; the comparison in the handler depends on that."
+      ]
+    },
+    {
+      "heading": "Updating only the changed field",
+      "points": [
+        "Call `setContact` with a callback that receives the previous state (named prevValue in the solution). Logging the argument is a good way to confirm its shape if unsure.",
+        "Inside the callback, branch on `name`: if it is fName, return a full new object with the new `value` for fName while copying lName and email from prevValue; likewise for lName and for email.",
+        "Every branch must return a complete object with all three keys. If a key is omitted, that field disappears from state, because the useState setter replaces the whole value rather than merging object properties.",
+        "(Extra) This differs from class components, where this.setState shallow-merges the object you pass into the existing state.",
+        "This works but repeats near-identical code in three places, which is the motivation for the spread-operator version in the next lecture."
+      ]
+    },
+    {
+      "heading": "Controlled inputs and display",
+      "points": [
+        "Add a `value` attribute to each input bound to the state: `contact.fName`, `contact.lName`, `contact.email`. This makes the inputs controlled: React state is the single source of truth, and what appears in the field is always what is stored.",
+        "The h1 renders `Hello {contact.fName} {contact.lName}` and the paragraph renders `{contact.email}` as JSX expressions that update on every re-render triggered by setContact.",
+        "Verify in DevTools: expanding the App component's hooks shows the contact object; typing in one input changes just that key."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Handler with explicit branches (from the reference solution, trimmed)",
+      "language": "jsx",
+      "code": "const [contact, setContact] = useState({ fName: \"\", lName: \"\", email: \"\" });\n\nfunction handleChange(event) {\n  const { name, value } = event.target;\n  setContact((prevValue) => {\n    if (name === \"fName\") {\n      return { fName: value, lName: prevValue.lName, email: prevValue.email };\n    } else if (name === \"lName\") {\n      return { fName: prevValue.fName, lName: value, email: prevValue.email };\n    } else if (name === \"email\") {\n      return { fName: prevValue.fName, lName: prevValue.lName, email: value };\n    }\n  });\n}"
+    },
+    {
+      "caption": "Markup: shared handler, name and value on each input",
+      "language": "jsx",
+      "code": "<div className=\"container\">\n  <h1>Hello {contact.fName} {contact.lName}</h1>\n  <p>{contact.email}</p>\n  <form>\n    <input name=\"fName\" onChange={handleChange} value={contact.fName} placeholder=\"First Name\" />\n    <input name=\"lName\" onChange={handleChange} value={contact.lName} placeholder=\"Last Name\" />\n    <input name=\"email\" onChange={handleChange} value={contact.email} placeholder=\"Email\" />\n    <button>Submit</button>\n  </form>\n</div>"
+    }
+  ],
+  "task": {
+    "name": "Changing Complex State: contact form",
+    "starting_point": "App.jsx with a `contact` object state (fName, lName, email), setContact, and a form with three inputs plus an h1 and a paragraph that are not yet connected.",
+    "goal": "Typing in each input updates only its own property in state and shows the first and last name in the h1 and the email in the paragraph beneath it.",
+    "steps": [
+      "Add `onChange={handleChange}` to all three inputs and define handleChange.",
+      "Destructure `name` and `value` from `event.target` inside the handler.",
+      "Call setContact with a function of the previous state.",
+      "Branch on the input name and return a complete new object that replaces just the changed field and copies the other two from the previous state.",
+      "Add `value` attributes (contact.fName, contact.lName, contact.email) so the inputs are controlled.",
+      "Render contact.fName and contact.lName in the h1 and contact.email in the paragraph.",
+      "Check the result with React DevTools."
+    ],
+    "expected_result": "Each input can be typed in independently; the greeting and email text update live and no field is cleared when another changes.",
+    "solution_code": {
+      "language": "jsx",
+      "code": "function handleChange(event) {\n  const { name, value } = event.target;\n  setContact((prevValue) => {\n    if (name === \"fName\") {\n      return { fName: value, lName: prevValue.lName, email: prevValue.email };\n    } else if (name === \"lName\") {\n      return { fName: prevValue.fName, lName: value, email: prevValue.email };\n    } else if (name === \"email\") {\n      return { fName: prevValue.fName, lName: prevValue.lName, email: value };\n    }\n  });\n}"
+    },
+    "reference_repo_path": "Section 36 - React.js/36.37 Changing Complex State Practice/changing-complex-state-practice/src/App.jsx"
+  },
+  "pitfalls": [
+    "Omitting a key in a returned object removes it from state because state is replaced, not merged.",
+    "Forgetting the `name` attribute on an input, or a name that does not match the state key and the if-branch string.",
+    "Forgetting the `value` attribute leaves the input uncontrolled and out of sync with state.",
+    "(Extra) The final else-if has no plain else, so an unexpected name would make the updater return undefined and wipe state.",
+    "(Extra) Reading event.target inside the updater callback can fail in older React versions due to event pooling; destructure first, as done here."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (the playground has no React section files).",
+    "gaps_and_ideas": [
+      "New lesson 'Object state in forms': blurb on one state object with several fields and a shared change handler.",
+      "Tasks: (1) add onChange and name attributes, (2) destructure name and value, (3) return the full object from setContact, (4) add value to make inputs controlled, (5) show the email in a paragraph.",
+      "Starter code: App.jsx with the contact state and unwired inputs.",
+      "Interactive demo: live JSON view of the state object beside the form, and a toggle that omits a key to show that field vanishing."
+    ]
+  }
+}

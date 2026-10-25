@@ -1,7 +1,7 @@
 /* ===== Section 2 — Introduction to HTML ===== */
 
 PG.add({
-  id:'s02-headings', section:'s02', slug:'headings', lesson:'2.1',
+  id:'s02-headings', index:13, udemyId:37348070, minutes:14, section:'s02', slug:'headings', lesson:'2.1',
   title:'Heading Elements',
   blurb:'Six levels of heading, <code>&lt;h1&gt;</code> down to <code>&lt;h6&gt;</code>. They are not just "big text" — they describe the <b>hierarchy</b> of the page, which is what search engines and screen readers read.',
   tasks:[
@@ -127,7 +127,7 @@ html:`<!DOCTYPE html>
 
 
 PG.add({
-  id:'s02-paragraphs', section:'s02', slug:'paragraphs', lesson:'2.2',
+  id:'s02-paragraphs', index:14, udemyId:37348656, minutes:9, section:'s02', slug:'paragraphs', lesson:'2.2',
   title:'Paragraph Elements',
   blurb:'<code>&lt;p&gt;</code> wraps a block of body text. The browser ignores the line breaks and extra spaces you type — only the tags decide where blocks start and end.',
   tasks:[
@@ -235,7 +235,7 @@ of blank lines
 
 
 PG.add({
-  id:'s02-void-elements', section:'s02', slug:'void-elements', lesson:'2.3',
+  id:'s02-void-elements', index:15, udemyId:37349664, minutes:12, section:'s02', slug:'void-elements', lesson:'2.3',
   title:'Void Elements',
   blurb:'Most tags come in pairs, but a few have no content to wrap so they never close: <code>&lt;br /&gt;</code> for a line break, <code>&lt;hr /&gt;</code> for a horizontal rule, <code>&lt;img /&gt;</code> for a picture.',
   tasks:[
@@ -358,7 +358,7 @@ html:`<!DOCTYPE html>
 
 
 PG.add({
-  id:'s02-movie-ranking', section:'s02', slug:'movie-ranking', lesson:'2.4', project:true,
+  id:'s02-movie-ranking', index:16, udemyId:37349766, minutes:6, section:'s02', slug:'movie-ranking', lesson:'2.4', project:true,
   title:'Movie Ranking Project',
   blurb:'Your first project: a ranked list of your favourite films, using only headings, paragraphs and rules.',
   tasks:[

@@ -1,0 +1,59 @@
+{
+  "index": 339,
+  "lecture_id": 31673436,
+  "title": "What are Cycles and the ICP Token?",
+  "section": "39. Deploying to the ICP Live Blockchain",
+  "duration_min": 7,
+  "kind": "theory",
+  "summary": "Explains how running a canister on the live Internet Computer is paid for: ICP tokens are acquired in several ways and burned into non-tradable cycles that power canisters. Introduces the free cycles faucet for learners and warns that cycles are a limited budget.",
+  "concepts": [
+    {
+      "heading": "Local simulation vs the live network",
+      "points": [
+        "So far everything ran on a local simulated replica (dfx start) for testing behaviour and latency.",
+        "Deploying to the live network makes the app reachable by anyone and puts it on the ICP blockchain, but it then consumes real computing resources in globally distributed data centres, which must be paid for."
+      ]
+    },
+    {
+      "heading": "Ways to obtain ICP tokens",
+      "points": [
+        "Buy them, or swap another cryptocurrency (such as Bitcoin or Ethereum) for them on a large exchange. This is the simplest route.",
+        "Participate in the Network Nervous System (NNS), the governance system of the Internet Computer: lock existing ICP for a period to create a neuron, then earn rewards by voting on proposals.",
+        "Apply for a developer grant from the Dfinity Foundation. At the time of recording grants ranged from about 25,000 to 100,000 dollars in ICP, with no equity taken.",
+        "Run a node as an independent data centre provider: supplying hardware and electricity for the shared network earns ICP rewards."
+      ]
+    },
+    {
+      "heading": "ICP tokens vs cycles",
+      "points": [
+        "ICP is tradable and can be bought and sold. Cycles are not tradable; they are produced by burning ICP and are credited to a canister.",
+        "A canister needs cycles to compute and store data. While it has enough cycles it stays live; when they run low it must be topped up, similar to refilling a gas bottle at home.",
+        "Think of cycles as pre-loaded computation capacity for each canister."
+      ]
+    },
+    {
+      "heading": "Free cycles for learning",
+      "points": [
+        "Dfinity runs a cycles faucet. At recording time anyone with a GitHub account older than 90 days could claim roughly 20 dollars worth of free cycles, enough to deploy and experiment. The course uses these for its deployments (claimed in the next lesson).",
+        "Warning: once the free allowance is spent it cannot be refilled for free; further cycles require buying ICP and converting it.",
+        "Costs differ by operation. Creating a canister, which is what the first dfx deploy to the network does, is by far the most expensive action (around 0.1 trillion cycles in 2021, somewhat more later). Avoid redeploying carelessly.",
+        "Advice: watch the whole deployment section before running the commands, to conserve cycles."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [
+    "Treating free cycles as unlimited: creating canisters is costly and the faucet allowance is one-off.",
+    "Confusing ICP (tradable token) with cycles (non-tradable compute credit).",
+    "(Extra) Figures such as the 20 dollar faucet and grant ranges are dated; check current Dfinity documentation."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (the playground only has files for sections 1-11, 14, 15).",
+    "gaps_and_ideas": [
+      "A small concept lesson 'Paying for hosting: cycles': an interactive 'cycle budget' demo where the learner clicks actions (create canister, store data, run query, run update) and watches a balance deplete, with creating a canister costing the most.",
+      "Quick quiz tasks: classify statements as true/false for ICP vs cycles; compute how many redeploys a free allowance affords with a given cost."
+    ]
+  }
+}

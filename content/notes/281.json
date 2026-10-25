@@ -1,0 +1,105 @@
+{
+  "index": 281,
+  "lecture_id": 17038636,
+  "title": "Introduction to JSX and Babel",
+  "section": "36. React.js",
+  "duration_min": 17,
+  "kind": "concept+exercise",
+  "summary": "Walks through the first React code: the single-div HTML shell, rendering an h1 into the root div, what JSX is, how Babel compiles it to plain JavaScript, import vs require, and why render accepts only one top-level element.",
+  "concepts": [
+    {
+      "heading": "Starter sandbox and project layout",
+      "points": [
+        "The lesson uses a CodeSandbox starter linked in the resources. Fork it (GitHub login) to keep your own copy; free accounts have a limit on draft projects, so download finished projects as a zip.",
+        "Files: public/index.html (the only one with code at first), src/index.js (empty) and src/styles.css (empty).",
+        "index.html is a bare skeleton: a head linking the stylesheet, and a body with a single div whose id is root, followed by a script tag loading index.js.",
+        "By convention a React app always has one div with id root; everything React builds is injected inside it. After the first setup this HTML file is not edited again (except the title), all work happens in JavaScript."
+      ]
+    },
+    {
+      "heading": "Installing and loading React packages",
+      "points": [
+        "In CodeSandbox, dependencies are added by searching for them in the Dependencies panel and clicking, instead of npm install in a terminal. Needed here: react and react-dom.",
+        "Installing is not enough; each file that uses a package must load it. Old style: const React = require('react'); const ReactDOM = require('react-dom') (module names lowercase).",
+        "Modern style: import React from 'react'; import ReactDOM from 'react-dom'. import/export (ES6 modules) organise dependencies better; a later lesson covers them in depth."
+      ]
+    },
+    {
+      "heading": "Rendering with ReactDOM.render (lesson's React version)",
+      "points": [
+        "ReactDOM.render(what, where, callback?) takes three arguments: the element to show, the DOM node to put it in, and an optional callback run when rendering completes (not needed here).",
+        "What to show: <h1>Hello world!</h1> written directly as JSX with no quotes.",
+        "Where to show it: document.getElementById('root') (plain DOM API returning the root div).",
+        "Result: an h1 appears on the page although index.html was never changed.",
+        "(Extra) In React 18+ (including the Vite reference repo) ReactDOM.render is replaced by createRoot(container).render(element), imported from 'react-dom/client'. Same idea: choose a container, render an element."
+      ]
+    },
+    {
+      "heading": "What JSX is and how Babel fits in",
+      "points": [
+        "JSX is HTML-like syntax written inside a JavaScript file, with no special delimiters such as EJS tags.",
+        "A compiler converts JSX to ordinary JavaScript before it reaches the browser. That compiler is Babel, which tooling in the React setup runs for you.",
+        "Demo: removing the React import breaks the page with React is not defined, because compiled JSX calls React functions (createElement).",
+        "Babel is a JavaScript compiler that turns next-generation JS (ES6 and later, arrow functions, map, etc.) into code every browser understands, JSX included. Its website has a Try it out pane showing input and compiled output side by side.",
+        "Compiled output for <h1>Hello world!</h1> is a React.createElement('h1', null, 'Hello world!') call.",
+        "Equivalent vanilla DOM code needs several lines: createElement, set innerHTML, getElementById('root'), appendChild. JSX gives the same result in one readable line.",
+        "Because Babel handles compatibility, ES6+ features can be used freely in React code, which is why the module teaches many of them."
+      ]
+    },
+    {
+      "heading": "Only one root element",
+      "points": [
+        "render accepts a single element. Placing an h1 and a p side by side causes a syntax error.",
+        "Fix: wrap siblings in one parent such as a div; anything nested in a div still counts as one element, so any number of children can be rendered.",
+        "(Extra) Modern React also allows a fragment (<>...</>) as the wrapper to avoid adding an extra div to the DOM; the reference repo App.jsx uses it."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Lesson code (older React API), src/index.js",
+      "language": "jsx",
+      "code": "import React from \"react\";\nimport ReactDOM from \"react-dom\";\n\nReactDOM.render(\n  <div>\n    <h1>Hello world!</h1>\n    <p>This is a paragraph.</p>\n  </div>,\n  document.getElementById(\"root\")\n);"
+    },
+    {
+      "caption": "Same idea in the Vite reference repo (React 18+), src/main.jsx and App.jsx",
+      "language": "jsx",
+      "code": "// main.jsx\nimport { StrictMode } from 'react'\nimport { createRoot } from 'react-dom/client'\nimport App from './App.jsx'\n\ncreateRoot(document.getElementById('root')).render(\n  <StrictMode>\n    <App />\n  </StrictMode>,\n)\n\n// App.jsx\nfunction App() {\n  return (\n    <>\n      <h1>Hello World</h1>\n      <p>This is Introduction to jsx and babel</p>\n    </>\n  )\n}\nexport default App"
+    },
+    {
+      "caption": "Roughly what Babel produces from JSX",
+      "language": "javascript",
+      "code": "React.createElement(\n  \"div\", null,\n  React.createElement(\"h1\", null, \"Hello world!\"),\n  React.createElement(\"p\", null, \"This is a paragraph.\")\n);"
+    }
+  ],
+  "task": {
+    "name": "Render your first JSX",
+    "starting_point": "Starter sandbox with the root div in index.html and empty index.js",
+    "goal": "Display an h1 and a paragraph using React",
+    "steps": [
+      "Change the page title in index.html to JSX.",
+      "In index.js, add react and react-dom as dependencies and import both.",
+      "Call ReactDOM.render with an h1 reading Hello world! and the root element from getElementById.",
+      "Add a p element and observe the error, then wrap both in a div.",
+      "Open Babel's Try it out page and compare JSX with its compiled output."
+    ],
+    "expected_result": "Page shows a heading and a paragraph generated entirely from JavaScript.",
+    "solution_code": null,
+    "reference_repo_path": "Section 36 - React.js/36.05 Introduction to JSX and Babel/my-react-app"
+  },
+  "pitfalls": [
+    "Two sibling top-level elements in render cause a syntax error; wrap them.",
+    "Removing the React import (older setups) breaks JSX with React is not defined.",
+    "(Extra) Reference repo is a Vite app with React 18+/19, so index.js becomes main.jsx and ReactDOM.render is no longer used."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (no data file exists for section 36)",
+    "gaps_and_ideas": [
+      "New lesson 'JSX and Babel' with blurb: JSX compiles to createElement calls.",
+      "Tasks: 1) render an h1 into #root; 2) add a p and fix the multiple-root error with a wrapper; 3) rewrite the same output with React.createElement; 4) use a fragment instead of a div.",
+      "Starter idea: HTML page with Babel standalone and React UMD scripts loaded from a CDN plus a script type text/babel.",
+      "Interactive demo: a two-pane box where typing JSX on the left shows compiled createElement output on the right, plus a live preview."
+    ]
+  }
+}

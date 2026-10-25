@@ -1,0 +1,74 @@
+{
+ "index": 85,
+ "lecture_id": 12371788,
+ "title": "Challenge: Changing Casing in Text",
+ "section": "14. Introduction to Javascript ES6",
+ "duration_min": 4,
+ "kind": "concept+exercise",
+ "summary": "Introduces toUpperCase() and toLowerCase() for changing the case of a string, shows that the result must be reassigned to persist, then sets a challenge: prompt for a name and alert a greeting where only the first letter is capitalised.",
+ "concepts": [
+  {
+   "heading": "toUpperCase() and toLowerCase()",
+   "points": [
+    "Both are string methods called with dot notation on a variable: name.toUpperCase() returns the string with every character in capitals; name.toLowerCase() returns it in small letters.",
+    "The parentheses are required even though no argument is passed, and the statement ends with a semicolon.",
+    "In the console demo the uppercase string is printed, but checking name afterwards still shows the original lowercase text.",
+    "(Extra) Strings are immutable in JavaScript, so these methods never edit the original; they return a new string."
+   ]
+  },
+  {
+   "heading": "Keeping the changed value",
+   "points": [
+    "To keep the result, reassign it to the same variable: name = name.toUpperCase();",
+    "Reassigning with name = name.toLowerCase(); later lowercases the whole value, including the first letter that had been capitalised.",
+    "Typing the variable name in the console after running shows its current value, which is a quick way to verify a reassignment worked."
+   ]
+  },
+  {
+   "heading": "Why casing matters",
+   "points": [
+    "Users type input inconsistently (all lowercase, all caps, mixed). Normalising case before printing makes output such as an alert look consistent across users."
+   ]
+  }
+ ],
+ "code_examples": [
+  {
+   "caption": "Changing case and reassigning",
+   "language": "javascript",
+   "code": "var name = \"Angela\";\nname.toUpperCase();          // returns \"ANGELA\" but name is unchanged\nname = name.toUpperCase();   // now name holds \"ANGELA\"\nname = name.toLowerCase();   // now name holds \"angela\""
+  }
+ ],
+ "task": {
+  "name": "Capitalise the first letter of a name",
+  "starting_point": "Empty script in the editor (reference repo: index.html linking script.js).",
+  "goal": "Ask the user for their name with a prompt and show an alert greeting them, with only the first character capitalised and the rest lowercase, regardless of how it was typed.",
+  "steps": [
+   "Use prompt() to ask for the name and store it in a variable.",
+   "Slice out the first character with slice(0, 1).",
+   "Slice out the remainder from index 1 to the end.",
+   "Uppercase the first part and lowercase the remainder.",
+   "Concatenate a greeting, the capitalised letter and the remainder, then pass it to alert().",
+   "Constraint: use only techniques from this module (slice, concatenation, case methods), not Stack Overflow shortcuts."
+  ],
+  "expected_result": "Entering aNGELA, ANGELA or angela all produce an alert reading Hello Angela.",
+  "solution_code": {
+   "language": "javascript",
+   "code": "var name = prompt(\"What is your first name?\");\nvar capitalLetter = name.slice(0, 1);\nvar remainderOfName = name.slice(1, name.length);\nalert(\"Hello \" + capitalLetter.toUpperCase() + remainderOfName.toLowerCase());"
+  },
+  "reference_repo_path": "Section 14 - Introduction to Javascript ES6/14.08 - Challenge - Changing Casing in Text"
+ },
+ "pitfalls": [
+  "Calling name.toUpperCase() without assigning the result leaves the variable unchanged.",
+  "Forgetting the parentheses turns the call into a reference to the method rather than running it.",
+  "Reference repo page has an author footer; ignore it."
+ ],
+ "playground": {
+  "match": "s14-casing (lesson 14.8, data/s14.js)",
+  "coverage": "Covers the same challenge with four tasks, a starter, a solution that also shows chaining, and notes on both methods and immutability.",
+  "gaps_and_ideas": [
+   "Add a task that demonstrates the reassignment gotcha (call toUpperCase without assigning, log the variable, then fix it).",
+   "Add a live input box in the explore demo showing the original and normalised strings side by side.",
+   "Mention that an empty prompt or Cancel (null) will make name.slice fail, as a stretch task."
+  ]
+ }
+}

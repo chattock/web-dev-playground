@@ -1,0 +1,115 @@
+{
+  "index": 199,
+  "lecture_id": 38126546,
+  "title": "[Project] QR Code Generator",
+  "section": "23. Node.js",
+  "duration_min": 16,
+  "kind": "project",
+  "summary": "Capstone for the Node section: a command-line program that asks for a URL with the inquirer package, turns it into a PNG QR code with qr-image, and saves the URL to a text file with the native fs module. The walkthrough doubles as practice at reading package documentation and converting CommonJS examples to ES module imports.",
+  "concepts": [
+    {
+      "heading": "Project overview and packages",
+      "points": [
+        "A QR code is a 2D barcode that a phone camera scans to open a URL.",
+        "inquirer collects typed input from the terminal. qr-image generates QR images (PNG by default). fs (native) writes files.",
+        "Spelling matters: inquirer is easy to misspell, and qr-image has a hyphen, not an underscore. Verify names on npmjs.com before installing.",
+        "Install both in one command: npm i inquirer qr-image. The install reported about 50 packages because each package brings its own dependencies into node_modules; they are small.",
+        "(Extra) fs is a built-in module and needs no install; the reference repo's package.json lists an \"fs\" security placeholder package, which is unnecessary."
+      ]
+    },
+    {
+      "heading": "Preparing package.json for ES modules",
+      "points": [
+        "The project had no full package.json, which shows npm init -y can be run any time, even after installing packages; -y accepts all defaults.",
+        "Add \"type\": \"module\" so import syntax works. Without it Node reports that import cannot be used outside a module.",
+        "(Extra) Optionally fill in the author field."
+      ]
+    },
+    {
+      "heading": "Step 1: get user input with inquirer",
+      "points": [
+        "The docs example calls inquirer.prompt([...questions]) which returns a promise. .then receives an answers object; .catch handles errors.",
+        "Each question is an object. message is the text shown to the user; name is the key under which the answer is stored. Many other options exist and are optional. Several questions can be passed in the array.",
+        "Question used: { message: \"Type in your URL\", name: \"URL\" }.",
+        "First log answers to see its shape: an object such as { URL: \"www.google.com\" }. Then read answers.URL into a const url.",
+        "Run from the project folder with node index.js. (Extra) The catch block's error.isTtyError check distinguishes a terminal that cannot show prompts from other failures."
+      ]
+    },
+    {
+      "heading": "Step 2: create the QR image with qr-image",
+      "points": [
+        "The docs example uses require. It must be converted: import qr from \"qr-image\" and import fs from \"fs\". CommonJS require and ESM import cannot be mixed in one file.",
+        "qr.image(text, options) returns a readable stream. The options object (type, size, margin and so on) is optional; the default type is PNG, so it can be omitted.",
+        "Pipe the stream into a file: qr_svg.pipe(fs.createWriteStream(\"qr_img.png\")). This writes the PNG into the project folder.",
+        "Test with a full URL including https:// and scan the result with a phone to confirm it opens the right site.",
+        "(Extra) The qr-image README example passes { type: 'svg' } and names its variable qr_svg; the lecture drops the type option so the output is PNG (the default), and the variable name has no effect."
+      ]
+    },
+    {
+      "heading": "Step 3: save the URL with fs.writeFile",
+      "points": [
+        "Call fs.writeFile(\"URL.txt\", url, callback) inside the same .then block, after the image code.",
+        "The callback receives err; throw it if present, otherwise log a confirmation message.",
+        "Final outcome of one run: a qr_img.png and a URL.txt containing the typed text in the project folder."
+      ]
+    },
+    {
+      "heading": "Workflow lessons",
+      "points": [
+        "Read each package's documentation first, paste its example, then adapt it. The qr-image source lives in node_modules/qr-image/lib, which can be browsed to see what is exported.",
+        "Typing the import line before using a name lets the editor autocomplete.",
+        "Getting stuck and digging through docs is the expected part of the process. Next section: Express."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Finished index.js (reconstructed from the reference solution)",
+      "language": "javascript",
+      "code": "import inquirer from \"inquirer\";\nimport qr from \"qr-image\";\nimport fs from \"fs\";\n\ninquirer\n  .prompt([\n    {\n      message: \"Type in your URL: \",\n      name: \"URL\",\n    },\n  ])\n  .then((answers) => {\n    const url = answers.URL;\n\n    // QR image: PNG by default\n    const qr_png = qr.image(url);\n    qr_png.pipe(fs.createWriteStream(\"qr_img.png\"));\n\n    // Save the typed URL\n    fs.writeFile(\"URL.txt\", url, (err) => {\n      if (err) throw err;\n      console.log(\"The file has been saved!\");\n    });\n  })\n  .catch((error) => {\n    if (error.isTtyError) {\n      // Prompt could not be rendered in this environment\n    } else {\n      // Something else went wrong\n    }\n  });"
+    },
+    {
+      "caption": "Setup commands",
+      "language": "bash",
+      "code": "npm init -y\nnpm i inquirer qr-image\nnode index.js"
+    }
+  ],
+  "task": {
+    "name": "QR Code Generator",
+    "starting_point": "index.js with a comment block listing three TODOs, an empty or partial package.json.",
+    "goal": "Running node index.js asks for a URL, writes a QR code PNG for it and a text file containing the URL.",
+    "steps": [
+      "Install inquirer and qr-image with npm i (check spelling on npmjs.com).",
+      "Make sure package.json has \"type\": \"module\".",
+      "Import inquirer and call inquirer.prompt with one question object that has message and name.",
+      "In .then, read answers.URL into a const.",
+      "Import qr from qr-image; create the image with qr.image(url) and pipe it to fs.createWriteStream(\"qr_img.png\").",
+      "Import fs and call fs.writeFile to save the URL to URL.txt, with an error-throwing callback.",
+      "Run it, enter a full https URL, then scan the PNG with a phone to check it."
+    ],
+    "expected_result": "After entering e.g. https://www.google.com, the folder contains qr_img.png (scans to that URL) and URL.txt holding the same text.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "import inquirer from \"inquirer\";\nimport qr from \"qr-image\";\nimport fs from \"fs\";\n\ninquirer\n  .prompt([{ message: \"Type in your URL: \", name: \"URL\" }])\n  .then((answers) => {\n    const url = answers.URL;\n    // qr.image returns a readable PNG stream; pipe it into a file\n    qr.image(url).pipe(fs.createWriteStream(\"qr_img.png\"));\n    // save the typed URL as plain text\n    fs.writeFile(\"URL.txt\", url, (err) => {\n      if (err) throw err;\n      console.log(\"The file has been saved!\");\n    });\n  })\n  .catch((error) => {\n    if (error.isTtyError) {\n      console.error(\"Prompt could not be rendered in this terminal\");\n    } else {\n      console.error(error);\n    }\n  });"
+    },
+    "reference_repo_path": "Section 23 - Node.js/23.04 - QR Code Generator/solution.js"
+  },
+  "pitfalls": [
+    "Misspelling the package names (inquirer, qr-image with a hyphen).",
+    "Forgetting \"type\": \"module\", which causes the import error.",
+    "Leaving require() lines from the docs alongside import statements.",
+    "Typing a URL without https:// makes a QR code phones may treat as plain text.",
+    "Running node from the wrong folder so files land elsewhere.",
+    "The reference repo's index.js differs slightly from the lecture: it saves to link.txt rather than URL.txt and logs placeholder 'Error 1/2' messages; its package.json also lists an unnecessary \"fs\" placeholder dependency and the student's name as author (ignore both)."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "Proposed lesson 'Node QR generator': blurb about combining two npm packages and fs. Tasks: 1) install packages and set type module, 2) prompt for a URL and log answers, 3) create the PNG, 4) write URL.txt, 5) extend with a second question for the file name.",
+      "Starter code: index.js containing only the TODO comment block and import lines.",
+      "Interactive demo idea: simulated terminal prompt that takes a URL, draws a QR code in a canvas and shows the two output files appearing in a mock file tree.",
+      "Stretch tasks: add a size option to qr.image, validate the URL, use the promise form fs.promises.writeFile."
+    ]
+  }
+}

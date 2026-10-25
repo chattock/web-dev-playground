@@ -1,0 +1,71 @@
+{
+  "index": 100,
+  "lecture_id": 12373964,
+  "title": "Control Statements: Using If-Else Conditionals & Logic",
+  "section": "15. Intermediate Javascript",
+  "duration_min": 5,
+  "kind": "concept",
+  "summary": "Introduces control flow with if/else: a condition in parentheses decides which block runs. Applied to the love calculator so a high score gets a special message.",
+  "concepts": [
+    {
+      "heading": "Control flow and conditionals",
+      "points": [
+        "Control flow means the program takes different paths depending on current conditions.",
+        "if evaluates a condition. When it is true the block that follows runs; else holds the block for when it is false.",
+        "Syntax: if (condition) { ... } else { ... }. The condition sits in parentheses, each branch in curly braces.",
+        "Convention is to put the opening brace on the same line as if and else, which keeps long blocks readable.",
+        "Only one of the two blocks runs for any given evaluation."
+      ]
+    },
+    {
+      "heading": "Conditions in the love calculator",
+      "points": [
+        "Equality is tested with three equals signs: loveScore === 100. This only triggers for one value in a hundred, so it is awkward to test.",
+        "Testing a range is more practical, using a comparator such as greater than: loveScore > 70.",
+        "(Extra) A single = assigns a value and must not be used as a comparison inside if."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Generic shape",
+      "language": "javascript",
+      "code": "if (track === \"clear\") {\n  goStraight();\n} else {\n  turnRight();\n}"
+    },
+    {
+      "caption": "Love calculator with a conditional",
+      "language": "javascript",
+      "code": "var loveScore = Math.floor(Math.random() * 100) + 1;\nif (loveScore > 70) {\n  alert(\"Your love score is \" + loveScore + \"%, indicating genuine love\");\n} else {\n  alert(\"Your love score is \" + loveScore + \"%\");\n}"
+    }
+  ],
+  "task": {
+    "name": "Add a special message to the love calculator",
+    "starting_point": "The love calculator from the previous lecture.",
+    "goal": "Show a different alert when the score is high.",
+    "steps": [
+      "Keep the prompts and the 1-100 loveScore calculation.",
+      "Wrap the alert in if (loveScore > 70) with an extended message.",
+      "Put the plain message in the else block.",
+      "Run several times to see both branches."
+    ],
+    "expected_result": "Scores above 70 show the special message; others show the plain one.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "var loveCalculator = Math.random() * 100;\nloveCalculator = Math.floor(loveCalculator) + 1;\nif (loveCalculator > 70) {\n  alert(\"Your love score is \" + loveCalculator + \"%, indicating genuine love\");\n} else {\n  alert(\"Your love score is \" + loveCalculator + \"%\");\n}"
+    },
+    "reference_repo_path": "Section 15 - Intermediate Javascript/15.02 - Control Statements - Using If-Else Conditionals & Logic/script.js"
+  },
+  "pitfalls": [
+    "Using = instead of === in a condition.",
+    "Testing for a single exact value when a range is wanted.",
+    "Forgetting braces or parentheses around the condition."
+  ],
+  "playground": {
+    "match": "s15-if-else (lesson 15.2, data/s15.js)",
+    "coverage": "Covers the love-score branch, else if chains, ordering, truthy/falsy and the ternary.",
+    "gaps_and_ideas": [
+      "Add the === 100 attempt first, then show why a range is easier to test.",
+      "Demo idea: a button repeatedly generating scores and tallying which branch ran."
+    ]
+  }
+}

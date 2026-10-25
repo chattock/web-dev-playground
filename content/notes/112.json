@@ -1,0 +1,100 @@
+{
+  "index": 112,
+  "lecture_id": 18143228,
+  "title": "Fibonacci Solution",
+  "section": "15. Intermediate Javascript",
+  "duration_min": 8,
+  "kind": "solution",
+  "summary": "Walks through turning the Fibonacci flowchart into code: base cases with if / else if, a hand-written sum of the last two items, then replacing the repetition with a for loop that uses output.length for the last two positions.",
+  "concepts": [
+    {
+      "heading": "Step 1: base cases from the flowchart",
+      "points": [
+        "Create output as an empty array inside the function.",
+        "if (n === 1) set output to [0].",
+        "else if (n === 2) set output to [0, 1]. An else if is only evaluated when the earlier condition was false.",
+        "else branch handles every larger n: start output at [0, 1], then add more terms.",
+        "All branches fall through to a single return output at the end."
+      ]
+    },
+    {
+      "heading": "Step 2: first manual sum",
+      "points": [
+        "Inside else, the next number is output[0] + output[1] (0 + 1 = 1) and is appended with output.push(...); the array becomes [0, 1, 1].",
+        "The flowchart then asks whether n equals the array's length; if yes return, otherwise add again. This suggests an if (n === output.length) check."
+      ]
+    },
+    {
+      "heading": "Step 3: make the indexes dynamic",
+      "points": [
+        "Hard-coded positions 0 and 1 only work for a two-item array. Use output.length - 1 for the last item and output.length - 2 for the second last; this works at any size (length 4 gives positions 3 and 2).",
+        "length is a property, so no parentheses (the lecture's spoken output.length() is loose wording)."
+      ]
+    },
+    {
+      "heading": "Step 4: collapse the repetition into a loop",
+      "points": [
+        "Repeated lines plus the 'go back and check again' arrow are the signal to use a loop.",
+        "for loop: counter starts at 2 (two items already exist), condition i < n, step i++. Each round pushes the sum of the last two items.",
+        "The loop ends when i reaches n, which leaves exactly n items. The loop condition replaces the explicit length-vs-n check.",
+        "Test with n = 1, 2 and 5 in the sandbox, then run the course checker."
+      ]
+    },
+    {
+      "heading": "Closing advice",
+      "points": [
+        "Many routes work (while loop, fewer if branches); correct output meeting the stated rules is what counts, and the best solution is one the learner understands.",
+        "Common sticking points flagged: array methods and remembering to loop."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Final solution (matches the lecture's approach)",
+      "language": "javascript",
+      "code": "function fibonacciGenerator(n) {\n  var output = [];\n  if (n === 1) {\n    output = [0];\n  } else if (n === 2) {\n    output = [0, 1];\n  } else {\n    output = [0, 1];\n    for (var i = 2; i < n; i++) {\n      output.push(output[output.length - 1] + output[output.length - 2]);\n    }\n  }\n  return output;\n}"
+    },
+    {
+      "caption": "(Extra) Reference-repo variant: a single loop with index checks, no separate base cases",
+      "language": "javascript",
+      "code": "function fibonacciGenerator(n) {\n  var sequenceOfNumbers = [];\n  for (var i = 0; i < n; i++) {\n    if (i === 0) {\n      sequenceOfNumbers.push(0);\n    } else if (i === 1) {\n      sequenceOfNumbers.push(1);\n    } else {\n      sequenceOfNumbers.push(sequenceOfNumbers[i - 1] + sequenceOfNumbers[i - 2]);\n    }\n  }\n  return sequenceOfNumbers;\n}"
+    }
+  ],
+  "task": {
+    "name": "Fibonacci solution walkthrough",
+    "starting_point": "fibonacciGenerator(n) stub from the previous lecture.",
+    "goal": "Return the first n numbers of the sequence as an array.",
+    "steps": [
+      "Declare an empty output array.",
+      "if n is 1 return [0] via output; else if n is 2 use [0, 1].",
+      "Else start with [0, 1].",
+      "Loop i from 2 while i < n.",
+      "In each round push output[output.length-1] + output[output.length-2].",
+      "Return output.",
+      "Run with n = 1, 2, 5, then use the checker."
+    ],
+    "expected_result": "n=1 gives [0]; n=2 gives [0,1]; n=5 gives [0,1,1,2,3].",
+    "solution_code": {
+      "language": "javascript",
+      "code": "function fibonacciGenerator(n) {\n  var output = [];\n  if (n === 1) {\n    output = [0];\n  } else if (n === 2) {\n    output = [0, 1];\n  } else {\n    output = [0, 1];\n    for (var i = 2; i < n; i++) {\n      output.push(output[output.length - 1] + output[output.length - 2]);\n    }\n  }\n  return output;\n}"
+    },
+    "reference_repo_path": "Section 15 - Intermediate Javascript/15.13 - Introducing the Fibonacci Code Challenge/script.js"
+  },
+  "pitfalls": [
+    "Writing output.length() with parentheses (it is a property).",
+    "Starting the loop at 0 or 1 so the first terms get duplicated.",
+    "Using <= n and getting n+1 items.",
+    "(Extra) n = 0 or negative: the lecture's code returns [0, 1] for n = 0; add an explicit guard if needed.",
+    "Reference repo diverges: it uses a different but valid single-loop structure."
+  ],
+  "playground": {
+    "match": "s15-fibonacci (lesson 15.13, data/s15.js)",
+    "coverage": "Solution uses early returns for 0 and 1, loops from index 2 pushing output[i-1]+output[i-2], plus a rolling-variables alternative. Notes explain edge cases and loop start.",
+    "gaps_and_ideas": [
+      "Add the lecture's progression (manual sum, then dynamic indexes with length, then the loop) as an incremental walkthrough.",
+      "Note output.length - 1 / - 2 as an alternative to i - 1 / i - 2.",
+      "Add a flowchart-first task and a 'what does n = 0 return?' trap.",
+      "Explore idea: animate array growing with indexes highlighted."
+    ]
+  }
+}

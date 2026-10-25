@@ -1,0 +1,30 @@
+{
+  "index": 251,
+  "lecture_id": 40735610,
+  "title": "Flag Emojis on Windows",
+  "section": "33. PostgreSQL",
+  "duration_min": 1,
+  "kind": "admin",
+  "summary": "Windows does not render flag emoji as images, so flags appear as two-letter country codes in VS Code and pgAdmin. This only matters for the flag quiz project in the browser, where Firefox shows them correctly.",
+  "concepts": [
+    {
+      "heading": "Key takeaways",
+      "points": [
+        "On Windows, flag emoji show as letter codes in VS Code, pgAdmin and Chrome. Data in .csv files and the database is still correct.",
+        "What matters for the project is how flags render in the browser page, not in the editor or pgAdmin.",
+        "Workaround for Windows users on the flag quiz: view the app in Firefox, which draws flag emoji.",
+        "(Extra) The notes are based on the lesson text as mirrored in the reference repo, since the article could not be read inline."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [
+    "Assuming the data is broken when you only see country codes instead of flags."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": []
+  }
+}

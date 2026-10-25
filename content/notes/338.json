@@ -1,0 +1,29 @@
+{
+  "index": 338,
+  "lecture_id": 31678170,
+  "title": "Where to Get Help and Support for Development on the Internet Computer",
+  "section": "38. Build Your First Defi (Decentralised Finance) DApp - DBANK",
+  "duration_min": 0,
+  "kind": "admin",
+  "summary": "A short resource article listing where to look for help when building on the Internet Computer: official docs, the CLI reference, the Dfinity forum and its developer Discord.",
+  "concepts": [
+    {
+      "heading": "Support channels listed",
+      "points": [
+        "Official developer docs for the Internet Computer (the introduction and guides).",
+        "Command-line reference for dfx, useful when a command or flag is unfamiliar.",
+        "Official Dfinity forum for questions and discussions.",
+        "Official Dfinity developer Discord for quick community help.",
+        "(Extra) The lecture page itself only exposes an Open button for the external link; the link list above comes from the course's reference repo copy. The old smartcontracts.org docs address has since moved to internetcomputer.org/docs, so check current URLs."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": []
+  }
+}

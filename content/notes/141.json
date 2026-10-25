@@ -1,0 +1,93 @@
+{
+  "index": 141,
+  "lecture_id": 12384034,
+  "title": "A Deeper Understanding of Javascript Objects",
+  "section": "18. Advanced Javascript and DOM Manipulation",
+  "duration_min": 12,
+  "kind": "concept+exercise",
+  "summary": "Explains JavaScript objects as bundles of related properties, why they beat many separate variables, and how constructor functions with the new keyword mass-produce objects with the same shape. Uses a hotel staff scenario (bellboys, housekeepers) with two build-it-yourself challenges.",
+  "concepts": [
+    {
+      "heading": "The problem with separate variables",
+      "points": [
+        "Storing each fact about a person in its own variable (e.g. bellBoy1Name, bellBoy1Age...) works for one person but doesn't scale: each new person needs a new set of variables with invented names.",
+        "The mental model is a table or spreadsheet: one row per property, one column per individual, with the same properties for each."
+      ]
+    },
+    {
+      "heading": "Object literals",
+      "points": [
+        "Create one with var name = { ... }. Curly braces enclose comma-separated property: value pairs.",
+        "Property names follow variable naming conventions: camelCase, not starting with a digit.",
+        "Values can be any type: string, number, boolean, array, even a function.",
+        "Read a value with dot notation: bellBoy1.name. In an alert this becomes a greeting built by string concatenation.",
+        "Different kinds of thing get different properties: a housekeeper might record yearsOfExperience, name and a cleaningRepertoire array.",
+        "Structured data like this is less error-prone than loose variables."
+      ]
+    },
+    {
+      "heading": "Constructor functions",
+      "points": [
+        "Writing out every property for every new object is repetitive. A constructor function is a template (the lecture compares it to a factory) that builds objects for you.",
+        "Convention: the function name starts with a capital letter (BellBoy, Housekeeper), which signals it is a constructor and not an ordinary function.",
+        "Its parameters are the values supplied per object. Inside, assign each to a property of the object being built: this.name = name; this.yearsOfExperience = yearsOfExperience; and so on.",
+        "Create objects by calling it with the new keyword: var houseKeeper1 = new Housekeeper(9, \"Tom\", [\"Lobby\", \"Bedroom\"]). Arguments must follow the parameter order.",
+        "The only syntactic difference from calling a normal function is new plus the capitalised name. Omitting new breaks the pattern (this would not refer to a fresh object).",
+        "After creating, access properties via the dot: houseKeeper1.name gives \"Tom\".",
+        "Many objects with identical properties but different values can then be created in one line each."
+      ]
+    },
+    {
+      "heading": "Workflow notes",
+      "points": [
+        "The Chrome DevTools Sources tab (snippets) is used to run the code; a hard reload clears earlier definitions."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Object literal",
+      "language": "javascript",
+      "code": "var housekeeper = {\n  name: \"Geovana\",\n  yearsOfExperience: 2,\n  cleaningRepertoire: [\"Bathroom\", \"Lobby\", \"Bedroom\"],\n  clean: function () {\n    alert(\"Cleaning in progress...\");\n  }\n};\n\nconsole.log(housekeeper.name); // Geovana"
+    },
+    {
+      "caption": "Constructor function and new",
+      "language": "javascript",
+      "code": "function Housekeeper(name, yearsOfExperience, cleaningRepertoire) {\n  this.name = name;\n  this.yearsOfExperience = yearsOfExperience;\n  this.cleaningRepertoire = cleaningRepertoire;\n  this.clean = function () {\n    alert(\"Cleaning in progress...\");\n  };\n}\n\nvar nataly = new Housekeeper(\"Nataly\", 5, [\"Bathroom\", \"Lobby\", \"Bedroom\"]);\nconsole.log(nataly.name); // Nataly\nnataly.clean();"
+    }
+  ],
+  "task": {
+    "name": "Housekeeper object and constructor",
+    "starting_point": "Empty script (DevTools snippet or script.js).",
+    "goal": "First build a single object literal, then replace it with a constructor function and create objects from it.",
+    "steps": [
+      "Declare var houseKeeper1 = { ... } with properties of your choice (e.g. yearsOfExperience, name, cleaningRepertoire array).",
+      "Log houseKeeper1.name using dot notation.",
+      "Write a capitalised constructor Housekeeper(...) taking one parameter per property and assigning each to this.",
+      "Delete the literal and create objects with new Housekeeper(...) giving values in parameter order.",
+      "Log a property from the new object to confirm."
+    ],
+    "expected_result": "Logging the name of an object built via new prints the value you passed in; additional objects take one line each.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "function Housekeeper(name, yearsOfExperience, cleaningRepertoire) {\n  this.name = name;\n  this.yearsOfExperience = yearsOfExperience;\n  this.cleaningRepertoire = cleaningRepertoire;\n  this.clean = function () {\n    alert(\"Cleaning in progress...\");\n  };\n}\n\nvar nataly = new Housekeeper(\"Nataly\", 5, [\"Bathroom\", \"Lobby\", \"Bedroom\"]);\nconsole.log(nataly.name);"
+    },
+    "reference_repo_path": "Section 18 - Advanced Javascript and DOM Manipulation/18.05 - A Deeper Understanding of Javascript Objects/script.js"
+  },
+  "pitfalls": [
+    "Forgetting new when calling a constructor.",
+    "Passing constructor arguments in a different order from the parameters.",
+    "Starting a constructor name with a lowercase letter (works, but breaks the convention).",
+    "Missing commas between properties in an object literal (no comma after the last one is needed).",
+    "(Extra) The lecture's housekeeper constructor has parameters in the order experience, name, repertoire; the reference repo uses name first. Either is fine if calls match.",
+    "(Extra) Defining a method inside the constructor (this.clean = function...) creates a separate copy per object; prototypes avoid this but are beyond this lesson."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (section 18 has no playground file).",
+    "gaps_and_ideas": [
+      "Proposed lesson 'Objects and constructors': tasks: (1) turn five loose variables into an object, (2) read and update properties with dot notation, (3) write a constructor, (4) create three instances, (5) add a method.",
+      "Interactive demo: a form that fills constructor arguments and renders the resulting object as a table, with a live console showing property reads."
+    ]
+  }
+}

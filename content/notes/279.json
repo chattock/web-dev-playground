@@ -1,0 +1,59 @@
+{
+  "index": 279,
+  "lecture_id": 17038612,
+  "title": "Introduction to Code Sandbox and the Structure of the Module",
+  "section": "36. React.js",
+  "duration_min": 6,
+  "kind": "setup",
+  "summary": "Introduces CodeSandbox as the browser-based editor used for the React module, explains why it replaces local VS Code here, and outlines the learn-then-practice rhythm of the lessons.",
+  "concepts": [
+    {
+      "heading": "What CodeSandbox offers",
+      "points": [
+        "Browser-based development environment with instant hosting: every project gets a shareable URL for friends, colleagues or a portfolio.",
+        "Designed with React in mind: no manual React install, built-in npm dependency management, and live collaboration.",
+        "Free to use. Sign-up (via the link in the course resources) works with GitHub, Google or Apple accounts."
+      ]
+    },
+    {
+      "heading": "Why not local VS Code for this module",
+      "points": [
+        "React releases change details frequently and the course cannot be re-recorded each time, so a shared environment keeps everyone on identical React versions and avoids deprecation surprises.",
+        "Provided starter and final sandboxes mean everyone sees the same code and tooling, so learning focuses on fundamentals (components, hooks, functional style) instead of setup problems.",
+        "Local development is still possible; the next lesson is a text guide for it, but it is not recommended until the basics are solid. Docs cover any later version changes."
+      ]
+    },
+    {
+      "heading": "Module structure",
+      "points": [
+        "Pattern: a lesson teaches one skill in a demo sandbox, then a separate practice sandbox lets the learner apply it.",
+        "After enough skills are built, the Keeper app project is introduced in several parts, each applying earlier skills."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": {
+    "name": "Create a CodeSandbox account",
+    "starting_point": "Link to codesandbox.io in the lecture resources",
+    "goal": "Be able to open and fork the course's starter sandboxes",
+    "steps": [
+      "Open the CodeSandbox link from the course resources.",
+      "Click sign in.",
+      "Choose GitHub, Google or Apple to register."
+    ],
+    "expected_result": "Logged-in CodeSandbox account ready for the following lessons.",
+    "solution_code": null,
+    "reference_repo_path": null
+  },
+  "pitfalls": [
+    "(Extra) CodeSandbox's UI and templates change over time, and the reference repo uses local Vite projects instead, so sandbox links may differ from what the repo shows."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (no data file exists for section 36)",
+    "gaps_and_ideas": [
+      "(Extra) New 'React setup' lesson: compare CodeSandbox, Vite local (npm create vite@latest) and StackBlitz; tasks: create a Vite React project, run it, edit App.jsx and watch hot reload.",
+      "Since the playground may be a static site, consider embedding a tiny in-browser React sandbox (Babel standalone) as the demo."
+    ]
+  }
+}

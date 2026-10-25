@@ -1,0 +1,91 @@
+{
+  "index": 343,
+  "lecture_id": 31673536,
+  "title": "[Optional] How to Deploy a Static Website onto the ICP Blockchain for Hosting",
+  "section": "39. Deploying to the ICP Live Blockchain",
+  "duration_min": 8,
+  "kind": "concept+exercise",
+  "summary": "Hosts a plain static website (the CSS-section demo site) on the Internet Computer: put the site in an assets folder, add a dfx.json describing one assets canister, flatten the file references, deploy with dfx deploy --network ic and open it at <canister-id>.ic0.app.",
+  "concepts": [
+    {
+      "heading": "Why host a static site on ICP",
+      "points": [
+        "A small static site (HTML, CSS, a few images; only a couple of hundred KB) is an alternative to a hosting company or GitHub Pages.",
+        "Cost depends on the size of what is stored, so small sites cost very little cycles.",
+        "The lesson uses the course's earlier CSS website; the learner may use their own."
+      ]
+    },
+    {
+      "heading": "Project layout and dfx.json",
+      "points": [
+        "Create a project folder with a subfolder named assets that holds every site file (index.html, favicon, images, stylesheet). This mirrors the assets canister folder of the DBank project.",
+        "Next to (outside) the assets folder, create dfx.json, which tells dfx what canisters exist.",
+        "Inside it, define a canisters object with one canister named website. Its type is 'assets' and its source is an array (several folders are allowed) containing the path to the assets folder.",
+        "The canister name chosen here is the name used later in dfx canister --network ic id website."
+      ]
+    },
+    {
+      "heading": "Flatten the file references",
+      "points": [
+        "The deployment puts all asset files at the same level, collapsing subfolders such as css/ and images/ next to index.html and the favicon. Links with folder prefixes then break.",
+        "Edit index.html (search and replace) to drop the css/ prefix from the stylesheet link and the images/ prefix from the five image sources, leaving bare file names.",
+        "(Extra) The reference repo is already flat and uses ./styles.css, ./script.js and ./name.png image paths directly in the assets folder, matching this requirement. It also loads Google Fonts from a CDN, which still works because that is an external URL.",
+        "(Extra) Newer asset canisters keep folder structure, so this flattening step may not be needed with current dfx versions; test locally first."
+      ]
+    },
+    {
+      "heading": "Deploy and visit",
+      "points": [
+        "Open a terminal in the project folder and run dfx deploy --network ic. This creates the canister (spending wallet cycles) and uploads the assets.",
+        "Get the id with dfx canister --network ic id website, then open https://<id>.ic0.app. The site, including its favicon, loads from the blockchain and can be shared.",
+        "Keep the canister funded: when cycles run out the site can go offline, so top up the canister to keep it available.",
+        "Future course projects stay on local deployment to avoid cost."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "dfx.json for a static site (matches the reference repo)",
+      "language": "json",
+      "code": "{\n  \"canisters\": {\n    \"website\": {\n      \"type\": \"assets\",\n      \"source\": [\"assets\"]\n    }\n  }\n}"
+    },
+    {
+      "caption": "Folder layout and deploy commands",
+      "language": "bash",
+      "code": "My Site/\n  dfx.json\n  assets/\n    index.html\n    styles.css\n    favicon.jpg\n    (images ...)\n\ndfx deploy --network ic\ndfx canister --network ic id website\n# open https://<canister-id>.ic0.app"
+    }
+  ],
+  "task": {
+    "name": "Host a static website on the Internet Computer",
+    "starting_point": "The CSS-section demo site (index.html, CSS folder, images, favicon), downloaded and unzipped, or your own small site.",
+    "goal": "The site served live from an ICP canister at its ic0.app address.",
+    "steps": [
+      "Put all site files in a folder called assets inside a project folder.",
+      "Create dfx.json beside assets with a canister called website of type assets with source [\"assets\"].",
+      "Flatten the references in index.html by removing the css/ and images/ prefixes (five image links).",
+      "Open a terminal in the project folder and run dfx deploy --network ic.",
+      "Run dfx canister --network ic id website to get the canister id.",
+      "Open https://<id>.ic0.app and share the link."
+    ],
+    "expected_result": "The portfolio-style page loads with its styles, images and favicon from the canister URL.",
+    "solution_code": {
+      "language": "json",
+      "code": "{\n  \"canisters\": {\n    \"website\": {\n      \"type\": \"assets\",\n      \"source\": [\"assets\"]\n    }\n  }\n}"
+    },
+    "reference_repo_path": "Section 39 - Deploying to the ICP Live Blockchain/39.05 How to Deploy a Static Website onto the ICP Blockchain for Hosting/My Site/"
+  },
+  "pitfalls": [
+    "Leaving folder prefixes in links after the flat upload gives missing CSS and images.",
+    "Running the terminal outside the project folder (it must contain dfx.json).",
+    "Letting the canister run out of cycles takes the site down.",
+    "Wrong canister name in the id command; it must match the name in dfx.json."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "Optional lesson 'Hosting a static site': tasks on writing a dfx.json from a spec, rewriting asset paths to a flat layout, and spotting broken relative links.",
+      "Interactive demo idea: a file-tree toggle that flattens folders and highlights which src/href values break."
+    ]
+  }
+}

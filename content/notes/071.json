@@ -1,0 +1,78 @@
+{
+  "index": 71,
+  "lecture_id": 19655714,
+  "title": "Manage ATTENTION with effective User Interface (UI) Design",
+  "section": "12. Web Design School - Create a Website that People Love",
+  "duration_min": 10,
+  "kind": "theory",
+  "summary": "UI design directs where users look. Five principles: visual hierarchy, layout, alignment, white space, and designing for the target audience. Each is illustrated with real-site examples and simple rules of thumb.",
+  "concepts": [
+    {
+      "heading": "1. Hierarchy",
+      "points": [
+        "Eyes go first to what is bigger, bolder and higher in contrast. Ranking information by importance lets people skim instead of reading everything.",
+        "If all text has equal weight (as in a plain invitation paragraph), the reader must read it all to find the key facts. With hierarchy, the key facts (whose event, where, when) come first.",
+        "Colour: bright, high-contrast colours signal importance; muted or grey tones signal less importance. An ecommerce example keeps a neutral grey/white palette and uses a green accent to pull attention to the add-to-bag action.",
+        "Size: the largest elements get noticed first. A crypto exchange landing page makes its headline biggest, then the email field and Get started button, because capturing the visitor's email is the goal.",
+        "(Extra) In CSS terms, hierarchy comes from font-size, font-weight, colour, contrast and spacing."
+      ]
+    },
+    {
+      "heading": "2. Layout",
+      "points": [
+        "A wall of uniform text is dull. Mix text blocks with images and vary shapes, sizes and emphasis to keep interest.",
+        "Chop content into smaller pieces so visitors absorb more of the page (a grammar tool site is the positive example, an encyclopedia page the negative one).",
+        "Line length: aim for about 40-60 characters per line. Longer lines make the eye lose its track; shorter ones feel choppy.",
+        "(Extra) In CSS, limit line length with max-width in ch units, for example max-width: 60ch."
+      ]
+    },
+    {
+      "heading": "3. Alignment",
+      "points": [
+        "Elements should share clear starting edges. A centred title above left-aligned body text looks mismatched; giving both the same left edge looks deliberate.",
+        "Reduce the number of distinct alignment lines in a design. Draw an imaginary line through the start of each item and merge lines where possible.",
+        "Better alignment alone, with no change to colour or fonts, makes a design look more professional."
+      ]
+    },
+    {
+      "heading": "4. White space",
+      "points": [
+        "White space is the empty area around text and elements. Luxury shops use it to signal quality, while crowded displays suggest a discount store.",
+        "The same applies to digital ads: stuffing a headphone ad with badges and prices looks cheap; spacing it out looks premium and minimalist.",
+        "(Extra) In CSS use padding, margin, gap and line-height to create it."
+      ]
+    },
+    {
+      "heading": "5. Know your audience",
+      "points": [
+        "Style rules depend on who the site is for. A very severe black-and-white children's concert poster fails, while a colourful playful one fits.",
+        "Be flexible: teenagers buying clothes, crypto traders and a medical site each need a different visual style.",
+        "A bolder, messier style is fine when it suits the audience."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "(Extra) CSS for hierarchy, line length and white space",
+      "language": "css",
+      "code": "article {\n  max-width: 60ch;      /* ~40-60 characters per line */\n  margin: 0 auto;\n  line-height: 1.6;\n  padding: 4rem 1rem;   /* generous white space */\n}\nh1 { font-size: 3rem; font-weight: 800; }\np  { color: #555; }\n.cta {\n  background: #1db954;  /* single bright accent draws the eye */\n  color: #fff;\n  padding: 0.8rem 2rem;\n}"
+    }
+  ],
+  "task": null,
+  "pitfalls": [
+    "Giving every element the same visual weight.",
+    "Very long text lines and walls of text.",
+    "Mixing centre and left alignment without reason, or having many different alignment lines.",
+    "Cramming content together with no breathing room.",
+    "Applying one style regardless of audience."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (section 12 has no playground file).",
+    "gaps_and_ideas": [
+      "New lesson 'UI principles': blurb on hierarchy, alignment and white space. Tasks: 1) make the call-to-action the most prominent element; 2) limit paragraph width to 60ch; 3) align the title and body to one left edge; 4) add padding and margins to a cramped card grid; 5) restyle the page for a playful kids' audience.",
+      "Starter code idea: a cramped pricing page with centred and left-aligned text mixed and every element the same size.",
+      "Interactive demo idea: sliders for max-width, padding and font-size with a live 'characters per line' counter and an eye-path heat overlay."
+    ]
+  }
+}

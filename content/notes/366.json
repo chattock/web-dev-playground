@@ -1,0 +1,127 @@
+{
+  "index": 366,
+  "lecture_id": 31673790,
+  "title": "Creating the \"Discover\" Page",
+  "section": "42. Minting NFTs and Building an NFT Marketplace like OpenSea",
+  "duration_min": 23,
+  "kind": "project",
+  "summary": "Builds the Discover route by reusing the Gallery component with the IDs of listed NFTs, adds a role prop so Item renders differently for the collection and discover views, hides the Buy button from the original owner via a getOriginalOwner query, shows prices with a PriceLabel component, and uses dfx command-line calls to create a listing owned by someone else for testing.",
+  "concepts": [
+    {
+      "heading": "Backend: getListedNFTs",
+      "points": [
+        "Add public query func getListedNFTs() : async [Principal] next to getOwnedNFTs in main.mo. No parameters.",
+        "HashMap.keys() returns an Iter of all keys; convert it with Iter.toArray, which needs import Iter from mo:base/Iter. The same Iter helpers were used earlier when persisting HashMaps.",
+        "Store the array in a constant (ids) and return it. The listing map's keys are exactly the listed NFTs' Principals."
+      ]
+    },
+    {
+      "heading": "Header.jsx: a second gallery",
+      "points": [
+        "The Discover route currently renders just a placeholder heading. Replace it with a listingGallery state value, mirroring the userOwnedGallery used for the collection route.",
+        "Inside getNFTs (called once from useEffect) add const listedNFTIds = await OPEND_backend.getListedNFTs(), log it, then setListingGallery(<Gallery title=\"Discover\" ids={listedNFTIds} role=\"discover\" />).",
+        "Because Gallery already maps ids to Item components, the same tile layout is reused with different data.",
+        "After redeploying, confirm the generated opend.did lists the new method. Mint two NFTs and list only one; Discover should show only the listed one while My NFTs shows both."
+      ]
+    },
+    {
+      "heading": "The role prop",
+      "points": [
+        "Discover items must not be blurred and should offer Buy instead of Sell, so Item needs to know where it is rendered.",
+        "Pass role=\"collection\" from the My NFTs gallery and role=\"discover\" from the Discover gallery. Gallery forwards it with role={props.role} to each Item.",
+        "In loadNFT, the sell-related logic (listing check, blur, owner label, Sell button) moves under if (props.role == \"collection\"). An else if (props.role == \"discover\") branch handles the marketplace view. Strings must match exactly between Header and Item; a typo silently skips both branches.",
+        "For discover, the button is a Button with text Buy and handleClick={handleBuy}; handleBuy is an async function that only logs a message for now (real buying comes in the next lecture)."
+      ]
+    },
+    {
+      "heading": "Hiding Buy from the original owner",
+      "points": [
+        "Problem: the user who listed an NFT sees a Buy button on it in Discover. The NFT's current owner is the OpenD canister, so the original seller is only recorded in the listing's itemOwner field.",
+        "Add public query func getOriginalOwner(id : Principal) : async Principal. Look up the listing with switch on mapOfListings.get(id): case null returns an empty Principal, case (?result) continues, then return listing.itemOwner.",
+        "In the discover branch, call await OPEND_backend.getOriginalOwner(props.id) and only set the Buy button when originalOwner.toText() != CURRENT_USER_ID.toText(). Comparing as text avoids comparing two different object instances.",
+        "CURRENT_USER_ID is exported from main.jsx (a Principal built with Principal.fromText of the default anonymous-style ID), so no login flow or deployed identity is needed. Import it into Item.jsx (and Header) from ../main.",
+        "Save main.mo before deploying; an unsaved file shows in italics in the editor."
+      ]
+    },
+    {
+      "heading": "Testing a Buy button with a command-line NFT",
+      "points": [
+        "Everything minted from the UI is owned by the same identity, so the Buy button can never appear in practice. Mint from the terminal instead, using the dfx caller identity, which differs from the frontend's CURRENT_USER_ID.",
+        "README section 'Creating NFT for Testing' has four numbered commands: (1) mint an NFT through dfx canister call, which returns the new NFT's canister ID; (2) call listItem with that ID (quoted, no angle brackets) and a price; (3) get OpenD's ID with dfx canister id; (4) call the new NFT canister's transferOwnership, passing the OpenD ID.",
+        "Placeholders in angle brackets must be replaced entirely, and quote handling matters: the Principal arguments to Candid calls are quoted, while the canister name used as the call target is not. Each step should print Success (the first prints an ID).",
+        "After refreshing Discover, both listed items appear but only the command-line one has a Buy button.",
+        "(Extra) This works because the shell identity's principal is stored as itemOwner for the command-line listing, which differs from the browser's fixed ID."
+      ]
+    },
+    {
+      "heading": "Price label",
+      "points": [
+        "Create components/PriceLabel.jsx exporting a functional component that returns the README's label markup and renders {props.sellPrice} in a span; the reference version appends the currency text DANG.",
+        "Add priceLabel state in Item.jsx and render {priceLabel} directly above the h2 title.",
+        "Backend: public query func getListedNFTPrice(id : Principal) : async Nat. Use the same switch on the listings map; return 0 for null, otherwise listing.itemPrice.",
+        "In the discover branch call await OPEND_backend.getListedNFTPrice(props.id) and setPriceLabel(<PriceLabel sellPrice={price.toString()} />). The returned Nat arrives as a BigInt in JS, so convert with toString() before rendering.",
+        "Redeploy, mint and list a new NFT, and the price shows on the Discover tile."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "main.mo additions (reference repo)",
+      "language": "motoko",
+      "code": "import Iter \"mo:base/Iter\";\n\npublic query func getListedNFTs() : async [Principal] {\n  let ids = Iter.toArray(mapOfListings.keys());\n  return ids;\n};\n\npublic query func getOriginalOwner(id : Principal) : async Principal {\n  var listing : Listing = switch (mapOfListings.get(id)) {\n    case null return Principal.fromText(\"\");\n    case (?result) result;\n  };\n  return listing.itemOwner;\n};\n\npublic query func getListedNFTPrice(id : Principal) : async Nat {\n  var listing : Listing = switch (mapOfListings.get(id)) {\n    case null return 0;\n    case (?result) result;\n  };\n  return listing.itemPrice;\n};"
+    },
+    {
+      "caption": "Header.jsx: fetching both galleries",
+      "language": "jsx",
+      "code": "async function getNFTs() {\n  const userNFTIds = await OPEND_backend.getOwnedNFTs(CURRENT_USER_ID);\n  setOwnedGallery(<Gallery title=\"My NFTs\" ids={userNFTIds} role=\"collection\" />);\n\n  const listedNFTIds = await OPEND_backend.getListedNFTs();\n  setListingGallery(<Gallery title=\"Discover\" ids={listedNFTIds} role=\"discover\" />);\n}"
+    },
+    {
+      "caption": "Item.jsx loadNFT: role-based branches",
+      "language": "jsx",
+      "code": "if (props.role == \"collection\") {\n  const nftIsListed = await OPEND_backend.isListed(props.id);\n  if (nftIsListed) {\n    setOwner(\"OpenD\");\n    setBlur({ filter: \"blur(4px)\" });\n    setSellStatus(\"Listed\");\n  } else {\n    setButton(<Button handleClick={handleSell} text={\"Sell\"} />);\n  }\n} else if (props.role == \"discover\") {\n  const originalOwner = await OPEND_backend.getOriginalOwner(props.id);\n  if (originalOwner.toText() != CURRENT_USER_ID.toText()) {\n    setButton(<Button handleClick={handleBuy} text={\"Buy\"} />);\n  }\n  const price = await OPEND_backend.getListedNFTPrice(props.id);\n  setPriceLabel(<PriceLabel sellPrice={price.toString()} />);\n}"
+    },
+    {
+      "caption": "Gallery.jsx: forward role to each Item",
+      "language": "jsx",
+      "code": "props.ids.map((NFTId) => (\n  <Item id={NFTId} key={NFTId.toText()} role={props.role} />\n))"
+    },
+    {
+      "caption": "PriceLabel.jsx",
+      "language": "jsx",
+      "code": "import React from \"react\";\n\nfunction PriceLabel(props) {\n  return (\n    <div className=\"disButtonBase-root disChip-root makeStyles-price-23 disChip-outlined\">\n      <span className=\"disChip-label\">{props.sellPrice} DANG</span>\n    </div>\n  );\n}\nexport default PriceLabel;"
+    }
+  ],
+  "task": {
+    "name": "Build the Discover page with Buy buttons and prices",
+    "starting_point": "Project after lesson 42.07: listing works, Item has loader/blur/Listed styling, Discover route shows only a placeholder heading.",
+    "goal": "Discover lists all NFTs for sale with their price, shows Buy only on NFTs originally owned by someone else, and My NFTs still shows the Sell flow.",
+    "steps": [
+      "Add getListedNFTs (with Iter import) to main.mo and fetch it in Header.getNFTs into a listingGallery state rendered in the /discover route.",
+      "Pass role=\"collection\" and role=\"discover\" to the two Gallery elements and forward it to Item.",
+      "Wrap the existing sell logic of loadNFT in the collection branch and add a discover branch showing a Buy button wired to a logging handleBuy.",
+      "Add getOriginalOwner and show Buy only when the original owner's text differs from CURRENT_USER_ID's text.",
+      "Redeploy and use the README's command-line steps to mint, list and transfer a test NFT to OpenD from a different identity.",
+      "Create PriceLabel.jsx, render it above the title, add getListedNFTPrice, and set the label from its result via toString()."
+    ],
+    "expected_result": "Discover shows listed NFTs unblurred with price tags; the self-listed NFT has no Buy button, the command-line one does.",
+    "solution_code": null,
+    "reference_repo_path": "Section 42 - Minting NFTs and Building an NFT Marketplace like OpenSea/42.08 Creating the 'Discover' Page/OPEND/src"
+  },
+  "pitfalls": [
+    "Mismatched role strings between Header and Item silently render no button.",
+    "Leaving angle brackets, or adding/removing quotes, in the README dfx commands breaks the test NFT setup.",
+    "Principals compared as objects are never equal; compare toText() results.",
+    "Passing a BigInt Nat to a component without toString() fails to render.",
+    "Redeploying clears everything, so re-mint after each backend change.",
+    "(Extra) The 42.07 reference repo already contains getListedNFTs, getOriginalOwner and getListedNFTPrice in main.mo, so its main.mo is identical to 42.08's; the README write-up of this lesson shows a simpler PriceLabel snippet than the repo's component."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet.",
+    "gaps_and_ideas": [
+      "Add to the proposed marketplace lesson: a 'reuse one component in two roles' task using a role prop and conditional rendering in a list.",
+      "Tasks: render a gallery from an array of ids; add a role prop that toggles Buy versus Sell; hide Buy when seller equals current user; format a price label from a BigInt with toString().",
+      "Interactive demo: mock listings table with a 'current user' dropdown; switching users changes which cards show Buy, mimicking the original-owner check."
+    ]
+  }
+}

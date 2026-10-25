@@ -1,0 +1,122 @@
+{
+  "index": 26,
+  "lecture_id": 37349924,
+  "title": "What are Webpages?",
+  "section": "4. Multi-Page Websites",
+  "duration_min": 13,
+  "kind": "concept+exercise",
+  "summary": "Shows how a multi-page website is just several HTML files in one project folder, joined by anchor tags whose href is a relative file path. Includes a four-option quiz on image paths and an exercise that links a home page to an About page (via a clickable image) and a Contact page (via a text link) stored in a public folder.",
+  "concepts": [
+    {
+      "heading": "From one page to a multi-page site",
+      "points": [
+        "Up to now each project was one folder holding index.html (the starting file where all the code goes) plus supporting folders such as images.",
+        "A multi-page website adds more HTML files to the same project folder, e.g. about.html (information about the site owner) and contact.html (how to reach them).",
+        "Extra pages are only reachable if some page links to them, so each page needs anchor (<a>) elements pointing at the others.",
+        "index.html acts as the home page of the site."
+      ]
+    },
+    {
+      "heading": "Linking to another page with a relative path",
+      "points": [
+        "Use the same <a> element as for external links, but put a relative file path in href instead of a full URL.",
+        "If about.html sits next to index.html, the link written inside index.html is <a href=\"./about.html\">About</a>: ./ means look in the folder containing index.html, then open about.html.",
+        "Clicking the rendered link makes the browser load about.html in place of the home page; the browser Back button returns to index.html.",
+        "The path is always measured from the file that contains the link, exactly as in the file paths lesson."
+      ]
+    },
+    {
+      "heading": "Quiz recap: displaying assets/images/cat.png from index.html",
+      "points": [
+        "Setup: index.html is in the Project folder, which also contains assets/, which contains images/, which contains cat.png.",
+        "Option with src=\"../assets/images/cat.png\" is wrong: ../ climbs out of the Project folder into its parent, where there is no assets folder.",
+        "Option with <img href=...> is wrong: images use the src attribute; href belongs to anchor tags.",
+        "Option with <a href=\"./assets/images/cat.png\"> is wrong: an anchor creates a clickable link, it does not display the picture on the page.",
+        "Correct: <img src=\"./assets/images/cat.png\" />, i.e. start in the Project folder, go into assets, then images, then the file.",
+        "If the quiz was difficult, revise file paths before continuing; later lessons depend on them."
+      ]
+    },
+    {
+      "heading": "Typical project layout: assets and public",
+      "points": [
+        "assets/ holds non-HTML resources; inside it an images/ folder holds pictures (assets/images/cat.png).",
+        "public/ conventionally holds every HTML page other than the home page (about.html, contact.html). index.html stays at the top level of the project.",
+        "VS Code's Explorer may compact a folder that only contains another folder into one row (shown as assets/images); it is still two nested folders.",
+        "(Extra) The single-row display is VS Code's 'Compact Folders' setting (explorer.compactFolders); turning it off shows each folder on its own line."
+      ]
+    },
+    {
+      "heading": "Previewing the goal without seeing the answer",
+      "points": [
+        "Right-click solution.html in the Explorer and choose Show Preview to see the finished page working, including its links, without opening the solution source.",
+        "Left-clicking solution.html would open its code and reveal the answer, so avoid that until you have attempted the task.",
+        "Run Show Preview on index.html while working to test each link as you add it."
+      ]
+    },
+    {
+      "heading": "Any element can be a link: wrapping an image in <a>",
+      "points": [
+        "An anchor's content does not have to be text. Put an <img> element between <a> and </a> and the whole picture becomes clickable.",
+        "The href on the <a> decides where the click goes; the src on the <img> decides which picture is shown. They are two separate paths, each measured from index.html.",
+        "Suggested personal touch: drop a photo of yourself into assets/images and point the img src at it instead of the cat."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Multi-page project structure used in the exercise (reference repo folder '04.02 - Webpages')",
+      "language": "text",
+      "code": "4.1 Webpages/\n├── index.html          <- home page, write code here\n├── solution.html\n├── goal.png\n├── assets/\n│   └── images/\n│       └── cat.png\n└── public/\n    ├── about.html\n    └── contact.html"
+    },
+    {
+      "caption": "The four quiz options (only the last one is correct)",
+      "language": "html",
+      "code": "<!-- 1. wrong: ../ leaves the Project folder -->\n<img src=\"../assets/images/cat.png\" />\n\n<!-- 2. wrong: img has no href, it needs src -->\n<img href=\"./assets/images/cat.png\" />\n\n<!-- 3. wrong: an anchor links to the file, it doesn't show it -->\n<a href=\"./assets/images/cat.png\">cat</a>\n\n<!-- 4. correct -->\n<img src=\"./assets/images/cat.png\" />"
+    },
+    {
+      "caption": "Text link vs image link",
+      "language": "html",
+      "code": "<!-- text link to a page in the same folder -->\n<a href=\"./about.html\">About Me</a>\n\n<!-- image link: the <img> is the clickable content of the <a> -->\n<a href=\"./about.html\">\n  <img src=\"./assets/images/cat.png\" alt=\"Cat\" />\n</a>"
+    }
+  ],
+  "task": {
+    "name": "4.1 Webpages: link the home page to About and Contact",
+    "starting_point": "index.html already contains an h1 'Welcome to My Website!', an hr, and two HTML comments marking where to add the image link (above the hr) and the contact link (below it). public/about.html (heading plus placeholder paragraphs) and public/contact.html (heading, phone, email, address) are already written.",
+    "goal": "Make the home page navigate to both sub-pages: a picture that opens about.html when clicked, and a 'Contact Me' text link that opens contact.html.",
+    "steps": [
+      "Extract the zip, open it in VS Code inside the Web Development Projects folder, and expand all folders to see assets/images/cat.png and public/about.html, public/contact.html.",
+      "Right-click solution.html, choose Show Preview, and click around to see the target behaviour.",
+      "Open Show Preview on index.html so changes can be tested live.",
+      "Start with the simpler task. Under the hr add an anchor whose href goes from index.html into public and opens contact.html: <a href=\"./public/contact.html\">Contact Me</a>. Click it in the preview to check it opens the contact page, then go Back.",
+      "Above the hr, create an anchor pointing to the about page: <a href=\"./public/about.html\"></a>.",
+      "Instead of text, place an img inside that anchor with src=\"./assets/images/cat.png\" (or a photo of yourself copied into assets/images) and an alt description.",
+      "Click the image in the preview; it should load about.html.",
+      "Optionally replace the cat with your own photo."
+    ],
+    "expected_result": "Home page shows the heading, a clickable picture that leads to the About Me page, a horizontal rule, and a 'Contact Me' link that leads to the contact page.",
+    "solution_code": {
+      "language": "html",
+      "code": "<body>\n  <h1>Welcome to My Website!</h1>\n\n  <!-- Add an image of yourself that links to the about page -->\n  <a href=\"./public/about.html\">\n    <img src=\"./assets/images/cat.png\" alt=\"Cat\" />\n  </a>\n\n  <hr />\n\n  <!-- Add a link to your contact me page here -->\n  <a href=\"./public/contact.html\">Contact Me</a>\n</body>"
+    },
+    "reference_repo_path": "Section 04 - Multi-Page Websites/04.02 - Webpages/index.html (personal footer line in the repo omitted)"
+  },
+  "pitfalls": [
+    "Writing the image path with the dot and slash swapped (/.assets/...) or with a leading / instead of ./; the correct form is ./assets/images/cat.png.",
+    "Using href on an img or src on an a: images need src, links need href.",
+    "Expecting an <a> pointing at an image file to display the image; it only creates a link to it.",
+    "Forgetting that pages inside public/ need the public/ segment in the path when linked from index.html.",
+    "Left-clicking solution.html (opens the answer code) when the aim was to preview it."
+  ],
+  "playground": {
+    "match": "s04-webpages (lesson 4.2, data/s04.js)",
+    "coverage": "Covers linking pages with relative hrefs and wrapping an image in an anchor; the Explore tab simulates a three-page site in an iframe, and the notes explain index.html as the default page, a normal folder layout with assets/images, and why the Build tab can only render one file.",
+    "gaps_and_ideas": [
+      "Align the folder layout with the course: the course keeps sub-pages in a public/ folder, so the links should be ./public/about.html and ./public/contact.html (playground uses ./about.html and ./contact.html). Mention the public/ convention in the notes.",
+      "Use a local image path (./assets/images/cat.png) for the image link rather than an Unsplash URL, so the exercise practises the relative path from the previous lesson.",
+      "Add the four-option quiz from the lecture (../ vs ./, img href vs src, a vs img) as a quick check, with an explanation for each wrong answer.",
+      "Playground task 3 ('back home' via ../index.html) does not appear in the course exercise; it is a useful extension, but label it as such and point out that it belongs in the sub-pages (about.html/contact.html inside public/), not in index.html.",
+      "Add a tip about previewing solution.html with right-click > Show Preview, and about VS Code showing assets/images on one row when a folder only contains another folder.",
+      "Extend the Explore demo with a public/ folder so the readout shows ./public/about.html from index.html and ../index.html from inside public/."
+    ]
+  }
+}

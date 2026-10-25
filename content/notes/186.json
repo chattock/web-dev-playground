@@ -1,0 +1,56 @@
+{
+  "index": 186,
+  "lecture_id": 12384360,
+  "title": "Understanding the Command Line. Long Live the Command Line!",
+  "section": "21. The Unix Command Line",
+  "duration_min": 5,
+  "kind": "theory",
+  "summary": "Explains what a shell is, what Bash is, and why developers prefer the command line to graphical file managers.",
+  "concepts": [
+    {
+      "heading": "Kernel and shell",
+      "points": [
+        "The kernel is the core of the operating system and is the program that talks directly to hardware.",
+        "A shell is the interface a person uses to reach the kernel. It comes in two kinds: graphical (e.g. Finder or Explorer) and command line interface (CLI).",
+        "Bash (Bourne Again Shell) is a command line interpreter for Unix-style systems."
+      ]
+    },
+    {
+      "heading": "Where Unix lives",
+      "points": [
+        "Linux is Unix-like, most servers run Unix-like systems, and macOS is Unix-based too.",
+        "Windows comes from a different lineage (DOS), which is why Windows users install Git Bash to get the same commands."
+      ]
+    },
+    {
+      "heading": "Why use the command line",
+      "points": [
+        "Control: you steer the machine more directly than through a GUI.",
+        "Speed: creating a folder is one short command (mkdir Music), and the up arrow recalls the previous command so a variation (Music2) takes seconds.",
+        "Visibility: GUIs hide config files and dot-folders; ls -a shows hidden entries, and a folder starting with a dot (mkdir .Secrets) is hidden by default.",
+        "Git and version control, taught later, are used mostly from the command line."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Create a folder, then list including hidden items",
+      "language": "bash",
+      "code": "mkdir Music\nmkdir .Secrets\nls\nls -a"
+    }
+  ],
+  "task": null,
+  "pitfalls": [
+    "Do not confuse the kernel (hardware-facing core) with the shell (user-facing layer)."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "Proposed new lesson 'What is the command line?' Blurb: the shell is the layer you use to talk to the kernel; a GUI file manager and a CLI like Bash are two shells over the same files, and the CLI adds speed, control and access to hidden files.",
+      "Tasks: (1) in the simulated terminal, run mkdir Music and see the folder appear in a mirrored 'Finder' panel; (2) press the Up arrow to recall the command and edit it to mkdir Music2; (3) run mkdir .Secrets and notice it does not show in ls or the GUI panel; (4) run ls -a to reveal it, plus the . and .. entries; (5) match three terms (kernel, shell, Bash) to their definitions.",
+      "Starter code idea: a JS object representing a fake home folder (Desktop, Documents, Downloads, .config) and a tiny command parser supporting mkdir, ls and ls -a, with a history array driving Up/Down arrow recall.",
+      "Interactive demo: a split view with a layered diagram (hardware > kernel > shell > user) on one side and the terminal plus a GUI-style folder view on the other, where every command typed updates both views and highlights which layer handled it."
+    ]
+  }
+}

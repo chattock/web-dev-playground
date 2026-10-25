@@ -1,0 +1,121 @@
+{
+  "index": 131,
+  "lecture_id": 12383908,
+  "title": "The Solution to the Dicee Challenge",
+  "section": "17. Boss Level Challenge 1 - The Dicee Game",
+  "duration_min": 15,
+  "kind": "solution",
+  "summary": "Step-by-step walkthrough of the Dicee solution: link an external script, set default dice images, generate two random 1-6 numbers, build image paths with string concatenation, update both img elements with setAttribute, and announce the winner in the h1 with an if / else if / else chain. Ends with advice on balancing short and readable code.",
+  "concepts": [
+    {
+      "heading": "Step 1: external script",
+      "points": [
+        "Create a JS file (index.js) in the project and link it with a script tag whose src is that file.",
+        "Place the tag just before the closing body tag, the same position used for other external resources in earlier modules.",
+        "Quick test: put an alert in the file, reload, and see the alert to confirm the link works. Remove it afterwards."
+      ]
+    },
+    {
+      "heading": "Step 2: default images",
+      "points": [
+        "Both img src values start as images/dice6.png. Dice files live in an images folder and are named dice1 to dice6, so the folder must be part of the path.",
+        "The src must include the folder name (plural 'images') followed by a slash."
+      ]
+    },
+    {
+      "heading": "Step 3: random number recap",
+      "points": [
+        "Math.random() gives a decimal from 0 up to just under 1.",
+        "Multiplying by 6 widens it to 0 up to just under 6.",
+        "Math.floor drops the decimals, leaving integers 0-5.",
+        "Adding 1 shifts the range to 1-6.",
+        "Any piece of code can be pasted into the console to inspect its output, which helps verify each step.",
+        "If this is unclear, revisit the earlier randomisation lesson."
+      ]
+    },
+    {
+      "heading": "Step 4: building the image path",
+      "points": [
+        "Because file names are dice1.png to dice6.png, string concatenation of 'dice' + number + '.png' picks the right file.",
+        "A second variable prepends 'images/'. This split into separate variables is optional and used only to make each step visible; one expression would do.",
+        "Select the first image with document.querySelectorAll('img')[0]. querySelectorAll returns a list of all matching elements, so index 0 is the first (left) image and index 1 is the second.",
+        "Call setAttribute('src', randomImageSource) on it: first argument is the attribute name, second is the new value.",
+        "After reloading, the left die shows a random face each time."
+      ]
+    },
+    {
+      "heading": "Step 5: second image",
+      "points": [
+        "Repeat with a second variable randomNumber2 using the same formula, a second source string, and querySelectorAll('img')[1].",
+        "Recommendation: type the repeated code out instead of copy-pasting, because pasted duplicates tend to leave stale variable names that cause bugs.",
+        "The second version condenses lines to show that the variable and select/set steps can be merged."
+      ]
+    },
+    {
+      "heading": "Step 6: announcing the winner",
+      "points": [
+        "Use an if / else if / else: first branch randomNumber1 greater than randomNumber2 means Player 1 wins; else if randomNumber2 is greater means Player 2 wins; the final else covers equal values, a draw.",
+        "Each branch sets innerHTML of document.querySelector('h1'). querySelector is enough because the page has one h1.",
+        "Emoji can be added to the message text: on Mac via Edit > Emoji & Symbols, on Windows by searching for the emoji in the browser."
+      ]
+    },
+    {
+      "heading": "Alternatives and code readability",
+      "points": [
+        "Other valid approaches: getElementById, getElementsByTagName/ClassName, or querySelector with classes (the starter gives the images classes) instead of querySelectorAll indexes.",
+        "The code can be refactored shorter, but compress with care. Very short code that crams many operations into one line is hard to read.",
+        "Aim for a balance between concise and expressive. The walkthrough version is deliberately somewhat long to be clear.",
+        "(Extra) Prefer let/const over var in modern code, and a function for the repeated roll logic.",
+        "Next module covers responding to events such as clicks and key presses."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Complete solution (from the lecture, cross-checked with the reference repo)",
+      "language": "javascript",
+      "code": "// index.js, linked just before </body>\nvar randomNumber1 = Math.floor(Math.random() * 6) + 1;\nvar randomDiceImage = \"dice\" + randomNumber1 + \".png\";\nvar randomImageSource = \"images/\" + randomDiceImage;\nvar image1 = document.querySelectorAll(\"img\")[0];\nimage1.setAttribute(\"src\", randomImageSource);\n\nvar randomNumber2 = Math.floor(Math.random() * 6) + 1;\nvar randomImageSource2 = \"images/dice\" + randomNumber2 + \".png\";\ndocument.querySelectorAll(\"img\")[1].setAttribute(\"src\", randomImageSource2);\n\nif (randomNumber1 > randomNumber2) {\n  document.querySelector(\"h1\").innerHTML = \"Player 1 Wins!\";\n} else if (randomNumber2 > randomNumber1) {\n  document.querySelector(\"h1\").innerHTML = \"Player 2 Wins!\";\n} else {\n  document.querySelector(\"h1\").innerHTML = \"Draw!\";\n}"
+    },
+    {
+      "caption": "Compact variant from the reference repo with class selectors and a draw check first",
+      "language": "javascript",
+      "code": "var randomNumber1 = Math.floor(Math.random() * 6) + 1;\nvar randomNumber2 = Math.floor(Math.random() * 6) + 1;\n\ndocument.querySelector(\".img1\").setAttribute(\"src\", \"./images/dice\" + randomNumber1 + \".png\");\ndocument.querySelector(\".img2\").setAttribute(\"src\", \"./images/dice\" + randomNumber2 + \".png\");\n\nif (randomNumber1 === randomNumber2) {\n  document.querySelector(\"h1\").innerHTML = \"Draw!\";\n} else if (randomNumber1 > randomNumber2) {\n  document.querySelector(\"h1\").innerHTML = \"Player 1 Wins!\";\n} else {\n  document.querySelector(\"h1\").innerHTML = \"Player 2 Wins!\";\n}"
+    }
+  ],
+  "task": {
+    "name": "Dicee game",
+    "starting_point": "Skeleton project: index.html with h1 'Refresh Me', two img elements, styles.css, images folder (dice1-6).",
+    "goal": "On each refresh show two random dice faces and a headline naming the winner or a draw.",
+    "steps": [
+      "Create index.js and link it before </body>; test with an alert.",
+      "Set both img src values to images/dice6.png.",
+      "Create randomNumber1 with Math.floor(Math.random() * 6) + 1.",
+      "Build the image path with concatenation and set the first img src via setAttribute.",
+      "Repeat for randomNumber2 and the second img.",
+      "Compare the numbers with if / else if / else and set the h1 innerHTML."
+    ],
+    "expected_result": "Refresh gives two random dice and a matching result message.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "// index.js, linked just before </body>\nvar randomNumber1 = Math.floor(Math.random() * 6) + 1;\nvar randomDiceImage = \"dice\" + randomNumber1 + \".png\";\nvar randomImageSource = \"images/\" + randomDiceImage;\nvar image1 = document.querySelectorAll(\"img\")[0];\nimage1.setAttribute(\"src\", randomImageSource);\n\nvar randomNumber2 = Math.floor(Math.random() * 6) + 1;\nvar randomImageSource2 = \"images/dice\" + randomNumber2 + \".png\";\ndocument.querySelectorAll(\"img\")[1].setAttribute(\"src\", randomImageSource2);\n\nif (randomNumber1 > randomNumber2) {\n  document.querySelector(\"h1\").innerHTML = \"Player 1 Wins!\";\n} else if (randomNumber2 > randomNumber1) {\n  document.querySelector(\"h1\").innerHTML = \"Player 2 Wins!\";\n} else {\n  document.querySelector(\"h1\").innerHTML = \"Draw!\";\n}"
+    },
+    "reference_repo_path": "Section 17 - Boss Level Challenge 1 - The Dicee Game"
+  },
+  "pitfalls": [
+    "Forgetting + 1 so dice 0 is requested (broken image).",
+    "Using querySelector (single) for the images and getting only the first one, or off-by-one indexes with querySelectorAll.",
+    "Copy-pasting code and leaving randomNumber1 in the second block.",
+    "Missing 'images/' folder prefix in the src.",
+    "Reference repo differs slightly: it uses class selectors .img1 / .img2, ./images/ paths, === first for draw, and adds flag emoji and a personal footer (ignore the footer)."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (no s17.js data file).",
+    "gaps_and_ideas": [
+      "Add a project lesson 'Dicee: random dice game' with blurb 'roll two dice on refresh and name the winner'.",
+      "Tasks: (1) link a script and confirm with console.log, (2) generate a number 1-6, (3) change one img src using setAttribute, (4) change the other, (5) announce winner or draw in the h1, (6) stretch: refactor with a rollDie() function and a Roll button.",
+      "Starter: HTML with h1 and two imgs, with inline SVG or emoji dice faces if image files are unavailable.",
+      "Explore demo: step visualiser showing Math.random -> *6 -> floor -> +1 with live values, plus a 600-roll histogram."
+    ]
+  }
+}

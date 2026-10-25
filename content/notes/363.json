@@ -1,0 +1,152 @@
+{
+  "index": 363,
+  "lecture_id": 31673772,
+  "title": "Displaying Owned NFTs Using the React Router",
+  "section": "42. Minting NFTs and Building an NFT Marketplace like OpenSea",
+  "duration_min": 37,
+  "kind": "project",
+  "summary": "Adds client-side navigation to OpenD with react-router-dom (Home, Discover, Minter, My NFTs) and gives the backend memory of what was minted: two HashMaps record every NFT and each owner's list of NFT ids. A new getOwnedNFTs query returns the ids, and the My NFTs route maps them into a Gallery of Item components.",
+  "concepts": [
+    {
+      "heading": "Why routing is needed",
+      "points": [
+        "After minting, the user needs a place to see everything they own. The nav buttons (Discover, Minter, My NFTs) are inactive, so react-router-dom (a dependency already listed in package.json, like react-hook-form) is used to switch views by URL path.",
+        "Preparation in App.jsx: comment out the temporary Minter and the hard-coded NFT id, so that only Header and Footer remain; the Header will own the routing and page content.",
+        "(Extra) The code uses react-router-dom v5 (^5.2.0 in the reference package.json), where Switch exists. In v6 Switch was renamed Routes and routes take an element prop, so the syntax below does not carry over directly."
+      ]
+    },
+    {
+      "heading": "BrowserRouter and Link",
+      "points": [
+        "Import { BrowserRouter, Link, Switch, Route } from \"react-router-dom\" in Header.jsx.",
+        "Wrap everything the Header returns in <BrowserRouter>. It provides the routing context that Link and Route require.",
+        "Link turns text into a navigation link without a full page request. Its to attribute is the path: /discover, /minter, /collection (the My NFTs collection). Wrap the link around the text inside each button, not around the button itself, and use a different path on each of the three.",
+        "Also wrap the OpenD title (the h5) in <Link to=\"/\"> so clicking the logo text returns to the home route."
+      ]
+    },
+    {
+      "heading": "Switch and Route",
+      "points": [
+        "Switch inspects the current URL and renders the first Route whose path matches, much like a JavaScript switch statement checking cases from top to bottom. Put it beneath the header markup, still inside BrowserRouter.",
+        "Four Route children are needed: home, discover, minter, collection. Each has a path attribute that must match the corresponding Link's to value exactly (copy-paste to avoid typos), and whatever sits between the Route tags is what gets rendered.",
+        "Home route (path \"/\"): the home image, moved out of App.jsx together with its import line (the image import now lives in Header.jsx).",
+        "Discover route: only a placeholder <h1>Discover</h1> for now; it will list NFTs for sale once listing is built in later lessons.",
+        "Minter route: <Minter />, imported from ./Minter.",
+        "Collection route: the Gallery of the user's NFTs (first with a hard-coded Item, then dynamic data, see below).",
+        "Matching problem: the path \"/\" matches every URL, so if it comes first it always wins. Two fixes: move it to the end of the Switch, or (preferred) add the exact attribute so it matches only when the path is exactly \"/\"."
+      ]
+    },
+    {
+      "heading": "Making Gallery reusable",
+      "points": [
+        "Gallery was a static grid with one Item. Item breaks without an id (Principal.fromText on undefined), which showed up as a blank My NFTs page; a temporary fix was to give the Item the canister id used earlier.",
+        "The heading was hard-coded as Discover. Replace it with {props.title} and pass title=\"My NFTs\" from where Gallery is used, so the same component can serve Discover and My NFTs later."
+      ]
+    },
+    {
+      "heading": "Backend: tracking NFTs and owners",
+      "points": [
+        "Until now mint only returned the new canister id and nothing was remembered. The backend needs a data store in main.mo, built with HashMap (import HashMap \"mo:base/HashMap\").",
+        "mapOfNFTs: a var HashMap whose key is the NFT canister's Principal and whose value is the NFTActorClass.NFT instance. Constructed as HashMap.HashMap<Principal, NFTActorClass.NFT>(1, Principal.equal, Principal.hash): the first argument is an initial capacity, then the key-equality function and the key-hash function. After obtaining newNFTPrincipal in mint, call mapOfNFTs.put(newNFTPrincipal, newNFT).",
+        "mapOfOwners: key is the owner's Principal, value is a List.List<Principal> of the NFT canister ids that owner holds, because one owner can have many NFTs. Import List (mo:base/List). Same constructor arguments (Principal keys).",
+        "A plain put is not enough for mapOfOwners since the existing list must be read, extended and written back. This is done in a separate private func addToOwnershipMap(owner : Principal, nftId : Principal). private keeps it unreachable from outside the actor.",
+        "Inside it: mapOfOwners.get(owner) returns an option (?List), because a first-time owner has no entry. Resolve it with a switch expression wrapped in parentheses: case null returns an empty list via List.nil<Principal>(); case (?result) returns the unwrapped result. Declaring the variable's type as List.List<Principal> is what makes the compiler complain until the option is unwrapped.",
+        "Then ownedNFTs := List.push(nftId, ownedNFTs); (push puts the new element at the head and returns the new list, so the variable must be reassigned with :=), followed by mapOfOwners.put(owner, ownedNFTs).",
+        "Call addToOwnershipMap(owner, newNFTPrincipal) from mint after the mapOfNFTs.put.",
+        "The lecture mentions a naming typo in the earlier return (variable name mismatch) that happened not to cause an error; keep newNFTPrincipal consistent."
+      ]
+    },
+    {
+      "heading": "Backend: query for a user's NFTs (exercise)",
+      "points": [
+        "Add public query func getOwnedNFTs(user : Principal) : async [Principal]. A pause-and-try moment: repeat the same get-and-unwrap switch used above.",
+        "Declare var userNFTs : List.List<Principal> = switch (mapOfOwners.get(user)) { case null List.nil<Principal>(); case (?result) result }; then return List.toArray(userNFTs) to convert the list into an array, the type sent to the frontend as a JS array of Principals."
+      ]
+    },
+    {
+      "heading": "Frontend: fetching and rendering the owned NFTs",
+      "points": [
+        "In Header.jsx import the backend actor from ../../../declarations/OPEND_backend and write async function getNFTs() that does const userNFTIds = await OPEND_backend.getOwnedNFTs(CURRENT_USER_ID);. Log it first to check the array.",
+        "CURRENT_USER_ID is the anonymous principal (\"2vxsx-fae\") exported from main.jsx, used so the login flow can be skipped. Import it into Header with the default import from ../main. Both lines defining and exporting it must exist in main.jsx.",
+        "Run getNFTs once on first render with useEffect(() => { getNFTs(); }, []); the empty dependency array limits it to a single call.",
+        "Redeploy using the README command; after minting a few more NFTs the logged array contains one principal per mint (the lecture's test user had three).",
+        "Store a ready-made Gallery element in state: const [userOwnedGallery, setOwnedGallery] = useState(); then in getNFTs call setOwnedGallery(<Gallery title=\"My NFTs\" ids={userNFTIds} />). The collection Route renders {userOwnedGallery}.",
+        "Gallery: const [items, setItems] = useState(); a function fetchNFTs that checks props.ids != undefined and then calls setItems(props.ids.map(NFTId => <Item id={NFTId} key={NFTId.toText()} />)). The arrow function returns JSX wrapped in parentheses (not braces) for an implicit return.",
+        "React requires a unique key on list-rendered elements; the principal converted with toText() is a convenient unique value (Principal import needed only if used for typing).",
+        "Call fetchNFTs inside useEffect with an empty dependency array, and render {items} inside the innermost grid div in the Gallery markup. Items placed outside that div display stacked on separate lines; check the closing div position if the layout looks off.",
+        "Item.jsx change: ids from the gallery are Principal objects, not strings, so Item should stop calling Principal.fromText and just use props.id directly. (Extra) In the reference repo Minter still passes nftPrincipal.toText(), a string; the agent's createActor accepts either a string or a Principal for canisterId, so both paths work.",
+        "Refresh problem: a freshly minted NFT only appears in My NFTs after a manual page reload, because Header (and its useEffect) ran before the mint. Setting forceRefresh={true} on BrowserRouter makes each Link navigation do a full page reload, re-running the effect so the new NFT shows. (Extra) This is a blunt fix; re-fetching on route change or lifting state up would avoid full reloads."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "main.mo: HashMaps, private ownership helper, and getOwnedNFTs (reference repo 42.05)",
+      "language": "motoko",
+      "code": "import Cycles \"mo:base/ExperimentalCycles\";\nimport Principal \"mo:base/Principal\";\nimport HashMap \"mo:base/HashMap\";\nimport List \"mo:base/List\";\nimport NFTActorClass \"../NFT/nft\";\n\npersistent actor OpenD {\n\n  // NFT canister id -> the NFT actor itself\n  transient var mapOfNFTs = HashMap.HashMap<Principal, NFTActorClass.NFT>(1, Principal.equal, Principal.hash);\n  // owner principal -> list of NFT canister ids they own\n  transient var mapOfOwners = HashMap.HashMap<Principal, List.List<Principal>>(1, Principal.equal, Principal.hash);\n\n  public shared (msg) func mint(imgData : [Nat8], name : Text) : async Principal {\n    let owner : Principal = msg.caller;\n    Cycles.add(10_000_000_000_000);\n    let newNFT = await NFTActorClass.NFT(name, owner, imgData);\n    let newNFTPrincipal = await newNFT.getCanisterId();\n\n    mapOfNFTs.put(newNFTPrincipal, newNFT);\n    addToOwnershipMap(owner, newNFTPrincipal);\n\n    return newNFTPrincipal;\n  };\n\n  private func addToOwnershipMap(owner : Principal, nftId : Principal) {\n    var ownedNFTs : List.List<Principal> = switch (mapOfOwners.get(owner)) {\n      case null List.nil<Principal>();\n      case (?result) result;\n    };\n    ownedNFTs := List.push(nftId, ownedNFTs);\n    mapOfOwners.put(owner, ownedNFTs);\n  };\n\n  public query func getOwnedNFTs(user : Principal) : async [Principal] {\n    var userNFTs : List.List<Principal> = switch (mapOfOwners.get(user)) {\n      case null List.nil<Principal>();\n      case (?result) result;\n    };\n    return List.toArray(userNFTs);\n  };\n};"
+    },
+    {
+      "caption": "Header.jsx: BrowserRouter, Links, Switch/Route and owned-NFT fetching (reference repo, class strings abbreviated)",
+      "language": "jsx",
+      "code": "import React, { useEffect, useState } from \"react\";\nimport logo from \"/logo.png\";\nimport { BrowserRouter, Link, Switch, Route } from \"react-router-dom\";\nimport homeImage from \"/home-img.png\";\nimport Minter from \"./Minter\";\nimport Gallery from \"./Gallery\";\nimport { OPEND_backend } from \"../../../declarations/OPEND_backend\";\nimport CURRENT_USER_ID from \"../main\";\n\nfunction Header() {\n  const [userOwnedGallery, setOwnedGallery] = useState();\n\n  async function getNFTs() {\n    const userNFTIds = await OPEND_backend.getOwnedNFTs(CURRENT_USER_ID);\n    setOwnedGallery(<Gallery title=\"My NFTs\" ids={userNFTIds} />);\n  }\n\n  useEffect(() => { getNFTs(); }, []);\n\n  return (\n    <BrowserRouter forceRefresh={true}>\n      <div className=\"app-root-1\">\n        <header className=\"...\">\n          <div className=\"...\">\n            <img className=\"header-logo-11\" src={logo} />\n            <Link to=\"/\"><h5 className=\"header-logo-text\">OpenD</h5></Link>\n            <button className=\"...\"><Link to=\"/discover\">Discover</Link></button>\n            <button className=\"...\"><Link to=\"/minter\">Minter</Link></button>\n            <button className=\"...\"><Link to=\"/collection\">My NFTs</Link></button>\n          </div>\n        </header>\n      </div>\n      <Switch>\n        <Route exact path=\"/\"><img className=\"bottom-space\" src={homeImage} /></Route>\n        <Route path=\"/discover\"><h1>Discover</h1></Route>\n        <Route path=\"/minter\"><Minter /></Route>\n        <Route path=\"/collection\">{userOwnedGallery}</Route>\n      </Switch>\n    </BrowserRouter>\n  );\n}\nexport default Header;"
+    },
+    {
+      "caption": "Gallery.jsx: render one Item per id (reference repo, typo itemms fixed)",
+      "language": "jsx",
+      "code": "import React, { useEffect, useState } from \"react\";\nimport Item from \"./Item\";\n\nfunction Gallery(props) {\n  const [items, setItems] = useState();\n\n  function fetchNFTs() {\n    if (props.ids != undefined) {\n      setItems(\n        props.ids.map((NFTId) => <Item id={NFTId} key={NFTId.toText()} />)\n      );\n    }\n  }\n\n  useEffect(() => { fetchNFTs(); }, []);\n\n  return (\n    <div className=\"gallery-view\">\n      <h3 className=\"makeStyles-title-99 Typography-h3\">{props.title}</h3>\n      <div className=\"disGrid-root disGrid-container disGrid-spacing-xs-2\">\n        <div className=\"disGrid-root disGrid-item disGrid-grid-xs-12\">\n          <div className=\"disGrid-root disGrid-container disGrid-spacing-xs-5 disGrid-justify-content-xs-center\">\n            {items}\n          </div>\n        </div>\n      </div>\n    </div>\n  );\n}\nexport default Gallery;"
+    },
+    {
+      "caption": "App.jsx after the change: routing lives in Header",
+      "language": "jsx",
+      "code": "import React from \"react\";\nimport Header from \"./components/Header\";\nimport Footer from \"./components/Footer\";\nimport \"bootstrap/dist/css/bootstrap.min.css\";\n\nfunction App() {\n  return (\n    <div className=\"App\">\n      <Header />   {/* Header now also holds the router and the page content */}\n      <Footer />\n    </div>\n  );\n}\nexport default App;"
+    }
+  ],
+  "task": {
+    "name": "Routing plus 'My NFTs' gallery",
+    "starting_point": "Project from 42.04: working Minter, static Gallery with a single Item, inactive nav buttons, main.mo with only a mint function.",
+    "goal": "Clicking the nav items switches between Home, Discover, Minter and My NFTs; My NFTs lists an Item card for every NFT minted by the current (anonymous) user, including newly minted ones.",
+    "steps": [
+      "Comment out Minter and the hard-coded nftId in App.jsx; keep Header and Footer.",
+      "In Header.jsx import BrowserRouter, Link, Switch, Route; wrap the returned markup in BrowserRouter.",
+      "Wrap the text of each nav button in a Link with to=\"/discover\", \"/minter\", \"/collection\", and wrap the OpenD title in a Link to \"/\".",
+      "Add a Switch with four Routes: exact path \"/\" (home image), \"/discover\" (h1 placeholder), \"/minter\" (Minter), \"/collection\" (Gallery). Move the home image and its import from App into the Route.",
+      "Make Gallery accept props.title and pass title=\"My NFTs\".",
+      "In main.mo add mapOfNFTs and mapOfOwners HashMaps, populate mapOfNFTs in mint, and write private addToOwnershipMap with the option-unwrapping switch and List.push; call it from mint.",
+      "Write public query func getOwnedNFTs(user : Principal) : async [Principal] returning List.toArray of the user's list (empty list when the user is unknown).",
+      "In Header.jsx call getOwnedNFTs(CURRENT_USER_ID) inside an async function triggered by useEffect with an empty array; store <Gallery title=\"My NFTs\" ids={...} /> in useState and render it in the collection Route.",
+      "In Gallery.jsx map props.ids to <Item id={...} key={...toText()} /> via state and useEffect and render the result inside the grid container.",
+      "Update Item.jsx to use props.id directly (a Principal) instead of parsing text.",
+      "Redeploy, mint several NFTs, open My NFTs; add forceRefresh={true} to BrowserRouter so new NFTs appear without a manual reload."
+    ],
+    "expected_result": "Header links change the displayed page. Home shows the landing image, Discover shows a heading, Minter shows the minting form, My NFTs shows a grid of cards (image, name, owner) for every NFT the anonymous user has minted, with the newest first because List.push adds at the head.",
+    "solution_code": {
+      "language": "motoko",
+      "code": "import Cycles \"mo:base/ExperimentalCycles\";\nimport Principal \"mo:base/Principal\";\nimport HashMap \"mo:base/HashMap\";\nimport List \"mo:base/List\";\nimport NFTActorClass \"../NFT/nft\";\n\npersistent actor OpenD {\n\n  // NFT canister id -> the NFT actor itself\n  transient var mapOfNFTs = HashMap.HashMap<Principal, NFTActorClass.NFT>(1, Principal.equal, Principal.hash);\n  // owner principal -> list of NFT canister ids they own\n  transient var mapOfOwners = HashMap.HashMap<Principal, List.List<Principal>>(1, Principal.equal, Principal.hash);\n\n  public shared (msg) func mint(imgData : [Nat8], name : Text) : async Principal {\n    let owner : Principal = msg.caller;\n    Cycles.add(10_000_000_000_000);\n    let newNFT = await NFTActorClass.NFT(name, owner, imgData);\n    let newNFTPrincipal = await newNFT.getCanisterId();\n\n    mapOfNFTs.put(newNFTPrincipal, newNFT);\n    addToOwnershipMap(owner, newNFTPrincipal);\n\n    return newNFTPrincipal;\n  };\n\n  private func addToOwnershipMap(owner : Principal, nftId : Principal) {\n    var ownedNFTs : List.List<Principal> = switch (mapOfOwners.get(owner)) {\n      case null List.nil<Principal>();\n      case (?result) result;\n    };\n    ownedNFTs := List.push(nftId, ownedNFTs);\n    mapOfOwners.put(owner, ownedNFTs);\n  };\n\n  public query func getOwnedNFTs(user : Principal) : async [Principal] {\n    var userNFTs : List.List<Principal> = switch (mapOfOwners.get(user)) {\n      case null List.nil<Principal>();\n      case (?result) result;\n    };\n    return List.toArray(userNFTs);\n  };\n};"
+    },
+    "reference_repo_path": "Section 42 - Minting NFTs and Building an NFT Marketplace like OpenSea/42.05 Displaying Owned NFTs Using the React Router/OPEND/src (OPEND_backend/main.mo, OPEND_frontend/src/components/Header.jsx, Gallery.jsx, Item.jsx)"
+  },
+  "pitfalls": [
+    "Putting the Link around the button instead of the text, or giving two buttons the same path.",
+    "Link to values not matching Route paths exactly, for example a typo or capitalisation difference.",
+    "Leaving the root Route without exact (or not placing it last), so it matches every URL.",
+    "Calling Gallery's Item without an id, which crashes rendering and leaves My NFTs blank.",
+    "Forgetting that mapOfOwners.get returns an option; assigning it straight to a List type is a compile error.",
+    "Forgetting to reassign after List.push (it returns a new list) and to put the result back into the map.",
+    "Keeping Principal.fromText in Item while passing Principal objects from the Gallery.",
+    "Using curly braces instead of parentheses in the map callback, so no JSX is returned.",
+    "Placing {items} outside the grid container div, which breaks the layout.",
+    "New mints not appearing until a manual reload unless forceRefresh is set.",
+    "(Extra) The reference Gallery calls the state variable itemms (typo); other leftovers such as unused imports in the reference code can be removed.",
+    "(Extra) HashMaps declared as transient var in the reference repo (a persistent actor) are cleared on every canister upgrade; deployments that reinstall the code lose the ownership data."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (section 42 has no data file)",
+    "gaps_and_ideas": [
+      "Proposed lesson: 'Client-side routing with react-router-dom v5 (Link, Switch, Route)'. Blurb: build a four-page mini app whose nav links change the rendered component without reloading.",
+      "Tasks: (1) wrap a nav in BrowserRouter and add three Links; (2) add a Switch with Routes for each path; (3) observe the bug when the '/' route lacks exact, then fix it; (4) make a reusable Gallery that takes title and an ids array and renders items with map and a unique key; (5) add a list-of-owned-items state that updates when a 'mint' button is pressed.",
+      "Starter code: a Header with three plain buttons and a Gallery with a hard-coded card.",
+      "Interactive demo: a URL bar simulator showing which Route matches in order, toggling exact on and off, plus a fake owner-to-items map (as a JS Map of arrays) that mirrors the Motoko mapOfOwners and shows the get/unwrap/push/put sequence step by step."
+    ]
+  }
+}

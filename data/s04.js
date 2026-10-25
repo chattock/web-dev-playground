@@ -1,7 +1,7 @@
 /* ===== Section 4 — Multi-Page Websites ===== */
 
 PG.add({
-  id:'s04-file-paths', section:'s04', slug:'file-paths', lesson:'4.1',
+  id:'s04-file-paths', index:25, udemyId:37349942, minutes:19, section:'s04', slug:'file-paths', lesson:'4.1',
   // the preview pretends to live in Folder0/, so ./ and ../ resolve against
   // the real folders in assets/paths/ — wrong paths genuinely break
   previewBase:'assets/paths/Folder0/',
@@ -208,7 +208,7 @@ html:`<!DOCTYPE html>
 
 
 PG.add({
-  id:'s04-webpages', section:'s04', slug:'multi-page', lesson:'4.2',
+  id:'s04-webpages', index:26, udemyId:37349924, minutes:13, section:'s04', slug:'multi-page', lesson:'4.2',
   title:'Multi-Page Websites',
   blurb:'Linking your own pages together is the same <code>&lt;a&gt;</code> tag, with a relative path instead of a URL. And anything can be a link — including an image.',
   tasks:[
@@ -341,7 +341,7 @@ html:`<!DOCTYPE html>
 
 
 PG.add({
-  id:'s04-portfolio', section:'s04', slug:'portfolio', lesson:'4.3', project:true,
+  id:'s04-portfolio', index:28, udemyId:37350000, minutes:9, section:'s04', slug:'portfolio', lesson:'4.3', project:true,
   title:'HTML Portfolio Project',
   blurb:'A home page listing your projects so far, each with a preview image linking to the project itself. The first thing you have built that you would actually show someone.',
   tasks:[

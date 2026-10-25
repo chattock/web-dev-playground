@@ -1,0 +1,45 @@
+{
+  "index": 193,
+  "lecture_id": 12400776,
+  "title": "Install Node.js on Mac",
+  "section": "23. Node.js",
+  "duration_min": 1,
+  "kind": "setup",
+  "summary": "Short article with the steps to install the LTS release of Node.js on macOS and check it worked from the terminal.",
+  "concepts": [
+    {
+      "heading": "Install steps (macOS)",
+      "points": [
+        "Get the macOS installer from nodejs.org and pick the LTS (Long Term Support) build, the stable option shown on the left of the download page.",
+        "Double-click the downloaded .pkg to launch the installer.",
+        "On macOS Catalina (10.15) a security warning can block the .pkg. Workaround: Control-click (right-click) the file, choose Open With, then Installer (default).",
+        "Accept the licence, keep clicking Next, and leave the default install options.",
+        "Verify in the terminal (the course uses Hyper) with node --version; it should print the version number you just installed."
+      ]
+    },
+    {
+      "heading": "(Extra) Useful checks",
+      "points": [
+        "(Extra) The installer also adds npm, the package manager used later in this section; npm --version confirms it.",
+        "(Extra) If the command is not found, close and reopen the terminal so it picks up the updated PATH."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Confirm the install",
+      "language": "bash",
+      "code": "node --version   # e.g. v20.x.x\nnpm --version    # (Extra) npm ships with Node"
+    }
+  ],
+  "task": null,
+  "pitfalls": [
+    "Downloading the 'Current' build instead of LTS.",
+    "Catalina blocking the .pkg: open it via Control-click > Open With > Installer."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": []
+  }
+}

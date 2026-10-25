@@ -1,0 +1,48 @@
+{
+  "index": 319,
+  "lecture_id": 42762294,
+  "title": "Note about the Next Lesson - Packages and Imports",
+  "section": "36. React.js",
+  "duration_min": 1,
+  "kind": "admin",
+  "summary": "Short article warning that the next video uses the old Material UI v4 package names; the current MUI v5 packages and import paths must be used instead.",
+  "concepts": [
+    {
+      "heading": "Use MUI v5 packages, not the ones in the video",
+      "points": [
+        "The video installs the legacy @material-ui/core 4.6.1 and @material-ui/icons 4.5.1. These are superseded.",
+        "Add four dependencies to package.json instead: @mui/material, @mui/icons-material (both ^5.15.11), plus the styling engine @emotion/react (^11.11.4) and @emotion/styled (^11.11.0). Run npm install afterwards.",
+        "Imports change: icons come from @mui/icons-material/<Name>, components from @mui/material (named imports such as { Fab } and { Zoom }) rather than per-file default imports.",
+        "Using the new names avoids console warnings and errors, and matches the downloadable finished projects.",
+        "(Extra) MUI v5 needs Emotion as its default styling engine, which is why the two @emotion packages are listed."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "package.json dependencies to add",
+      "language": "json",
+      "code": "\"@mui/icons-material\": \"^5.15.11\",\n\"@mui/material\": \"^5.15.11\",\n\"@emotion/react\": \"^11.11.4\",\n\"@emotion/styled\": \"^11.11.0\""
+    },
+    {
+      "caption": "Imports per file (new style)",
+      "language": "jsx",
+      "code": "// CreateArea.jsx\nimport AddIcon from \"@mui/icons-material/Add\";\nimport { Fab } from \"@mui/material\";\nimport { Zoom } from \"@mui/material\";\n\n// Header.jsx\nimport HighlightIcon from \"@mui/icons-material/Highlight\";\n\n// Note.jsx\nimport DeleteIcon from \"@mui/icons-material/Delete\";"
+    },
+    {
+      "caption": "Old style shown in the video (do not use)",
+      "language": "jsx",
+      "code": "import AddIcon from \"@material-ui/icons/Add\";\nimport Fab from \"@material-ui/core/Fab\";\nimport Zoom from \"@material-ui/core/Zoom\";"
+    }
+  ],
+  "task": null,
+  "pitfalls": [
+    "Copying the old @material-ui imports from the video causes dependency or peer-version errors with current React.",
+    "Forgetting the @emotion packages gives a missing-module error when MUI components render."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": []
+  }
+}

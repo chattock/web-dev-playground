@@ -1,0 +1,93 @@
+{
+  "index": 145,
+  "lecture_id": 12384168,
+  "title": "Understanding Callbacks and How to Respond to Events",
+  "section": "18. Advanced Javascript and DOM Manipulation",
+  "duration_min": 12,
+  "kind": "concept",
+  "summary": "Explains callbacks: the function handed to a higher-order function such as addEventListener, which the event source calls later and feeds an event object. Builds a simplified fake addEventListener to show where the event object comes from, then steps through it with the debugger.",
+  "concepts": [
+    {
+      "heading": "Higher-order function vs callback",
+      "points": [
+        "A higher-order function is one that accepts another function as an argument. addEventListener qualifies because its second argument is a function.",
+        "The function passed in is the callback. It is not run at the point of writing; it is stored and invoked later, when the awaited thing (a click, a key press) occurs.",
+        "So you write the callback, but the object that detected the event is the one that calls it."
+      ]
+    },
+    {
+      "heading": "The event parameter",
+      "points": [
+        "The browser passes details about the event into the callback as its first argument. For a click that is a mouse event with properties such as screen position and the event type; for a key press it is a KeyboardEvent with key.",
+        "The parameter name is your choice: event, e or evt all behave identically. This is the same as any function parameter: a function sayHi(to) and sayHi(name) work the same way when called with \"Tom\".",
+        "Experiment in the browser: select an element in DevTools (it becomes $0), then run $0.addEventListener(\"click\", function (e) { console.log(e); }) and click it to inspect the logged object."
+      ]
+    },
+    {
+      "heading": "Simulating addEventListener",
+      "points": [
+        "The lecture builds anotherAddEventListener(typeOfEvent, callBack) to show the hidden machinery.",
+        "Inside, when something happens the runtime creates an event object, e.g. { eventType: \"keypress\", key: \"p\", durationOfkeypress: 2 }.",
+        "It then compares that object's eventType with the type the programmer asked for. Only if they match is callBack(eventThatHappened) executed, passing the object through.",
+        "Calling it with a callback that logs its argument prints the object, just like the real document.addEventListener(\"keypress\", fn) prints a KeyboardEvent.",
+        "(Extra) The fake version hard-codes the event; a real browser queues events from the OS and dispatches them through its event loop."
+      ]
+    },
+    {
+      "heading": "Using the debugger to follow it",
+      "points": [
+        "Put the debugger keyword on the line before the call, run it in the console, and step through. Execution enters anotherAddEventListener, creates the event object, evaluates the type comparison, then jumps into the anonymous callback and logs the object.",
+        "Stepping this way makes it visible that the callback runs inside the function it was passed to, with data that function produced.",
+        "Advice: callbacks confuse even experienced developers. Rebuild the fake listener from memory and step through it until the flow is obvious. The concept recurs throughout the course."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Real listener using the event object",
+      "language": "javascript",
+      "code": "document.querySelector(\".title\").addEventListener(\"click\", function (event) {\n  console.log(event);       // the MouseEvent\n  console.log(event.type);  // \"click\"\n});"
+    },
+    {
+      "caption": "Simplified model of addEventListener (reference repo)",
+      "language": "javascript",
+      "code": "function anotherAddEventListener(typeOfEvent, callBack) {\n  var eventThatHappened = {\n    eventType: \"keypress\",\n    key: \"p\",\n    durationOfkeypress: 2,\n  };\n  if (eventThatHappened.eventType === typeOfEvent) {\n    callBack(eventThatHappened);\n  }\n}\n\nanotherAddEventListener(\"keypress\", function (event) {\n  console.log(event);\n  console.log(event.eventType);\n});"
+    },
+    {
+      "caption": "Parameter naming does not matter",
+      "language": "javascript",
+      "code": "function sayHi(to) { console.log(\"Hello \" + to); }\nfunction sayHi2(name) { console.log(\"Hello \" + name); }\nsayHi(\"Tom\");  // same output either way"
+    }
+  ],
+  "task": {
+    "name": "Recreate the fake addEventListener",
+    "starting_point": "An empty script with an h1.title in the page (reference: index.html with h1 'Click Me').",
+    "goal": "Write your own anotherAddEventListener, call it with a callback, and step through it with the debugger until the call order makes sense.",
+    "steps": [
+      "Define anotherAddEventListener(typeOfEvent, callBack) with a hard-coded eventThatHappened object.",
+      "Add the type comparison and call callBack(eventThatHappened) when equal.",
+      "Call it with \"keypress\" and a logging callback; add the debugger keyword above the call.",
+      "Step through and watch the callback receive the object.",
+      "Try a non-matching type and confirm the callback never runs."
+    ],
+    "expected_result": "The event object prints in the console only when the requested type matches.",
+    "solution_code": null,
+    "reference_repo_path": "Section 18 - Advanced Javascript and DOM Manipulation/18.08 - Understanding Callbacks and How to Respond to Events/script.js"
+  },
+  "pitfalls": [
+    "Thinking you call the callback yourself; the event source does.",
+    "Writing addEventListener(\"click\", handler()) with parentheses, which runs the function immediately instead of passing it.",
+    "Believing the parameter must be named e or event.",
+    "Reference repo adds an author footer to index.html; ignore it."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (no section 18 data).",
+    "gaps_and_ideas": [
+      "New lesson 'Callbacks and the event object': blurb on handing a function to be called later.",
+      "Tasks: log a click event; rename the parameter and prove it still works; write the fake listener; add a second event type that does not fire; pass a named function instead of an anonymous one.",
+      "Starter: h1 plus a script with a stub fake listener.",
+      "Interactive demo: animated diagram showing the callback being stored, the event firing, and the event object flowing back, with a step button mirroring the debugger."
+    ]
+  }
+}

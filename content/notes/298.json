@@ -1,0 +1,132 @@
+{
+  "index": 298,
+  "lecture_id": 17039144,
+  "title": "Mapping Data to Components Practice",
+  "section": "36. React.js",
+  "duration_min": 18,
+  "kind": "concept+exercise",
+  "summary": "Practice challenge: build an 'emojipedia' card dictionary by extracting a repeated block of HTML into an Entry component, replacing the hard-coded text with props, and rendering one Entry per object in emojipedia.js with map(). The solution half shows how to break the problem into numbered steps and work through them.",
+  "concepts": [
+    {
+      "heading": "Starting project",
+      "points": [
+        "Fork the CodeSandbox from the course resources (or use the local Vite version). public/ already has index.html with the Montserrat Google Font link, styles.css and the root div; index.js renders <App/>. Nothing in public needs changing.",
+        "App.jsx contains a long block of static HTML: an h1 with a span reading 'emojipedia', then a <dl className=\"dictionary\"> holding three near-identical <div className=\"term\"> blocks (Tense Biceps, Person With Folded Hands, Rolling On The Floor Laughing).",
+        "emojipedia.js holds a const array of three objects, each with id, emoji, name and meaning. It is not exported yet.",
+        "The supplied styles.css produces the finished card look, but the styling is optional; the point is the mapping."
+      ]
+    },
+    {
+      "heading": "Description list elements: dl, dt, dd",
+      "points": [
+        "<dl> is a description list: a container for groups of terms and their descriptions, such as a glossary or dictionary.",
+        "<dt> is the term being described; <dd> is the description or detail for it. A dt/dd pair works rather like a key-value pair.",
+        "Grouping a dt and its dd in a <div> is allowed inside a dl, which is what the starter does with div.term so each pair can be styled as a card.",
+        "The emoji is in <span className=\"emoji\" role=\"img\" aria-label=\"...\"> so screen readers announce a label instead of the raw character."
+      ]
+    },
+    {
+      "heading": "Planning: split a big challenge into small steps",
+      "points": [
+        "The challenge comes without step comments, so write your own: break the end result into small tasks you can tick off.",
+        "Step 1: extract the repeated part (each div.term) into its own Entry component.",
+        "Step 2: find what differs between the repeats (emoji, name, meaning) and replace each with a prop.",
+        "Step 3a: export the emojipedia array and import it into App.",
+        "Step 3b: map over the array and render an Entry per object, with a key."
+      ]
+    },
+    {
+      "heading": "Step 1: extracting Entry",
+      "points": [
+        "Create Entry.jsx with the usual component boilerplate (import React, function Entry, export default Entry) and import Entry into App.jsx.",
+        "Cut one whole <div className=\"term\"> out of App and return it from Entry; delete the other two copies but keep the surrounding <dl className=\"dictionary\"> in App.",
+        "Temporarily place <Entry /> three times inside the dl. The page shows three identical cards, which proves the extraction worked."
+      ]
+    },
+    {
+      "heading": "Step 2: props for the parts that change",
+      "points": [
+        "Choose clear prop names. The solution uses emoji, name and description.",
+        "In Entry, accept props and swap the hard-coded values for {props.emoji}, {props.name} and {props.description}, each in curly braces.",
+        "Test by passing hard-coded strings (copied from emojipedia.js) to the first <Entry/> only. That card fills in while the other two render empty, because no props reach them.",
+        "Writing out props for every Entry by hand would work but is exactly the repetition map() removes."
+      ]
+    },
+    {
+      "heading": "Step 3: import the data and map it",
+      "points": [
+        "A value can only be imported if its file exports it: add export default emojipedia; at the bottom of emojipedia.js.",
+        "In App.jsx (inside the components folder in the sandbox) write import emojipedia from \"../emojipedia\"; the ../ steps up from components into src.",
+        "console.log(emojipedia) is a quick check that the array of three objects (id, emoji, name, meaning) arrived.",
+        "Delete the placeholder Entry elements and write {emojipedia.map(createEntry)} inside the dl, wrapped in curly braces so it runs as JavaScript.",
+        "createEntry(emojiTerm) receives one object per call and returns <Entry key={emojiTerm.id} emoji={emojiTerm.emoji} name={emojiTerm.name} description={emojiTerm.meaning} />.",
+        "The key prop is required whenever components are produced by looping over an array; id is unique, so it is used.",
+        "Pasting one sample object as a comment next to createEntry is a handy reference while matching data fields to prop names.",
+        "Result: as many cards as objects in the array. Adding a new object (e.g. another emoji and its meaning) to emojipedia.js makes a new card appear with no extra JSX.",
+        "(Extra) map() is used here instead of forEach because map returns the new array of <Entry/> elements, which JSX can render directly; forEach returns undefined, so nothing would appear."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Starter markup for one card (repeated three times in the original App.jsx)",
+      "language": "jsx",
+      "code": "<dl className=\"dictionary\">\n  <div className=\"term\">\n    <dt>\n      <span className=\"emoji\" role=\"img\" aria-label=\"Tense Biceps\">\n        💪\n      </span>\n      <span>Tense Biceps</span>\n    </dt>\n    <dd>\n      “You can do that!” or “I feel strong!” Arm with tense biceps. ...\n    </dd>\n  </div>\n  {/* ...two more div.term blocks... */}\n</dl>"
+    },
+    {
+      "caption": "emojipedia.js: the data array, now exported",
+      "language": "javascript",
+      "code": "const emojipedia = [\n  { id: 1, emoji: \"💪\", name: \"Tense Biceps\", meaning: \"...\" },\n  { id: 2, emoji: \"🙏\", name: \"Person With Folded Hands\", meaning: \"...\" },\n  { id: 3, emoji: \"🤣\", name: \"Rolling On The Floor, Laughing\", meaning: \"...\" }\n];\n\nexport default emojipedia;"
+    },
+    {
+      "caption": "Entry.jsx: the extracted, prop-driven card ((Extra) aria-label={props.name} replaces the starter's hard-coded 'Tense Biceps' label)",
+      "language": "jsx",
+      "code": "import React from \"react\";\n\nfunction Entry(props) {\n  return (\n    <div className=\"term\">\n      <dt>\n        <span className=\"emoji\" role=\"img\" aria-label={props.name}>\n          {props.emoji}\n        </span>\n        <span>{props.name}</span>\n      </dt>\n      <dd>{props.description}</dd>\n    </div>\n  );\n}\n\nexport default Entry;"
+    }
+  ],
+  "task": {
+    "name": "Emojipedia: map data to Entry components",
+    "starting_point": "Forked sandbox with App.jsx holding three hard-coded div.term cards inside a dl, emojipedia.js with an unexported array of {id, emoji, name, meaning}, and finished styles.css/index.html.",
+    "goal": "Render the dictionary entirely from emojipedia.js so that adding an object to the array adds a card automatically.",
+    "steps": [
+      "Write your own step list before coding (extract, add props, import, map).",
+      "Create Entry.jsx, move one div.term into it and return it; import Entry into App.",
+      "Remove the other hard-coded cards, keeping the dl wrapper in App.",
+      "Replace the emoji, name and meaning text in Entry with {props.emoji}, {props.name} and {props.description}.",
+      "Add export default emojipedia; to emojipedia.js and import it in App with the correct relative path.",
+      "Write createEntry(emojiTerm) returning an Entry with key, emoji, name and description (= emojiTerm.meaning).",
+      "Inside the dl, render {emojipedia.map(createEntry)}.",
+      "Add a fourth emoji object to the array to confirm a new card appears with no JSX changes."
+    ],
+    "expected_result": "Styled 'emojipedia' heading followed by one white card per array item (large emoji, teal name, description), with no key warning in the console.",
+    "solution_code": {
+      "language": "jsx",
+      "code": "import React from \"react\";\nimport Entry from \"./Entry\";\nimport emojipedia from \"../emojipedia\";\n\n// Called once per object in the emojipedia array\nfunction createEntry(emojiTerm) {\n  return (\n    <Entry\n      key={emojiTerm.id}             // unique id for React's list tracking\n      emoji={emojiTerm.emoji}\n      name={emojiTerm.name}\n      description={emojiTerm.meaning} // prop name differs from data field\n    />\n  );\n}\n\nfunction App() {\n  return (\n    <div>\n      <h1>\n        <span>emojipedia</span>\n      </h1>\n      <dl className=\"dictionary\">{emojipedia.map(createEntry)}</dl>\n    </div>\n  );\n}\n\nexport default App;"
+    },
+    "reference_repo_path": "Section 36 - React.js/36.22 Mapping Data to Components Practice/mapping-components-practice/src/App.jsx"
+  },
+  "pitfalls": [
+    "Forgetting to export emojipedia before importing it (the import is undefined).",
+    "Wrong relative path: App.jsx sits in components, so the data file is ../emojipedia.",
+    "Leaving out the curly braces around emojipedia.map(...) in JSX.",
+    "Using a data field name as a prop name by mistake: the prop is description but the object field is meaning.",
+    "Moving the dl into Entry, which creates a separate description list per card instead of one list of terms.",
+    "Leaving aria-label hard-coded as 'Tense Biceps' for every card. (Extra) Use aria-label={props.name} so each emoji has the right accessible label.",
+    "(Extra) Reference repo divergence: the student's App.jsx maps the array twice (once with an arrow function block and once with a concise arrow), so every card appears twice; delete one. It also uses key={index} instead of the id, passes the prop as meaning, and puts a <dl> inside each Entry. The lecture's version uses a named createEntry function, key={emojiTerm.id}, the description prop and a single dl in App."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "New lesson 'Emojipedia: mapping practice' (s36). Blurb: extract a repeated card into a component, drive it with props, and render it from an array with map().",
+      "Task 1: extract the repeated div.term into an Entry component and render it three times.",
+      "Task 2: add emoji, name and description props and fill one Entry with hard-coded values.",
+      "Task 3: export the emojipedia array and import it into App.",
+      "Task 4: render {emojipedia.map(createEntry)} with key={emojiTerm.id} and description={emojiTerm.meaning}.",
+      "Task 5 (stretch): add your own emoji object and confirm the card appears; set aria-label from props.",
+      "Starter code: App.jsx with the three hard-coded dl/dt/dd cards, emojipedia.js with an unexported array, and the supplied styles.css.",
+      "Interactive demo: a small form (emoji, name, meaning) that pushes into the array and shows the new card instantly, with a side panel listing the array beside the rendered cards so learners see one object per card.",
+      "Explore panel: a short dl/dt/dd explainer with an MDN link, since these elements have not appeared earlier in the course."
+    ]
+  }
+}

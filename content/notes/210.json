@@ -1,0 +1,132 @@
+{
+  "index": 210,
+  "lecture_id": 38911792,
+  "title": "EJS Tags",
+  "section": "25. EJS",
+  "duration_min": 18,
+  "kind": "concept+exercise",
+  "summary": "Surveys the EJS tag types (output, scriptlet, unescaped output, escape, comment, include) and then has the learner complete a template that uses them with a title, a seconds value, an array, raw HTML and a footer partial.",
+  "concepts": [
+    {
+      "heading": "Anatomy of an EJS tag",
+      "points": [
+        "Every tag opens with <% and normally closes with %>. The character right after the opening <% selects the behaviour.",
+        "Variants covered: <%= (output), <% (plain scriptlet), <%- (unescaped output), <%% (literal), <%# (comment), and <%- include(...) (insert another file)."
+      ]
+    },
+    {
+      "heading": "<%= value %> : escaped output",
+      "points": [
+        "Contents are evaluated as JavaScript and the result is written into the page at that position, e.g. a variable holding a name.",
+        "The value is HTML-escaped, so if the string contains markup it shows up as visible text rather than being parsed.",
+        "This is the tag for anything displayed: titles, numbers, list item text."
+      ]
+    },
+    {
+      "heading": "<% code %> : scriptlet, no output",
+      "points": [
+        "Plain tag with no modifier runs JavaScript only; nothing is written to the page. Good for if/else, loops, variable declarations, even console.log (which prints in the server terminal, since rendering happens on the server).",
+        "Control-flow constructs can be split across several tags, with plain HTML sitting between them. The HTML between tags is emitted only when the surrounding JavaScript lets execution reach it.",
+        "Rule: every line of JavaScript needs its own opening and closing tag, including lines holding only a closing curly brace or '})'. One tag cannot wrap a region that also contains HTML elements.",
+        "Forgetting to wrap an if line in tags makes it appear as literal text on the page."
+      ]
+    },
+    {
+      "heading": "<%- value %> : unescaped output",
+      "points": [
+        "Writes the value as raw HTML, so '<strong>text</strong>' sent from the server renders as bold text instead of showing the tag characters.",
+        "Swapping the minus for = shows the markup characters as plain text. The two tags differ only in escaping.",
+        "(Extra) Only use <%- with trusted content; with user input it opens the door to XSS."
+      ]
+    },
+    {
+      "heading": "<%% : escape tag",
+      "points": [
+        "A doubled percent in the opening (or closing) delimiter makes EJS print the delimiter as text rather than interpret it. Rarely needed, e.g. a page that documents EJS syntax."
+      ]
+    },
+    {
+      "heading": "<%# comment %>",
+      "points": [
+        "A hash after the opening delimiter creates an EJS comment: not executed, not rendered, and not sent to the browser (unlike an HTML comment, which still appears in page source)."
+      ]
+    },
+    {
+      "heading": "<%- include('file.ejs') %>",
+      "points": [
+        "Pastes another EJS file at that point. Argument is the filename in parentheses; the included file must also sit in the views folder (relative paths work from the including file).",
+        "Use it for repeated pieces such as header and footer so only the changing body is written per page. Layouts and partials get a full treatment in a later lesson.",
+        "The unescaped (-) form is required so the included HTML is not escaped."
+      ]
+    },
+    {
+      "heading": "Worked example: looping an array",
+      "points": [
+        "Server passes an array (fruits). In the template a scriptlet tag starts a loop over it and another closes it; within each pass an li contains an output tag with the current element.",
+        "Result is an unordered list in array order."
+      ]
+    },
+    {
+      "heading": "Exercise server setup",
+      "points": [
+        "Starter index.js already has a route that renders index.ejs with an object containing title, seconds (from the current clock time), items (array of three fruit names), and htmlContent (a string with HTML tags).",
+        "A footer.ejs partial exists in views.",
+        "Workflow: cd into the extracted folder, npm i to install modules, run with nodemon (auto-restarts on save) and refresh the browser. Running solution.js shows the target."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Tag cheat sheet",
+      "language": "html",
+      "code": "<%= name %>            <!-- run JS, output escaped -->\n<%  console.log(1) %>  <!-- run JS, no output -->\n<%- html %>            <!-- output raw HTML -->\n<%% literal %%>        <!-- prints the delimiters as text -->\n<%# a comment %>       <!-- ignored entirely -->\n<%- include('footer.ejs') %>"
+    },
+    {
+      "caption": "Server route sending the data object",
+      "language": "javascript",
+      "code": "app.get(\"/\", (req, res) => {\n  const data = {\n    title: \"EJS Tags\",\n    seconds: new Date().getSeconds(),\n    items: [\"apple\", \"banana\", \"cherry\"],\n    htmlContent: \"<em>This is some em text</em>\",\n  };\n  res.render(\"index.ejs\", data);\n});"
+    },
+    {
+      "caption": "Template body that satisfies the exercise",
+      "language": "html",
+      "code": "<h1><%= title %></h1>\n<p>Current second: <%= seconds %></p>\n<% if (seconds % 2 === 0) { %>\n  <ul>\n    <% items.forEach((fruit) => { %>\n      <li><%= fruit %></li>\n    <% }) %>\n  </ul>\n<% } else { %>\n  <p>No items to display</p>\n<% } %>\n<p><%- htmlContent %></p>\n<%- include(\"footer.ejs\") %>"
+    }
+  ],
+  "task": {
+    "name": "Complete index.ejs using the different EJS tags",
+    "starting_point": "Extracted lesson folder with index.js (route already written and sending title, seconds, items, htmlContent), views/index.ejs with placeholders and comments, views/footer.ejs, and solution files. Run npm i first.",
+    "goal": "Page shows the title in an h1, the current second in a paragraph, a fruit list when the second is even or 'No items to display' when it is odd, the htmlContent rendered as real HTML, and the footer pulled in via include.",
+    "steps": [
+      "cd into the extracted folder, npm i, then start with nodemon index.js and open localhost:3000. Optionally run solution.js first to see the target.",
+      "Put the title variable inside the h1 with an output tag.",
+      "Put seconds in the paragraph with an output tag.",
+      "Turn the if/else commentary into real code: if (seconds % 2 === 0) show the ul, else show the 'No items to display' paragraph. Each line of JavaScript, including the closing braces, gets its own scriptlet tag; HTML stays outside tags.",
+      "Inside the ul loop over items (classic for loop with index or items.forEach((fruit) => ...)). Open the loop in one scriptlet tag, close it in another, and output each element with <%= %> inside an li. Without the output tag the literal word of the variable appears.",
+      "Render htmlContent with the unescaped tag <%- %> so the markup is interpreted. Compare what the = variant prints.",
+      "Add <%- include('footer.ejs') %> at the bottom.",
+      "Refresh repeatedly to hit both even and odd seconds and verify both branches."
+    ],
+    "expected_result": "Even second: heading, second count, bulleted list of apple, banana, cherry, formatted HTML text, footer. Odd second: same but with the 'No items to display' message instead of the list.",
+    "solution_code": {
+      "language": "html",
+      "code": "<h1><%= title %></h1>\n<p>Current second: <%= seconds %></p>\n<% if (seconds % 2 === 0) { %>\n  <ul>\n    <% items.forEach((fruit) => { %>\n      <li><%= fruit %></li>\n    <% }) %>\n  </ul>\n<% } else { %>\n  <p>No items to display</p>\n<% } %>\n<p><%- htmlContent %></p>\n<%- include(\"footer.ejs\") %>"
+    },
+    "reference_repo_path": "Section 25 - EJS/25.02 - EJS Tags/views/solution.ejs (route: solution.js)"
+  },
+  "pitfalls": [
+    "Forgetting that every JavaScript line, even a lone closing brace, needs its own tag.",
+    "Using the plain scriptlet tag where output is needed, so the loop variable never appears.",
+    "Using <%= for HTML content and seeing tags as text; or the reverse with untrusted data.",
+    "Putting footer.ejs outside the views folder so the include fails.",
+    "Reference repo diverges: its starter index.ejs holds a finished solution, htmlContent uses strong/em, and the footer carries a personal credit line to be removed."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (section 25 has no playground file).",
+    "gaps_and_ideas": [
+      "New lesson 'EJS Tags': blurb contrasting <%=, <%, <%-, <%#, <%% and include. Tasks: (1) output a variable, (2) conditional on even/odd second, (3) loop an array into li, (4) render raw HTML and observe the escaped version, (5) include a footer partial.",
+      "Starter code: route with the data object plus a template with commented placeholders.",
+      "Interactive demo idea: side-by-side editor where the learner toggles the tag type on a variable containing '<b>hi</b>' and sees escaped vs raw output, plus a clock-seconds slider showing which if branch renders."
+    ]
+  }
+}

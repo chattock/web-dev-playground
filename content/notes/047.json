@@ -1,0 +1,28 @@
+{
+  "index": 47,
+  "lecture_id": 17966538,
+  "title": "Tip from Angela - Nothing Easy is Worth Doing!",
+  "section": "7. Intermediate CSS",
+  "duration_min": 4,
+  "kind": "tip",
+  "summary": "A short motivational check-in at the end of the Intermediate CSS module. The message is that programming ability comes from sustained practice rather than innate talent.",
+  "concepts": [
+    {
+      "heading": "Key takeaways",
+      "points": [
+        "Feeling 'not cut out' for coding is common; programming skill is built through repeated practice, not inherited.",
+        "Skills that look effortless in others usually hide a large amount of unseen work, and apparent overnight successes tend to follow many earlier attempts.",
+        "Progress comes from showing up regularly and putting in hours; results earned this way feel more valuable.",
+        "Practical takeaway: keep going through the exercises and projects even when CSS positioning feels frustrating."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson (motivational tip).",
+    "gaps_and_ideas": []
+  }
+}

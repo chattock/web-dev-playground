@@ -1,0 +1,72 @@
+{
+  "index": 289,
+  "lecture_id": 17038778,
+  "title": "React Components Practice",
+  "section": "36. React.js",
+  "duration_min": 5,
+  "kind": "concept+exercise",
+  "summary": "Practice in refactoring: take the time-of-day greeting code, which sits entirely in the entry file, and split it into a Heading component and an App component in separate .jsx files, leaving the entry file to just render App.",
+  "concepts": [
+    {
+      "heading": "Target structure",
+      "points": [
+        "Entry file (index.js / main.jsx): only imports App and renders <App />.",
+        "App.jsx: the root of the component tree. Imports Heading and returns <Heading />. A wrapping div is normally used when there are several children; with a single child it can be omitted.",
+        "Heading.jsx: holds the greeting logic (hour lookup, greeting text, colour style object) and the h1."
+      ]
+    },
+    {
+      "heading": "How the move works",
+      "points": [
+        "Move the logic that decides the greeting and style, not only the h1 markup, into the Heading module, since the h1 depends on those variables.",
+        "Wrap the markup in function Heading() { ... return (<h1 className=\"heading\" style={customStyle}>{greeting}</h1>); } and export it with export default Heading.",
+        "Whether the logic sits above the function (computed once when the module loads) or inside it (recomputed on each render) both work for this demo. (Extra) Inside the function is the better habit, since the value then refreshes when the component re-renders; the reference repo puts it at module level.",
+        "In App.jsx import Heading from the Heading file, and in the entry file import App from \"./App\". If the files later move into a components folder, the path becomes ./components/App."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Heading.jsx (reference repo style, logic inside the component for clarity)",
+      "language": "jsx",
+      "code": "function Heading() {\n  const currentTime = new Date().getHours();\n  const customStyle = { color: \"\" };\n  let greeting;\n\n  if (currentTime < 12) {\n    greeting = \"Good Morning\";\n    customStyle.color = \"red\";\n  } else if (currentTime < 18) {\n    greeting = \"Good Afternoon\";\n    customStyle.color = \"green\";\n  } else {\n    greeting = \"Good Night\";\n    customStyle.color = \"blue\";\n  }\n\n  return (\n    <h1 className=\"heading\" style={customStyle}>\n      {greeting}\n    </h1>\n  );\n}\n\nexport default Heading;"
+    },
+    {
+      "caption": "App.jsx",
+      "language": "jsx",
+      "code": "import Heading from \"./components/Heading\";\n\nfunction App() {\n  return <Heading />;\n}\n\nexport default App;"
+    }
+  ],
+  "task": {
+    "name": "Split the greeting page into App and Heading",
+    "starting_point": "A sandbox whose entry file contains the whole greeting logic and h1 (the result of the previous styling practice).",
+    "goal": "End with the entry file rendering only <App />, plus App.jsx and Heading.jsx.",
+    "steps": [
+      "Clear the logic and the h1 out of the entry file.",
+      "Create Heading.jsx, import React if the setup needs it, and define function Heading() containing the time logic and returning the styled h1.",
+      "Add export default Heading.",
+      "Create App.jsx importing Heading and returning <Heading />, exported as default.",
+      "In the entry file import App and render <App />.",
+      "Verify the page looks and behaves exactly as before."
+    ],
+    "expected_result": "Same greeting, colour and heading style as before the refactor, now from a two-level component tree.",
+    "solution_code": {
+      "language": "jsx",
+      "code": "// App.jsx\nimport Heading from \"./components/Heading\";\nfunction App() {\n  return <Heading />;\n}\nexport default App;"
+    },
+    "reference_repo_path": "Section 36 - React.js/36.13 React Components Practice/react-components-practice"
+  },
+  "pitfalls": [
+    "Leaving the greeting logic behind in the entry file leaves Heading with undefined variables.",
+    "Forgetting export default or the matching import gives a not-defined or missing-export error.",
+    "Relative paths must match where each file lives (./Heading vs ./components/Heading)."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (section 36 is not in the playground data files).",
+    "gaps_and_ideas": [
+      "Make this the capstone task of a 'React components' lesson: refactor a one-file greeting into App and Heading.",
+      "Interactive demo: a file tree view where clicking a component shows its imports and what depends on it."
+    ]
+  }
+}

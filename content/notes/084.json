@@ -1,0 +1,91 @@
+{
+  "index": 84,
+  "lecture_id": 12371756,
+  "title": "Slicing and Extracting Parts of a String",
+  "section": "14. Introduction to Javascript ES6",
+  "duration_min": 9,
+  "kind": "concept+exercise",
+  "summary": "Teaches string.slice(start, end): zero-based positions, an exclusive end index, and how to compute the result length. The exercise truncates a tweet to 140 characters, with a condensed one-expression version.",
+  "concepts": [
+    {
+      "heading": "slice(start, end)",
+      "points": [
+        "Syntax: string.slice(startIndex, endIndex). It must be called on a string or a variable holding one (name.slice(0, 3)); slice alone is meaningless.",
+        "Returns a new string; the original is unchanged. (Extra) That is true of all string methods because strings are immutable.",
+        "Indices count from 0, so in \"Angela\" A is position 0 and the last letter a is position 5 (the sixth character).",
+        "The start index is included, the end index is excluded: slice(0, 1) gives \"A\", slice(5, 6) gives \"a\", slice(0, 3) gives \"Ang\".",
+        "Quick length check: end minus start gives the number of characters returned (3 - 0 = 3; 5 - 1 = 4).",
+        "On \"abc\", slice(1, 3) returns \"bc\" because positions 1 and 2 are included and position 3 does not exist.",
+        "(Extra) If the end index is omitted, slice goes to the end of the string; negative numbers count back from the end; an end beyond the length is clamped, so a short text is not padded or errored."
+      ]
+    },
+    {
+      "heading": "Editor shortcut",
+      "points": [
+        "Cmd+/ (Mac) or Ctrl+/ (Windows) toggles comment on the selected lines, handy for switching old code off and on in the snippets editor."
+      ]
+    },
+    {
+      "heading": "Enforcing a tweet limit",
+      "points": [
+        "Instead of only reporting excess characters, cut the text down to the limit.",
+        "Prompt for text, then slice from 0 to 140 (140 - 0 = 140 characters).",
+        "A variable name can include digits but not start with one, hence tweetUnder140.",
+        "Verify with .length on the result.",
+        "Variables here are only for readability: the whole thing collapses to a single alert(prompt(\"...\").slice(0, 140)) expression because a function call can stand in for the value it returns."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "slice examples",
+      "language": "javascript",
+      "code": "var name = \"Angela\";\nname.slice(0, 1); // \"A\"\nname.slice(5, 6); // \"a\"\nname.slice(0, 3); // \"Ang\"\nname.slice(1, 5); // \"ngel\" (5 - 1 = 4 characters)"
+    },
+    {
+      "caption": "Tweet truncation, step by step",
+      "language": "javascript",
+      "code": "var tweet = prompt(\"Compose your tweet:\");\nvar tweetUnder140 = tweet.slice(0, 140);\nalert(tweetUnder140);"
+    },
+    {
+      "caption": "Condensed version (same idea as reference repo 14.07, which limits to 10 characters)",
+      "language": "javascript",
+      "code": "alert(prompt(\"Compose your tweet:\").slice(0, 140));"
+    }
+  ],
+  "task": {
+    "name": "Cut a tweet down to 140 characters",
+    "starting_point": "Snippet containing the prompt for a tweet (from the earlier counter exercise).",
+    "goal": "Alert back only the first 140 characters of whatever was entered.",
+    "steps": [
+      "Prompt for text and keep it in a variable, tweet.",
+      "Create tweetUnder140 = tweet.slice(0, 140).",
+      "Alert tweetUnder140.",
+      "Test with a long pasted paragraph and check the result with .length.",
+      "Optional: merge into one line by replacing variables with the expressions they hold."
+    ],
+    "expected_result": "An alert showing exactly the first 140 characters of the input.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "var tweet = prompt(\"Compose your tweet:\");\nvar tweetUnder140 = tweet.slice(0, 140);\nalert(tweetUnder140);"
+    },
+    "reference_repo_path": "Section 14 - Introduction to Javascript ES6/14.07 - Slicing and Extracting Parts of a String/script.js (author's variant: limit of 10 characters and a message with the count; fix punctuation typo in its alert)"
+  },
+  "pitfalls": [
+    "Counting from 1 instead of 0.",
+    "Expecting the end index to be included.",
+    "Calling slice without a string in front of it.",
+    "Null from a dismissed prompt makes .slice throw an error."
+  ],
+  "playground": {
+    "match": "s14-slice (lesson 14.7, data/s14.js)",
+    "coverage": "Covers slice(start, end), zero indexing, exclusive end, first 10 characters, first letter, negative indices, slice(5), and capitalising a name. Goes beyond the lecture.",
+    "gaps_and_ideas": [
+      "Make the tweet-truncation exercise explicit (slice(0, 140) on a long pasted prompt answer), matching the lecture's main task.",
+      "Add the 'end minus start equals length' shortcut and a worked table for \"Angela\" with indices 0-5.",
+      "Add the Cmd/Ctrl+/ comment toggle tip.",
+      "Interactive demo: type a word and two index numbers and see highlighted characters selected, showing the exclusive end.",
+      "Add a task collapsing three lines into one nested expression."
+    ]
+  }
+}

@@ -1,0 +1,119 @@
+{
+  "index": 316,
+  "lecture_id": 17039602,
+  "title": "Managing a Component Tree",
+  "section": "36. React.js",
+  "duration_min": 23,
+  "kind": "concept+exercise",
+  "summary": "Splits the to-do list into a ToDoItem child component, shows that props are read-only, gives the child its own state to strike text through on click, then replaces that with a pattern where the parent passes a callback prop so a child can delete itself from the parent's array using an index id and filter.",
+  "concepts": [
+    {
+      "heading": "Extracting ToDoItem",
+      "points": [
+        "Real apps are divided into components (heading, input area, each list row). Here the `li` is pulled out into `components/ToDoItem.jsx`.",
+        "The component file imports React, defines a function named after the file, returns an `li` and exports it as default.",
+        "In App.jsx, import it (`import ToDoItem from \"./components/ToDoItem\"`) and inside items.map render `<ToDoItem ... />` as a self-closing tag instead of the raw `li`.",
+        "Each rendered item receives its text via a prop (the lecture names it `text`), and the child reads it as `props.text` inside curly braces. Behaviour is identical to before; only the structure changed.",
+        "At this stage ToDoItem is stateless: it just displays read-only props."
+      ]
+    },
+    {
+      "heading": "Props are read-only",
+      "points": [
+        "Props cannot be reassigned by the child. An input inside ToDoItem whose onChange tries `props = \"new Thing\"` does nothing visible.",
+        "A child that needs to change over time uses its own state via useState instead."
+      ]
+    },
+    {
+      "heading": "Challenge A: strike-through with local state",
+      "points": [
+        "Task: clicking an item crosses it out; clicking again uncrosses it. Needs inline styling, a ternary, event handling and state.",
+        "Step 1: confirm inline style works with a style object, `style={{ textDecoration: \"line-through\" }}`. The property name is camelCase and the value a string; the outer braces are JSX expression, the inner are the object.",
+        "Step 2: add `onClick={handleClick}` to the div (the li would work too).",
+        "Step 3: `const [isDone, setIsDone] = useState(false)`; items start not done. In handleClick call `setIsDone((prevValue) => !prevValue)`; negating is simpler than if/else.",
+        "Step 4: `textDecoration: isDone ? \"line-through\" : \"none\"`.",
+        "Limitation: this state is local to one item. The parent cannot know about it, which leads to the next problem."
+      ]
+    },
+    {
+      "heading": "Challenge B: child deletes itself from the parent's array",
+      "points": [
+        "The goal is to remove the clicked item from the App's items array (with Buy milk, Buy eggs, Buy bacon, clicking eggs removes only eggs). The strike-through state, handleClick and inline style are removed first.",
+        "Key idea: parents can pass functions as props. In App, define `deleteItem` and pass it as a prop (named `onChecked`) on each ToDoItem. The child triggers it with `props.onChecked`, which runs the function that lives in App.",
+        "To identify which item was clicked, pass an `id`. The map callback gets a second argument, the element's index, so use `items.map((todoItem, index) => ...)`. With two parameters the arrow function needs parentheses.",
+        "Each mapped component needs a `key`; the lecture uses the index for both key and id, noting that React advises against index keys in general but that it is acceptable for this example. (Extra) In real apps give each item a stable unique id, e.g. generated with crypto.randomUUID() or the uuid package, and use it for both key and id.",
+        "In React DevTools the ToDoItem props show id, text and onChecked (the function).",
+        "Gotcha: writing `onClick={props.onChecked(props.id)}` calls the function immediately on render and logs for every item. Instead wrap it: `onClick={() => { props.onChecked(props.id); }}` so it only runs on click.",
+        "deleteItem(id) calls `setItems` with the previous array filtered: `prevItems.filter((item, index) => index !== id)`. filter's callback receives the element and its index; returning true keeps the element, so everything except the clicked index remains.",
+        "Verification: add three items, click the second; its id 1 is sent to deleteItem, and the filter keeps indexes 0 and 2."
+      ]
+    },
+    {
+      "heading": "Closing advice",
+      "points": [
+        "This nests functions inside functions, typical of functional style in React; the instruction is to experiment (different filter conditions, array of objects instead of strings) rather than memorise.",
+        "Data flows down through props; events flow up by calling callbacks the parent passed down."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "First step: stateless ToDoItem that only displays its text prop",
+      "language": "jsx",
+      "code": "// components/ToDoItem.jsx\nimport React from \"react\";\n\nfunction ToDoItem(props) {\n  return <li>{props.text}</li>;\n}\n\nexport default ToDoItem;\n\n// App.jsx\nimport ToDoItem from \"./components/ToDoItem\";\n// ...inside the return\n<ul>\n  {items.map((todoItem) => (\n    <ToDoItem text={todoItem} />\n  ))}\n</ul>"
+    },
+    {
+      "caption": "ToDoItem.jsx: calls the parent's callback with its id on click",
+      "language": "jsx",
+      "code": "export default function ToDoItem(props) {\n  return (\n    <div onClick={() => { props.onChecked(props.id); }}>\n      <li>{props.text}</li>\n    </div>\n  );\n}"
+    },
+    {
+      "caption": "App.jsx: delete by index and render children with id and callback",
+      "language": "jsx",
+      "code": "function deleteItem(id) {\n  setItems((prevItems) => {\n    return prevItems.filter((item, index) => {\n      return index !== id;\n    });\n  });\n}\n\n<ul>\n  {items.map((todoItem, index) => (\n    <ToDoItem key={index} id={index} onChecked={deleteItem} text={todoItem} />\n  ))}\n</ul>"
+    },
+    {
+      "caption": "Local state version (Challenge A) inside ToDoItem",
+      "language": "jsx",
+      "code": "import React, { useState } from \"react\";\n\nfunction ToDoItem(props) {\n  const [isDone, setIsDone] = useState(false);\n  function handleClick() {\n    setIsDone((prevValue) => !prevValue);\n  }\n  return (\n    <div onClick={handleClick}>\n      <li style={{ textDecoration: isDone ? \"line-through\" : \"none\" }}>{props.text}</li>\n    </div>\n  );\n}\nexport default ToDoItem;"
+    }
+  ],
+  "task": {
+    "name": "Component tree: ToDoItem extraction, strike-through, then delete",
+    "starting_point": "The to-do list from the previous lesson (single App component) in a forked sandbox with an empty components folder.",
+    "goal": "Move the li into a ToDoItem component, then (a) make clicking strike through a todo with its own state and finally (b) make clicking remove it from the parent's items array.",
+    "steps": [
+      "Create components/ToDoItem.jsx that returns an li showing props.text and exports it by default.",
+      "Import it in App.jsx and render it inside items.map, passing the item string as a prop.",
+      "Challenge A: add isDone state (false), a click handler that toggles it, and a ternary on the inline textDecoration style.",
+      "Remove the Challenge A code.",
+      "Define deleteItem(id) in App and pass it as an onChecked prop, along with id from the map's index parameter and a key.",
+      "In ToDoItem call props.onChecked(props.id) inside an arrow function on click so it does not run during render.",
+      "In deleteItem use setItems with prevItems.filter to drop the element whose index equals id."
+    ],
+    "expected_result": "Adding several items and clicking one removes just that one from the list; with Challenge A active, a click toggles a line through the text.",
+    "solution_code": {
+      "language": "jsx",
+      "code": "// App.jsx (key parts)\nfunction deleteItem(id) {\n  setItems((prevItems) => prevItems.filter((item, index) => index !== id));\n}\n{items.map((todoItem, index) => (\n  <ToDoItem key={index} id={index} onChecked={deleteItem} text={todoItem} />\n))}\n\n// ToDoItem.jsx\nexport default function ToDoItem(props) {\n  return (\n    <div onClick={() => { props.onChecked(props.id); }}>\n      <li>{props.text}</li>\n    </div>\n  );\n}"
+    },
+    "reference_repo_path": "Section 36 - React.js/36.40 Managing a Component Tree/managing-a-component-tree/src/App.jsx"
+  },
+  "pitfalls": [
+    "Calling the callback in the attribute (`onClick={props.onChecked(props.id)}`) runs it at render time instead of on click.",
+    "Trying to assign to props; they are read-only.",
+    "Using the array index as a key breaks down if items can be reordered or removed (ids shift); use unique ids when possible.",
+    "Forgetting parentheses around two arrow-function parameters in map.",
+    "Reference repo quirks: it imports from \"./components/todoItem\" (lowercase t, which fails on case-sensitive file systems when the file is ToDoItem.jsx), names the prop `todoItem` instead of `text`, and has no key; the note's code corrects these. It also contains only the final delete version, not Challenge A.",
+    "(Extra) Wrapping each li in a div (as the lecture and reference do, to hang the onClick on) produces a div as a direct child of ul, which is invalid HTML. Putting onClick on the li itself avoids this."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (no React section files in the playground).",
+    "gaps_and_ideas": [
+      "New lesson 'Lifting state and callback props': blurb on passing data down and events up.",
+      "Tasks: (1) extract ToDoItem and pass text, (2) add local isDone toggling a line-through, (3) pass a deleteItem callback as a prop, (4) pass an id and wrap the call in an arrow function, (5) delete with filter.",
+      "Starter: single-component to-do list.",
+      "Interactive demo: component tree diagram that highlights the prop flow down and the callback flow up, plus a toggle that shows the immediate-call bug logging on render."
+    ]
+  }
+}

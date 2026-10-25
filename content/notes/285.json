@@ -1,0 +1,118 @@
+{
+  "index": 285,
+  "lecture_id": 17038724,
+  "title": "JSX Attributes & Styling React Elements",
+  "section": "36. React.js",
+  "duration_min": 17,
+  "kind": "concept+exercise",
+  "summary": "Shows how HTML attributes carry over into JSX with two changes: names become camelCase (class becomes className) and values can be JavaScript expressions in curly braces. Also covers styling React output with an ordinary CSS file, self-closing tags, and alt text.",
+  "concepts": [
+    {
+      "heading": "Styling React output with a normal stylesheet",
+      "points": [
+        "React renders ordinary HTML elements, so everything known about CSS still applies: define a class (e.g. .heading { color: red; }) in styles.css and attach it to an element in the JSX.",
+        "Element selectors (ul { color: blue; }), class selectors and id selectors all work against React-rendered DOM exactly as on a static page.",
+        "Blanket element selectors are rarely a good idea in a real app because they restyle every matching element everywhere; classes give targeted control.",
+        "The React docs prefer styling through classes in a CSS file, applied via className, over inline styles (inline styles come in the next lecture)."
+      ]
+    },
+    {
+      "heading": "class becomes className",
+      "points": [
+        "JSX is compiled to JavaScript calls, and the DOM property for an element's classes in JavaScript is className, so JSX uses className instead of class.",
+        "Writing class often still works because React tolerates it, but the browser console logs a warning about an invalid DOM property and it can cause subtle problems, so always use className.",
+        "CSS class names follow kebab-case (food-img), while the attribute name itself is camelCase (className)."
+      ]
+    },
+    {
+      "heading": "Telling the tooling the file contains JSX",
+      "points": [
+        "In the CodeSandbox set-up of the time, a warning about an unexpected angle bracket in index.js meant the script was being treated as plain JavaScript. The fix was to set the script tag's type attribute in index.html so the file is handled as JSX rather than plain JS.",
+        "(Extra) In a modern Vite project (as in the reference repo) none of this is needed: files ending in .jsx are compiled automatically and index.html loads src/main.jsx as a module.",
+        "(Extra) main.jsx uses createRoot(document.getElementById('root')).render(<StrictMode><App /></StrictMode>) to mount the app."
+      ]
+    },
+    {
+      "heading": "Multi-word attributes are camelCased",
+      "points": [
+        "HTML attributes are all lowercase (contenteditable, spellcheck); in JSX the convention follows JavaScript naming, so they become contentEditable and spellCheck.",
+        "Editor autocomplete in a JSX file suggests the camelCase forms, which is a quick way to find the right spelling.",
+        "contentEditable={true} makes the element editable in the browser (click the h1 and type); {false} turns it back off. Using the all-lowercase HTML spelling breaks the behaviour.",
+        "spellCheck={false} stops Chrome drawing red spelling underlines in an editable element.",
+        "Single-word attributes (src, href, alt, id) are unchanged."
+      ]
+    },
+    {
+      "heading": "Expressions as attribute values",
+      "points": [
+        "Instead of a quoted string, an attribute can take a JavaScript expression wrapped in curly braces: src={img} where img is a const holding a URL.",
+        "Any expression works, such as concatenation: src={imgURL + '?grayscale'} appends a query string that makes the Picsum placeholder service return a greyscale image.",
+        "Quotes mean a literal string; braces mean evaluate this JavaScript. Do not combine them (src='{img}' would be the literal text).",
+        "Lorem Picsum (picsum.photos/size) returns a random photo for a given size, handy for placeholder images."
+      ]
+    },
+    {
+      "heading": "Self-closing tags are mandatory",
+      "points": [
+        "HTML forgives a missing slash on void elements like img; JSX does not. An element with no children must be written <img ... /> or JSX raises an 'Unterminated JSX contents' style error.",
+        "The same applies to every void element: br, hr, input, and so on."
+      ]
+    },
+    {
+      "heading": "Alt text and linter warnings",
+      "points": [
+        "The sandbox ran an ESLint-based linter that warns when an img has no alt attribute.",
+        "alt should describe the picture for screen-reader users (e.g. alt='bacon'); adding it clears the warnings and improves accessibility."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "CSS used in the lesson (class for the heading and fixed-size images)",
+      "language": "css",
+      "code": ".heading {\n  color: red;\n}\n\n.food-img {\n  height: 100px;\n  width: 100px;\n}"
+    },
+    {
+      "caption": "JSX with className, an expression-valued src, and alt text (based on the reference repo)",
+      "language": "jsx",
+      "code": "const img = \"https://picsum.photos/200\";\n\nfunction App() {\n  return (\n    <div>\n      <h1 className=\"heading\" contentEditable={true} spellCheck={false}>\n        My Favourite Foods\n      </h1>\n      <ul>\n        <li>Bacon</li>\n        <li>Jamon</li>\n        <li>Noodles</li>\n      </ul>\n      <div>\n        <img className=\"food-img\" src={img} alt=\"random\" />\n        <img className=\"food-img\" src={img + \"?grayscale\"} alt=\"random, greyscale\" />\n      </div>\n    </div>\n  );\n}\n\nexport default App;"
+    }
+  ],
+  "task": {
+    "name": "Disable spellcheck, then build an image row",
+    "starting_point": "A forked CodeSandbox (or Vite project) rendering an h1 and a list of three foods, with styles.css linked.",
+    "goal": "Practise JSX attributes by turning off spellcheck on an editable heading, and replacing the list with three equally sized images.",
+    "steps": [
+      "Make the h1 editable with contentEditable={true}, then look through the HTML global attributes list to find the one that disables spellcheck.",
+      "Convert that attribute to camelCase (spellCheck) and set it to {false}; type nonsense into the heading to confirm no red underline appears.",
+      "Delete the ul and replace it with a div containing three img elements whose src values are image URLs found via image search.",
+      "In styles.css create a class (e.g. .food-img) setting height and width to 100px.",
+      "Add className=\"food-img\" to each image (multi-cursor editing with Alt/Option-click speeds this up).",
+      "Store a Picsum URL in a const and use it as an image's src with curly braces; then append '?grayscale' via an expression.",
+      "Give every img an alt value to clear the linter warnings."
+    ],
+    "expected_result": "Three (or four) 100x100 images in a row below a red, editable heading with no spellcheck underlines, and no console or linter warnings.",
+    "solution_code": {
+      "language": "jsx",
+      "code": "<h1 className=\"heading\" contentEditable={true} spellCheck={false}>My Favourite Foods</h1>\n<div>\n  <img className=\"food-img\" src={img} alt=\"random\" />\n  <img className=\"food-img\" src=\"https://example.com/bacon.jpg\" alt=\"bacon\" />\n  <img className=\"food-img\" src=\"https://example.com/noodles.jpg\" alt=\"noodles\" />\n</div>"
+    },
+    "reference_repo_path": "Section 36 - React.js/36.09 JSX Attributes and Styling React Elements/jsx-attributes-and-styling"
+  },
+  "pitfalls": [
+    "Using class instead of className produces a console warning.",
+    "Writing contenteditable or spellcheck in lowercase silently loses the behaviour in JSX.",
+    "Forgetting the self-closing slash on img is a compile error in JSX.",
+    "Quoting an expression (src=\"{img}\") passes the literal text instead of the variable.",
+    "The reference repo's styles.css targets li (blue) rather than ul, and its alt texts are all just 'img'; use descriptive alt text instead."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (section 36 is not in the playground data files).",
+    "gaps_and_ideas": [
+      "New lesson 'JSX attributes': blurb on className, camelCase attributes and expression values.",
+      "Tasks: (1) fix a snippet using class and tabindex, (2) make a heading editable with spellcheck off, (3) render three images with one shared class, (4) build a src from a const plus a query string, (5) fix a missing self-closing tag.",
+      "Starter code: a small App.jsx with deliberately wrong attribute names.",
+      "Interactive demo: a live JSX snippet editor that shows the compiled React.createElement props side by side, so className and expression values are visible."
+    ]
+  }
+}

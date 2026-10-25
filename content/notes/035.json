@@ -1,0 +1,93 @@
+{
+  "index": 35,
+  "lecture_id": 37350350,
+  "title": "[Project] Colour Vocab Website",
+  "section": "5. Introduction to CSS",
+  "duration_min": 9,
+  "kind": "project",
+  "summary": "Section project: style a starter HTML page that pairs colour words with colour images, writing a brand-new external stylesheet. It consolidates id, class and element selectors, plus linking a CSS file via a relative path.",
+  "concepts": [
+    {
+      "heading": "Project idea",
+      "points": [
+        "A mini flashcard site for learning colour words in a foreign language (the lecture uses Spanish, but any language works). Each word is an h2 shown in the colour it names, followed by an image of that colour.",
+        "Starter index.html is supplied with the content already written. All the learner's work goes into CSS; the HTML must not be edited."
+      ]
+    },
+    {
+      "heading": "Create and link the stylesheet",
+      "points": [
+        "index.html already contains a link to ./style.css but the file does not exist. Create style.css in the same folder as index.html (not inside the solution folder, not elsewhere), since the relative path in href is what the browser follows.",
+        "The file name just has to match the href exactly; style.css, styles.css or main.css are all fine if the link agrees.",
+        "Quick link test: add a rule that sets the background colour of everything (or body) to red. If the preview turns red, the link works; then delete the test rule."
+      ]
+    },
+    {
+      "heading": "Style rules needed",
+      "points": [
+        "Each colour heading has a unique id (red, blue, orange, green, yellow), so an id selector like #red { color: red; } gives every title the colour it means. Repeat for all five.",
+        "Titles should have a lighter weight than default (default h2 is bold): font-weight: normal. A plain h2 selector is wrong because the page has another h2 (the subtitle) that should stay bold.",
+        "The five titles all carry class color-title, which the subtitle h2 lacks, so .color-title { font-weight: normal; } hits exactly the right group.",
+        "Images must be 200px by 200px squares: use the element selector img { height: 200px; width: 200px; }. Do this in CSS, not in HTML attributes.",
+        "Choosing selectors here is the lesson: id for a unique one-off, class for a group sharing a trait, element for all of one tag."
+      ]
+    },
+    {
+      "heading": "How to work",
+      "points": [
+        "Two modes: follow the numbered TODO comments step by step, or study goal.png and build it freely.",
+        "Compare with the solution page by previewing solution.html after your attempt.",
+        "Afterwards, personalise: change colours, swap in another language, restyle further."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Complete style.css for the project",
+      "language": "css",
+      "code": "img {\n  height: 200px;\n  width: 200px;\n}\n\n.color-title {\n  font-weight: normal;\n}\n\n#red {\n  color: red;\n}\n\n#blue {\n  color: blue;\n}\n\n#orange {\n  color: orange;\n}\n\n#green {\n  color: green;\n}\n\n#yellow {\n  color: yellow;\n}"
+    },
+    {
+      "caption": "HTML structure being styled (unchanged by the learner)",
+      "language": "html",
+      "code": "<link rel=\"stylesheet\" href=\"./style.css\" />\n...\n<h1>Colors</h1>\n<h2>Learn colors in English!</h2>\n<h2 class=\"color-title\" id=\"red\">Red</h2>\n<img src=\"./assets/images/red.png\" alt=\"red\" />"
+    }
+  ],
+  "task": {
+    "name": "5.3 Colour Vocab Project",
+    "starting_point": "Folder with index.html (links ./style.css, which is missing), assets/images with red, blue, orange, green and yellow PNGs of mixed sizes, goal.png, and a solution folder.",
+    "goal": "Create style.css so titles use their own colours with lighter weight, and all images are 200px squares, matching goal.png.",
+    "steps": [
+      "Create a new file named style.css in the same folder as index.html (matching the link's href).",
+      "Verify the link by temporarily setting a red background, previewing, then removing it.",
+      "For each of the five ids, set color to the colour the heading names.",
+      "Select .color-title and set font-weight: normal so the subtitle h2 stays bold.",
+      "Select img and set height: 200px and width: 200px.",
+      "Do not change index.html."
+    ],
+    "expected_result": "Five lighter-weight colour titles, each in its own colour, above five equal 200px square images; the h1 and the subtitle h2 keep default styling.",
+    "solution_code": {
+      "language": "css",
+      "code": "img {\n  height: 200px;\n  width: 200px;\n}\n\n.color-title {\n  font-weight: normal;\n}\n\n#red { color: red; }\n#blue { color: blue; }\n#orange { color: orange; }\n#green { color: green; }\n#yellow { color: yellow; }"
+    },
+    "reference_repo_path": "Section 05 - Introduction to CSS/05.03 - Color Vocab Project/solution/style.css"
+  },
+  "pitfalls": [
+    "Putting style.css in the wrong folder (or inside solution/) so the link 404s and nothing is styled.",
+    "A file name that differs from the href, including case.",
+    "Using an h2 selector for font-weight, which also unbolds the subtitle.",
+    "Editing width/height in the HTML instead of CSS.",
+    "(Extra) Yellow text on a white background is hard to read; consider a darker shade such as gold or goldenrod in your own version.",
+    "The reference repo's index.html uses English words and an author footer ('Made with love'), unlike the Spanish words shown in the lecture; ignore the footer."
+  ],
+  "playground": {
+    "match": "s05-color-vocab (lesson 5.3, data/s05.js)",
+    "coverage": "Has a project lesson with ids, a shared .color-title class and a stylesheet pane. It colours titles by id and adds centring. It uses coloured divs as swatches instead of img elements.",
+    "gaps_and_ideas": [
+      "Add the font-weight: normal step and the reason a bare h2 selector would also hit the subtitle h2; the current tasks set font-size 30px which the lecture does not use.",
+      "Add the img { height: 200px; width: 200px; } task with real or generated square images so the element-selector step is practised.",
+      "Add the link-check trick (temporary red background) as an explicit first task, and an exercise with a missing or misnamed stylesheet to show the symptom.",
+      "Use Spanish words (rojo, azul, naranja, verde, amarillo) as in the lecture, with an option to swap language."
+    ]
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "index": 248,
+  "lecture_id": 40494144,
+  "title": "Introduction to Postgres",
+  "section": "33. PostgreSQL",
+  "duration_min": 8,
+  "kind": "theory",
+  "summary": "Explains why PostgreSQL is the course's database, where a database sits in the client / server / app architecture, and previews the node-postgres (pg) code pattern used to talk to it from Node. Ends by naming the two programs to install next: the Postgres server and pgAdmin.",
+  "concepts": [
+    {
+      "heading": "Why Postgres",
+      "points": [
+        "Postgres is a relational database management system (DBMS) used to persist app data permanently, beyond a single request or server restart.",
+        "Reasons given for choosing it: widely used by large companies (Apple, Twitch, Instagram, NASA are named), free and open source, strong career value, and a big community so help is easy to find.",
+        "Its own tagline is that it is the most advanced open source relational database. 'Relational' means data lives in tables that can reference each other (covered later with keys and joins)."
+      ]
+    },
+    {
+      "heading": "Where the database fits in the architecture",
+      "points": [
+        "Flow: client (front-end in the browser) sends a request, the server-side app (index.js / app.js) applies business logic, and that code talks to the database.",
+        "The database stores anything that must outlive a request: user records, emails, password hashes, blog posts, to-do items, social 'likes'.",
+        "Example flow: a request for a blog post from a given month makes the app query the database for that row, then format it and respond with the right status code for the client to display.",
+        "Mental model: the database is its own server process, like the API server and website server from earlier sections that ran on separate localhost ports. It can run on your own machine (this course) or be hosted in the cloud."
+      ]
+    },
+    {
+      "heading": "Connecting from Node with the pg package",
+      "points": [
+        "The npm package is node-postgres, installed under the name pg. It is the standard way to use Postgres from Node.",
+        "A db object (a pg Client) is created with the connection details: user, host, database name, password and port. These authenticate you and select which database receives your data.",
+        "db.connect() opens the connection to the Postgres server.",
+        "db.query(sqlString, callback) runs SQL passed as a plain string. This is the method used for almost all database work in the course.",
+        "The callback receives an error (handle it if present) and a result; the returned records are in result.rows, an array of row objects.",
+        "db.end() closes the connection when finished.",
+        "(Extra) Newer pg versions also return a promise from query(), so async/await works. Later lectures use this style."
+      ]
+    },
+    {
+      "heading": "What to install next",
+      "points": [
+        "Postgres server: the actual database engine that runs on your computer, so no cloud storage fees.",
+        "pgAdmin: a graphical client for the server, so you can browse, organise and query data visually instead of using command-line tools.",
+        "Installation steps are in the next lesson."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Overview pattern for querying Postgres from Node (illustrative; values are placeholders)",
+      "language": "javascript",
+      "code": "import pg from \"pg\";\n\nconst db = new pg.Client({\n  user: \"postgres\",\n  host: \"localhost\",\n  database: \"world\",\n  password: \"your-password\",\n  port: 5432,\n});\n\ndb.connect();\n\ndb.query(\"SELECT * FROM users\", (err, res) => {\n  if (err) {\n    console.error(\"Error executing query\", err.stack);\n  } else {\n    console.log(res.rows);\n  }\n  db.end();\n});"
+    }
+  ],
+  "task": null,
+  "pitfalls": [
+    "(Extra) Call db.end() only after queries finish; ending early (outside the callback) can cut off the query.",
+    "(Extra) Do not commit real database passwords to a public repo; use environment variables."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (playground data has no files for section 33).",
+    "gaps_and_ideas": [
+      "New lesson 'What is Postgres and how Node talks to it': blurb covering client, server, database flow and the pg package.",
+      "Tasks: (1) label the architecture diagram, (2) list which data in a sample app belongs in the DB, (3) fill in the db connection object from a given list of fields, (4) predict what res.rows looks like for SELECT * FROM users.",
+      "Starter code: the connection snippet with blanks for user, host, database, password, port.",
+      "Interactive demo: a clickable request-flow diagram (browser, Express, Postgres) that highlights each hop and shows the SQL string and returned rows."
+    ]
+  }
+}

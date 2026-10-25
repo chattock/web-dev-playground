@@ -1,0 +1,159 @@
+{
+  "index": 67,
+  "lecture_id": 37389824,
+  "title": "[Project] TinDog Startup Website",
+  "section": "11. Bootstrap",
+  "duration_min": 31,
+  "kind": "project",
+  "summary": "Project brief and full walkthrough for building the TinDog landing page (hero, features, testimonial, pricing, footer) purely from Bootstrap Examples/Snippets plus a little custom CSS. The walkthrough shows how to copy a snippet, fix what breaks, and tune it with utility classes.",
+  "concepts": [
+    {
+      "heading": "Project setup and provided assets",
+      "points": [
+        "The starter has index.html with a comment-labelled section element per area (title, features, testimonial, pricing, contact/footer), an images folder (iphone.png, dog-img.jpg, four press logos), goal screenshots per section, and a README with the copy text and ready-made SVG icons.",
+        "section elements group distinct areas of a page and keep the code organised; each part of the build goes inside its section.",
+        "Use the README SVGs rather than the ones in Bootstrap's snippets because sizes differ. Copy all text from the README or the live demo (in real work the client usually supplies the copy).",
+        "The provided style.css already contains .gradient-background: a three-colour linear-gradient with background-size 180% and a long looping @keyframes animation that slides background-position. Applying that single class animates any element.",
+        "Reference finished site: appbrewery.github.io/tindog. Expect 30-60 minutes of independent attempt before watching."
+      ]
+    },
+    {
+      "heading": "Link order: Bootstrap first, custom CSS second",
+      "points": [
+        "If a pasted snippet looks like raw HTML (wrong font, unstyled buttons), the Bootstrap CSS link is missing. Take the link from the docs home page and add it to head.",
+        "Add the custom stylesheet link after Bootstrap's so that equal-specificity rules from your file win."
+      ]
+    },
+    {
+      "heading": "Hero (Title section)",
+      "points": [
+        "Use Examples > Heroes (text left, image right). Inspect, climb to the top-level element after the divider, copy the element, paste into the title section.",
+        "Fix the image: src to images/iphone.png, alt 'app demo'. Remove the width attribute and set height 200 so the aspect ratio is kept.",
+        "Replace the h1 with the headline, delete the paragraph, change both buttons to read Download and paste the Apple and Google Play SVGs before the text (with a space).",
+        "Colours: btn-primary becomes btn-light, btn-outline-secondary becomes btn-outline-light. A white outline button is nearly invisible on white, which is why the gradient is needed.",
+        "Put gradient-background on the section element, not the inner container, otherwise the gradient stops at the container's side margins. It is a class, so use the class attribute, not id.",
+        "Excess spacing: padding extends the background colour, margin does not (margin would show white). Hover in dev tools to see the orange padding box, find the py-5 classes on the container and the row div and change them to pt-5 so only top padding remains."
+      ]
+    },
+    {
+      "heading": "Features section",
+      "points": [
+        "Source: Snippets > Features (three columns, icon, heading, text). Copy the row element.",
+        "A bare .row spans full width and misaligns with the rest of the page; wrapping it in a .container (moving the closing tag to wrap everything) lines it up.",
+        "Remove the snippet's extra link/button anchors, replace text, then swap the icons for the README SVGs (check mark, graduation hat, heart with arrow).",
+        "Icon backgrounds look wrong because the snippet's .icon-square (a div with fancy styling) is custom CSS from the example page, not Bootstrap. Find it via Inspect > Styles, copy the rule into style.css.",
+        "Add mt-5 on the container for spacing from the hero (the goal image hints at this)."
+      ]
+    },
+    {
+      "heading": "Testimonial and press logos",
+      "points": [
+        "Source: Examples > Jumbotrons (full-width jumbotron). Copy the section after the divider and paste into testimonial.",
+        "Change the h1 to an h2 for the quote since the page should only have one h1 (already used in the hero). Keep the paragraph for the attribution 'Pebbles, New York'.",
+        "Add the dog image between them, with a custom class .profile-img: height 100px and border-radius 50% for a circle. Spacing: mt-5 on the image, mt-2 on the paragraph.",
+        "Press logos: new .container > .row, each logo in a column with col-lg-3 col-sm-12 (four across on desktop, stacked on small screens). Each img gets alt text and height 30 so they line up.",
+        "(Extra) col-sm-12 only affects widths of 576px and up; below that, columns without a col-* class already stack, so it is redundant but harmless."
+      ]
+    },
+    {
+      "heading": "Pricing",
+      "points": [
+        "Source: Snippets > Pricing. Copy the row with three cards and wrap it in a container (a row must live in a container). Also copy the heading block above the cards and put it at the top of the container.",
+        "Colour changes: primary becomes dark across the buttons and highlighted card header/border (btn-outline-dark, btn-dark, text-bg-dark, border-dark).",
+        "Use the editor's find with replace one match at a time rather than Replace All, so only the intended spots change.",
+        "The snippet's heading is an h1; change it to h2 (title) and the subtitle to a paragraph. Appearance is unchanged because display-4 and fs-5 classes control size, not the tag. Bootstrap classes are independent of semantics, so fix semantics separately.",
+        "Card structure: .card > .card-header + .card-body > card-title, list-unstyled ul, full-width button (w-100 btn btn-lg)."
+      ]
+    },
+    {
+      "heading": "Footer",
+      "points": [
+        "Source: Snippets > Footers. Copy the container holding the footer into the footer section.",
+        "Remove the Bootstrap-logo link at the top left, change the copyright paragraph to the company name, leave the placeholder links.",
+        "Remove border-top from the footer element to drop the line. Add gradient-background to the footer's section.",
+        "The white strip underneath is the bottom margin from my-5; changing it to mt-5 removes it, keeping top spacing."
+      ]
+    },
+    {
+      "heading": "Take-aways",
+      "points": [
+        "Workflow repeated for each section: find the closest snippet, copy the element, wrap in container if needed, fix images/text/icons, compare with goal image, inspect to track down missing styles, adjust with utilities.",
+        "Bootstrap suits quickly assembling modern-looking pages from components; Flexbox and Grid suit fully custom layouts."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Head links and hero section",
+      "language": "html",
+      "code": "<link href=\"https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css\" rel=\"stylesheet\" />\n<link rel=\"stylesheet\" href=\"./css/style.css\" />   <!-- custom CSS AFTER Bootstrap so it wins -->\n...\n<section id=\"title\" class=\"gradient-background\">\n  <div class=\"container col-xxl-8 px-4 pt-5\">\n    <div class=\"row flex-lg-row-reverse align-items-center g-5 pt-5\">\n      <div class=\"col-10 col-sm-8 col-lg-6\">\n        <img src=\"./images/iphone.png\" class=\"d-block mx-lg-auto img-fluid\" alt=\"app demo\" height=\"200\" loading=\"lazy\" />\n      </div>\n      <div class=\"col-lg-6\">\n        <h1 class=\"display-5 fw-bold text-body-emphasis lh-1 mb-3\">Meet new and interesting dogs nearby.</h1>\n        <div class=\"d-grid gap-2 d-md-flex justify-content-md-start\">\n          <button type=\"button\" class=\"btn btn-light btn-lg px-4 me-md-2\">\n            <svg class=\"bi bi-apple mb-1\" ...><!-- Apple icon pasted from the README --></svg> Download\n          </button>\n          <button type=\"button\" class=\"btn btn-outline-light btn-lg px-4\">\n            <svg class=\"bi bi-google-play mb-1\" ...><!-- Google Play icon from README --></svg> Download\n          </button>\n        </div>\n      </div>\n    </div>\n  </div>\n</section>"
+    },
+    {
+      "caption": "Features section (one of three items)",
+      "language": "html",
+      "code": "<section id=\"features\">\n  <div class=\"container mt-5\">\n    <div class=\"row g-4 py-5 row-cols-1 row-cols-lg-3\">\n      <div class=\"col d-flex align-items-start\">\n        <div class=\"icon-square text-body-emphasis bg-body-secondary d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3\">\n          <svg class=\"bi bi-check2-circle\" height=\"30\" fill=\"currentColor\" viewBox=\"0 0 16 16\">...</svg>\n        </div>\n        <div>\n          <h3 class=\"fs-2\">Easy to use.</h3>\n          <p>So easy to use, even your dog could do it.</p>\n        </div>\n      </div>\n      <!-- Elite Clientele (bi-mortarboard) and Guaranteed to work (bi-arrow-through-heart) repeat the same shape -->\n    </div>\n  </div>\n</section>"
+    },
+    {
+      "caption": "Testimonial and press logos",
+      "language": "html",
+      "code": "<section id=\"testimonial\">\n  <div class=\"my-5\">\n    <div class=\"p-5 text-center bg-body-tertiary\">\n      <div class=\"container py-5\">\n        <h2 class=\"text-body-emphasis\">\"I no longer have to sniff other dogs for love. I've found the hottest Corgi on TinDog. Woof.\"</h2>\n        <img class=\"profile-img mt-5\" src=\"./images/dog-img.jpg\" alt=\"dog image\" />\n        <p class=\"col-lg-8 mx-auto lead mt-2\">Pebbles, New York</p>\n      </div>\n      <div class=\"container\">\n        <div class=\"row\">\n          <div class=\"col-lg-3 col-sm-12\"><img src=\"./images/techcrunch.png\" alt=\"techcrunch\" height=\"30\" /></div>\n          <div class=\"col-lg-3 col-sm-12\"><img src=\"./images/mashable.png\" alt=\"mashable\" height=\"30\" /></div>\n          <div class=\"col-lg-3 col-sm-12\"><img src=\"./images/bizinsider.png\" alt=\"bizinsider\" height=\"30\" /></div>\n          <div class=\"col-lg-3 col-sm-12\"><img src=\"./images/tnw.png\" alt=\"tnw\" height=\"30\" /></div>\n        </div>\n      </div>\n    </div>\n  </div>\n</section>"
+    },
+    {
+      "caption": "Pricing section (first card, others described)",
+      "language": "html",
+      "code": "<section id=\"pricing\">\n  <div class=\"container\">\n    <div class=\"pricing-header p-3 pb-md-4 mx-auto text-center\">\n      <h2 class=\"display-4 fw-normal\">A Plan for Every Dog's Needs</h2>\n      <p class=\"fs-5 text-body-secondary\">Simple and affordable price plans for you and your dog.</p>\n    </div>\n    <div class=\"row row-cols-1 row-cols-md-3 mb-3 text-center\">\n      <div class=\"col\">\n        <div class=\"card mb-4 rounded-3 shadow-sm\">\n          <div class=\"card-header py-3\"><h4 class=\"my-0 fw-normal\">Chihuahua</h4></div>\n          <div class=\"card-body\">\n            <h1 class=\"card-title pricing-card-title\">$0<small class=\"text-body-secondary fw-light\">/mo</small></h1>\n            <ul class=\"list-unstyled mt-3 mb-4\">\n              <li>5 Matches Per Day</li><li>10 Messages Per Day</li><li>Unlimited App Usage</li>\n            </ul>\n            <button type=\"button\" class=\"w-100 btn btn-lg btn-outline-dark\">Sign up for free</button>\n          </div>\n        </div>\n      </div>\n      <!-- Labrador $15: plain card, button btn-dark \"Get started\" -->\n      <!-- Mastiff $29: card gets border-dark, header gets text-bg-dark border-dark, button btn-dark \"Contact us\" -->\n    </div>\n  </div>\n</section>"
+    },
+    {
+      "caption": "Footer section",
+      "language": "html",
+      "code": "<section id=\"contact\" class=\"gradient-background\">\n  <div class=\"container\">\n    <footer class=\"row row-cols-1 row-cols-sm-2 row-cols-md-5 py-5 mt-5\">   <!-- border-top removed, my-5 became mt-5 -->\n      <div class=\"col mb-3\"><p class=\"text-body-secondary\">&copy; TinDog</p></div>\n      <div class=\"col mb-3\"></div>\n      <div class=\"col mb-3\">\n        <h5>Section</h5>\n        <ul class=\"nav flex-column\">\n          <li class=\"nav-item mb-2\"><a href=\"#\" class=\"nav-link p-0 text-body-secondary\">Home</a></li>\n          <!-- Features, Pricing, FAQs, About ... and two more identical columns -->\n        </ul>\n      </div>\n    </footer>\n  </div>\n</section>"
+    },
+    {
+      "caption": "css/style.css: gradient, icon-square, profile-img",
+      "language": "css",
+      "code": ".gradient-background {\n  background: linear-gradient(300deg, #00bfff, #ff4c68, #ef8172);\n  background-size: 180% 180%;\n  animation: gradient-animation 18s ease infinite;\n}\n@keyframes gradient-animation {\n  0%   { background-position: 0% 50%; }\n  50%  { background-position: 100% 50%; }\n  100% { background-position: 0% 50%; }\n}\n.icon-square { width: 3rem; height: 3rem; border-radius: 0.75rem; }\n.profile-img { border-radius: 50%; height: 100px; }"
+    }
+  ],
+  "task": {
+    "name": "11.3 TinDog Project",
+    "starting_point": "Starter folder: index.html with empty section elements and comments, css/style.css containing .gradient-background, images folder, goal images for title, features, testimonial, pricing and footer, README with copy text and SVG code. No Bootstrap link yet.",
+    "goal": "Reproduce the TinDog landing page (gradient hero with download buttons and phone image, three features, testimonial with logos, three-plan pricing, gradient footer) that is responsive on desktop and phone.",
+    "steps": [
+      "Link Bootstrap CSS (and then the custom style.css after it) in head.",
+      "Hero: copy the Heroes example, set iphone.png with height 200, add heading, remove paragraph, two Download buttons with README SVGs using btn-light and btn-outline-light, add gradient-background to the section and trim padding with pt-5.",
+      "Features: copy the Features snippet, wrap in container mt-5, remove link buttons, insert text and SVGs, copy the icon-square CSS.",
+      "Testimonial: copy the Jumbotron, h1 to h2, add circular profile image (.profile-img), build the four press logos with a container, row and col-lg-3 col-sm-12 columns, height 30.",
+      "Pricing: copy the three-card row inside a container, add the heading block, insert plan text (Chihuahua, Labrador, Mastiff), switch primary to dark one by one, make title h2 and subtitle p.",
+      "Footer: copy a footer snippet, remove logo link, set copyright to TinDog, remove border-top, give the section gradient-background and change my-5 to mt-5.",
+      "Compare each section with its goal image and test at phone width."
+    ],
+    "expected_result": "A page matching appbrewery.github.io/tindog: animated blue/red/peach gradient hero and footer, responsive layout.",
+    "solution_code": {
+      "language": "html",
+      "code": "<!-- Full structure shown in code_examples. Reference: css/solution.css + solution.html. -->\n<section id=\"title\" class=\"gradient-background\">...</section>\n<section id=\"features\">...</section>\n<section id=\"testimonial\">...</section>\n<section id=\"pricing\">...</section>\n<section id=\"contact\" class=\"gradient-background\">...</section>"
+    },
+    "reference_repo_path": "Section 11 - Bootstrap/11.03 - TinDog Project/solution.html"
+  },
+  "pitfalls": [
+    "Forgetting the Bootstrap link so the pasted snippet appears unstyled.",
+    "Placing the custom CSS link before Bootstrap, letting Bootstrap override it.",
+    "Putting gradient-background on the inner container instead of the full-width section.",
+    "Mixing up padding (extends the background) and margin (shows page white).",
+    "A row outside a container makes content run edge to edge.",
+    "Replace All on 'primary' can change unrelated places; step through the matches.",
+    "Using more than one h1 on the page.",
+    "Reference repo diverges: uses Bootstrap 5.3.0-alpha3, keeps the author footer line (ignore), has a typo in a pricing item (priority), and an alt text left as 'Bootstrap Themes' in the hero image."
+  ],
+  "playground": {
+    "match": "s11-tindog (lesson 11.3, data/s11.js)",
+    "coverage": "Has hero, features, pricing and footer tasks with a solid-colour hero background. Does not cover the animated gradient, testimonial, press logos, snippet copy workflow or custom CSS additions.",
+    "gaps_and_ideas": [
+      "Add the gradient-background class and keyframes to the starter CSS pane and a task to apply it to hero and footer, with a note on putting it on the section not the container.",
+      "Add a testimonial task: circular .profile-img (border-radius 50%) plus four press logos with col-lg-3 col-sm-12.",
+      "Pricing task should say: wrap row in a container, three cards, switch primary to dark one match at a time, h1 to h2 while keeping display-4.",
+      "Add 'broken-snippet' debugging task: paste an Examples snippet that depends on custom CSS (icon-square) and find the missing rule via dev tools.",
+      "Add a padding versus margin explainer showing why background colour extends under padding.",
+      "Add a goal screenshot/checklist per section and a phone-width check."
+    ]
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "index": 224,
+  "lecture_id": 17967280,
+  "title": "Tip from Angela - Spaced Repetition",
+  "section": "27. Git, Github and Version Control",
+  "duration_min": 4,
+  "kind": "tip",
+  "summary": "Study tip on spaced repetition: knowledge sticks when reviewed at growing intervals, and cramming fades fast. Recommends revisiting concepts regularly and practising by building small things yourself.",
+  "concepts": [
+    {
+      "heading": "Spaced repetition for programming",
+      "points": [
+        "Learning a concept once and never using it again leads to forgetting; revisit it after increasing gaps (for example a day, a week, a month, then longer).",
+        "The course repeats concepts on purpose; if it feels repetitive, raise the playback speed to review faster.",
+        "Keep a personal list of learned concepts and schedule reviews of each.",
+        "Cramming gives short-lived memory; spaced review turns knowledge into a lasting skill.",
+        "Practise by writing small programs or quizzes, or rebuilding a simple course project from scratch alone. Hands-on work matters more than watching lectures."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [
+    "Cramming everything once and expecting it to last.",
+    "Only watching videos without writing code."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": []
+  }
+}

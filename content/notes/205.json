@@ -1,0 +1,114 @@
+{
+  "index": 205,
+  "lecture_id": 38911596,
+  "title": "Introduction to Middlewares",
+  "section": "24. Express.js with Node.js",
+  "duration_min": 18,
+  "kind": "concept+exercise",
+  "summary": "Explains what Express middleware is (code that runs on every request before the route handlers), recaps HTML form attributes, shows how to serve a file with res.sendFile and a computed __dirname, and wires up body-parser so form data appears on req.body.",
+  "concepts": [
+    {
+      "heading": "What middleware is and what it is used for",
+      "points": [
+        "Middleware is a function that sits between the incoming request and the route handlers (app.get, app.post, app.put and so on). It can inspect or change the request before a handler sees it.",
+        "Typical jobs: pre-processing requests shared by several handlers, logging (method, timing, status), authentication/authorisation checks before the request reaches back-end logic, and detecting or handling errors early.",
+        "Registered with app.use(...) above the routes, so it runs first for every matching request."
+      ]
+    },
+    {
+      "heading": "HTML form recap (needed for the exercise)",
+      "points": [
+        "<form action=\"/submit\" method=\"POST\">: action is the route on the server that receives the data; method is the HTTP verb used (POST here, since the form sends data to the server).",
+        "<label> describes the input that follows it; the for attribute links it to an input by id.",
+        "<input type=\"text\" name=\"street\">: type picks the control (text, radio, checkbox, submit, etc.); name is the key under which the typed value is sent, producing key/value pairs.",
+        "required blocks submission until the field is filled in.",
+        "<input type=\"submit\" value=\"Submit\"> renders the button; value is the button's label.",
+        "Submitting a form like this sends an application/x-www-form-urlencoded body, e.g. street=Aberdeen&pet=rabbit."
+      ]
+    },
+    {
+      "heading": "Serving a file with res.sendFile and computing __dirname",
+      "points": [
+        "Static files (HTML, CSS, images) live in a public folder. Instead of res.send(string), use res.sendFile(absolutePath) to return a whole file.",
+        "sendFile needs an absolute path. Hard-coding one breaks once the server is hosted elsewhere, so compute it at runtime.",
+        "In ES modules there is no built-in __dirname. Rebuild it: import { dirname } from 'path'; import { fileURLToPath } from 'url'; const __dirname = dirname(fileURLToPath(import.meta.url));",
+        "import.meta.url is the file URL of the current module; fileURLToPath turns it into a normal OS path; dirname strips the file name, leaving the folder.",
+        "Then: res.sendFile(__dirname + '/public/index.html'). The path adapts to Mac, Windows, Linux or a cloud host.",
+        "(Extra) Newer Node versions also offer import.meta.dirname, and Express supports res.sendFile(path, { root: ... }) as another way to avoid string concatenation."
+      ]
+    },
+    {
+      "heading": "body-parser middleware",
+      "points": [
+        "Install with npm i body-parser (already in the starter package.json, but needed when building from scratch), then import bodyParser from 'body-parser'.",
+        "Add it with app.use(bodyParser.urlencoded({ extended: true })). urlencoded selects the parser for HTML form data. The extended option is required; it chooses which library parses the string behind the scenes (true = qs, supports nested objects; false = querystring). Using true is the near-universal choice.",
+        "The effect: every request gains a body property. Without the middleware req.body is undefined.",
+        "Put the logic in a POST handler, not GET: app.post('/submit', (req, res) => { console.log(req.body); }). GET only returns resources; POST receives data. The path must match the form action exactly, including case.",
+        "(Extra) The sample handler never responds, so the browser keeps loading. Add res.send(...) or res.sendStatus(200) to finish the request.",
+        "(Extra) Express 4.16+ includes express.urlencoded() built in, which does the same job; the reference solution1.js uses it."
+      ]
+    },
+    {
+      "heading": "Testing with Postman and the browser",
+      "points": [
+        "Run with nodemon index1.js (the folder has index1-4 files, one per sub-exercise).",
+        "In Postman: method POST, URL localhost:3000/submit, Body tab, x-www-form-urlencoded, add any key/value pairs, Send. The console prints them as an object.",
+        "Removing the body-parser line and sending again prints undefined, proving the middleware is what creates req.body.",
+        "In the browser, open localhost:3000, fill the Band Name Generator form (street name and pet name), submit, and the terminal shows { street: ..., pet: ... }."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "ES module __dirname and sendFile",
+      "language": "javascript",
+      "code": "import express from \"express\";\nimport { dirname } from \"path\";\nimport { fileURLToPath } from \"url\";\n\nconst __dirname = dirname(fileURLToPath(import.meta.url));\nconst app = express();\nconst port = 3000;\n\napp.get(\"/\", (req, res) => {\n  res.sendFile(__dirname + \"/public/index.html\");\n});"
+    },
+    {
+      "caption": "Form HTML sent to /submit",
+      "language": "html",
+      "code": "<form action=\"/submit\" method=\"POST\">\n  <label for=\"street\">Street Name:</label>\n  <input placeholder=\"Enter Street Name\" type=\"text\" name=\"street\" required />\n  <label for=\"pet\">Pet Name:</label>\n  <input placeholder=\"Enter Pet Name\" type=\"text\" name=\"pet\" required />\n  <input type=\"submit\" value=\"Submit\" />\n</form>"
+    },
+    {
+      "caption": "index1 target: body-parser plus POST route",
+      "language": "javascript",
+      "code": "import bodyParser from \"body-parser\";\n\napp.use(bodyParser.urlencoded({ extended: true }));\n\napp.post(\"/submit\", (req, res) => {\n  console.log(req.body); // { street: 'Aberdeen', pet: 'rabbit' }\n});"
+    }
+  ],
+  "task": {
+    "name": "3.4 Middleware, index1.js: log submitted form data",
+    "starting_point": "Download the exercise zip, extract, cd into it, run npm install. index1.js already has the express, path/url and body-parser imports plus __dirname and a GET route that sends public/index.html; the POST route is missing or incomplete.",
+    "goal": "Submitting the Band Name Generator form should print the entered street and pet values in the terminal via req.body.",
+    "steps": [
+      "Open the project folder, run npm install, and start with nodemon index1.js.",
+      "Install body-parser (npm i body-parser) if not already in dependencies and import it.",
+      "Register app.use(bodyParser.urlencoded({ extended: true })) before the routes.",
+      "Add app.post('/submit', ...) whose handler console.logs req.body.",
+      "Open localhost:3000, fill both fields, press Submit, and check the terminal output.",
+      "Optionally comment out the app.use line to confirm req.body becomes undefined."
+    ],
+    "expected_result": "Terminal shows an object such as { street: 'Aberdeen', pet: 'rabbit' } after each submit.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "import express from \"express\";\nimport bodyParser from \"body-parser\";\nimport { dirname } from \"path\";\nimport { fileURLToPath } from \"url\";\n\nconst __dirname = dirname(fileURLToPath(import.meta.url));\nconst app = express();\nconst port = 3000;\n\napp.use(bodyParser.urlencoded({ extended: true }));\n\napp.get(\"/\", (req, res) => {\n  res.sendFile(__dirname + \"/public/index.html\");\n});\n\napp.post(\"/submit\", (req, res) => {\n  console.log(req.body);\n});\n\napp.listen(port, () => {\n  console.log(`Listening on port ${port}`);\n});"
+    },
+    "reference_repo_path": "Section 24 - Express.js with Node.js/24.04 - Introduction to Middlewares/solution1.js"
+  },
+  "pitfalls": [
+    "Registering app.use(bodyParser...) after the routes, so req.body is undefined in handlers.",
+    "Form action and app.post path differing in spelling or case.",
+    "Missing name attributes on inputs, so no keys appear in req.body.",
+    "Forgetting to extract the zip or run npm install in the right folder.",
+    "Handler never sends a response, so the browser hangs.",
+    "Reference repo note: public/index.html contains a personal footer from the repo author; ignore it."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (data/s24.js does not exist).",
+    "gaps_and_ideas": [
+      "New lesson 'Middleware and req.body': blurb on the request pipeline; tasks: (1) serve an HTML form with res.sendFile, (2) add urlencoded parsing, (3) log req.body in app.post('/submit'), (4) remove the parser to see undefined, (5) respond with the submitted values.",
+      "Starter code: the index1.js skeleton with the app.use line missing.",
+      "Interactive demo idea: a pipeline diagram where a simulated request moves through toggleable middleware boxes (body parser on/off) and the req.body panel changes between an object and undefined."
+    ]
+  }
+}

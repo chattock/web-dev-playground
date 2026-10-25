@@ -1,0 +1,119 @@
+{
+  "index": 57,
+  "lecture_id": 37368390,
+  "title": "Flex Sizing",
+  "section": "9. Flexbox",
+  "duration_min": 24,
+  "kind": "concept+exercise",
+  "summary": "Explains how a flex container works out the size of each flex item: a priority list of size sources, the min/max limits, and the flex-grow, flex-shrink and flex-basis properties with the flex shorthand. Ends with an online exercise where you reproduce the resize behaviour of a target flex container.",
+  "concepts": [
+    {
+      "heading": "Default behaviour of flex items",
+      "points": [
+        "Paragraphs are normally full-width block elements. Once their parent is display: flex they become flex items laid out along the main axis (a row by default), each sized to its content with no gaps unless gap is set.",
+        "With no sizing properties at all, items already respond to window resizing: they shrink with the container down to a minimum size, then overflow off the page.",
+        "The default minimum size of an item is the width of its longest word (text will wrap but a word is not broken). The default ideal/maximum size is all of its text on one line. So the item with the longest single word stays widest when squeezed."
+      ]
+    },
+    {
+      "heading": "Priority list used to pick an item's size",
+      "points": [
+        "1. min-width / max-width (or min-height / max-height in a column) act as hard limits and win over everything else.",
+        "2. flex-basis, if set. It sets the starting size along the main axis (width in a row, height in a column).",
+        "3. width (or height in a column container), if there is no flex-basis.",
+        "4. Otherwise the natural content size.",
+        "Because flex-basis outranks width, setting both is pointless: the width is ignored in a row container."
+      ]
+    },
+    {
+      "heading": "width and flex-basis in practice",
+      "points": [
+        "Setting width: 100px on each of four items gives four 100px boxes while the container is at least 400px wide (plus any gaps).",
+        "When the container gets narrower than the total, the items are still allowed to shrink (flex-shrink defaults to 1), but never below their minimum content size, so the longest word stays intact.",
+        "Setting flex-basis: 200px makes each item aim for 200px and overrides the width. It shrinks the same way once space runs out."
+      ]
+    },
+    {
+      "heading": "max-width and min-width",
+      "points": [
+        "max-width caps how large an item may become. If flex-basis is 200px but max-width is 100px, the item ends at 100px even with plenty of room. If flex-basis is smaller than max-width (e.g. 50px), the basis is used.",
+        "max-width therefore limits growth potential; items still shrink and grow with the container but only within the cap.",
+        "min-width sets how small an item may shrink. If min-width (300px) is larger than flex-basis (200px), the item renders at 300px and will not shrink below it.",
+        "Both properties replace the content-derived defaults if you set them explicitly, which is sometimes useful."
+      ]
+    },
+    {
+      "heading": "flex-grow and flex-shrink",
+      "points": [
+        "These provide the 'flexible' part of flexbox. flex-grow says whether an item may expand into spare space; flex-shrink says whether it may contract when space is short. Value 0 turns each off.",
+        "grow 0 and shrink 0: items stay fixed at the basis size whatever the window does. It stops behaving like a flexible layout.",
+        "grow 1 and shrink 0: items start at the basis, expand to fill the container when it widens, but do not shrink under the basis (they overflow instead).",
+        "grow 0 and shrink 1: this is the default for flex items. Items begin at their basis, do not stretch, but can shrink down to their minimum content width.",
+        "grow 1 and shrink 1: items expand to fill the container and also shrink; the basis is effectively just a starting point, and the limits come from max/min-width or content.",
+        "The default flex-basis is auto, which uses the width if set, else the content size, so items with more text get a bigger share. Setting flex-basis: 0 removes this and makes shares equal."
+      ]
+    },
+    {
+      "heading": "The flex shorthand",
+      "points": [
+        "flex: <grow> <shrink> <basis>, in that order, e.g. flex: 1 1 0.",
+        "A single unitless number such as flex: 1 means grow 1, shrink 1, basis 0, so every item gets an equal share.",
+        "Different numbers set proportions: an item with flex: 2 and another with flex: 1 split the space 2:1 and keep that ratio as the container is resized. This is how the earlier section's red/blue boxes with different flex values worked."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Four items that keep a 100px width, shrinking only when needed",
+      "language": "css",
+      "code": ".container {\n  display: flex;\n  gap: 10px;\n}\n.container p {\n  width: 100px;   /* used only if no flex-basis */\n}"
+    },
+    {
+      "caption": "flex-basis beats width; max-width caps it; min-width raises it",
+      "language": "css",
+      "code": ".item {\n  width: 100px;        /* ignored */\n  flex-basis: 200px;   /* starting size */\n  max-width: 150px;    /* final size cannot exceed this */\n  min-width: 50px;     /* cannot shrink below this */\n}"
+    },
+    {
+      "caption": "Longhand versus shorthand",
+      "language": "css",
+      "code": ".item {\n  flex-grow: 1;\n  flex-shrink: 1;\n  flex-basis: 0;\n}\n/* same as */\n.item { flex: 1 1 0; }\n/* same as */\n.item { flex: 1; }"
+    }
+  ],
+  "task": {
+    "name": "Match the resize behaviour of the green flex box",
+    "starting_point": "An external exercise page with a CSS text box and an 'Apply CSS' button. A green flex container (the target) and a blue container (yours) hold three items. Target widths are listed on screen: item 1 200px, item 2 200px, item 3 400px.",
+    "goal": "Write CSS so the blue container resizes exactly like the green one, which means matching both the static layout and the behaviour while the window is resized.",
+    "steps": [
+      "Set justify-content: space-between on the container to match how the items are spread.",
+      "Give the items flex-basis values of 200px, 200px and 400px.",
+      "Resize the window and watch the green box: only item 1 shrinks, items 2 and 3 hold their size.",
+      "Set flex-shrink: 0 on item 2 and item 3, leaving item 1 on its default shrink of 1.",
+      "Press Apply CSS and re-test by resizing."
+    ],
+    "expected_result": "Blue items look identical to the green ones at full width and respond identically when the window is narrowed.",
+    "solution_code": {
+      "language": "css",
+      "code": ".container {\n  justify-content: space-between;\n}\n.item1 { flex-basis: 200px; }\n.item2 { flex-basis: 200px; flex-shrink: 0; }\n.item3 { flex-basis: 400px; flex-shrink: 0; }"
+    },
+    "reference_repo_path": null
+  },
+  "pitfalls": [
+    "Checking only the static layout: matching widths is not enough, you must resize to compare grow/shrink behaviour.",
+    "Setting width and flex-basis together; the width is ignored in a row container.",
+    "Expecting a flex-basis larger than max-width to win. The max-width limit wins.",
+    "Setting both grow and shrink to 0 and wondering why the layout no longer responds.",
+    "Leaving flex-basis on auto when you want equal item sizes; use flex: 1 (basis 0).",
+    "(Extra) The selectors in the solution are illustrative; the exercise page uses its own class names."
+  ],
+  "playground": {
+    "match": "s09-flex-direction (lesson 9.2, data/s09.js)",
+    "coverage": "That lesson's explore demo has sliders for flex-grow, flex-basis and a note on flex-shrink (default 1). Equal split and double share via grow values are explained.",
+    "gaps_and_ideas": [
+      "Add a dedicated 'Flex sizing' lesson (9.2b) with the four-step priority list: min/max, flex-basis, width, content.",
+      "Add sliders/checkboxes for min-width, max-width and flex-shrink plus a draggable container width, so learners see items hit their limits.",
+      "Show the 'longest word' minimum size with a long-word paragraph to explain why items stop shrinking.",
+      "Add a 2x2 grow/shrink toggle matrix (0/0, 1/0, 0/1, 1/1) with a resizable container.",
+      "Task: re-create the external match-the-green-box exercise in the playground with a target container and a student container."
+    ]
+  }
+}

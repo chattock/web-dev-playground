@@ -1,0 +1,46 @@
+{
+  "index": 7,
+  "lecture_id": 13268600,
+  "title": "How to Get the Most Out of the Course",
+  "section": "1. Front-End Web Development",
+  "duration_min": 10,
+  "kind": "tip",
+  "summary": "Study-method advice: watch short chunks for understanding, then rebuild the code from memory; take Cornell-style notes; adjust playback speed but don't skip modules; flag hard topics to revisit; and treat getting stuck as normal, solving it with Google and Stack Overflow.",
+  "concepts": [
+    {
+      "heading": "Key takeaways",
+      "points": [
+        "Lessons are deliberately about 10 minutes each. For longer videos, pause around the 10-minute mark.",
+        "Avoid 'code-along' (typing in sync with the video). Watch the chunk focusing on why each line is written, then go to your editor and reproduce it without looking. Recall forces understanding; copying teaches little.",
+        "The goal is programming skill, not typing speed. If you want faster typing, practise it separately (keybr.com is suggested).",
+        "Cornell notes: one page in four areas: topic at the top, main notes, a side column for keywords/questions/reminders picked out after every few lines, and a summary of the whole lesson in a few bullets at the end. A printable template PDF is in the course resources (also in the reference repo as 01.03 - App Brewery Cornell Notes Template.pdf).",
+        "Use playback speed: 2x for material you already know, 0.5x if the pace is too fast or English is not your first language.",
+        "Don't skip modules; the curriculum ramps up gradually and gaps make later lessons hard. Videos explicitly marked optional/skippable are the exception.",
+        "When a topic is too hard: bookmark it and note the module, retry the watch-then-rebuild method, read around the subject, and come back about a week later. It is usually much easier second time.",
+        "Mastery comes from repeated practice, not from watching once.",
+        "Getting stuck is normal; working developers spend most of their time debugging. Act like a professional: search Google and Stack Overflow, since someone has almost always hit the same problem. Finding the bug is part of how skills grow."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Cornell notes page layout",
+      "language": "text",
+      "code": "+------------------------------------------+\n| TOPIC                                    |\n+--------------+---------------------------+\n| KEYWORDS /   | NOTES                     |\n| QUESTIONS /  | (most of your writing)    |\n| REMINDERS    |                           |\n| (filled in   |                           |\n|  on review)  |                           |\n+--------------+---------------------------+\n| SUMMARY (a few bullets, after the lesson)|\n+------------------------------------------+"
+    }
+  ],
+  "task": null,
+  "pitfalls": [
+    "Typing along with the video at full speed and ending up with working code you can't reproduce.",
+    "Skipping modules that look easy, then missing concepts later lessons build on.",
+    "Giving up when stuck instead of searching for the error or revisiting the topic later."
+  ],
+  "playground": {
+    "match": "s01-how-the-web-works (lesson 1.1, data/s01.js), 'Learning this well' notes",
+    "coverage": "The lesson notes already say to type rather than copy code, to break things on purpose, and to build your own projects.",
+    "gaps_and_ideas": [
+      "Refine the first tip to match the course method: watch about 10 minutes for understanding, then rebuild from memory, instead of only 'type, don't copy'.",
+      "Add a 'when you're stuck' line (search the error on Google/Stack Overflow, mark the lesson to revisit in a week) and a printable or on-screen Cornell notes template linked from the lesson."
+    ]
+  }
+}

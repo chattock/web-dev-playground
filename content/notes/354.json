@@ -1,0 +1,96 @@
+{
+  "index": 354,
+  "lecture_id": 31673674,
+  "title": "Using the Transfer Functionality in the Faucet",
+  "section": "41. Create Your Own Crypto Token",
+  "duration_min": 7,
+  "kind": "concept+exercise",
+  "summary": "Replaces the faucet's direct ledger write with a call to transfer so tokens come out of the canister's own balance instead of being created. Because the canister starts with zero, the owner funds it once from the command line.",
+  "concepts": [
+    {
+      "heading": "Why the faucet had to change",
+      "points": [
+        "The old payOut did balances.put(msg.caller, 10000), which mints 10,000 new tokens per claim and silently inflates the supply set at 1 billion.",
+        "Better model: the canister holds a pool of tokens and each claim moves 10,000 from the canister to the claimant, so the total stays constant.",
+        "This needs transfer to exist and work, which it now does."
+      ]
+    },
+    {
+      "heading": "Updating payOut",
+      "points": [
+        "Inside the 'not yet claimed' branch, replace balances.put with let result = await transfer(msg.caller, amount). The recipient is the caller of payOut and the amount is the existing 10,000 constant.",
+        "transfer is async, so it must be awaited; its Text result is returned directly in place of the hard-coded 'Success'. payOut therefore reports 'Success' or 'Insufficient Funds' (if the pool runs dry).",
+        "The 'Already Claimed' branch is unchanged."
+      ]
+    },
+    {
+      "heading": "Why it initially fails",
+      "points": [
+        "After dfx deploy, clicking the faucet button returns 'Insufficient Funds'.",
+        "Reason: as shown in the previous lecture, a function called from another function sees the canister itself as msg.caller. So transfer debits the token canister's account, which holds 0.",
+        "Confirm by pasting the token canister's ID into the balance checker: it shows 0 DANG. The deploy output lists the canister ID under 'Upgrading code for canister token' (a separate 'token assets' canister is also listed; use token).",
+        "Do not hard-code the canister ID into main.mo: it is unknown before the first deploy and may change between deployments."
+      ]
+    },
+    {
+      "heading": "Funding the canister from the command line",
+      "points": [
+        "Commands (also in the project README under 'Charge the Canister'): get the ID with dfx canister id token.",
+        "Store it as a Candid principal literal in a shell variable: CANISTER_PUBLIC_KEY=\"principal \\\"$( dfx canister id token )\\\"\". The command substitution inserts the ID inside principal \"...\" syntax automatically.",
+        "Check with echo $CANISTER_PUBLIC_KEY; it should print principal \"<id>\" in lowercase.",
+        "Call dfx canister call token transfer \"($CANISTER_PUBLIC_KEY, 500_000_000)\". Candid args are passed as a tuple in parentheses, and underscores are allowed in numeric literals for readability.",
+        "The terminal identity is the owner, who holds the whole initial supply, so as msg.caller they are the sender. The reply should be 'Success'.",
+        "Refresh the site and check the canister ID in the balance checker: it now shows 500,000,000 DANG.",
+        "Claiming from the faucet now works and returns 'Success'.",
+        "(Extra) Every dfx deploy resets the HashMap in this version, so the funding step has to be repeated after each deploy until persistence is added (next lecture).",
+        "(Extra) The reference repo also changed the guard in transfer from > to >= in this lesson, so a sender can move their exact full balance."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "payOut using transfer",
+      "language": "motoko",
+      "code": "public shared (msg) func payOut() : async Text {\n  if (balances.get(msg.caller) == null) {\n    let amount = 10000;\n    let result = await transfer(msg.caller, amount);\n    return result;\n  } else {\n    return \"Already Claimed\";\n  };\n};"
+    },
+    {
+      "caption": "Fund the canister from the terminal",
+      "language": "bash",
+      "code": "dfx canister id token\nCANISTER_PUBLIC_KEY=\"principal \\\"$( \\dfx canister id token )\\\"\"\necho $CANISTER_PUBLIC_KEY\ndfx canister call token transfer \"($CANISTER_PUBLIC_KEY, 500_000_000)\""
+    }
+  ],
+  "task": {
+    "name": "Make the faucet draw from the canister's balance",
+    "starting_point": "Working project from the previous lesson with transfer and a payOut that writes directly to the ledger.",
+    "goal": "Faucet claims move tokens from the canister to the user without increasing total supply.",
+    "steps": [
+      "In payOut replace balances.put with let result = await transfer(msg.caller, amount).",
+      "Return result instead of the literal 'Success'.",
+      "Run dfx deploy and try the faucet; observe 'Insufficient Funds'.",
+      "Look up the canister ID and confirm via the balance checker that it has 0.",
+      "Run the four terminal commands to put 500,000,000 tokens into the canister.",
+      "Refresh and claim again to get 'Success' and check both balances."
+    ],
+    "expected_result": "Canister balance falls by 10,000 and the claimant gains 10,000 on each new claim.",
+    "solution_code": {
+      "language": "motoko",
+      "code": "public shared (msg) func payOut() : async Text {\n  if (balances.get(msg.caller) == null) {\n    let amount = 10000;\n    let result = await transfer(msg.caller, amount);\n    return result;\n  } else {\n    return \"Already Claimed\";\n  };\n};"
+    },
+    "reference_repo_path": "Section 41 - Create Your Own Crypto Token/41.07 Using the Transfer Functionality in the Faucet/DANG/src/DANG_backend/main.mo"
+  },
+  "pitfalls": [
+    "Forgetting to fund the canister after each redeploy.",
+    "Using the wrong canister name (token vs token assets, or the project's actual backend name).",
+    "Typing the principal without the principal \"...\" wrapper in the CLI.",
+    "Hard-coding the canister ID in source.",
+    "Method name case, e.g. payOut."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet.",
+    "gaps_and_ideas": [
+      "Extend the proposed token lesson with a 'treasury' task: model a faucet that draws from a pool so total supply is constant.",
+      "Interactive demo: three account rows (owner, canister, user) and a faucet button; with the canister at 0 the claim fails, a 'fund canister' button makes it work, and a total-supply counter stays fixed."
+    ]
+  }
+}

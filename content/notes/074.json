@@ -1,0 +1,78 @@
+{
+  "index": 74,
+  "lecture_id": 37331054,
+  "title": "Instructions",
+  "section": "13. Capstone Project 2 - Personal Site",
+  "duration_min": 2,
+  "kind": "challenge-intro",
+  "summary": "Brief for Capstone Project 2: build a personal portfolio site using only HTML and CSS. There is no solution walkthrough because capstones are meant to be the learner's own work.",
+  "concepts": [
+    {
+      "heading": "Capstone project ground rules",
+      "points": [
+        "Capstones have no solution code, no video walkthrough and no design spec, so the finished site can be presented as original work in a portfolio.",
+        "Getting stuck is the point: gaps in memory show which earlier lessons or docs to revisit.",
+        "Deliverables are one HTML file, one CSS file and any images used. No JavaScript is allowed in this project.",
+        "A live example site exists at appbrewery.github.io/capstone-2-example for visual inspiration."
+      ]
+    },
+    {
+      "heading": "Required features",
+      "points": [
+        "Hero section giving a short introduction to you and your background.",
+        "Resume page or section listing education, work experience, skills and other details (may link to Capstone 1).",
+        "Projects section showing past work.",
+        "About-me section covering interests.",
+        "Contact section with ways to get in touch."
+      ]
+    },
+    {
+      "heading": "Technical requirements",
+      "points": [
+        "Valid HTML using semantic elements (header, nav, main, section, footer).",
+        "Valid CSS with sensible naming and organisation.",
+        "Responsive layout that works across screen sizes and devices.",
+        "Every image needs meaningful alt text."
+      ]
+    },
+    {
+      "heading": "Suggested five-hour timeline",
+      "points": [
+        "Hour 1: collect content and design ideas, sketch wireframes and mockups.",
+        "Hours 2-3: write the HTML structure and CSS, testing in different browsers and devices.",
+        "Hour 4: finalise design and copy, revise, optimise performance.",
+        "Hour 5: launch, share in the Q&A for feedback, make final tweaks."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": {
+    "name": "Capstone 2: Personal portfolio site",
+    "starting_point": "Empty project; you create index.html, styles.css and an images folder.",
+    "goal": "A responsive, semantic, accessible, HTML+CSS-only personal website with hero, resume, projects, about and contact sections.",
+    "steps": [
+      "Plan content and sketch a wireframe of each section.",
+      "Write semantic HTML for the hero, resume, projects, about and contact sections.",
+      "Style with an external stylesheet; make it responsive with media queries or flexible layouts.",
+      "Add alt text to every image.",
+      "Validate HTML and CSS, test on several screen sizes, then share for feedback."
+    ],
+    "expected_result": "A polished portfolio page with all five sections and no JavaScript.",
+    "solution_code": null,
+    "reference_repo_path": "Section 13 - Capstone Project 2 - Personal Site/ (one student's own site: index.html, styles.css, imgs/)"
+  },
+  "pitfalls": [
+    "(Extra) The reference repo copy includes a script.js with theme toggle and mobile menu code, which breaks the brief's no-JavaScript rule; also it contains the student's personal name and email, which should be ignored.",
+    "Forgetting alt text or a viewport meta tag, which hurt accessibility and responsiveness."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "Add a capstone-style lesson: blurb 'Build a one-page portfolio with only HTML and CSS'.",
+      "Tasks: (1) semantic skeleton with header/nav/main/sections/footer, (2) hero with image and heading, (3) projects grid with flexbox or grid, (4) responsive media query, (5) alt text audit.",
+      "Starter code idea: a skeleton with empty section tags and a TODO comment in each.",
+      "Interactive demo idea: a checklist that inspects the learner's editor HTML for required sections and alt attributes."
+    ]
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "index": 70,
+  "lecture_id": 19655724,
+  "title": "Understanding Typography and How to Choose a Font",
+  "section": "12. Web Design School - Create a Website that People Love",
+  "duration_min": 10,
+  "kind": "theory",
+  "summary": "Font choice carries mood and affects readability. Explains serif versus sans-serif families and their sub-families, what makes type legible, and a simple pairing method: two fonts, similar mood and era, contrasting style or weight.",
+  "concepts": [
+    {
+      "heading": "Why typography matters",
+      "points": [
+        "Fonts convey mood just as colours do; the wrong choice sends the wrong message (a cursive script on a serious message is her humorous example).",
+        "Pairing fonts well is one of the cheapest ways to make a design look polished."
+      ]
+    },
+    {
+      "heading": "Serif family",
+      "points": [
+        "Serifs are the small strokes (feet) at the ends of letter strokes. They are traditionally linked to carved stone lettering.",
+        "Mood: traditional, stable, respectable, authoritative, slightly old. Suited to legal letterheads, magazines, architecture and similar.",
+        "Sub-families: Old Style, Transitional, Modern, Slab Serif. A quick way to judge a serif's age is the contrast between the thickest and thinnest parts of a letter: low in Old Style, higher in Transitional, extreme in Modern.",
+        "Modern serifs (Didot is the example, as in a fashion magazine masthead) look authoritative yet contemporary; Old Style suits something aged, such as a winery."
+      ]
+    },
+    {
+      "heading": "Sans-serif family",
+      "points": [
+        "Sans-serif letters end in clean right angles with no feet.",
+        "Mood: friendly, approachable, contemporary, simple, straightforward. Popular with startups.",
+        "Humanist sans-serifs (Gill Sans, Tahoma, Verdana) are known for readability. Designers usually prefer sans-serif for body text.",
+        "A study on car dashboards found that switching from a Grotesque to a Humanist sans-serif cut the time drivers needed to read gauges by roughly 30-40%. The takeaway: legibility has measurable effects, and long copy that is easier to read is more likely to be read to the end."
+      ]
+    },
+    {
+      "heading": "What makes a font legible",
+      "points": [
+        "Open letter shapes with generous spacing between letters.",
+        "Unambiguous forms so similar characters are distinguishable (for example the letter g versus the digit 9).",
+        "Varied proportions, such as a wide capital O versus a narrower zero."
+      ]
+    },
+    {
+      "heading": "Pairing rules",
+      "points": [
+        "Use two fonts per design or per section; ten fonts look cluttered and amateur.",
+        "Pick fonts with a similar mood and from a similar era so they do not feel mismatched.",
+        "Create contrast through serif versus sans-serif (serif heading with sans body, or the reverse).",
+        "Create contrast through weight: a very bold or black heading with light, thin or regular body text.",
+        "She also shows six novelty fonts to avoid in professional work because they are hard to read and their moods are hard to fit; the fonts are shown on a slide and not named in the audio."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "(Extra) A two-font pairing in CSS: serif heading, sans-serif body, contrasting weights",
+      "language": "css",
+      "code": "h1, h2 {\n  font-family: \"Playfair Display\", Georgia, serif;\n  font-weight: 900;\n}\nbody {\n  font-family: \"Open Sans\", Verdana, sans-serif;\n  font-weight: 300;\n  line-height: 1.6;\n}"
+    }
+  ],
+  "task": null,
+  "pitfalls": [
+    "Using many fonts in one design.",
+    "Pairing fonts of clashing eras or moods.",
+    "Using decorative novelty fonts for body copy or professional sites.",
+    "Setting long body text in a font with tight spacing or ambiguous characters."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (section 12 has no playground file).",
+    "gaps_and_ideas": [
+      "New lesson 'Font pairing': blurb on serif versus sans-serif and mood. Tasks: 1) load two Google Fonts with a link tag; 2) set serif headings and sans body with font-family fallbacks; 3) create contrast with font-weight; 4) fix a page using five fonts; 5) bump line-height for readability.",
+      "Starter code idea: an article page with five random font-family declarations.",
+      "Interactive demo idea: a live preview with dropdowns for heading and body fonts and weights, plus a badge saying whether the pair has serif/sans contrast."
+    ]
+  }
+}

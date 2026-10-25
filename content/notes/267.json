@@ -1,0 +1,117 @@
+{
+  "index": 267,
+  "lecture_id": 41780530,
+  "title": "Level 1 - Registering Users with Email and Password",
+  "section": "35. Authentication and Security",
+  "duration_min": 22,
+  "kind": "project",
+  "summary": "Builds the simplest possible authentication: a users table in Postgres, a register route that checks for an existing email then inserts email and password, and a login route that compares the submitted password with the stored one. Works, but stores passwords as plain text, which is the weakness the next levels address.",
+  "concepts": [
+    {
+      "heading": "Starting project and prerequisites",
+      "points": [
+        "Download and unzip the starter, cd into it, run npm i. Dependencies: body-parser, ejs, express, pg. Start with nodemon index.js and open localhost:3000.",
+        "Assumes prior modules on Express, EJS and PostgreSQL; the lesson does not re-teach them.",
+        "Pages: home (Login and Register buttons), login, register, and secrets.ejs, a plain page with a heading and a paragraph holding the secret. secrets.ejs is the protected page, to be rendered only after a successful register or login.",
+        "GET routes already just render the pages. The work is in the two POST routes, app.post('/register') and app.post('/login').",
+        "Leave the views alone, but note the form details: both forms use action pointing at their route, method POST, and two inputs named username (holds the email) and password. Those name attributes decide the keys on req.body.",
+        "The starter already has app.use(bodyParser.urlencoded({ extended: true })); Express's built-in express.urlencoded would work equally."
+      ]
+    },
+    {
+      "heading": "Step 1: read the form data",
+      "points": [
+        "Exercise: in both POST routes console.log the submitted values. Use req.body.username and req.body.password.",
+        "Before the fix both are undefined; after it the values appear in the terminal.",
+        "Then rename the local variable to email (const email = req.body.username). Only the right-hand side must match the form's name attribute; the left-hand name is free, and renaming helps tell form fields apart from server variables.",
+        "Delete the console.logs afterwards (they print passwords)."
+      ]
+    },
+    {
+      "heading": "Step 2: create the database and table",
+      "points": [
+        "In pgAdmin: right-click Databases, create a database named secrets, open the Query Tool on it and run the CREATE TABLE from queries.sql.",
+        "id is SERIAL PRIMARY KEY (auto-generated). email is VARCHAR NOT NULL UNIQUE so no two users share an address. password is a plain VARCHAR.",
+        "Refresh Schemas > Tables and use View All Rows to see the empty table.",
+        "In index.js: import pg from 'pg', create new pg.Client with user postgres, host localhost, database secrets, your password, port 5432, then call db.connect()."
+      ]
+    },
+    {
+      "heading": "Step 3: register route",
+      "points": [
+        "Naive version: db.query('INSERT INTO users (email, password) VALUES ($1, $2)', [email, password]) then res.render('secrets.ejs'). $1 and $2 are placeholders filled from the array, which keeps values out of the SQL text.",
+        "Registering the same email twice throws a duplicate key error from the UNIQUE constraint. That error is desirable, but it has to be handled.",
+        "Fix: first SELECT * FROM users WHERE email = $1. If checkResult.rows.length > 0 the user already exists, so respond with a message (send text, render a page, show a message) telling them to log in. Otherwise insert. A more elaborate site could log the user in automatically instead.",
+        "Wrap the queries in try/catch because pg calls can fail (no connection, wrong address or password, database gone); log or handle the error.",
+        "Verify by registering and viewing rows in pgAdmin: a new row with the email and password should appear."
+      ]
+    },
+    {
+      "heading": "Step 4: login route",
+      "points": [
+        "Within try/catch, SELECT * FROM users WHERE email = $1 with the submitted email.",
+        "result.rows is an array; because emails are unique it has at most one element. result.rows[0] is an object like {id, email, password}. Logging result.rows is a quick way to see this shape.",
+        "If rows.length > 0: take user = result.rows[0], storedPassword = user.password, compare it with the submitted password. Match: res.render('secrets.ejs'). Mismatch: tell them the password is wrong (or redirect to login, or flash a message).",
+        "Else (zero rows): no such user, tell them to register or check the email."
+      ]
+    },
+    {
+      "heading": "Why this level is weak",
+      "points": [
+        "Passwords sit readable in the table. Anyone who reads the database (breach, insider, backup leak) gets every email and password pair, and people reuse them across sites.",
+        "Subsequent levels add encryption, hashing and salting."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "users table",
+      "language": "sql",
+      "code": "CREATE TABLE users (\n  id SERIAL PRIMARY KEY,\n  email VARCHAR(100) NOT NULL UNIQUE,\n  password VARCHAR(100)\n);"
+    },
+    {
+      "caption": "Form fields that POST routes read (register.ejs, abridged)",
+      "language": "html",
+      "code": "<form action=\"/register\" method=\"POST\">\n  <input type=\"email\" class=\"form-control\" name=\"username\">\n  <input type=\"password\" class=\"form-control\" name=\"password\">\n  <button type=\"submit\" class=\"btn btn-dark\">Register</button>\n</form>"
+    },
+    {
+      "caption": "Finished Level 1 server (abridged from the reference)",
+      "language": "javascript",
+      "code": "import express from \"express\";\nimport bodyParser from \"body-parser\";\nimport pg from \"pg\";\n\nconst app = express();\nconst port = 3000;\n\nconst db = new pg.Client({\n  user: \"postgres\", host: \"localhost\", database: \"secrets\",\n  password: \"<your password>\", port: 5432,\n});\ndb.connect();\n\napp.use(bodyParser.urlencoded({ extended: true }));\napp.use(express.static(\"public\"));\n\napp.get(\"/\", (req, res) => res.render(\"home.ejs\"));\napp.get(\"/login\", (req, res) => res.render(\"login.ejs\"));\napp.get(\"/register\", (req, res) => res.render(\"register.ejs\"));\n\napp.post(\"/register\", async (req, res) => {\n  const email = req.body.username;   // form field name is \"username\"\n  const password = req.body.password;\n  try {\n    const checkResult = await db.query(\"SELECT * FROM users WHERE email = $1\", [email]);\n    if (checkResult.rows.length > 0) {\n      res.send(\"Email already exists. Try logging in.\");\n    } else {\n      await db.query(\"INSERT INTO users (email, password) VALUES ($1, $2)\", [email, password]);\n      res.render(\"secrets.ejs\");\n    }\n  } catch (err) {\n    console.log(err);\n  }\n});\n\napp.post(\"/login\", async (req, res) => {\n  const email = req.body.username;\n  const password = req.body.password;\n  try {\n    const result = await db.query(\"SELECT * FROM users WHERE email = $1\", [email]);\n    if (result.rows.length > 0) {\n      const user = result.rows[0];\n      if (password === user.password) {\n        res.render(\"secrets.ejs\");\n      } else {\n        res.send(\"Incorrect Password\");\n      }\n    } else {\n      res.send(\"User not found. Please register your email.\");\n    }\n  } catch (err) {\n    console.log(err);\n  }\n});\n\napp.listen(port, () => console.log(`Server running on port ${port}`));"
+    }
+  ],
+  "task": {
+    "name": "Level 1 authentication: register and log in",
+    "starting_point": "Starter project with package.json, index.js (GET routes done, POST routes empty), views including secrets.ejs, queries.sql.",
+    "goal": "Users can register (saved to Postgres) and log in with email and password to reach secrets.ejs.",
+    "steps": [
+      "npm i, run nodemon index.js, visit localhost:3000.",
+      "In both POST routes, log req.body.username and req.body.password until they print; then rename to email and password and remove logs.",
+      "Create the secrets database and users table in pgAdmin using queries.sql.",
+      "Import pg, create the client, connect.",
+      "Register: SELECT by email; if found, send an 'already exists' message; else INSERT with $1/$2 and render secrets.ejs; wrap in try/catch.",
+      "Login: SELECT by email; if no row, say user not found; if row, compare passwords; render secrets.ejs on match, else say incorrect password.",
+      "Test: register, check row in pgAdmin, try re-registering, log in with right and wrong password."
+    ],
+    "expected_result": "New users appear in the table; duplicate registration is rejected with a message; correct credentials show the secrets page, wrong ones a rejection message.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "import express from \"express\";\nimport bodyParser from \"body-parser\";\nimport pg from \"pg\";\n\nconst app = express();\nconst port = 3000;\n\nconst db = new pg.Client({\n  user: \"postgres\", host: \"localhost\", database: \"secrets\",\n  password: \"<your password>\", port: 5432,\n});\ndb.connect();\n\napp.use(bodyParser.urlencoded({ extended: true }));\napp.use(express.static(\"public\"));\n\napp.get(\"/\", (req, res) => res.render(\"home.ejs\"));\napp.get(\"/login\", (req, res) => res.render(\"login.ejs\"));\napp.get(\"/register\", (req, res) => res.render(\"register.ejs\"));\n\napp.post(\"/register\", async (req, res) => {\n  const email = req.body.username;   // form field name is \"username\"\n  const password = req.body.password;\n  try {\n    const checkResult = await db.query(\"SELECT * FROM users WHERE email = $1\", [email]);\n    if (checkResult.rows.length > 0) {\n      res.send(\"Email already exists. Try logging in.\");\n    } else {\n      await db.query(\"INSERT INTO users (email, password) VALUES ($1, $2)\", [email, password]);\n      res.render(\"secrets.ejs\");\n    }\n  } catch (err) {\n    console.log(err);\n  }\n});\n\napp.post(\"/login\", async (req, res) => {\n  const email = req.body.username;\n  const password = req.body.password;\n  try {\n    const result = await db.query(\"SELECT * FROM users WHERE email = $1\", [email]);\n    if (result.rows.length > 0) {\n      const user = result.rows[0];\n      if (password === user.password) {\n        res.render(\"secrets.ejs\");\n      } else {\n        res.send(\"Incorrect Password\");\n      }\n    } else {\n      res.send(\"User not found. Please register your email.\");\n    }\n  } catch (err) {\n    console.log(err);\n  }\n});\n\napp.listen(port, () => console.log(`Server running on port ${port}`));"
+    },
+    "reference_repo_path": "Section 35 - Authentication and Security - Handling Credentials & Designing a Secure Login/35.02 Level 1 - Registering Users with Email and Password"
+  },
+  "pitfalls": [
+    "Reading req.body.email instead of req.body.username: the field is named username in the form, so it is undefined.",
+    "Duplicate email without a prior check crashes the insert with a unique-constraint error.",
+    "(Extra) The reference index.js has stray bugs: db.query not awaited in register, render imported from ejs and called instead of res.render, so the response never gets sent; the solution.js file fixes both. Use res.render and await.",
+    "(Extra) Plain text password storage and comparison with === is only acceptable for this teaching level.",
+    "(Extra) Echoing different messages for 'user not found' versus 'wrong password' lets attackers discover which emails are registered."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (section 35 has no file).",
+    "gaps_and_ideas": [
+      "New lesson 'Level 1 login': blurb on register/login with a database; tasks: (1) read form values from req.body, (2) write the users CREATE TABLE with UNIQUE email, (3) check-then-insert register, (4) login compare, (5) spot the security problem. Starter: Express app with an in-memory users array and the two forms. Interactive demo: in-browser fake users table where registering adds a row showing the plaintext password, highlighting the leak risk."
+    ]
+  }
+}

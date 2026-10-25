@@ -1,0 +1,41 @@
+{
+  "index": 164,
+  "lecture_id": 12639986,
+  "title": "Step 1 - Answer",
+  "section": "20. Boss Level Challenge 2 - The Simon Game",
+  "duration_min": 1,
+  "kind": "solution",
+  "summary": "Pointer to the downloadable solution for step 1.",
+  "concepts": [
+    {
+      "heading": "How to use it",
+      "points": [
+        "Pointer lecture: the full code for steps up to 1 is a downloadable project under Course Resources. The notes below restate the step's solution from the reference repo.",
+        "Solutions are not unique; any code that produces the required behaviour counts.",
+        "The downloaded solution marks each step with comments so you can jump to the relevant lines."
+      ]
+    },
+    {
+      "heading": "Step 1 end state",
+      "points": [
+        "index.html ends with the jQuery CDN script followed by the game script, both at the bottom of body. The reference repo links ./script.js."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Reference index.html bottom",
+      "language": "html",
+      "code": "<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js\"></script>\n<script src=\"./script.js\"></script>"
+    }
+  ],
+  "task": null,
+  "pitfalls": [
+    "Reference repo's HTML has a typo (lass=\"row\" instead of class) and an author footer; ignore both."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (web-dev-playground has no files for sections 19-20)",
+    "gaps_and_ideas": []
+  }
+}

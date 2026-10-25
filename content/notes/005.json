@@ -1,0 +1,98 @@
+{
+  "index": 5,
+  "lecture_id": 12286980,
+  "title": "How Does the Internet Actually Work?",
+  "section": "1. Front-End Web Development",
+  "duration_min": 5,
+  "kind": "theory",
+  "summary": "Explains the internet as a physical network of cables linking computers, the client/server roles, and the path a request takes when you type a domain name: browser → ISP → DNS server → IP address → direct request to the server, which sends back the site's files. Ends with a hands-on DNS lookup and a look at the undersea cables that carry the traffic.",
+  "concepts": [
+    {
+      "heading": "The internet is physical wiring",
+      "points": [
+        "Strip away the 'cloud' image: the internet is a very large set of wires (copper and fibre) joining computers together so they can exchange data, for example a machine in London talking to one in Seattle.",
+        "It is the same idea as wiring two computers together, scaled up to every connected computer on the planet."
+      ]
+    },
+    {
+      "heading": "Servers and clients",
+      "points": [
+        "Server: a computer whose job is to stay online around the clock and hand out the files and data a website needs whenever someone asks for them.",
+        "Client: any computer (laptop, phone, etc.) that a person uses to go online and request those files.",
+        "A server can be pictured as a library that never closes: you ask for a page (Google's home page, the latest articles on a news site) and it supplies everything needed to display it.",
+        "The catch is scale: with so many sites stored on so many machines, the client needs a way to find the exact machine that holds the site it wants. DNS and IP addresses solve that."
+      ]
+    },
+    {
+      "heading": "What happens when you type google.com",
+      "points": [
+        "1. The browser sends the request to your ISP (Internet Service Provider), the company you pay for access. Examples given: AT&T or Comcast in the US, BT or TalkTalk in the UK.",
+        "2. The ISP passes the domain name on to a DNS server. DNS stands for Domain Name System.",
+        "3. The DNS server works like an enhanced phone book: it looks up the domain name in its database and finds the matching IP address.",
+        "4. The IP address travels back through the ISP to your browser.",
+        "5. The browser now sends a request straight to that IP address. The machine living there (Google's servers) responds with all the files and data needed to show the page.",
+        "Every computer on the internet has an IP address. It acts like a postal code: a unique location that lets other computers find it to send or receive files.",
+        "(Extra) In practice your computer and ISP cache DNS answers, so repeat visits often skip the lookup. The request to the server uses HTTP/HTTPS, which the next lecture builds on.",
+        "(Extra) Many sites share a single IP (shared hosting, CDNs). The browser includes the domain name in its request (the Host header) so the server knows which site to return. That is why pasting a bare IP into the address bar does not work for every site."
+      ]
+    },
+    {
+      "heading": "Try it: see a domain's IP address",
+      "points": [
+        "Go to nslookup.io, enter google.com, and it lists the IP address(es) the DNS returns for Google.",
+        "Copy one of those IPs into a new browser tab: the Google home page loads, which repeats by hand what the browser normally does automatically after the DNS lookup."
+      ]
+    },
+    {
+      "heading": "How data crosses oceans",
+      "points": [
+        "Continents are joined by enormous submarine (undersea) cables. submarinecablemap.com shows every one of them and which reach your country.",
+        "Each cable bundles hundreds of optical fibres; lasers send the data as light pulses. The lecture quotes up to 400 gigabytes per second per fibre and shows a cross-section of a cable that lands in New Zealand.",
+        "Because the signals travel at close to light speed, a request can go halfway round the world and back in milliseconds. All the browser needs to start that journey is the server's IP address."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "(Extra) The same DNS lookup from a terminal instead of nslookup.io",
+      "language": "bash",
+      "code": "# Ask DNS for google.com's IP address(es)\nnslookup google.com\n\n# Shorter output, just the addresses\ndig +short google.com\n\n# See the chain of routers your packets pass through on the way\ntraceroute google.com     # macOS / Linux\ntracert google.com        # Windows"
+    },
+    {
+      "caption": "(Extra) The request flow as a text diagram",
+      "language": "text",
+      "code": "You type google.com\n   |\n   v\nBrowser --(\"where is google.com?\")--> ISP --> DNS server\n                                            | looks up name\n                                            v\nBrowser <------- IP e.g. 142.250.x.x ---- ISP\n   |\n   +--(request sent directly to that IP)--> Google's server\n   <--(HTML, CSS, JS, images)-------------- Google's server"
+    }
+  ],
+  "task": {
+    "name": "Try-it: look up an IP address and visit it",
+    "starting_point": "A browser with internet access.",
+    "goal": "See for yourself that a domain name is just a label for an IP address.",
+    "steps": [
+      "Open nslookup.io.",
+      "Type google.com and run the lookup.",
+      "Copy one of the IPv4 addresses from the results.",
+      "Paste it into a new browser tab's address bar and press Enter.",
+      "Optional: open submarinecablemap.com and find the cables that land in your country."
+    ],
+    "expected_result": "The Google home page loads from the raw IP address, showing that DNS just converts names into addresses.",
+    "solution_code": null,
+    "reference_repo_path": null
+  },
+  "pitfalls": [
+    "Thinking of the internet as wireless or 'in the sky'; it is mostly cables, including under the sea.",
+    "Mixing up the roles: DNS only translates the name into an IP address; the actual files come from the web server at that address.",
+    "(Extra) Expecting every site to load from its bare IP. Sites on shared hosting or behind a CDN usually show an error or a certificate warning that way."
+  ],
+  "playground": {
+    "match": "s01-how-the-web-works (lesson 1.1, data/s01.js), explore demo 'What happens when you type a URL'",
+    "coverage": "The animated five-step demo covers typing a URL, the DNS lookup turning the name into an IP, the browser requesting files from the server, the server replying, and the browser rendering. The client/server labels are present.",
+    "gaps_and_ideas": [
+      "Add the ISP hop the course shows: browser → ISP → DNS → back via ISP → direct request to the IP. The current demo jumps straight from browser to DNS.",
+      "Explain the IP address as the computer's postal code in the step 2 readout, and say every connected computer has one.",
+      "Add a 'Try it' task: look up google.com on nslookup.io and paste the IP into a new tab. Include a note that this fails for many CDN-hosted sites and why (Host header).",
+      "Add a physical-layer step or card: undersea fibre cables, a link to submarinecablemap.com, light-speed travel (a round trip in milliseconds).",
+      "Interactive idea: a mini 'DNS phone book' where the learner types a domain from a small lookup table and sees the IP returned, then an animated packet travels to the matching server icon; an unknown domain shows a 'could not resolve' error."
+    ]
+  }
+}

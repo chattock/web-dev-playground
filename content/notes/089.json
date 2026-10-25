@@ -1,0 +1,70 @@
+{
+ "index": 89,
+ "lecture_id": 12371950,
+ "title": "Functions Part 1: Creating and Calling Functions",
+ "section": "14. Introduction to Javascript ES6",
+ "duration_min": 11,
+ "kind": "concept",
+ "summary": "Introduces functions as named, reusable blocks of instructions, using a house-robot 'get milk' routine; covers the declaration syntax, calling with name plus parentheses, indentation style, and swapping alert for console.log while testing.",
+ "concepts": [
+  {
+   "heading": "Why functions exist",
+   "points": [
+    "A fixed sequence of instructions (a robot walking to a shop, buying milk and returning, written as a long list of alert calls) would otherwise have to be retyped every time it is needed.",
+    "A function packages that sequence under a name so one short call repeats the whole thing. This keeps code DRY (do not repeat yourself).",
+    "A computer only does what it is told, so the function must contain every low-level step."
+   ]
+  },
+  {
+   "heading": "Declaring a function",
+   "points": [
+    "Syntax: the function keyword, then the name, then a pair of round brackets, then curly braces holding the body.",
+    "The opening { marks where the instructions start and the closing } where they end; everything between runs when the function is called.",
+    "The structure parallels a variable: var name = value creates a container, function name() { ... } creates a named block of behaviour.",
+    "Function names follow the variable naming rules and camelCase convention (getMilk); a name cannot start with a digit.",
+    "The brackets are empty here; parameters come in the next lesson.",
+    "Style: indent every line inside the braces so the parent/child structure is visible. A function declaration's closing brace is not followed by a semicolon."
+   ]
+  },
+  {
+   "heading": "Declaring versus calling",
+   "points": [
+    "Declaring defines what the function does and runs nothing.",
+    "Calling is writing getMilk(); : the name, empty parentheses and a semicolon, with no function keyword and no braces.",
+    "On a call the engine finds the matching declaration and executes its body in order."
+   ]
+  },
+  {
+   "heading": "alert versus console.log",
+   "points": [
+    "Clicking through many alerts while testing is tedious; replace them with console.log() (in the editor use find-and-replace, Replace All).",
+    "alert is visible to every visitor of the page. console.log output only appears in the developer console and is meant for debugging and inspecting values.",
+    "The function works identically either way."
+   ]
+  }
+ ],
+ "code_examples": [
+  {
+   "caption": "A function with the milk-run instructions, called twice",
+   "language": "javascript",
+   "code": "function getMilk() {\n    console.log(\"leaveHouse\");\n    console.log(\"moveRight\");\n    console.log(\"moveRight\");\n    console.log(\"moveUp\");\n    console.log(\"moveUp\");\n    console.log(\"moveUp\");\n    console.log(\"moveUp\");\n    console.log(\"moveRight\");\n    console.log(\"moveRight\");\n    console.log(\"buyMilk\");\n    console.log(\"moveLeft\");\n    console.log(\"moveLeft\");\n    console.log(\"moveDown\");\n    console.log(\"moveDown\");\n    console.log(\"moveDown\");\n    console.log(\"moveDown\");\n    console.log(\"moveLeft\");\n    console.log(\"moveLeft\");\n    console.log(\"enterHouse\");\n}\n\ngetMilk();   // runs every instruction above\ngetMilk();   // and again, with no retyping"
+  }
+ ],
+ "task": null,
+ "pitfalls": [
+  "Writing getMilk without parentheses does not run it.",
+  "Starting a function name with a number, or using spaces.",
+  "Putting a semicolon after the closing brace of a declaration is unnecessary.",
+  "(Extra) Calling a function never changes anything until the declaration has been read; declaring alone produces no output."
+ ],
+ "playground": {
+  "match": "s14-functions-1 (lesson 14.11, data/s14.js)",
+  "coverage": "Has the define/call distinction, a getMilk log sequence, calling twice, notes on brackets and reasons for functions.",
+  "gaps_and_ideas": [
+   "Add the contrast with alert (user-visible) versus console.log (developer-only) and a find-and-replace step as a task.",
+   "Add the naming rules recap: camelCase, no leading digit.",
+   "Add the indentation/semicolon style note.",
+   "Explore demo idea: a small robot grid where getMilk() animates the moves, so calling once vs twice is visible."
+  ]
+ }
+}

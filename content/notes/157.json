@@ -1,0 +1,59 @@
+{
+  "index": 157,
+  "lecture_id": 12384230,
+  "title": "Adding and Removing Elements with jQuery",
+  "section": "19. jQuery",
+  "duration_min": 3,
+  "kind": "concept",
+  "summary": "Shows how jQuery can insert new HTML into a live page with before(), after(), prepend() and append(), and delete elements with remove(). The four insertion methods differ only in where the new markup lands relative to the selected element.",
+  "concepts": [
+    {
+      "heading": "Inserting elements: the four methods",
+      "points": [
+        "Select an element with $(), then call an insertion method and pass it a string of HTML. jQuery parses the string, builds the element(s) and places them in the DOM; the source .html file is never modified, so a page refresh removes them.",
+        "before(html) inserts the new markup as a sibling immediately in front of the selected element's opening tag (outside it).",
+        "after(html) inserts the markup as a sibling immediately behind the selected element's closing tag (outside it).",
+        "prepend(html) inserts the markup inside the selected element, as its first child, right after the opening tag and before the existing content.",
+        "append(html) inserts the markup inside the selected element, as its last child, after the existing content but before the closing tag.",
+        "Rule of thumb: before/after place content outside the element; prepend/append place it inside. Inspecting the page in dev tools makes the difference visible: a button added with prepend sits inside the h1 ahead of the text, one added with append sits inside the h1 behind the text.",
+        "The demo uses '<button>New</button>' as the HTML string in each case, typed in the browser console against the live page."
+      ]
+    },
+    {
+      "heading": "Removing elements",
+      "points": [
+        "remove() deletes every element in the jQuery selection from the DOM. $('button').remove() clears all button elements on the page in one go.",
+        "(Extra) remove() also discards the elements' attached event handlers and data; detach() is the variant that keeps them for re-insertion later.",
+        "(Extra) Inserted HTML strings are real markup, so never build them from untrusted user input without escaping, or you open the door to script injection."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Insertion and removal methods on the h1 and buttons (matches the reference script)",
+      "language": "javascript",
+      "code": "$(\"button\").remove();                      // delete all buttons\n$(\"h1\").before(\"<button>New</button>\");     // sibling above the h1\n$(\"h1\").after(\"<button>New</button>\");      // sibling below the h1\n$(\"h1\").prepend(\"<button>New</button>\");    // inside h1, before the text\n$(\"h1\").append(\"<button>New</button>\");     // inside h1, after the text"
+    },
+    {
+      "caption": "Resulting DOM for <h1>Hello</h1> after all four calls",
+      "language": "html",
+      "code": "<button>New</button>\n<h1><button>New</button>Hello<button>New</button></h1>\n<button>New</button>"
+    }
+  ],
+  "task": null,
+  "pitfalls": [
+    "Confusing before/after (siblings) with prepend/append (children): a button prepended to an h1 becomes part of the heading.",
+    "Changes made this way live only in the running page; they vanish on reload because the HTML file is untouched.",
+    "In the reference repo the script lines are in the order remove, before, after, prepend, append; run remove() first and it will empty the page of the buttons that were there originally. The reference index.html also carries a personal footer credit that is not part of the lesson."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (the playground has no jQuery section)",
+    "gaps_and_ideas": [
+      "Proposed lesson 'jQuery: adding and removing elements'. Blurb: place new markup before, after, inside-start and inside-end of an element and delete nodes.",
+      "Tasks: 1) add a 'New' button above the h1 with before(); 2) add one below with after(); 3) use prepend and append and inspect where they land; 4) remove all buttons; 5) rebuild the same four placements with plain JS insertAdjacentHTML (beforebegin, afterend, afterbegin, beforeend) to compare.",
+      "Starter code: an h1 and five buttons plus a console-like input.",
+      "Interactive demo: a visual diagram of one box labelled 'h1' with four drop zones; clicking a method name highlights where the new element lands and shows the resulting HTML."
+    ]
+  }
+}

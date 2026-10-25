@@ -1,0 +1,126 @@
+{
+  "index": 272,
+  "lecture_id": 41780544,
+  "title": "Level 5 - Hide your Secrets with Environment Variables",
+  "section": "35. Authentication and Security",
+  "duration_min": 17,
+  "kind": "concept+exercise",
+  "summary": "Shows why API keys and session secrets must not live in source code, and how to move them into a .env file loaded by the dotenv package and read through process.env. Also covers .gitignore so the .env file never reaches GitHub, and ends with an exercise moving the Postgres connection settings into environment variables.",
+  "concepts": [
+    {
+      "heading": "Why secrets must stay out of the code",
+      "points": [
+        "This protects the developer's own credentials rather than the users' data. A session secret, API key or cloud key written in index.js ends up on GitHub or on a server, where it is easy to leak.",
+        "Bots scan public repositories for exposed keys. Stolen cloud keys can be used to run compute-heavy jobs (such as crypto mining), producing large bills; the lecture cites a developer who accidentally pushed AWS keys and got a bill above $3,000 in a short time (refunded in that case, but not guaranteed).",
+        "The app still needs the secrets to run, and code still needs to be shared through version control, so the secrets must be stored separately from the code."
+      ]
+    },
+    {
+      "heading": "What environment variables give you",
+      "points": [
+        "Convenience: values that change between deployments can be altered without editing code files.",
+        "Security: keys and passwords live in a separate file or in the host environment, not alongside the code that gets published.",
+        "In development they are kept in a simple text file called .env, loaded by the dotenv package (one of the most downloaded npm packages)."
+      ]
+    },
+    {
+      "heading": "Creating the .env file",
+      "points": [
+        "Add dotenv to the project (it is already in the lesson's package.json) and run npm install.",
+        "Create a file named exactly .env at the project root (no name before the dot). A gear-style icon appears in VS Code if an icon extension such as vscode-icons is installed.",
+        "Format: NAME=\"value\". The name is conventionally ALL_CAPS with underscores between words, and the line has no const/var keyword because this is not JavaScript.",
+        "No spaces around the equals sign, no commas or semicolons. Each variable goes on its own line.",
+        "Cut the secret out of index.js and paste it in as e.g. SESSION_SECRET=\"...\"."
+      ]
+    },
+    {
+      "heading": "Loading and using the variables",
+      "points": [
+        "import env from \"dotenv\" and call env.config() near the top of index.js. This reads .env and adds its entries to process.env.",
+        "Replace the hard-coded value with process.env.SESSION_SECRET (process is the Node process object, env is the property holding the environment, and the name after it must match the .env name).",
+        "Call config() before the code that reads the variables, otherwise they are undefined.",
+        "The app behaves exactly as before (login and sessions still work) but the secret no longer appears in index.js."
+      ]
+    },
+    {
+      "heading": "Keeping .env out of Git with .gitignore",
+      "points": [
+        "A file named .gitignore (one word, no spaces) lists files and folders Git should not track or upload.",
+        "GitHub publishes a standard Node .gitignore template. It includes node_modules (huge, restored by npm install) and .env files (including variants for local, production and so on).",
+        "Demo on two throwaway projects: first, a repo created with a .env and no .gitignore and published publicly exposed the .env on GitHub; second, copying the template into .gitignore before the first commit left .env out of the repo.",
+        "Rule: add .gitignore at the very start of a project, before the first commit. (Extra) If a secret was already committed, remove it from history and rotate the key, because deleting the file later does not erase earlier commits.",
+        "VS Code's Source Control tab can initialise a repository, stage, commit and publish the branch."
+      ]
+    },
+    {
+      "heading": "Exercise: database settings",
+      "points": [
+        "Another thing that belongs in the environment is the database connection: user, host, database name, password and port. A real database is usually hosted remotely, so these values grant access to it.",
+        "Add PG_USER, PG_HOST, PG_DATABASE, PG_PASSWORD and PG_PORT to .env as strings with no spaces, then replace each property of the pg.Client config with the matching process.env.PG_* value.",
+        "After this, index.js reveals neither the DB credentials nor the session secret."
+      ]
+    },
+    {
+      "heading": "Next",
+      "points": [
+        "The following lessons hand authentication to Google using OAuth, so the app no longer stores user passwords itself."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": ".env file (values are placeholders)",
+      "language": "text",
+      "code": "SESSION_SECRET=\"TOPSECRETWORD\"\nPG_USER=\"postgres\"\nPG_HOST=\"localhost\"\nPG_DATABASE=\"secrets\"\nPG_PASSWORD=\"your-db-password\"\nPG_PORT=\"5432\""
+    },
+    {
+      "caption": "Loading dotenv and using process.env in index.js",
+      "language": "javascript",
+      "code": "import env from \"dotenv\";\n\nconst app = express();\nconst port = 3000;\nconst saltRounds = 10;\nenv.config();\n\napp.use(\n  session({\n    secret: process.env.SESSION_SECRET,\n    resave: false,\n    saveUninitialized: true,\n  })\n);\n\nconst db = new pg.Client({\n  user: process.env.PG_USER,\n  host: process.env.PG_HOST,\n  database: process.env.PG_DATABASE,\n  password: process.env.PG_PASSWORD,\n  port: process.env.PG_PORT,\n});\ndb.connect();"
+    },
+    {
+      "caption": "Minimal .gitignore (extract of the standard Node template)",
+      "language": "text",
+      "code": "node_modules/\n.env\n.env.local\n.env.production"
+    }
+  ],
+  "task": {
+    "name": "Move the session secret and database settings into .env",
+    "starting_point": "Project 'Environment Variables': the cookies-and-sessions app with dotenv already in package.json; secret and Postgres credentials hard-coded in index.js.",
+    "goal": "No secret or credential appears in index.js; all are read from process.env via a git-ignored .env file.",
+    "steps": [
+      "cd into the project and run npm install.",
+      "Create a .env file in the project root.",
+      "Move the session secret into SESSION_SECRET=\"...\".",
+      "Import dotenv (import env from \"dotenv\") and call env.config() before using the variables.",
+      "Replace the secret in the session options with process.env.SESSION_SECRET and confirm login and sessions still work.",
+      "Add PG_USER, PG_HOST, PG_DATABASE, PG_PASSWORD and PG_PORT to .env.",
+      "Replace each pg.Client option with its process.env.PG_* counterpart.",
+      "Create a .gitignore (copy the GitHub Node template) so .env and node_modules are not committed."
+    ],
+    "expected_result": "The app runs and behaves identically; index.js contains only process.env references and .env is excluded from Git.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "env.config();\n\napp.use(\n  session({\n    secret: process.env.SESSION_SECRET,\n    resave: false,\n    saveUninitialized: true,\n  })\n);\n\nconst db = new pg.Client({\n  user: process.env.PG_USER,\n  host: process.env.PG_HOST,\n  database: process.env.PG_DATABASE,\n  password: process.env.PG_PASSWORD,\n  port: process.env.PG_PORT,\n});"
+    },
+    "reference_repo_path": "Section 35 - Authentication and Security - Handling Credentials & Designing a Secure Login/35.07 Level 5 - Hide your Secrets with Environment Variables/solution.js"
+  },
+  "pitfalls": [
+    "Spaces around = in .env, or stray commas/semicolons.",
+    "Calling process.env.X before env.config() has run.",
+    "Committing .env before creating .gitignore.",
+    "Misspelling a variable name, so process.env returns undefined.",
+    "(Extra) The reference repo's .env file is not included (correctly ignored), so you must write your own with the keys above.",
+    "(Extra) Variable values are always strings, so PG_PORT arrives as the string \"5432\"; pg accepts this."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (playground has no section 35 file).",
+    "gaps_and_ideas": [
+      "New lesson 'Environment variables and .gitignore': blurb on separating secrets from code.",
+      "Tasks: (1) create .env with two variables and print them with process.env, (2) forget env.config() and observe undefined, (3) add a .gitignore and use git status to confirm .env is untracked, (4) move DB settings to env vars, (5) provide a .env.example with dummy values.",
+      "Starter code: tiny Node script with a hard-coded API key to refactor.",
+      "Interactive demo: a mock file tree with a toggle for .gitignore showing which files would appear in a 'GitHub upload' preview."
+    ]
+  }
+}

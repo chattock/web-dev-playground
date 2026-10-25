@@ -1,0 +1,58 @@
+{
+  "index": 322,
+  "lecture_id": 31673262,
+  "title": "What is Web3?",
+  "section": "37. Web3 Decentralised App (DApp) Development with the Internet Computer",
+  "duration_min": 8,
+  "kind": "theory",
+  "summary": "Opens the Web3 module (made with the DFINITY Foundation). Frames Web3 as the third stage of the web, explains why blockchain development is a career opportunity, and previews example projects built on blockchains.",
+  "concepts": [
+    {
+      "heading": "Why the module exists",
+      "points": [
+        "The module is a collaboration with the DFINITY Foundation, the organisation behind the Internet Computer, and teaches building applications on a blockchain rather than trading cryptocurrency.",
+        "Motivation given: a survey poll of learners placed Web3/blockchain top of the list of things people want to learn, and a job-market statistic cited growth in blockchain developer openings far above machine-learning openings, with high junior salaries in the US. (Extra) Treat salary and job-growth figures as marketing-era claims from early 2022 and check current data before relying on them.",
+        "The course stance: as a developer you build the technology rather than speculate on coin prices, so investment advice is explicitly out of scope."
+      ]
+    },
+    {
+      "heading": "The three stages of the web",
+      "points": [
+        "Web 1.0 (1990s): mostly read-only pages. Visitors consumed information that publishers posted (static portals and directories).",
+        "Web 2.0: interactive, read-and-write. Users create the content on platforms such as social networks and video/forum sites, so the platform companies own the data and the network.",
+        "Web 3.0: from about 2018, websites and applications are built on a blockchain instead of on a company's private servers. The comparison made is to the early internet boom: heavy investment and a new technology just taking off."
+      ]
+    },
+    {
+      "heading": "Examples of Web3 applications",
+      "points": [
+        "Helium: a community-run wireless network where individuals host hotspots and earn cryptocurrency for providing coverage in remote places.",
+        "PoolTogether: a no-loss lottery. Pooled deposits earn interest, the interest is paid to one winner, and depositors can withdraw their principal at any time.",
+        "Axie Infinity: a creature-collecting game with a tradeable in-game economy. Developers take a small percentage (4.25%) of each trade, so trading volume turns into developer revenue. Worked example: roughly 3 million in daily trades x 0.0425 is about 127,000 per day in fees.",
+        "The takeaway is that applications can embed their own money flows because the blockchain handles ownership and payment."
+      ]
+    },
+    {
+      "heading": "What comes next",
+      "points": [
+        "Before building apps, the next lesson explains how a blockchain works, then DApps and the Internet Computer follow."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [
+    "Do not read this lecture as financial advice; it explicitly avoids recommending which cryptocurrencies to buy.",
+    "Figures (poll percentages, salaries, trade volumes) are a 2022 snapshot and will have changed."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (the playground has no section 37 data file).",
+    "gaps_and_ideas": [
+      "Proposed lesson 'Web 1.0 vs 2.0 vs 3.0': blurb explaining read-only, read-write and ownership-based webs.",
+      "Tasks: (1) drag three sample sites (static page, social feed, token-based app) into the right era; (2) compute a marketplace fee as volume x rate for three inputs; (3) write one sentence on who owns the data in each era.",
+      "Starter idea: a small JS object array of example apps with era and data-owner fields.",
+      "Interactive demo: a timeline slider that swaps a mock page between read-only, comment-enabled and wallet-connected states, with a fee calculator beside it."
+    ]
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "index": 329,
+  "lecture_id": 31673294,
+  "title": "What You'll Build - DBANK (Inspired by Compound)",
+  "section": "38. Build Your First Defi (Decentralised Finance) DApp - DBANK",
+  "duration_min": 2,
+  "kind": "theory",
+  "summary": "Short project intro for the DBANK DeFi app: a simplified money-market idea in which a token balance earns interest, written in Motoko for the Internet Computer. Also positions Motoko as a general-purpose language that feels familiar to JS/TS/Swift/Java/C# developers.",
+  "concepts": [
+    {
+      "heading": "The inspiration: money-market protocols",
+      "points": [
+        "Compound is a money-market protocol: holders supply tokens (e.g. Ether) to earn interest, and borrowers take out tokens such as Chainlink and repay later.",
+        "Borrowers pay interest; the protocol passes it to lenders and keeps a small fee for running the service.",
+        "DBANK is a cut-down version: no borrowing side, just one account whose balance grows with interest over time."
+      ]
+    },
+    {
+      "heading": "What the project will cover",
+      "points": [
+        "A Motoko backend (canister) that stores a balance, accepts top-ups and withdrawals, and compounds interest based on elapsed time.",
+        "A JavaScript/HTML/CSS frontend that talks to that backend (built in later lessons of this section).",
+        "Final goal for the backend: earn interest on a token balance, implemented purely in Motoko."
+      ]
+    },
+    {
+      "heading": "About Motoko",
+      "points": [
+        "Motoko comes from DFINITY, with Andreas Rossberg (a WebAssembly co-creator) as lead designer.",
+        "It is designed as a modern general-purpose language, aimed specifically at writing Internet Computer smart contracts (canisters).",
+        "Syntax resembles JavaScript, TypeScript, Swift, C# and Java, so prior experience transfers quickly.",
+        "(Extra) Motoko compiles to WebAssembly, which is what canisters run as on the Internet Computer."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (the playground has no files for section 38).",
+    "gaps_and_ideas": [
+      "Proposed lesson 'DBANK intro: compound interest in a canister'. Blurb: preview of the finished DBANK page and the idea that a balance grows over time.",
+      "Tasks: (1) read the finished UI screenshot and list the three actions (top up, withdraw, check balance); (2) write the compound formula balance * 1.01^seconds in plain JS; (3) predict the balance after 60 s on 300; (4) list which pieces live in the backend vs frontend.",
+      "Interactive demo idea: a slider for elapsed seconds that shows the compounded balance from a 300 starting value, to preview what the Motoko code later computes."
+    ]
+  }
+}

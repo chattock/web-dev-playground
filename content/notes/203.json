@@ -1,0 +1,117 @@
+{
+  "index": 203,
+  "lecture_id": 12384582,
+  "title": "HTTP Requests",
+  "section": "24. Express.js with Node.js",
+  "duration_min": 24,
+  "kind": "concept+exercise",
+  "summary": "Introduces HTTP and its five main request verbs (GET, POST, PUT, PATCH, DELETE), then adds app.get route handlers to the Express server so it responds instead of showing Cannot GET. Covers req and res, rawHeaders, res.send with text and HTML, the address-in-use error, nodemon, and endpoints, ending with a challenge to serve /, /contact and /about.",
+  "concepts": [
+    {
+      "heading": "What HTTP is",
+      "points": [
+        "HTTP is HyperText Transfer Protocol: the agreed language that lets computers talk to each other over the internet.",
+        "Five request verbs cover most needs: GET, POST, PUT, PATCH, DELETE."
+      ]
+    },
+    {
+      "heading": "The five verbs",
+      "points": [
+        "GET: ask the server for a resource (an HTML page, text, or data). A browser address-bar visit is a GET request. This is the verb named in the Cannot GET error.",
+        "POST: send a resource to the server, for example a sign-up form submitting email and password. The server then processes or stores it (database, etc.).",
+        "PUT: update by completely replacing the existing resource with the one sent.",
+        "PATCH: update by changing only part of the resource. A product-return comparison helps: PUT is a whole replacement item, PATCH is a single replacement part.",
+        "DELETE: ask the server to remove a resource from the server or database."
+      ]
+    },
+    {
+      "heading": "Handling a GET route in Express",
+      "points": [
+        "app.get(path, callback) tells the server what to do when a GET request arrives at that path.",
+        "The path \"/\" is the root, the home page. Visiting localhost:3000 with or without a trailing slash targets it.",
+        "The callback receives two parameters, conventionally req (the incoming request) and res (the response to send back). Inside the callback the code decides the reply.",
+        "console.log(req) prints the whole request object, which is huge. req.rawHeaders narrows it to the request headers: a flat array that alternates header name and value (for example 'Host', 'localhost:3000', 'User-Agent', '...Chrome...'), revealing the host, the client application, the operating system and other details. The log appears in the server's terminal, not the browser console.",
+        "res.send(body) sends a response back to the browser and ends the request. A plain string appears as text; a string of HTML such as \"<h1>Hello</h1>\" is rendered as formatted HTML.",
+        "(Extra) When given a string, res.send sets the Content-Type header to text/html, which is why HTML markup in the string is rendered rather than shown as text. It also sets Content-Length and finishes the response, so call it only once per request.",
+        "Route code is registered at startup, so changing it requires restarting the server unless a watcher is used.",
+        "(Extra) Routes are matched in the order they are registered; for an unmatched path Express falls through to its built-in 404 handler, which produces the 'Cannot GET /path' page."
+      ]
+    },
+    {
+      "heading": "Restarting and the address-in-use error",
+      "points": [
+        "With plain node, every code change needs Ctrl+C then node index.js again.",
+        "Running a second server on port 3000 while the first is alive gives an 'address already in use' error because the port is occupied. Fix it by stopping the first process (go to its terminal and Ctrl+C), or by killing whatever holds the port with a terminal command (differs for Mac, Windows and Linux).",
+        "(Extra) On macOS you can find the process id with lsof -i :3000 and stop it with kill <pid>."
+      ]
+    },
+    {
+      "heading": "nodemon",
+      "points": [
+        "nodemon watches your files and automatically restarts the Node app whenever they change.",
+        "Install it globally with npm i -g nodemon (-g means global, available to all projects, not just one). If the install fails, copy the command from the nodemon docs. (Extra) On macOS a permissions error may need sudo npm i -g nodemon; alternatively npx nodemon index.js runs it without a global install.",
+        "Run it by replacing node with nodemon: nodemon index.js.",
+        "It restarts on save, so you only need to refresh the browser to see the change."
+      ]
+    },
+    {
+      "heading": "Endpoints",
+      "points": [
+        "An endpoint is the path part of the URL after the domain, such as /about or /contact. A letter addressed to a destination is the comparison used for it.",
+        "Each endpoint you want to support gets its own app.get call with its own handler. Different paths return different content.",
+        "This is the basis for multi-page sites and navigation built on a Node and Express back end."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Server with one GET route",
+      "language": "javascript",
+      "code": "import express from \"express\";\nconst app = express();\nconst port = 3000;\n\napp.get(\"/\", (req, res) => {\n  console.log(req.rawHeaders);\n  res.send(\"<h1>Hello</h1>\");\n});\n\napp.listen(port, () => {\n  console.log(`Server running on port ${port}.`);\n});"
+    },
+    {
+      "caption": "Install and run with nodemon",
+      "language": "bash",
+      "code": "npm i -g nodemon\nnodemon index.js"
+    }
+  ],
+  "task": {
+    "name": "3.2 HTTP Requests: new server with /, /contact and /about",
+    "starting_point": "Nothing: a new folder (3.2 HTTP Requests) in the Backend module. Part one repeats the six setup steps from the previous lesson; part two adds routes.",
+    "goal": "A server that answers GET requests at the home page, /contact and /about with different HTML content.",
+    "steps": [
+      "Create the project folder and index.js, cd into it.",
+      "Run npm init -y and npm i express.",
+      "Set \"type\": \"module\" in package.json.",
+      "In index.js import express, create app, set port 3000 and call app.listen with a logging callback.",
+      "Run it (node index.js or nodemon index.js) and confirm Cannot GET / still shows.",
+      "Add app.get(\"/\", ...) that sends an h1 for the home page.",
+      "Copy the get call twice for \"/contact\" and \"/about\". Send an h1 plus a paragraph in each (a heading and a phone number for contact, a heading and a name for about).",
+      "Save, refresh the browser at the root, /contact and /about to check each page."
+    ],
+    "expected_result": "Each URL shows its own content and the Cannot GET error is gone for those three paths. Any other path still returns Cannot GET.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "import express from \"express\";\nconst app = express();\nconst port = 3000;\n\napp.get(\"/\", (req, res) => {\n  res.send(\"<h1>Hello</h1>\");\n});\n\napp.get(\"/contact\", (req, res) => {\n  res.send(\"<h1>Contact me</h1><p>Phone: 0123 456 789</p>\");\n});\n\napp.get(\"/about\", (req, res) => {\n  res.send(\"<h1>About me</h1><p>My name is Angela.</p>\");\n});\n\napp.listen(port, () => {\n  console.log(`Server running on port ${port}.`);\n});"
+    },
+    "reference_repo_path": "Section 24 - Express.js with Node.js/24.02 - HTTP Requests/index.js"
+  },
+  "pitfalls": [
+    "Forgetting to restart the server after editing routes when not using nodemon.",
+    "Running two servers on port 3000 at once.",
+    "Forgetting \"type\": \"module\" in package.json.",
+    "(Extra) Not sending a response from a handler, leaving the browser waiting until it times out (every route should call res.send or similar).",
+    "Reference repo note: it follows the same layout but replaces the contact and about content with the repo author's personal details and puts app.listen before the routes; both orderings work.",
+    "(Extra) Editing the file while running plain node and refreshing the browser: the old code keeps serving until the process is restarted."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (section 24 has no playground file).",
+    "gaps_and_ideas": [
+      "Proposed lesson 'HTTP verbs and GET routes': blurb on the five HTTP verbs and answering them with Express.",
+      "Tasks: (1) match each verb to a real-world action (sign up, view page, replace profile, edit one field, delete account); (2) add a GET route for /; (3) add /about and /contact; (4) predict what a request to an undefined path returns.",
+      "Starter code idea: an Express file with only app.listen and a table of verbs to fill in.",
+      "Interactive demo idea: a fake browser address bar where typing paths shows the matching route handler lighting up in a code panel, or a Cannot GET page when nothing matches."
+    ]
+  }
+}

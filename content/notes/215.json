@@ -1,0 +1,83 @@
+{
+  "index": 215,
+  "lecture_id": 38516770,
+  "title": "Instructions",
+  "section": "26. Capstone Project - Create a Blog web application",
+  "duration_min": 3,
+  "kind": "article-task",
+  "summary": "Brief for the Blog capstone: build a multi-page blog with Express and EJS where posts can be created, listed, edited and deleted, held in memory only, with responsive styling. Capstones deliberately come with no starter files, steps or solution. Note: the Udemy page only exposes this item behind an Open button that loads externally, so these notes are built from the project README in the reference repo, which carries the same brief.",
+  "concepts": [
+    {
+      "heading": "What the capstone is",
+      "points": [
+        "A free-form project meant to be built from scratch using skills from the course so far: no starter files, style sheets, step lists or solution code are supplied.",
+        "Because it is entirely your own work, it is suitable for a portfolio, unlike the guided module projects whose solutions are widely recognisable.",
+        "Forgetting how to do something is expected. The intended response is to go back to earlier lessons or documentation and fill the gap, which exposes weak spots."
+      ]
+    },
+    {
+      "heading": "Requirements",
+      "points": [
+        "Stack: Node.js with Express for routing and middleware, and EJS for generating the HTML.",
+        "Deliverables: one Node project, at least one EJS file for structure, at least one CSS file for styling.",
+        "Features: (1) create new posts, (2) the home page lists all posts, (3) posts can be edited and deleted, (4) good-looking, responsive layout on desktop and mobile.",
+        "No database in this version, so posts live in server memory (for example an array) and disappear when the server restarts.",
+        "Example of the target feel: a simple essay-index style page where each entry links to its content."
+      ]
+    },
+    {
+      "heading": "Suggested timeline",
+      "points": [
+        "Hour 0 planning: collect content and design ideas, sketch wireframes, list the routes and pages needed.",
+        "Hour 1 setup: create the repository, run npm init, install express and ejs (and body-parser if used), lay out routes, views and static folders, start the server.",
+        "Hours 2-3 features: post-creation form and handler; list posts on the home page; edit form pre-filled with the existing post, with a save handler; delete button; test the flow.",
+        "Hours 4-5 styling: write and link a CSS file (Bootstrap, Flexbox or Grid are all fine), check across devices and browsers, fix bugs."
+      ]
+    },
+    {
+      "heading": "Ideas to structure the build",
+      "points": [
+        "(Extra) Routes you will probably need: GET / (list), GET /compose (form), POST /compose (create), GET /post/:id (single view), GET /edit/:id, POST /edit/:id (update) and POST /delete/:id.",
+        "(Extra) Keep each post as an object with an id, title and content inside an array; use array methods (push, find, filter) for create, read, edit and delete.",
+        "(Extra) Use header and footer partials and a public folder for CSS so the layout is shared across pages, as taught in the EJS section."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "(Extra) Skeleton for in-memory posts",
+      "language": "javascript",
+      "code": "import express from \"express\";\n\nconst app = express();\nconst port = 3000;\nlet posts = []; // { id, title, content }\nlet nextId = 1;\n\napp.use(express.static(\"public\"));\napp.use(express.urlencoded({ extended: true }));\n\napp.get(\"/\", (req, res) => res.render(\"index.ejs\", { posts }));\n\napp.post(\"/compose\", (req, res) => {\n  posts.push({ id: nextId++, title: req.body.title, content: req.body.content });\n  res.redirect(\"/\");\n});\n\napp.post(\"/delete/:id\", (req, res) => {\n  posts = posts.filter((p) => p.id !== Number(req.params.id));\n  res.redirect(\"/\");\n});\n\napp.listen(port, () => console.log(`Listening on ${port}`));"
+    }
+  ],
+  "task": {
+    "name": "Blog web application (capstone)",
+    "starting_point": "Nothing: an empty folder. Only the written brief is provided.",
+    "goal": "A styled, responsive multi-page blog where a user can create, view, edit and delete posts, stored in memory.",
+    "steps": [
+      "Plan pages, routes and a wireframe.",
+      "Initialise the Node project and install express and ejs; create views, public and partials folders.",
+      "Build the post-creation form and route.",
+      "List all posts on the home page.",
+      "Add edit (form pre-filled, save handler) and delete features.",
+      "Style with a linked CSS file, make it responsive, and test on different devices and browsers."
+    ],
+    "expected_result": "A working blog app with no database: posts can be added, shown on the home page, changed and removed during a server session.",
+    "solution_code": null,
+    "reference_repo_path": "Section 26 - Capstone Project - Create a Blog web application/README.md (a student's attempts are under 26.01 and 26.02, not official solutions)"
+  },
+  "pitfalls": [
+    "Expecting a walkthrough; none exists, so plan first and consult earlier lessons as needed.",
+    "Posts held in memory vanish on restart (and nodemon restarts on every file save).",
+    "(Extra) Using the array index as a post id breaks edit/delete after items are removed; use a stable id."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "Add a capstone-style lesson 'Blog app (in-memory)' that gives only the brief and a checklist of five features, with a hints drawer and an optional route-planning worksheet.",
+      "Starter idea: empty index.js with the posts array declared and one sample post.",
+      "Interactive demo idea: a route table builder where learners match each UI action (create, view, edit, delete) to method + path, then see a simulated request flow updating the in-memory array."
+    ]
+  }
+}

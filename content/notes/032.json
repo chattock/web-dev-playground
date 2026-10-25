@@ -1,0 +1,78 @@
+{
+  "index": 32,
+  "lecture_id": 37350296,
+  "title": "Why do we need CSS?",
+  "section": "5. Introduction to CSS",
+  "duration_min": 9,
+  "kind": "theory",
+  "summary": "Explains what CSS (Cascading Style Sheets) is, why it was invented, and the core principle behind it: keep content in HTML and appearance in a separate stylesheet language. Shows the history from styling-by-HTML-tags to CSS, and a demo site that toggles CSS on and off without changing the HTML.",
+  "concepts": [
+    {
+      "heading": "What the name means",
+      "points": [
+        "CSS = Cascading Style Sheets.",
+        "'Cascading': styles are applied in layers, from the most general rules down to the most specific ones, like water dropping level by level down a waterfall. Later lessons show this in action (which rule wins when several target the same element).",
+        "'Style sheet': a language whose only job is to describe how a page should look. Compare HTML, where 'ML' means markup language (structure and content); the 'SS' in CSS stands for the style sheet part.",
+        "CSS is one of several stylesheet languages. Others include Sass (Syntactically Awesome Style Sheets) and Less (Leaner CSS). (Extra) Sass and Less are preprocessors: you write in them and they compile down to plain CSS, because browsers only understand CSS.",
+        "CSS is the one every web developer must know, and it is the focus of this section."
+      ]
+    },
+    {
+      "heading": "The problem before CSS",
+      "points": [
+        "Early web pages were HTML only, so authors had almost no control over appearance. Sites looked alike and plain.",
+        "Marc Andreessen (Mosaic browser, later Netscape, later the a16z VC fund) wrote a now well-known email admitting that there was no easy way for authors to control a document's look the way a word processor allows.",
+        "The W3C's response in HTML 3.2 (1997) was to add presentation into HTML itself: the <font> element with color, face (typeface) and size attributes, and the <center> element for layout.",
+        "All of these are now deprecated, meaning they still exist in old pages but should no longer be used.",
+        "Why they were dropped: HTML is meant to describe content. Mixing colours, fonts, alignment and table borders into the markup bloats the file, buries the structure, and on a big site makes content and styling impossible to tell apart."
+      ]
+    },
+    {
+      "heading": "The CSS solution: separation of concerns",
+      "points": [
+        "A W3C recommendation led by Håkon Wium Lie (regarded as the father of CSS) introduced a way to attach styles such as font colours and spacing to HTML documents from outside the content.",
+        "(Extra) Lie first proposed CSS in 1994; CSS level 1 became a W3C Recommendation in December 1996, a few weeks before HTML 3.2 was published in January 1997.",
+        "This is the breakthrough: HTML holds structure and content, CSS holds presentation.",
+        "This idea is called separation of concerns: each part of a system has one job, like separate teams building a car's headlights and its wheels. Modular design like this matters throughout programming, not just in CSS."
+      ]
+    },
+    {
+      "heading": "Demo: Just Add CSS",
+      "points": [
+        "Visit appbrewery.github.io/just-add-css. It starts as a bare HTML page.",
+        "A toggle button switches the stylesheet on, and the page gains new fonts, colours and layout.",
+        "Right-click and choose View Page Source in both states: the HTML is identical. Only the CSS changes.",
+        "The script tags and button logic in the page source use JavaScript, which comes later in the course; ignore them for now.",
+        "Takeaway: CSS can completely transform a site's look without touching a single line of its HTML."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "The old, deprecated way (HTML 3.2 presentational tags). Do not use.",
+      "language": "html",
+      "code": "<center>\n  <font face=\"Arial\" size=\"5\" color=\"red\">Welcome to my site</font>\n</center>"
+    },
+    {
+      "caption": "The modern way: plain HTML for content, CSS for the look",
+      "language": "html",
+      "code": "<!-- HTML: content only -->\n<h1 class=\"welcome\">Welcome to my site</h1>\n\n<!-- CSS (in a stylesheet): appearance only -->\n<style>\n  .welcome {\n    font-family: Arial, sans-serif;\n    color: red;\n    text-align: center;\n  }\n</style>"
+    }
+  ],
+  "task": null,
+  "pitfalls": [
+    "Using deprecated presentational HTML (<font>, <center>, color/face/size attributes) found in old tutorials. Use CSS instead.",
+    "Thinking CSS changes the HTML. It only changes how the same HTML is displayed."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet. s05-adding-css (lesson 5.1) starts straight at the three ways of adding CSS; nothing covers the motivation or the separation-of-content-and-style idea.",
+    "gaps_and_ideas": [
+      "Proposed lesson 's05-why-css' (5.0). Blurb: HTML says what is on the page, CSS says how it looks. The same HTML can look completely different with a different stylesheet.",
+      "Tasks: (1) Toggle the provided stylesheet off and confirm the HTML pane does not change. (2) Change one colour in the CSS pane and watch every matching heading update at once. (3) Rewrite a <font color=\"red\"> line from the 'old web' snippet as a CSS rule. (4) Delete the <center> tag and achieve the same result with text-align: center.",
+      "Starter code idea: a small HTML page that uses deprecated <font> and <center> tags, so the learner converts presentational markup into a clean HTML + CSS pair.",
+      "Explore demo idea: a 'Just Add CSS' clone. One fixed HTML snippet with a dropdown of 3 or 4 stylesheets (none, plain, dark, playful) and a read-only HTML panel beside it that never changes, to make the separation visible.",
+      "Notes callout: what 'cascading' and 'style sheet' each mean, and that Sass/Less exist but compile to CSS."
+    ]
+  }
+}

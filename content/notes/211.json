@@ -1,0 +1,101 @@
+{
+  "index": 211,
+  "lecture_id": 38911796,
+  "title": "Passing Data to EJS Templates",
+  "section": "25. EJS",
+  "duration_min": 17,
+  "kind": "concept+exercise",
+  "summary": "Reviews data flow in both directions with EJS (server to template via res.render, template to server via a POST form), explains why a missing variable crashes a template and how the locals object avoids that, then has the learner build a name-letter counter.",
+  "concepts": [
+    {
+      "heading": "Server to template",
+      "points": [
+        "res.render(file, data) hands an object to the template. Each property name becomes a variable accessible in the EJS file and is printed with an output tag.",
+        "Arrays and other structures pass the same way and are iterated inside the template with a for or forEach loop wrapped in scriptlet tags."
+      ]
+    },
+    {
+      "heading": "When the data is missing",
+      "points": [
+        "If the route forgets to pass a variable (bug, corrupted data, first page load) a template that references it throws a ReferenceError and the whole page fails to render.",
+        "A JavaScript-style guard such as if (fruits) does not help, because EJS compiles the template so that an undeclared name is simply an unresolved identifier; reading it throws before the check can be false.",
+        "Fix: read it through locals. locals is an object always present in the template that holds everything passed to render, so locals.fruits is just undefined when absent and the if safely evaluates false.",
+        "Plain name access and locals.name are the same data; locals.name is the safe-existence form.",
+        "(Extra) res.locals is the Express object for values shared by every render in a request; app.locals is app-wide. EJS merges them with the render data into locals."
+      ]
+    },
+    {
+      "heading": "Template to server",
+      "points": [
+        "Data returns to the server through a standard HTML form: action is the route path, method is POST.",
+        "Each input's name attribute becomes the key in req.body, so name=\"fName\" is read as req.body.fName (or req.body['fName']).",
+        "req.body is only populated when body-parser (urlencoded) middleware is registered: app.use(bodyParser.urlencoded({ extended: true })).",
+        "Inputs can use placeholder text instead of labels in this exercise.",
+        "The submit route must send a response. If it only computes and logs, the browser hangs on the request."
+      ]
+    },
+    {
+      "heading": "Debugging tips from the demo",
+      "points": [
+        "console.log the length value, or req.body itself, to confirm what the form sent before rendering.",
+        "If behaviour looks stale, refresh the page, revisit the URL or restart the server (the form may have been loaded from an older version).",
+        "Error page output points at the template line number of the failing expression."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Server for the exercise",
+      "language": "javascript",
+      "code": "import express from \"express\";\nimport bodyParser from \"body-parser\";\n\nconst app = express();\nconst port = 3000;\n\napp.use(bodyParser.urlencoded({ extended: true }));\n\napp.get(\"/\", (req, res) => {\n  res.render(\"index.ejs\"); // no data on first visit\n});\n\napp.post(\"/submit\", (req, res) => {\n  const numLetters = req.body[\"fName\"].length + req.body[\"lName\"].length;\n  res.render(\"index.ejs\", { numberOfLetters: numLetters });\n});\n\napp.listen(port, () => {\n  console.log(`Server running on port ${port}`);\n});"
+    },
+    {
+      "caption": "index.ejs using locals to guard the variable",
+      "language": "html",
+      "code": "<body>\n  <% if (locals.numberOfLetters) { %>\n    <h1>There are <%= numberOfLetters %> letters in your name.</h1>\n  <% } else { %>\n    <h1>Enter your name below</h1>\n  <% } %>\n  <form action=\"/submit\" method=\"POST\">\n    <input type=\"text\" name=\"fName\" placeholder=\"First name\">\n    <input type=\"text\" name=\"lName\" placeholder=\"Last name\">\n    <input type=\"submit\" value=\"OK\">\n  </form>\n</body>"
+    },
+    {
+      "caption": "Crash vs safe check",
+      "language": "html",
+      "code": "<% if (fruits) { %>      <!-- ReferenceError if render() did not pass fruits -->\n<% if (locals.fruits) { %> <!-- safe: undefined when absent -->"
+    }
+  ],
+  "task": {
+    "name": "Name letter counter",
+    "starting_point": "Extracted folder with index.js (body-parser already imported and configured, GET and POST routes stubbed) and views/index.ejs containing a form with two text inputs fName and lName posting to /submit. Run npm i. Run solution.js with nodemon to see the target.",
+    "goal": "First visit shows an instruction h1. After submitting a first and last name, the page re-renders with an h1 reporting how many letters the two names contain in total, and the form is still shown.",
+    "steps": [
+      "Run npm i, then nodemon solution.js and try it to see the behaviour; stop it afterwards.",
+      "Add an h1 asking for the name above the form in index.ejs.",
+      "In the GET route call res.render('index.ejs') and run nodemon index.js to check.",
+      "In the POST /submit route read req.body.fName and req.body.lName, compute the combined length, and console.log it to verify (test with a known name).",
+      "Call res.render('index.ejs') again with an object passing the count as numberOfLetters.",
+      "In index.ejs add an if/else with scriptlet tags: if the count exists, show an h1 with the count via an output tag; otherwise show the instruction h1.",
+      "Reload: it will crash with ReferenceError on the first visit because the variable is undefined. Change the condition to locals.numberOfLetters.",
+      "Verify both states: initial instruction and result after submission."
+    ],
+    "expected_result": "Initial page: 'Enter your name below'. After submitting e.g. two names with 8 letters total: 'There are 8 letters in your name.'",
+    "solution_code": {
+      "language": "javascript",
+      "code": "import express from \"express\";\nimport bodyParser from \"body-parser\";\n\nconst app = express();\nconst port = 3000;\n\napp.use(bodyParser.urlencoded({ extended: true }));\n\napp.get(\"/\", (req, res) => {\n  res.render(\"index.ejs\"); // no data on first visit\n});\n\napp.post(\"/submit\", (req, res) => {\n  const numLetters = req.body[\"fName\"].length + req.body[\"lName\"].length;\n  res.render(\"index.ejs\", { numberOfLetters: numLetters });\n});\n\napp.listen(port, () => {\n  console.log(`Server running on port ${port}`);\n});\n\n// views/solution.ejs body (condition uses locals):\n<body>\n  <% if (locals.numberOfLetters) { %>\n    <h1>There are <%= numberOfLetters %> letters in your name.</h1>\n  <% } else { %>\n    <h1>Enter your name below</h1>\n  <% } %>\n  <form action=\"/submit\" method=\"POST\">\n    <input type=\"text\" name=\"fName\" placeholder=\"First name\">\n    <input type=\"text\" name=\"lName\" placeholder=\"Last name\">\n    <input type=\"submit\" value=\"OK\">\n  </form>\n</body>"
+    },
+    "reference_repo_path": "Section 25 - EJS/25.03 - Passing Data to EJS Templates/solution.js and views/solution.ejs"
+  },
+  "pitfalls": [
+    "Referencing a variable directly in an if condition when the route may not pass it: use locals.name.",
+    "Forgetting body-parser, leaving req.body undefined.",
+    "Not rendering or sending a response in the POST route, so the browser spins.",
+    "Mismatch between input name attributes and the keys read from req.body.",
+    "(Extra) A truthiness test on locals.numberOfLetters treats 0 as missing; use locals.numberOfLetters !== undefined if zero must be shown.",
+    "Reference repo diverges: its index.ejs tests locals.numberOfLetters == 0 with the branches in the opposite order, which on the first visit evaluates false and prints 'There are undefined letters'; prefer the solution.ejs form. Both files carry an author footer to omit."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (section 25 has no playground file).",
+    "gaps_and_ideas": [
+      "New lesson 'Passing Data to EJS Templates': blurb on the two-way data flow plus locals. Tasks: (1) render with an object and output a value, (2) trigger the ReferenceError by omitting the variable, (3) fix it with locals, (4) build the POST form reading req.body, (5) show the letter count, then handle the zero-letter edge case.",
+      "Starter code: server with bodyParser configured and empty routes, plus a template containing only the form.",
+      "Interactive demo idea: a diagram widget with a form input on the left, the req.body object in the middle, and the rendered template on the right, with a checkbox to 'omit the variable' that shows either the crash message or the locals-guarded output."
+    ]
+  }
+}

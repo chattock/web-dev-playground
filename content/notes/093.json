@@ -1,0 +1,79 @@
+{
+ "index": 93,
+ "lecture_id": 12373850,
+ "title": "Functions Part 2: Parameters and Arguments",
+ "section": "14. Introduction to Javascript ES6",
+ "duration_min": 10,
+ "kind": "concept+exercise",
+ "summary": "Extends functions so they accept inputs: a parameter named in the declaration receives the argument passed at the call. The exercise changes getMilk to take money, compute how many bottles it buys and round down with Math.floor.",
+ "concepts": [
+  {
+   "heading": "Parameters and arguments",
+   "points": [
+    "The simplest functions have empty brackets; a function with input puts a name between the brackets (a parameter), e.g. function getMilk(bottles) { ... }.",
+    "Inside the body the parameter behaves like a variable holding whatever value the caller supplied.",
+    "At the call the value in the brackets is the argument: getMilk(2) binds 2 to bottles for that run.",
+    "Using the parameter in the body lets one function produce different results, such as logging a message with the number of bottles or computing a cost (2 x 1.5 = 3).",
+    "Demo: change the buy line to console.log(\"buy \" + bottles + \" bottles of milk\") and call getMilk(12); the output includes 12 from the argument.",
+    "(Extra) The terms are often mixed up: parameter = placeholder in the definition, argument = actual value at the call."
+   ]
+  },
+  {
+   "heading": "Math.floor for rounding down",
+   "points": [
+    "money / 1.5 with 5 gives 3.33..., but a whole number of bottles is needed.",
+    "Math.floor(x) rounds down to the nearest integer, so 3.33 becomes 3, and 4.99 would still become 4.",
+    "Rounding down is correct here because you cannot buy a fraction of a bottle.",
+    "Looking up an unfamiliar task like rounding on a search engine is normal programmer practice.",
+    "(Extra) Math.round rounds to nearest and Math.ceil always rounds up."
+   ]
+  },
+  {
+   "heading": "Console tips",
+   "points": [
+    "Clear the console with Cmd+K (Mac) or Ctrl+K (Windows) before re-running to read fresh output."
+   ]
+  }
+ ],
+ "code_examples": [
+  {
+   "caption": "Parameter used inside the body",
+   "language": "javascript",
+   "code": "function getMilk(bottles) {\n    console.log(\"leaveHouse\");\n    console.log(\"buy \" + bottles + \" bottles of milk\");\n    console.log(\"enterHouse\");\n}\ngetMilk(12);   // argument 12 is bound to bottles"
+  }
+ ],
+ "task": {
+  "name": "getMilk takes money",
+  "starting_point": "The getMilk function from the previous lesson (code downloadable from the lesson resources).",
+  "goal": "Change the function to accept an amount of money and print how many whole bottles of milk can be bought at 1.5 per bottle.",
+  "steps": [
+   "Rename the parameter to money.",
+   "Inside the function compute var numberOfBottles = money / 1.5.",
+   "Notice 5 gives 3.33; wrap the division in Math.floor() to round down.",
+   "Log \"buy \" + numberOfBottles + \" bottles of milk\" in place of the fixed message.",
+   "Call getMilk(5) and confirm it reports 3."
+  ],
+  "expected_result": "getMilk(5) logs buy 3 bottles of milk.",
+  "solution_code": {
+   "language": "javascript",
+   "code": "function getMilk(money) {\n    console.log(\"leaveHouse\");\n    console.log(\"moveRight\");\n    console.log(\"moveRight\");\n    console.log(\"moveUp\");\n    console.log(\"moveUp\");\n    console.log(\"moveUp\");\n    console.log(\"moveUp\");\n    console.log(\"moveRight\");\n    console.log(\"moveRight\");\n    var price = 1.5;\n    var bottles = Math.floor(money / price);\n    console.log(\"buy \" + bottles + \" bottles of milk\");\n    console.log(\"moveLeft\");\n    console.log(\"moveLeft\");\n    console.log(\"moveDown\");\n    console.log(\"moveDown\");\n    console.log(\"moveDown\");\n    console.log(\"moveDown\");\n    console.log(\"moveLeft\");\n    console.log(\"moveLeft\");\n    console.log(\"enterHouse\");\n}\ngetMilk(5);   // buy 3 bottles of milk"
+  },
+  "reference_repo_path": "Section 14 - Introduction to Javascript ES6/14.12 - Functions Part 2 - Parameters and Arguments"
+ },
+ "pitfalls": [
+  "Dividing without rounding gives fractional bottles.",
+  "Forgetting a space when concatenating, e.g. \"of milk\" glued to the number (a slip visible in the demo's first attempt).",
+  "Calling a function that expects an argument with empty brackets leaves the parameter undefined.",
+  "Reference code uses a variable price rather than a literal 1.5; same behaviour."
+ ],
+ "playground": {
+  "match": "s14-functions-2 (lesson 14.12, data/s14.js)",
+  "coverage": "Matches the exercise: money parameter, Math.floor, several calls, plus extras on multiple parameters and default values, with parameter vs argument notes.",
+  "gaps_and_ideas": [
+   "Add the intermediate step of passing bottles first (the lecture's stepping stone) before switching to money.",
+   "Add the Math.floor vs Math.round vs Math.ceil comparison as a mini task.",
+   "Explore demo: a slider for money that updates the bottle count live.",
+   "Mention clearing the console and searching for a rounding method as a habit."
+  ]
+ }
+}

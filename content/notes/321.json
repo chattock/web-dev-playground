@@ -1,0 +1,30 @@
+{
+  "index": 321,
+  "lecture_id": 18113041,
+  "title": "Tip from Angela - How to Build Your Own Product",
+  "section": "36. React.js",
+  "duration_min": 2,
+  "kind": "tip",
+  "summary": "Advice for students who want to turn what they learn into their own product: identify the core feature, ship a minimal first version and iterate from user feedback.",
+  "concepts": [
+    {
+      "heading": "Building your own product",
+      "points": [
+        "Write down every feature you imagine, then trim the list to the one thing that makes the product different.",
+        "Build the smallest usable version first rather than the final grand vision. Each stage should already be usable, instead of a half-built big project nobody can use.",
+        "Overly ambitious mash-up ideas tend to stall; starting small keeps motivation up.",
+        "Release early and collect feedback from real users on what works, what is missing and what hurts the experience, then improve in cycles. This loop is presented as essential for success."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [
+    "Starting with a huge feature set and never reaching a usable release."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": []
+  }
+}

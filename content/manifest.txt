@@ -1,0 +1,420 @@
+# index|lecture_id|title|type(V=video,A=article)|minutes
+## 1. Front-End Web Development
+1|12638830|What You'll Get in This Course|V|3
+2|12685347|Download the Course Syllabus|A|0
+3|12398824|Download the 12 Rules to Learn to Code eBook [Latest Edition]|A|1
+4|35001070|Download the Required Software|A|1
+5|12286980|How Does the Internet Actually Work?|V|5
+6|12286990|How Do Websites Actually Work?|V|8
+7|13268600|How to Get the Most Out of the Course|V|10
+8|17104604|How to Get Help When You're Stuck|V|7
+9|12398844|Pathfinder|A|2
+## 2. Introduction to HTML
+10|37390282|A Note About 2023 Course Updates|A|1
+11|37348056|What is HTML?|V|4
+12|37348782|How to Download the Course Resources|V|3
+13|37348070|HTML Heading Elements|V|14
+14|37348656|HTML Paragraph Elements|V|9
+15|37349664|Self Closing Tags|V|12
+16|37349766|[Project] Movie Ranking|V|6
+17|21523656|How to Ace this Course|V|1
+## 3. Intermediate HTML
+18|37349778|The List Element|V|11
+19|37349804|Nesting and Indentation|V|14
+20|37349818|Anchor Elements|V|11
+21|37349846|Image Elements|V|8
+22|37349866|[Project] Birthday Invite|V|4
+23|17966364|Tip from Angela - Habit Building with the Calendar Trick|V|3
+24|12399306|Get Access to the Monthly App Brewery Newsletter|A|1
+## 4. Multi-Page Websites
+25|37349942|Computer File Paths|V|19
+26|37349924|What are Webpages?|V|13
+27|37349876|The HTML Boilerplate|V|13
+28|37350000|[Project] Portfolio Website|V|9
+29|37350028|How to Host Your Website for Free with GitHub|V|9
+30|37350282|Introduction to Capstone Projects|V|5
+31|37330378|Instructions for Capstone Project 1 - Online Resume|A|2
+## 5. Introduction to CSS
+32|37350296|Why do we need CSS?|V|9
+33|37350312|How to add CSS|V|15
+34|37350332|CSS Selectors|V|23
+35|37350350|[Project] Colour Vocab Website|V|9
+36|17966488|Tip from Angela - Dealing with Distractions|V|2
+37|12399710|Join the Student Community|A|1
+## 6. CSS Properties
+38|37350376|CSS Colours|V|7
+39|37350414|Font Properties|V|21
+40|37350424|Inspecting CSS|V|12
+41|37350454|The CSS Box Model - Margin, Padding and Border|V|21
+42|37350494|[Project] Motivational Poster Website|V|8
+## 7. Intermediate CSS
+43|37350528|The Cascade - Specificity and Inheritance|V|25
+44|37350562|Combining CSS Selectors|V|23
+45|37350588|CSS Positioning|V|23
+46|37350652|[Project] CSS Flag|V|18
+47|17966538|Tip from Angela - Nothing Easy is Worth Doing!|V|4
+## 8. Advanced CSS
+48|37368052|CSS Display|V|12
+49|37368102|CSS Float|V|12
+50|37368124|How to Create Responsive Websites|V|19
+51|37368166|Media Queries|V|11
+52|37368196|[Project] Web Design Agency Website|V|7
+53|17966600|Tip from Angela - How to Deal with Procrastination|V|4
+## 9. Flexbox
+54|37368230|Display: Flex|V|14
+55|37368266|Flex Direction|V|14
+56|37368332|Flex Layout|V|19
+57|37368390|Flex Sizing|V|24
+58|37368412|[Project] Pricing Table|V|10
+59|17966772|Tip from Angela - Building a Programming Habit|V|3
+## 10. Grid
+60|37368434|Display: Grid|V|15
+61|37368474|Grid Sizing|V|24
+62|37368524|Grid Placement|V|26
+63|37368588|[Project] Mondrian Painting|V|7
+## 11. Bootstrap
+64|37368626|What is Bootstrap?|V|16
+65|37388840|Bootstrap Layout|V|21
+66|37389818|Bootstrap Components|V|32
+67|37389824|[Project] TinDog Startup Website|V|31
+## 12. Web Design School - Create a Website that People Love
+68|19655686|Introduction to Web Design|V|4
+69|19655720|Understanding Colour Theory|V|9
+70|19655724|Understanding Typography and How to Choose a Font|V|10
+71|19655714|Manage ATTENTION with effective User Interface (UI) Design|V|10
+72|19655692|User Experience (UX) Design|V|14
+73|19655710|Web Design in Practice - Let's apply what we've learnt!|V|18
+## 13. Capstone Project 2 - Personal Site
+74|37331054|Instructions|A|2
+## 14. Introduction to Javascript ES6
+75|12371320|Introduction to Javascript|V|12
+76|12371344|Javascript Alerts - Adding Behaviour to Websites|V|14
+77|12371362|Data Types|V|4
+78|12371610|Javascript Variables|V|10
+79|18126317|Javascript Variables Exercise Start|V|3
+80|18126409|Javascript Variables Exercise Solution|V|3
+81|12371642|Naming and Naming Conventions for Javascript Variables|V|7
+82|12371720|String Concatenation|V|3
+83|12371744|String Lengths and Retrieving the Number of Characters|V|6
+84|12371756|Slicing and Extracting Parts of a String|V|9
+85|12371788|Challenge: Changing Casing in Text|V|4
+86|12371812|Challenge: Changing String Casing Solution|V|9
+87|12371848|Basic Arithmetic and the Modulo Operator in Javascript|V|6
+88|12371872|Increment and Decrement Expressions|V|2
+89|12371950|Functions Part 1: Creating and Calling Functions|V|11
+90|12372000|Functions Part 1 Challenge - The Karel Robot|V|9
+91|12400088|The Karel Chess Board Solution|A|0
+92|12400112|A Quick Note About the Next Lesson|A|0
+93|12373850|Functions Part 2: Parameters and Arguments|V|10
+94|18143204|Life in Weeks Solution|V|4
+95|12373868|Functions Part 3: Outputs & Return Values|V|11
+96|12373874|Challenge: Create a BMI Calculator|V|2
+97|12373890|Challenge: BMI Calculator Solution|V|6
+98|17966816|Tip from Angela - Set Your Expectations|V|3
+## 15. Intermediate Javascript
+99|12373892|Random Number Generation in Javascript: Building a Love Calculator|V|11
+100|12373964|Control Statements: Using If-Else Conditionals & Logic|V|5
+101|12373978|Comparators and Equality|V|3
+102|12373992|Combining Comparators|V|3
+103|18143246|Introducing the Leap Year Code Challenge|V|4
+104|18143372|Leap Year Solution|V|3
+105|12374004|Collections: Working with Javascript Arrays|V|9
+106|12374030|Adding Elements and Intermediate Array Techniques|V|16
+107|18170350|Who's Buying Lunch Solution|V|4
+108|12374056|Control Statements: While Loops|V|8
+109|12400140|Solution to the 99 Bottles Challenge|A|1
+110|12374074|Control Statements: For Loops|V|6
+111|18143224|Introducing the Fibonacci Code Challenge|V|7
+112|18143228|Fibonacci Solution|V|8
+113|17966864|Tip from Angela - Retrieval is How You Learn|V|3
+## 16. The Document Object Model (DOM)
+114|12374106|Adding Javascript to Websites|V|11
+115|12374120|Introduction to the Document Object Model (DOM)|V|12
+116|12400324|Solution to the DOM Challenge|A|0
+117|12383788|Selecting HTML Elements with Javascript|V|14
+118|12383818|Manipulating and Changing Styles of HTML Elements with Javascript|V|5
+119|12383850|The Separation of Concerns: Structure vs Style vs Behaviour|V|6
+120|12383870|Text Manipulation and the Text Content Property|V|3
+121|12383884|Manipulating HTML Element Attributes|V|2
+122|17966874|Tip from Angela - The 20 Minute Method|V|3
+## 17. Boss Level Challenge 1 - The Dicee Game
+123|12383900|Challenge: The Dicee Challenge|V|2
+124|12400466|Dicee Challenge Step 0 - Download the Skeleton Project|A|0
+125|12400506|Dicee Challenge Step 1 - Create an External Javascript File|A|0
+126|12400562|Dicee Challenge Step 2 - Add Dice Images|A|0
+127|12400574|Dicee Challenge Step 3 - Create a Random Number|A|0
+128|12400578|Dicee Challenge Step 4 - Change the <img> to a Random Dice|A|0
+129|12400594|Dicee Challenge Step 5 - Change both <img> Elements|A|0
+130|12400606|Dicee Challenge Step 6 - Change the Title to Display a Winner|A|0
+131|12383908|The Solution to the Dicee Challenge|V|15
+132|12400628|Download the Completed Website|A|0
+133|17966986|Tip from Angela - Learning Before you Eat|V|2
+## 18. Advanced Javascript and DOM Manipulation
+134|12383928|What We'll Make: Drum Kit|V|1
+135|12409852|Download the Starting Files|A|0
+136|12383942|Adding Event Listeners to a Button|V|14
+137|12383962|Higher Order Functions and Passing Functions as Arguments|V|13
+138|12400686|Higher Order Function Challenge Solution|A|0
+139|12383968|How to Play Sounds on a Website|V|11
+140|12384090|How to Use Switch Statements in Javascript|V|5
+141|12384034|A Deeper Understanding of Javascript Objects|V|12
+142|12384070|Objects, their Methods and the Dot Notation|V|6
+143|13487950|A Quick Note About the Next Lesson|A|0
+144|12384106|Using Keyboard Event Listeners to Check for Key Presses|V|8
+145|12384168|Understanding Callbacks and How to Respond to Events|V|12
+146|12384170|Adding Animation to Websites|V|9
+147|12409876|Download the Completed Website|A|0
+148|17967012|Tip from Angela - Dealing with Lack of Progress|V|3
+## 19. jQuery
+149|12384172|What is jQuery?|V|4
+150|12384174|How to Incorporate jQuery into Websites|V|9
+151|12384184|How Minification Works to Reduce File Size|V|4
+152|12384192|Selecting Elements with jQuery|V|2
+153|12384196|Manipulating Styles with jQuery|V|5
+154|12384208|Manipulating Text with jQuery|V|4
+155|12384214|Manipulating Attributes with jQuery|V|4
+156|12384224|Adding Event Listeners with jQuery|V|8
+157|12384230|Adding and Removing Elements with jQuery|V|3
+158|12384236|Website Animations with jQuery|V|8
+159|17967042|Tip from Angela - Mixing Knowledge|V|2
+## 20. Boss Level Challenge 2 - The Simon Game
+160|12384246|What You'll Make: The Simon Game|V|1
+161|12664256|Play the Game|A|0
+162|12407762|Step 0 - Download the Starting Files|A|1
+163|12407700|Step 1 - Add Javascript and jQuery|A|0
+164|12639986|Step 1 - Answer|A|0
+165|12407832|Step 2 - Create A New Pattern|A|1
+166|12640100|Step 2 - Answer|A|0
+167|12643388|Step 3 - Show the Sequence to the User with Animations and Sounds|A|0
+168|12664292|Step 3 - Answer|A|0
+169|12640242|Step 4 - Check Which Button is Pressed|A|1
+170|12664296|Step 4 - Answer|A|0
+171|12652760|Step 5 - Add Sounds to Button Clicks|A|0
+172|12664298|Step 5 - Answer|A|0
+173|12653170|Step 6 - Add Animations to User Clicks|A|0
+174|12664300|Step 6 - Answer|A|0
+175|12653348|Step 7 - Start the Game|A|1
+176|12664304|Step 7 - Answer|A|0
+177|12640450|Step 8 - Check the User's Answer Against the Game Sequence|A|1
+178|12664306|Step 8 - Answer|A|0
+179|12653842|Step 9 - Game Over|A|0
+180|12664308|Step 9 - Answer|A|0
+181|12664182|Step 10 - Restart the Game|A|0
+182|12664312|Step 10 - Answer|A|0
+183|12664354|Download the Completed Project Code|A|0
+184|17967152|Tip from Angela - Dealing with Frustration|V|3
+## 21. The Unix Command Line
+185|12371166|Install Git Bash on Windows|V|3
+186|12384360|Understanding the Command Line. Long Live the Command Line!|V|5
+187|12384404|Command Line Techniques and Directory Navigation|V|10
+188|12384438|Creating, Opening, and Removing Files through the Command Line|V|9
+189|17967188|Tip from Angela - Sleep is My Secret Weapon|V|4
+## 22. Backend Web Development
+190|12407820|Backend Web Development Explained|V|15
+191|37702170|Backend Tools and Technologies - Which one to learn?|V|6
+## 23. Node.js
+192|12384268|What is Node.js?|V|11
+193|12400776|Install Node.js on Mac|A|1
+194|12400782|Install Node.js on Windows|A|0
+195|38126452|Using Node.js|V|8
+196|12384326|How to Use the Native Node Modules|V|12
+197|48853823|A note about the next lesson|A|0
+198|12384340|The NPM Package Manager and Installing External Node Modules|V|16
+199|38126546|[Project] QR Code Generator|V|16
+200|18113055|Tip from Angela - Step Up to the Challenge|V|1
+## 24. Express.js with Node.js
+201|12384462|What is Express?|V|7
+202|12384540|Creating Our First Server with Express|V|22
+203|12384582|HTTP Requests|V|24
+204|38911684|Postman|V|19
+205|38911596|Introduction to Middlewares|V|18
+206|38911656|Custom Middlewares|V|19
+207|38911668|Secrets Access Project|V|8
+208|17967258|Tip from Angela - How to Solidify Your Knowledge|V|3
+## 25. EJS
+209|38911782|What is EJS?|V|23
+210|38911792|EJS Tags|V|18
+211|38911796|Passing Data to EJS Templates|V|17
+212|38911802|EJS Partials and Layouts|V|18
+213|38911810|Band Generator Project|V|12
+214|17967358|Tip from Angela - Location, Location, Location!|V|2
+## 26. Capstone Project - Create a Blog web application
+215|38516770|Instructions|A|3
+## 27. Git, Github and Version Control
+216|12386072|Introduction to Version Control and Git|V|2
+217|12386660|Version Control Using Git and the Command Line|V|14
+218|12386668|GitHub and Remote Repositories|V|10
+219|12386672|Gitignore|V|11
+220|12386680|Cloning|V|9
+221|12386684|Branching and Merging|V|10
+222|12386708|Optional Git Challenge|A|0
+223|12386696|Forking and Pull Requests|V|15
+224|17967280|Tip from Angela - Spaced Repetition|V|4
+## 28. Application Programming Interfaces (APIs)
+225|38912006|Introduction to APIs|V|19
+226|38912008|Structuring API Requests|V|14
+227|38912014|What is JSON?|V|18
+228|38912016|Making Server-Side API Requests with Axios|V|18
+229|38912024|API Authentication|V|38
+230|38912020|REST APIs|V|25
+231|38912028|Secrets Project|V|12
+232|17967488|Tip from Angela - Use Accountability in your Favour|V|3
+## 29. Capstone Project - Use a Public API
+233|38892394|Instructions|A|2
+## 30. Build Your Own API
+234|39461822|Building your own APIs|V|18
+235|39461828|Creating GET Routes|V|21
+236|39461834|Creating POST, PUT, and PATCH Routes|V|15
+237|39461844|Creating the DELETE Route|V|7
+238|39461864|Build your own API for a Blog|V|15
+239|18113037|Tip from Angela - How to Get a Job as Programmer|V|2
+## 31. Databases
+240|40494138|Databases Explained: SQL vs. NoSQL|V|16
+241|17967524|Tip from Angela - When Life Gives You Lemons|V|6
+## 32. SQL
+242|12385674|SQL Commands: CREATE Table and INSERT Data|V|14
+243|12385692|SQL Commands: READ, SELECT, and WHERE|V|3
+244|12385714|Updating Single Values and Adding Columns in SQL|V|5
+245|12385718|SQL Commands: DELETE|V|2
+246|12385724|Understanding SQL Relationships, Foreign Keys and Inner Joins|V|11
+247|17967528|Tip from Angela - Find All the Hard Working People|V|2
+## 33. PostgreSQL
+248|40494144|Introduction to Postgres|V|8
+249|39497140|How to Install PostgreSQL and pgAdmin|A|1
+250|40494154|Understand how to use keys, Postgres types and keywords|V|11
+251|40735610|Flag Emojis on Windows|A|1
+252|40494164|Use pgAdmin to CREATE a TABLE|V|17
+253|40494176|READ data from a Postgres database|V|23
+254|40494186|Query data using SELECT, WHERE, and LIKE|V|19
+255|40494228|UNIQUE and NOT NULL - Travel Tracker Part 1|V|19
+256|40494240|INSERT and add Data - Travel Tracker Part 2|V|17
+257|40494256|Travel Tracker Part 3|V|11
+258|40494260|One to One Relationships & Inner Joins|V|12
+259|40494262|One to Many Relationships|V|13
+260|40494274|Many to Many Relationships & Aliases|V|12
+261|40494288|The Family Travel Tracker|V|35
+262|40494294|How to update and delete data & tables|V|19
+263|40494298|Permalist Project|V|30
+264|17967564|Tip from Angela - Daily Routines|V|3
+## 34. Capstone Project - Book Notes
+265|40325688|Instructions|A|2
+## 35. Authentication and Security
+266|41780520|Introduction to Authentication|V|6
+267|41780530|Level 1 - Registering Users with Email and Password|V|22
+268|41780532|Level 2 - Encryption and Hashing|V|16
+269|41780534|How to Hack Passwords|V|12
+270|41780536|Level 3 - How to Salt Passwords for Improved Encryption|V|19
+271|41780540|Managing Cookies and Sessions|V|33
+272|41780544|Level 5 - Hide your Secrets with Environment Variables|V|17
+273|41780550|Set up your Google OAuth Credentials|A|2
+274|41780566|Level 6 - OAuth: Implement "Sign In with Google"|V|31
+275|41790508|Finish the app: let users submit secrets|V|16
+276|18113039|Tip from Angela - How to Work as a Freelancer|V|2
+## 36. React.js
+277|17038306|What is React?|V|7
+278|17038570|What we will make in this React module|V|2
+279|17038612|Introduction to Code Sandbox and the Structure of the Module|V|6
+280|42757326|[Optional] Local Development Setup|A|2
+281|17038636|Introduction to JSX and Babel|V|17
+282|17038694|JSX Code Practice|V|8
+283|17038702|Javascript Expressions in JSX & ES6 Template Literals|V|12
+284|17038718|Javascript Expressions in JSX Practice|V|9
+285|17038724|JSX Attributes & Styling React Elements|V|17
+286|17038734|Inline Styling for React Elements|V|9
+287|17038752|React Styling Practice|V|10
+288|17038762|React Components|V|16
+289|17038778|React Components Practice|V|5
+290|17038790|Javascript ES6 - Import, Export and Modules|V|11
+291|17038820|Javascript ES6 Import, Export and Modules Practice|V|4
+292|17038882|Keeper App Project - Part 1 Challenge|V|5
+293|17038904|Keeper App Part 1 Solution|V|14
+294|17039094|React Props|V|17
+295|17039100|React Props Practice|V|13
+296|17039112|React DevTools|V|17
+297|17039130|Mapping Data to Components|V|10
+298|17039144|Mapping Data to Components Practice|V|18
+299|17039152|Javascript ES6 Map/Filter/Reduce|V|20
+300|17039196|Javascript ES6 Arrow functions|V|10
+301|17039230|Keeper App Project - Part 2|V|10
+302|17039262|React Conditional Rendering with the Ternary Operator & AND Operator|V|19
+303|17039348|Conditional Rendering Practice|V|7
+304|17039392|State in React - Declarative vs. Imperative Programming|V|10
+305|17039436|React Hooks - useState|V|18
+306|17039466|useState Hook Practice|V|7
+307|17039494|Javascript ES6 Object & Array Destructuring|V|18
+308|17039526|Javascript ES6 Destructuring Challenge Solution|V|6
+309|17039530|Event Handling in React|V|11
+310|17039540|React Forms|V|14
+311|17039546|Class Components vs. Functional Components|V|6
+312|17039564|Changing Complex State|V|20
+313|17039566|Changing Complex State Practice|V|7
+314|17039574|Javascript ES6 Spread Operator|V|11
+315|17039594|Javascript ES6 Spread Operator Practice|V|12
+316|17039602|Managing a Component Tree|V|23
+317|17039614|Managing a Component Tree Practice|V|8
+318|17039626|Keeper App Project - Part 3|V|25
+319|42762294|Note about the Next Lesson - Packages and Imports|A|1
+320|17039638|React Dependencies & Styling the Keeper App|V|17
+321|18113041|Tip from Angela - How to Build Your Own Product|V|2
+## 37. Web3 Decentralised App (DApp) Development with the Internet Computer
+322|31673262|What is Web3?|V|8
+323|31673276|How does the Blockchain actually work?|V|26
+324|31673280|What are DApps (Decentralised Apps) and how do you develop them?|V|9
+325|31673284|What is the Internet Computer (ICP)?|V|9
+326|31678552|Read Me!|A|1
+327|31673380|[Mac Users] Installation and Setup for Web3 Development|V|7
+328|31673386|[Windows Users] Installation and Setup for Web3 Development|V|13
+## 38. Build Your First Defi (Decentralised Finance) DApp - DBANK
+329|31673294|What You'll Build - DBANK (Inspired by Compound)|V|2
+330|31673308|Introduction to the Motoko Language|V|13
+331|31673312|Motoko Functions and the Candid User Interface|V|16
+332|31673318|Motoko Conditionals and Type Annotations|V|6
+333|31673322|Query vs. Update Methods|V|8
+334|31673324|Orthogonal Persistance|V|8
+335|31673326|Tracking Time and Calculating Compound Interest|V|18
+336|31673348|Adding HTML and CSS to Create the Frontend for DBANK|V|8
+337|31673420|Connecting the Motoko Backend to our JS Frontend|V|27
+338|31678170|Where to Get Help and Support for Development on the Internet Computer|A|0
+## 39. Deploying to the ICP Live Blockchain
+339|31673436|What are Cycles and the ICP Token?|V|7
+340|31678498|How to Claim Free Cycles from Dfinity|A|3
+341|31673470|How to Deploy to the ICP Network|V|3
+342|31673484|How to Convert ICP into Cycles?|V|6
+343|31673536|[Optional] How to Deploy a Static Website onto the ICP Blockchain for Hosting|V|8
+## 40. Building DApps on ICP with a React Frontend
+344|31673556|How to Configure a DFX Created Project to Use React|V|11
+345|31673582|Storing Data on a Canister|V|16
+346|31673590|Retrieving Data from a Canister|V|12
+347|31673596|Deleting and Persistance|V|17
+## 41. Create Your Own Crypto Token
+348|31673602|Tokens and Coins: What are they and how are they used?|V|9
+349|31673610|Download and Configure the Skeleton Project|V|6
+350|31673630|Using Motoko Hashmaps to Store Token Balances|V|20
+351|31673638|Showing the User's Token Balance on the Frontend|V|14
+352|31673650|Creating the Faucet Functionality Using the Shared Keyword|V|15
+353|31673658|Creating the Transfer Functionality|V|21
+354|31673674|Using the Transfer Functionality in the Faucet|V|7
+355|31673694|Persisting Non-Stable Types Using the Pre- and Postupgrade Methods|V|16
+356|31673702|What is the Internet Identity?|V|6
+357|31673712|Authenticating with the Internet Identity|V|8
+358|31673726|[Optional] Live Deployment to Test Internet Identity Authentication|V|18
+## 42. Minting NFTs and Building an NFT Marketplace like OpenSea
+359|31673744|What You'll Build - A Website to Mint, Buy and Sell NFTs|V|10
+360|31673750|Minting NFTs|V|17
+361|31673756|Viewing the NFT on the Frontend|V|20
+362|31673764|Enabling the Minting Functionality on the Frontend|V|31
+363|31673772|Displaying Owned NFTs Using the React Router|V|37
+364|31673780|Listing NFTs for Sale|V|34
+365|31673786|Styling the Listed NFTs|V|11
+366|31673790|Creating the "Discover" Page|V|23
+367|31673804|Buying NFTs|V|32
+368|31673812|Join the $6 Million Dollar Supernova Hackathon|A|0
+## 43. Optional Module: Ask Angela Anything
+369|12614080|AAA 1 - How to Soak in Programming Concepts and more...|V|40
+370|12614090|AAA 2 - Schedule for Learning to Code and more...|V|39
+371|12614104|AAA 3 - How to Start Freelancing and more...|V|25
+372|23664410|AAA 4 - The Live AMA|V|60
+## 44. Next Steps
+373|12409976|Vote for the Next Module!|A|0
+## 45. Bonus Lecture - Succeed in the Age of AI
+374|53534825|Bonus|V|10

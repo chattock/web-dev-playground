@@ -1,0 +1,121 @@
+{
+  "index": 230,
+  "lecture_id": 38912020,
+  "title": "REST APIs",
+  "section": "28. Application Programming Interfaces (APIs)",
+  "duration_min": 25,
+  "kind": "concept+exercise",
+  "summary": "Covers the full set of HTTP verbs (GET, POST, PUT, PATCH, DELETE) through Axios, comparing promise chaining with async/await. The exercise wires up a small Express + EJS app so five form buttons each call a different endpoint of the Secrets API using a bearer token.",
+  "concepts": [
+    {
+      "heading": "Two ways to consume a promise",
+      "points": [
+        "Axios returns a promise. It can be handled with .then() / .catch() / .finally() chained on the call, or with async/await inside a try/catch.",
+        "With .then(), the callback runs once the promise resolves, and further .then() calls run in order. Long chains get hard to trace when debugging.",
+        "async/await (added to JavaScript in ES2017/ES8) marks a function async and puts await before the call, so execution pauses on that line until the promise settles and the code reads top to bottom like synchronous code.",
+        "Both styles are documented by Axios and are equivalent; the course standardises on async/await with try/catch."
+      ]
+    },
+    {
+      "heading": "Axios method signatures",
+      "points": [
+        "axios.get(url[, config]) and axios.delete(url[, config]): two parameters, the URL and an optional config object.",
+        "axios.post(url[, data[, config]]), axios.put(url[, data[, config]]) and axios.patch(url[, data[, config]]): three parameters. The middle one is the request body (Axios docs call it data), like the URL-encoded fields a browser form would submit.",
+        "The config object is where authentication goes, e.g. headers with an Authorization value, plus other options from the Request Config docs: url, method, baseURL, params, auth (basic auth) and so on. A request can even be described entirely in the config instead of passing the URL first.",
+        "In the docs, square brackets mark the optional parameters of each alias."
+      ]
+    },
+    {
+      "heading": "What each verb means in a REST API",
+      "points": [
+        "GET reads a resource.",
+        "POST creates a resource; the server usually assigns the id.",
+        "PUT replaces an existing resource, so the full set of fields must be sent; anything omitted is overwritten.",
+        "PATCH updates only the fields supplied and leaves the rest untouched.",
+        "DELETE removes the resource; no body is sent.",
+        "An API that supports all of these is called fully RESTful."
+      ]
+    },
+    {
+      "heading": "The demo app and how it is wired",
+      "points": [
+        "The app is an Express server that renders index.ejs. A content variable is injected into the page, so every route re-renders the template with the stringified API response (or the error).",
+        "The form has three inputs: id, secret and score. Which inputs matter depends on the route (GET/DELETE need only the id; POST needs secret and score; PUT/PATCH need the id plus the fields to change).",
+        "Five submit buttons live in one form. Each button has its own formaction attribute, which overrides the form's action for that button, so the same form posts to /get-secret, /post-secret, /put-secret, /patch-secret or /delete-secret.",
+        "All five browser requests are HTML form POSTs to the Express server. The server then makes the real GET/POST/PUT/PATCH/DELETE call to the remote API with Axios.",
+        "Input names match the field names the Secrets API expects (secret, score), so req.body can be forwarded as the request body unchanged. body-parser's urlencoded middleware populates req.body.",
+        "Default secrets run from id 1 to 50. Creating one yields id 51; the demo then reads it, PUTs a new score, PATCHes the score again, deletes it and confirms a GET now returns an error."
+      ]
+    },
+    {
+      "heading": "Error handling pattern",
+      "points": [
+        "On success, result.data holds the API's JSON body; JSON.stringify turns it into text for the template.",
+        "On failure Axios throws; error.response.data holds the message the API sent back (for example not found for a missing id), which is rendered the same way so the user sees what went wrong.",
+        "(Extra) If the server is unreachable there is no error.response, so reading error.response.data would itself throw; a production version would guard for that."
+      ]
+    },
+    {
+      "heading": "Read the docs first",
+      "points": [
+        "Before using any API, read the endpoints being used: required URL, params, body keys, auth, and the shape of the response. This prevents confusing errors later."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Shared setup in the exercise (token placeholder, never commit a real one)",
+      "language": "javascript",
+      "code": "import express from \"express\";\nimport axios from \"axios\";\nimport bodyParser from \"body-parser\";\n\nconst app = express();\nconst port = 3000;\nconst API_URL = \"https://secrets-api.appbrewery.com\";\nconst yourBearerToken = \"<PASTE_YOUR_TOKEN>\";\nconst config = {\n  headers: { Authorization: `Bearer ${yourBearerToken}` },\n};\napp.use(bodyParser.urlencoded({ extended: true }));"
+    },
+    {
+      "caption": "The already-working GET route used as the template",
+      "language": "javascript",
+      "code": "app.post(\"/get-secret\", async (req, res) => {\n  const searchId = req.body.id;\n  try {\n    const result = await axios.get(API_URL + \"/secrets/\" + searchId, config);\n    res.render(\"index.ejs\", { content: JSON.stringify(result.data) });\n  } catch (error) {\n    res.render(\"index.ejs\", { content: JSON.stringify(error.response.data) });\n  }\n});"
+    },
+    {
+      "caption": "Button-level formaction in the form (illustrative)",
+      "language": "html",
+      "code": "<form method=\"POST\">\n  <input name=\"id\" />\n  <input name=\"secret\" />\n  <input name=\"score\" />\n  <button formaction=\"/get-secret\">GET</button>\n  <button formaction=\"/post-secret\">POST</button>\n  <button formaction=\"/put-secret\">PUT</button>\n  <button formaction=\"/patch-secret\">PATCH</button>\n  <button formaction=\"/delete-secret\">DELETE</button>\n</form>"
+    }
+  ],
+  "task": {
+    "name": "5.5 REST APIs: finish the four missing routes",
+    "starting_point": "Download and extract the lesson, run npm i. index.js has the Express setup, config with a bearer token placeholder, the index.ejs view with the five-button form, and a working /get-secret route. The other four routes are empty.",
+    "goal": "Make POST, PUT, PATCH and DELETE buttons each call the matching Secrets API endpoint and show the response (or error) in the content area, behaving like the instructor's solution.js demo.",
+    "steps": [
+      "Run npm i, then paste the bearer token obtained in the previous (authentication) lesson into the yourBearerToken constant.",
+      "Start the app with nodemon and open localhost:3000. Optionally run solution.js first to see the target behaviour.",
+      "Study /get-secret: try/catch, await axios.get(url, config), render result.data stringified, render error.response.data on failure.",
+      "/post-secret: call axios.post(API_URL + '/secrets', req.body, config). The body is the form data (secret and score); no id needed since the API assigns it.",
+      "/put-secret: read req.body.id, then axios.put(API_URL + '/secrets/' + id, req.body, config).",
+      "/patch-secret: same shape as PUT but with axios.patch.",
+      "/delete-secret: read req.body.id and call axios.delete(API_URL + '/secrets/' + id, config); only two arguments, no body.",
+      "Test the whole lifecycle: POST a new secret (id 51), GET 51, PUT with full data, PATCH one field, DELETE, then GET 51 again to see the not-found error. Also try PUT on an id that does not exist to check error display."
+    ],
+    "expected_result": "Each button displays the JSON returned by the API (created secret, updated secret, deletion confirmation). Invalid ids show the API's error text in the content box.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "app.post(\"/post-secret\", async (req, res) => {\n  try {\n    const result = await axios.post(API_URL + \"/secrets\", req.body, config);\n    res.render(\"index.ejs\", { content: JSON.stringify(result.data) });\n  } catch (error) {\n    res.render(\"index.ejs\", { content: JSON.stringify(error.response.data) });\n  }\n});\n\napp.post(\"/put-secret\", async (req, res) => {\n  const searchId = req.body.id;\n  try {\n    const result = await axios.put(API_URL + \"/secrets/\" + searchId, req.body, config);\n    res.render(\"index.ejs\", { content: JSON.stringify(result.data) });\n  } catch (error) {\n    res.render(\"index.ejs\", { content: JSON.stringify(error.response.data) });\n  }\n});\n\napp.post(\"/patch-secret\", async (req, res) => {\n  const searchId = req.body.id;\n  try {\n    const result = await axios.patch(API_URL + \"/secrets/\" + searchId, req.body, config);\n    res.render(\"index.ejs\", { content: JSON.stringify(result.data) });\n  } catch (error) {\n    res.render(\"index.ejs\", { content: JSON.stringify(error.response.data) });\n  }\n});\n\napp.post(\"/delete-secret\", async (req, res) => {\n  const searchId = req.body.id;\n  try {\n    const result = await axios.delete(API_URL + \"/secrets/\" + searchId, config);\n    res.render(\"index.ejs\", { content: JSON.stringify(result.data) });\n  } catch (error) {\n    res.render(\"index.ejs\", { content: JSON.stringify(error.response.data) });\n  }\n});"
+    },
+    "reference_repo_path": "Section 28 - Aplication Programming Interfaces (APIs)/28.06 - REST APIs with Axios/solution.js"
+  },
+  "pitfalls": [
+    "Forgetting to paste the bearer token (or leaving the placeholder) makes every route fail with an auth error.",
+    "Using the wrong arity: passing config as the second argument of axios.post/put/patch makes it be sent as the body; the body must come second and config third.",
+    "Forgetting the id in the URL for PUT/PATCH/DELETE.",
+    "PUT with missing fields wipes them; use PATCH for partial updates.",
+    "Accidentally committing a real bearer token (the reference repo shows one hard-coded; replace it with your own and keep it out of version control).",
+    "Not running npm i before starting the server."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (section 28 has no data file).",
+    "gaps_and_ideas": [
+      "Proposed lesson: 'REST verbs with Axios'. Blurb: map GET/POST/PUT/PATCH/DELETE to read/create/replace/update/remove and see how each Axios alias takes its arguments.",
+      "Tasks: (1) write get and delete calls with url + config; (2) write post with url + body + config; (3) show the difference between PUT and PATCH on a sample object; (4) convert a .then() chain to async/await with try/catch; (5) handle an error response by reading error.response.data.",
+      "Starter code idea: a mock in-browser 'secrets' store with fake fetch-like functions and a five-button form using formaction.",
+      "Interactive demo idea: a simulated API where the user edits id/secret/score, clicks a verb button, and sees the request line, body, and the resulting store state side by side, highlighting that PUT overwrites missing fields while PATCH keeps them."
+    ]
+  }
+}

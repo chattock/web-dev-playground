@@ -1,0 +1,88 @@
+{
+  "index": 51,
+  "lecture_id": 37368166,
+  "title": "Media Queries",
+  "section": "8. Advanced CSS",
+  "duration_min": 11,
+  "kind": "concept+exercise",
+  "summary": "Detailed look at @media rules: max-width, min-width, combining both with and, plus the screen/print media types. The exercise builds four breakpoints that change the body background colour for mobile, tablet, laptop and desktop widths.",
+  "concepts": [
+    {
+      "heading": "Anatomy of a media query",
+      "points": [
+        "Written in place of a selector: @media (condition) { normal rules }. The rules inside only apply when the condition is true, and they override the default styles outside the block.",
+        "@media (max-width: 600px) means 'viewport at most 600px wide'. Typical use: shrink an h1, or reduce a 200x200 blue div to 100x100 on phones.",
+        "@media (min-width: 600px) flips direction: it targets viewports 600px and wider, i.e. the bigger-screen end.",
+        "Think of the width axis from 0 to roughly 2400px: max-width styles the left portion up to the breakpoint, min-width styles everything to the right."
+      ]
+    },
+    {
+      "heading": "Combining conditions",
+      "points": [
+        "Join conditions with the keyword and: @media (min-width: 600px) and (max-width: 900px) targets only widths in that band.",
+        "The same pattern can express 'outside a band' by reversing which side each limit is on (small max-width plus separate larger min-width rule). Read each limit literally: max-width is the highest width where the rules apply, min-width the lowest.",
+        "(Extra) Boundaries are inclusive, so adjacent bands should differ by 1px (480 / 481) to avoid overlap."
+      ]
+    },
+    {
+      "heading": "Media types and other features",
+      "points": [
+        "You may see screen, as in @media screen and (max-width: 600px). Screen is effectively the default so it is rarely needed; the other common type is print, which applies rules only when the page is printed.",
+        "MDN's 'Using media queries' page lists more features: orientation, height, width, device-width and device-height, and media types. Most real work only needs min-width and max-width."
+      ]
+    },
+    {
+      "heading": "Testing in Chrome DevTools",
+      "points": [
+        "Open DevTools (Chrome menu, More tools, Developer tools) and toggle the device toolbar.",
+        "Choose a preset (iPhone SE, iPhone 12, iPad Air) or Responsive and drag or type an exact width to check which breakpoint triggers."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "max-width, min-width and both",
+      "language": "css",
+      "code": "div { width: 200px; height: 200px; background-color: blue; }\n\n@media (max-width: 600px) {          /* phones and narrower */\n  div { width: 100px; height: 100px; }\n}\n@media (min-width: 600px) { /* wider screens */ }\n@media (min-width: 600px) and (max-width: 900px) { /* only in between */ }"
+    },
+    {
+      "caption": "Print only",
+      "language": "css",
+      "code": "@media print { nav { display: none; } }"
+    }
+  ],
+  "task": {
+    "name": "Device-width background colours",
+    "starting_point": "index.html with body background aquamarine and TODO comments listing four ranges: Mobile 319-480px, tablets 481-1200px, laptops 1201-1600px, desktops 1601px and up. An empty body.",
+    "goal": "Make the body background change by width, matching solution.html: lightsalmon (mobile), powderblue (tablet), limegreen (laptop), seagreen (desktop).",
+    "steps": [
+      "Add @media (min-width: 319px) and (max-width: 480px) with body { background-color: lightsalmon } (max-width alone also works since few screens are narrower than 320px).",
+      "Add @media (min-width: 481px) and (max-width: 1200px) with powderblue.",
+      "Add @media (min-width: 1201px) and (max-width: 1600px) with limegreen.",
+      "Add @media (min-width: 1601px) with seagreen; no max needed.",
+      "Test by resizing the browser or the DevTools device toolbar."
+    ],
+    "expected_result": "Resizing the window flips the page between four colours at 480/481, 1200/1201 and 1600/1601px; wider than 1601 is seagreen. Below 319px the default aquamarine shows.",
+    "solution_code": {
+      "language": "css",
+      "code": "body { background-color: aquamarine; }\n@media (min-width: 319px) and (max-width: 480px)  { body { background-color: lightsalmon; } }\n@media (min-width: 481px) and (max-width: 1200px) { body { background-color: powderblue; } }\n@media (min-width: 1201px) and (max-width: 1600px) { body { background-color: limegreen; } }\n@media (min-width: 1601px) { body { background-color: seagreen; } }"
+    },
+    "reference_repo_path": "Section 08 - Advanced CSS/08.04 - Media Query/solution.html"
+  },
+  "pitfalls": [
+    "Mixing up max and min direction (max-width styles smaller screens).",
+    "Overlapping or gapping ranges, such as 480 to 482.",
+    "Forgetting the viewport meta tag, so phones report a wide viewport.",
+    "Omitting the parentheses around each condition."
+  ],
+  "playground": {
+    "match": "s08-media-query (lesson 8.4, data/s08.js)",
+    "coverage": "Tasks cover the tablet and laptop bands only; the explore simulator shows min-width breakpoints with a live preview; notes cover anatomy, conditions, mobile-first and common breakpoints.",
+    "gaps_and_ideas": [
+      "Add the missing mobile (lightsalmon, 319-480) and desktop (seagreen, 1601+) tasks so all four colours from the course exercise are practised.",
+      "Add an explicit max-width vs min-width diagram of the width axis.",
+      "Add a 'print' media query task with the browser's print preview.",
+      "Mention Chrome DevTools device toolbar for testing, in case the playground preview width selector is unavailable in real projects."
+    ]
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "index": 128,
+  "lecture_id": 12400578,
+  "title": "Dicee Challenge Step 4 - Change the <img> to a Random Dice",
+  "section": "17. Boss Level Challenge 1 - The Dicee Game",
+  "duration_min": 1,
+  "kind": "article-task",
+  "summary": "Step 4: use the random number to build an image file name and apply it to the left img with setAttribute.",
+  "concepts": [
+    {
+      "heading": "Building the src from the number",
+      "points": [
+        "Dice image names follow a pattern: dice1.png to dice6.png, so the random number can be spliced into the path with string concatenation.",
+        "Select the left image by its class, then call setAttribute('src', newPath).",
+        "Hint in the lecture: use the DOM selection and setAttribute techniques from the previous section."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Update the left die",
+      "language": "javascript",
+      "code": "document.querySelector(\".img1\").setAttribute(\"src\", \"./images/dice\" + randomNumber1 + \".png\");"
+    }
+  ],
+  "task": {
+    "name": "Step 4: random left die",
+    "starting_point": "randomNumber1 exists; both images show dice6.",
+    "goal": "Left image changes to the rolled face on refresh.",
+    "steps": [
+      "Build the string './images/dice' + randomNumber1 + '.png'.",
+      "Select the left img with querySelector.",
+      "Call setAttribute('src', thatString).",
+      "Refresh a few times."
+    ],
+    "expected_result": "Left die shows a different face on refreshes, right die still six.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "document.querySelector(\".img1\").setAttribute(\"src\", \"./images/dice\" + randomNumber1 + \".png\");"
+    },
+    "reference_repo_path": "Section 17 - Boss Level Challenge 1 - The Dicee Game"
+  },
+  "pitfalls": [
+    "Missing the leading ./ or the .png extension.",
+    "Using .img1 without the dot in querySelector."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (no s17.js data file); covered by the proposed Dicee project lesson.",
+    "gaps_and_ideas": [
+      "Task: use a template literal as an alternative to concatenation."
+    ]
+  }
+}

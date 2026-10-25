@@ -1,7 +1,7 @@
 /* ===== Section 10 — Grid ===== */
 
 PG.add({
-  id:'s10-display-grid', section:'s10', slug:'display-grid', lesson:'10.1',
+  id:'s10-display-grid', index:60, udemyId:37368434, minutes:15, section:'s10', slug:'display-grid', lesson:'10.1',
   title:'Display: Grid',
   blurb:'Grid is flexbox\'s two-dimensional sibling: you define rows <b>and</b> columns up front and drop items into the cells. Perfect for anything that is genuinely a grid — a chessboard, a gallery, a page layout.',
   tasks:[
@@ -135,7 +135,7 @@ css:`body {
 
 
 PG.add({
-  id:'s10-grid-sizing', section:'s10', slug:'grid-sizing', lesson:'10.2',
+  id:'s10-grid-sizing', index:61, udemyId:37368474, minutes:24, section:'s10', slug:'grid-sizing', lesson:'10.2',
   title:'Grid Sizing',
   blurb:'Tracks can be fixed (<code>200px</code>), fractional (<code>1fr</code>), content-based (<code>auto</code>) or bounded (<code>minmax(400px, 5fr)</code>). Mixing them is where grid gets powerful.',
   tasks:[
@@ -259,7 +259,7 @@ h4{margin:0 0 5px}</style>
 
 
 PG.add({
-  id:'s10-grid-placement', section:'s10', slug:'grid-placement', lesson:'10.3',
+  id:'s10-grid-placement', index:62, udemyId:37368524, minutes:26, section:'s10', slug:'grid-placement', lesson:'10.3',
   title:'Grid Placement',
   blurb:'By default items fill the cells in order. <code>grid-column</code>, <code>grid-row</code> and the <code>grid-area</code> shorthand let you place them exactly, spanning as many tracks as you like.',
   tasks:[
@@ -415,7 +415,7 @@ grid-area: 1 / 2 / 3 / 4;   /* row-start / col-start / row-end / col-end */</pre
 
 
 PG.add({
-  id:'s10-mondrian', section:'s10', slug:'mondrian-project', lesson:'10.4', project:true,
+  id:'s10-mondrian', index:63, udemyId:37368588, minutes:7, section:'s10', slug:'mondrian-project', lesson:'10.4', project:true,
   title:'Mondrian Project',
   blurb:'Recreate a Piet Mondrian painting with nothing but grid placement — the section\'s final boss.',
   tasks:[

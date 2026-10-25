@@ -1,0 +1,120 @@
+{
+  "index": 347,
+  "lecture_id": 31673596,
+  "title": "Deleting and Persistance",
+  "section": "40. Building DApps on ICP with a React Frontend",
+  "duration_min": 17,
+  "kind": "project",
+  "summary": "Completes the Keeper backend with a removeNote function, built by combining List.take, List.drop and List.append to remove an element at an index, then wired into deleteNote in App.jsx. The lecture first poses this as a challenge using a Motoko playground to explore the list functions, then walks through the solution and finally shows how the stable keyword keeps data across canister upgrades.",
+  "concepts": [
+    {
+      "heading": "The problem",
+      "points": [
+        "deleteNote in App.jsx only filters the frontend state array. After a refresh, fetchData reloads from the canister and the deleted note returns, so the canister must delete it too.",
+        "The Motoko List module available at the time had no remove-at-index helper, so it has to be assembled from smaller functions.",
+        "The Motoko function receives the note's index as a natural number: public func removeNote(id : Nat). Nat is a whole number from 0 up, which suits an array index."
+      ]
+    },
+    {
+      "heading": "How take, drop and append behave",
+      "points": [
+        "List.take(list, n) returns a list with the first n elements. If the list is shorter than n, it returns a copy of the whole list.",
+        "List.drop(list, n) returns the list without its first n elements.",
+        "List.append(a, b) joins two lists, a first then b.",
+        "Remember that push prepends. In a playground that pushes A, B, C, D in order, the list reads D, C, B, A. Indices count from the front, so D is 0, C is 1, B is 2, A is 3.",
+        "Candid UI in the Motoko playground shows a List as deeply nested pairs, not a flat array, which is why readNotes converts to an array before sending to JS.",
+        "To remove B (index 2): take(list, 2) gives D, C; drop(list, 2 + 1) gives A; append them to get D, C, A.",
+        "Playground exercise suggested: deploy the sample with drop, take and getNotes methods, try different numbers, and note that upgrading resets a non-stable variable."
+      ]
+    },
+    {
+      "heading": "The solution in Motoko",
+      "points": [
+        "let listFront = List.take(notes, id) keeps everything before the target.",
+        "let listBack = List.drop(notes, id + 1) skips the target and keeps everything after it.",
+        "notes := List.append(listFront, listBack) reassigns the state to the joined list. Two locals and the assignment can be collapsed into one line, but separate steps are easier to follow.",
+        "Lists are immutable values: each function returns a new list, so the final := assignment is what actually changes the stored notes."
+      ]
+    },
+    {
+      "heading": "Frontend wiring",
+      "points": [
+        "In deleteNote, keep the existing setNotes filter so the UI changes immediately, and also call dkeeper_backend.removeNote(id) so the canister matches.",
+        "The id given to deleteNote is the array index of the note, passed from Note via props.onDelete(props.id). Because the frontend array and canister list are in the same newest-first order, the same index works on both sides.",
+        "Redeploy with dfx deploy before testing. Test: add two notes, delete one (disappears at once), refresh, and it stays gone because fetchData reads the already-trimmed list."
+      ]
+    },
+    {
+      "heading": "Persistence across upgrades",
+      "points": [
+        "When main.mo changes and dfx deploy upgrades the canister, ordinary variables are reset, so the notes list empties. A deploy with unchanged code does not upgrade.",
+        "Marking the variable stable (stable var notes : List.List<Note> = List.nil<Note>()) makes it survive upgrades, behaving like a built-in database without any extra storage code.",
+        "Check: change the file (e.g. add or remove a Debug.print), deploy again, refresh the app, and notes remain.",
+        "(Extra) The reference repo declares persistent actor DKeeper and plain var notes. In that newer Motoko form every var is persistent by default, so the stable keyword is not written. In older code with a plain actor, add stable explicitly.",
+        "(Extra) Stable variables have type restrictions, and large or changing types need migration planning; the simple Note record in a List is fine."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Final main.mo (reference repo)",
+      "language": "motoko",
+      "code": "import List \"mo:base/List\";\nimport Debug \"mo:base/Debug\";\n\npersistent actor DKeeper {\n  type Note = {\n    title : Text;\n    content : Text;\n  };\n\n  var notes : List.List<Note> = List.nil<Note>();\n\n  public func createNote(titleText : Text, contentText : Text) {\n    let newNote : Note = {\n      title = titleText;\n      content = contentText;\n    };\n    notes := List.push(newNote, notes);\n    Debug.print(debug_show (notes));\n  };\n\n  public query func readNotes() : async [Note] {\n    return List.toArray(notes);\n  };\n\n  public func removeNote(id : Nat) {\n    let listFront = List.take(notes, id);\n    let listBack = List.drop(notes, id + 1);\n    notes := List.append(listFront, listBack);\n  };\n};"
+    },
+    {
+      "caption": "App.jsx deleteNote with backend call",
+      "language": "jsx",
+      "code": "function deleteNote(id) {\n  dkeeper_backend.removeNote(id);\n  setNotes((prevNotes) => {\n    return prevNotes.filter((noteItem, index) => {\n      return index !== id;\n    });\n  });\n}"
+    },
+    {
+      "caption": "Older-style actor with stable storage (as taught in the video)",
+      "language": "motoko",
+      "code": "actor DKeeper {\n  stable var notes : List.List<Note> = List.nil<Note>();\n  // ...functions as above\n}"
+    },
+    {
+      "caption": "Worked trace: remove index 2 from [D, C, B, A]",
+      "language": "text",
+      "code": "take(list, 2)      -> [D, C]\ndrop(list, 2 + 1)  -> [A]\nappend(front, back) -> [D, C, A]"
+    }
+  ],
+  "task": {
+    "name": "Challenge: delete a note and keep it deleted",
+    "starting_point": "dkeeper with createNote and readNotes working; deleteNote only updates React state.",
+    "goal": "Deleting a note removes it from the canister so it does not reappear on refresh, and notes survive canister upgrades.",
+    "steps": [
+      "Try the sample Motoko playground linked in the course resources to see how take, drop and append behave on a list.",
+      "In main.mo write public func removeNote(id : Nat).",
+      "Inside, compute listFront with List.take(notes, id).",
+      "Compute listBack with List.drop(notes, id + 1).",
+      "Reassign notes := List.append(listFront, listBack).",
+      "In App.jsx deleteNote call dkeeper_backend.removeNote(id) in addition to the existing setNotes filter.",
+      "Run dfx deploy, add two notes, delete one, refresh and confirm it stays removed.",
+      "Make the notes variable stable (or use persistent actor), change the code, redeploy and confirm notes survive."
+    ],
+    "expected_result": "Deleted notes stay deleted after a refresh, and all notes remain after redeploying changed code.",
+    "solution_code": {
+      "language": "motoko",
+      "code": "public func removeNote(id : Nat) {\n  let listFront = List.take(notes, id);\n  let listBack = List.drop(notes, id + 1);\n  notes := List.append(listFront, listBack);\n};"
+    },
+    "reference_repo_path": "Section 40 - Building DApps on ICP with a React Frontend/40.04 Deleting and Persistance/dkeeper"
+  },
+  "pitfalls": [
+    "Forgetting the + 1 in drop, which keeps the item you meant to delete.",
+    "Forgetting the := assignment, since List functions return new lists.",
+    "Mixing up index direction: push prepends, so index 0 is the newest note.",
+    "Frontend and canister orders disagreeing, so the wrong note gets removed (the fix from the previous lesson keeps them aligned).",
+    "Expecting data to survive upgrades without stable or a persistent actor.",
+    "Not redeploying after editing main.mo.",
+    "Note: removeNote has no bounds check; an id past the end simply leaves the list unchanged."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (site data has files only for sections 1-11, 14, 15).",
+    "gaps_and_ideas": [
+      "New lesson 'Delete and persist: remove at index'. Blurb: building a missing helper from take, drop and append.",
+      "Tasks: (1) trace removing each index of a four-item list by hand; (2) write the three-line removeNote; (3) wire deleteNote; (4) explain why + 1 is needed; (5) explain what stable or persistent changes.",
+      "Starter code: a JS emulation of take, drop and append over arrays with a prepend-style push, plus a stub removeNote to complete.",
+      "Interactive demo idea: step-through visualiser where the learner picks an index and sees the list split into front and back, the skipped item highlighted, then rejoined; add a toggle to simulate an upgrade that clears non-stable state."
+    ]
+  }
+}

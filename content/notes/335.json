@@ -1,0 +1,106 @@
+{
+  "index": 335,
+  "lecture_id": 31673326,
+  "title": "Tracking Time and Calculating Compound Interest",
+  "section": "38. Build Your First Defi (Decentralised Finance) DApp - DBANK",
+  "duration_min": 18,
+  "kind": "project",
+  "summary": "Explains the compound-interest formula, then implements a compound() function in the DBank actor. Uses the Time module for timestamps, converts nanoseconds to seconds, raises 1.01 to the elapsed seconds with **, switches balances from Nat to Float to make the types agree, and resets startTime after each compounding.",
+  "concepts": [
+    {
+      "heading": "Compound interest in brief",
+      "points": [
+        "Interest earned is added to the principal, and later interest is calculated on the larger total. Example: 1000 with 50 interest becomes 1050, which then earns interest again.",
+        "General formula: final = principal * (1 + rate/n)^t, where rate is a decimal (10% = 0.1, 5% = 0.05), n is the number of compounding periods per time unit and t is the number of time units.",
+        "For the demo: rate 1% (0.01) per second, compounded once per second, so n = 1 and the multiplier is 1.01^seconds. This is an unrealistically high rate chosen so growth is visible within seconds."
+      ]
+    },
+    {
+      "heading": "Tracking time with the Time module",
+      "points": [
+        "Import with `import Time \"mo:base/Time\";`. `Time.now()` returns the current time as an integer count of nanoseconds since 1 January 1970 (Unix epoch).",
+        "Record the start: `let startTime = Time.now();` and print it with Debug.print(debug_show(startTime)) (debug_show needed because it is not Text).",
+        "Nanoseconds to seconds: divide by 1_000_000_000 (1000000000). The division on integers truncates to a whole number of seconds."
+      ]
+    },
+    {
+      "heading": "The compound function",
+      "points": [
+        "Declared `public func` (not query) because it changes currentValue, so it is an update call.",
+        "Steps inside: get currentTime = Time.now(); timeElapsedNS = currentTime - startTime; timeElapsedS = timeElapsedNS / 1000000000; then update the balance.",
+        "In practice it could be called on a schedule or whenever a user tops up or withdraws; here it is triggered manually from Candid UI.",
+        "Update: `currentValue := currentValue * (1.01 ** Float.fromInt(timeElapsedS));`. The exponent operator is `**` (two asterisks). Exponents are evaluated before multiplication, but parentheses make the order explicit."
+      ]
+    },
+    {
+      "heading": "Fixing type mismatches (Nat, Int, Float)",
+      "points": [
+        "1.01 is a Float but timeElapsedS is a whole number, so the exponent errors with a type mismatch. Convert it with `Float.fromInt(...)` from the base Float module (`import Float \"mo:base/Float\";`).",
+        "currentValue was a Nat, which can't be multiplied by a Float. Converting Nat to Float is awkward in Motoko, and money should allow decimals anyway, so change the balance to `Float`: `stable var currentValue : Float = 300;`.",
+        "Then align everything else: topUP and withdraw parameters become `amount : Float`, tempValue becomes Float, and checkBalance returns `async Float`.",
+        "(Extra) Time.now() returns Int, which is why Float.fromInt is the right converter."
+      ]
+    },
+    {
+      "heading": "Resetting the start time",
+      "points": [
+        "If startTime stays fixed, a second compound call would count the time since the beginning again and over-pay interest, ignoring the last compounding.",
+        "Fix: after updating the balance set `startTime := currentTime;`. That requires startTime to be a var, not a let. Make it `stable var` so it persists between deploys.",
+        "After changing a stable variable's type (Nat to Float), the stored value may reset on deploy. To restore 300 and a fresh start time, temporarily keep `currentValue := 300;` and `startTime := Time.now();`, deploy once, then comment those lines out and deploy again so they don't overwrite state next time."
+      ]
+    },
+    {
+      "heading": "Result",
+      "points": [
+        "Check balance starts at 300; calling compound after several seconds raises it (88 more in the demo) and each next call grows more because the principal is larger.",
+        "The prototype demonstrates a working DeFi-style interest mechanism; a real frontend comes in later lessons."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Final backend for this lesson (reference repo, cleaned)",
+      "language": "motoko",
+      "code": "import Debug \"mo:base/Debug\";\nimport Time \"mo:base/Time\";\nimport Float \"mo:base/Float\";\n\npersistent actor DBank {\n  stable var currentValue : Float = 300;\n  stable var startTime = Time.now();\n\n  public func topUP(amount : Float) {\n    currentValue += amount;\n    Debug.print(debug_show (currentValue));\n  };\n\n  public func withdraw(amount : Float) {\n    let tempValue : Float = currentValue - amount;\n    if (tempValue >= 0) {\n      currentValue -= amount;\n      Debug.print(debug_show (currentValue));\n    } else {\n      Debug.print(\"Amount too large, current value less than zero.\");\n    };\n  };\n\n  public query func checkBalance() : async Float {\n    return currentValue;\n  };\n\n  public func compound() {\n    let currentTime = Time.now();\n    let timeElapsedNS = currentTime - startTime;\n    let timeElapsedS = timeElapsedNS / 1000000000;\n    currentValue := currentValue * (1.01 ** Float.fromInt(timeElapsedS));\n    startTime := currentTime;\n  };\n};"
+    }
+  ],
+  "task": {
+    "name": "Print the current time in nanoseconds, then build compound()",
+    "starting_point": "DBank actor with topUP, withdraw, checkBalance and a stable currentValue.",
+    "goal": "Track time since the last compounding and grow the balance by 1% per elapsed second.",
+    "steps": [
+      "Import Time and Float from mo:base.",
+      "Challenge: create startTime = Time.now() and print it with debug_show; deploy and see the nanosecond count.",
+      "Change startTime to `stable var` so it can be reassigned and persists.",
+      "Add `public func compound()` with currentTime, timeElapsedNS and timeElapsedS (divide by 1000000000).",
+      "Set currentValue := currentValue * (1.01 ** Float.fromInt(timeElapsedS)).",
+      "Switch currentValue, amount parameters, tempValue and checkBalance return type from Nat to Float.",
+      "Add startTime := currentTime; at the end of compound.",
+      "Reset the balance and start time once (temporary assignments), redeploy, remove them, redeploy again.",
+      "In Candid UI check balance, wait a few seconds, call compound, check balance again."
+    ],
+    "expected_result": "Balance starts at 300 and grows by 1.01 to the power of elapsed seconds each time compound is called, since the last call.",
+    "solution_code": {
+      "language": "motoko",
+      "code": "public func compound() {\n  let currentTime = Time.now();\n  let timeElapsedNS = currentTime - startTime;\n  let timeElapsedS = timeElapsedNS / 1000000000;\n  currentValue := currentValue * (1.01 ** Float.fromInt(timeElapsedS));\n  startTime := currentTime;\n};"
+    },
+    "reference_repo_path": "Section 38 - Build Your First Defi (Decentralised Finance) DApp - DBANK/38.07 Tracking Time and Calculating Compound Interest/DBANK/src/DBANK/main.mo"
+  },
+  "pitfalls": [
+    "Mixing Nat, Int and Float in one calculation causes type errors; convert with Float.fromInt.",
+    "Leaving startTime as let: it cannot be reassigned, so interest is over-counted.",
+    "Leaving the temporary reset lines in place so every deploy overwrites persisted state.",
+    "Using a query modifier on compound (it writes state).",
+    "Forgetting the semicolon after compound's closing brace; the reference repo's version lacks one before its trailing comment, which can break compile when more declarations follow.",
+    "Expecting a 1% per-second rate to be realistic; it is only to make the demo visible."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (no section 38 file).",
+    "gaps_and_ideas": [
+      "New lesson 'Compound interest in Motoko': formula, Time.now, number types.",
+      "Tasks: (1) compute 100 at 1% per second after 5 s by hand and with JS; (2) convert nanoseconds to seconds; (3) explain the Float.fromInt error; (4) add startTime reset; (5) explain why the reset is needed.",
+      "Interactive demo idea: a compounding simulator with a Compound button and a time-elapsed counter. A toggle for 'reset startTime' shows over-payment when disabled. A Nat/Float switch shows the type error message."
+    ]
+  }
+}

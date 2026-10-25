@@ -1,0 +1,78 @@
+{
+  "index": 233,
+  "lecture_id": 38892394,
+  "title": "Instructions",
+  "section": "29. Capstone Project - Use a Public API",
+  "duration_min": 2,
+  "kind": "article-task",
+  "summary": "Brief for the Section 29 capstone: build an Express + Axios + EJS website around a public API of the learner's choice, with error handling, comments, a README and a GitHub push. The lecture page body did not render in the browser, so this note is based on the reference repo's section README, which holds the brief.",
+  "concepts": [
+    {
+      "heading": "Capstone brief",
+      "points": [
+        "Build a site on Node/Express that uses Axios to call a public API picked from the course's public-api-lists repo (or any other). Show the retrieved data in a friendly way.",
+        "Goals: practise integrating public APIs, server-side Express, client-server communication with Axios, and handling and presenting API data.",
+        "Example ideas: a joke based on the user's name (JokeAPI), a will-it-rain-tomorrow checker (OpenWeatherMap), a crypto price lookup, a random cocktail recipe with images (CocktailDB), a sunscreen-today helper (Open UV). Bonus for choosing an unusual API; if a chosen API turns out unusable, switch to another."
+      ]
+    },
+    {
+      "heading": "Requirements checklist",
+      "points": [
+        "API choice: prefer one that needs no authentication and has CORS enabled.",
+        "Planning: research the API's features, the data it returns and how the app will use it before coding.",
+        "Setup: new Node project with Express, Axios and EJS, organised into a sensible directory structure (index.js, views, public).",
+        "Integration: implement at least one GET endpoint that sends Axios requests to the API and handles the responses.",
+        "Presentation: render data with EJS, HTML and CSS so it reads well for a user.",
+        "Error handling: handle failures in the app and in API calls; log errors and show user-relevant messages where useful.",
+        "Documentation: comment the code to explain the logic.",
+        "Sharing: commit and push to GitHub, and include a README explaining how to install and start (npm i, then nodemon index.js)."
+      ]
+    },
+    {
+      "heading": "Recommended resources",
+      "points": [
+        "Express getting-started guide, Node docs, Axios docs, the public API list repo, and RapidAPI's list of free APIs."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Typical skeleton from the reference 'Get a Joke' solution (handles a /joke route; catch block should also send a response)",
+      "language": "javascript",
+      "code": "import express from \"express\";\nimport axios from \"axios\";\n\nconst app = express();\nconst port = 3000;\nconst API_URL = \"https://v2.jokeapi.dev/joke/Any\";\n\napp.use(express.static(\"public\"));\n\napp.get(\"/\", (req, res) => {\n  res.render(\"index.ejs\", { data: \"\" });\n});\n\napp.get(\"/joke\", async (req, res) => {\n  try {\n    const result = await axios.get(API_URL);\n    res.render(\"index.ejs\", { data: result.data });\n  } catch (error) {\n    console.log(error.message);\n    res.status(500).send(\"Could not fetch a joke.\");\n  }\n});\n\napp.listen(port, () => {\n  console.log(`Server is running on port ${port}`);\n});"
+    }
+  ],
+  "task": {
+    "name": "Section 29 capstone: use a public API",
+    "starting_point": "Empty project; reference repo has two example solutions (29.01 Get a Joke, 29.02 Know The Rain) each with index.js, views/index.ejs and package.json.",
+    "goal": "Ship a small Express/Axios/EJS app that fetches and displays data from a public API, with error handling, comments, a README and a GitHub repo.",
+    "steps": [
+      "Browse the public API list and pick an API (no auth, CORS enabled preferred).",
+      "Read its docs and plan routes, inputs and displayed fields.",
+      "npm init, install express, axios and ejs; create index.js, views/ and public/.",
+      "Add at least one GET route that calls the API with Axios (async/await in try/catch).",
+      "Render the data via an EJS template with CSS.",
+      "Add error handling and code comments.",
+      "Write a README with run instructions and push to GitHub; optionally share in the Q&A."
+    ],
+    "expected_result": "A working site that displays live API data in a readable layout and fails gracefully.",
+    "solution_code": null,
+    "reference_repo_path": "Section 29 - Capstone Project - Use a Public API/"
+  },
+  "pitfalls": [
+    "Picking an API that requires keys or lacks CORS/docs adds friction.",
+    "Hard-coding API keys in code pushed to GitHub.",
+    "Reference examples set res.status(500) without sending a body, leaving the request hanging.",
+    "Skipping the README or comments, which are explicit requirements."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (no data file for section 29).",
+    "gaps_and_ideas": [
+      "Proposed lesson: 'Public API capstone'. Blurb: plan and build a site around a public API.",
+      "Tasks: pick an API; list endpoint, params and response keys; build a GET route; render with EJS; add error handling and a README.",
+      "Starter idea: Express skeleton with TODO comments like the section hints.",
+      "Demo idea: an API-picker checklist (auth? CORS? rate limit?) that scores candidate APIs."
+    ]
+  }
+}

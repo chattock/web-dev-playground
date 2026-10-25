@@ -1,0 +1,61 @@
+{
+  "index": 273,
+  "lecture_id": 41780550,
+  "title": "Set up your Google OAuth Credentials",
+  "section": "35. Authentication and Security",
+  "duration_min": 2,
+  "kind": "article-task",
+  "summary": "Written setup guide for creating your own Google OAuth client ID and secret in Google Cloud Console, needed for the 'Sign in with Google' lesson that follows. The instructor's own credentials cannot be reused.",
+  "concepts": [
+    {
+      "heading": "Setup checklist in Google Cloud Console",
+      "points": [
+        "Sign in to console.cloud.google.com with a Google account and create a new project (named Secrets here); no organisation is needed.",
+        "Open APIs & Services, then Credentials, from the navigation menu.",
+        "Configure the OAuth consent screen first: this is the page users see when granting your app access. Choose the External user type; staying in testing mode avoids Google's app verification. Fill in app name, support email and developer contact email. No logo or domain is required.",
+        "Scopes define which user data your app receives. Only the email is needed, so add just the email scope via Add or Remove Scopes. Test users are not required for this setup.",
+        "Back in Credentials, choose Create Credentials, then OAuth client ID, and set the application type to Web application.",
+        "Authorised JavaScript origin: http://localhost:3000.",
+        "Authorised redirect URI: http://localhost:3000/auth/google/secrets. This is where Google sends the user after they authenticate, and it must match the callback route used in the Express app (which then shows the secrets page).",
+        "Click Create, then copy the Client ID and Client Secret for use in the next lesson.",
+        "(Extra) Store those two values in the project's .env file (for example GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET) rather than in index.js, using the approach from the previous lesson, and keep .env git-ignored.",
+        "(Extra) Google's console layout changes often, so menu names may differ slightly; the OAuth consent screen may now appear under an Auth Platform or Google Auth section."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Values to enter in the Google client form and keep in .env (placeholders)",
+      "language": "text",
+      "code": "Authorised JavaScript origin:  http://localhost:3000\nAuthorised redirect URI:      http://localhost:3000/auth/google/secrets\n\n# .env\nGOOGLE_CLIENT_ID=\"<your client id>\"\nGOOGLE_CLIENT_SECRET=\"<your client secret>\""
+    }
+  ],
+  "task": {
+    "name": "Create Google OAuth credentials",
+    "starting_point": "A Google account and the secrets app from the previous lessons.",
+    "goal": "Obtain a Client ID and Client Secret configured for http://localhost:3000.",
+    "steps": [
+      "Open Google Cloud Console and create a project called Secrets.",
+      "Go to APIs & Services, Credentials.",
+      "Configure the consent screen: External, app name and emails, email scope only.",
+      "Create an OAuth client ID of type Web application.",
+      "Add http://localhost:3000 as a JavaScript origin and http://localhost:3000/auth/google/secrets as a redirect URI.",
+      "Create it and copy the Client ID and Client Secret."
+    ],
+    "expected_result": "You hold a Client ID and Client Secret ready for the Sign in with Google lesson.",
+    "solution_code": null,
+    "reference_repo_path": "Section 35 - Authentication and Security - Handling Credentials & Designing a Secure Login/35.08 Set up your Google OAuth Credentials/README.md"
+  },
+  "pitfalls": [
+    "Redirect URI not matching exactly (port, path or http vs https), which gives a redirect_uri_mismatch error.",
+    "Committing the client secret to Git.",
+    "Trying to reuse the instructor's credentials from the video."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (playground has no section 35 file).",
+    "gaps_and_ideas": [
+      "Could be folded into a future OAuth lesson as a step-by-step checklist with a diagram of the redirect flow (browser, app, Google consent, callback URI)."
+    ]
+  }
+}

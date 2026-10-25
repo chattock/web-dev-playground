@@ -1,0 +1,70 @@
+{
+  "index": 201,
+  "lecture_id": 12384462,
+  "title": "What is Express?",
+  "section": "24. Express.js with Node.js",
+  "duration_min": 7,
+  "kind": "theory",
+  "summary": "Explains that Node is a general-purpose JavaScript runtime while Express is a web framework layered on top of it, built specifically for server back ends. Shows why Express replaces hand-written Node server code in almost every real project.",
+  "concepts": [
+    {
+      "heading": "Runtime vs framework",
+      "points": [
+        "Node.js is strictly a runtime environment: it lets JavaScript run on a computer outside the browser. It is not a framework.",
+        "Express is a JavaScript framework that sits on top of Node and is aimed at one job, building the back end of a website.",
+        "Professional teams normally combine the two: Node supplies the runtime, Express supplies the structure for handling web requests."
+      ]
+    },
+    {
+      "heading": "Why Express is needed",
+      "points": [
+        "Node is general purpose. Beyond web back ends it is used for IoT devices and desktop apps (VS Code runs on Electron, which embeds Node), so it has no web-specific conveniences built in.",
+        "Express is a specialised tool for the web-server case: an electric screwdriver versus a plain one. Both can do the job; the specialised tool is faster for that one task.",
+        "A two-page site (home and about) written in bare Node needs a lot of low-level code that is hard to read. The same site in Express is short, modular and easy to follow, because Express talks to Node's internals for you.",
+        "Listed advantages: better readability, less code to write, and middleware, which lets you plug in features one piece at a time (covered in a later lesson)."
+      ]
+    },
+    {
+      "heading": "Popularity",
+      "points": [
+        "Express is the default choice among JavaScript back-end frameworks, and State of JS usage statistics back this up.",
+        "That is why the course skips building a server with raw Node and goes straight to Express."
+      ]
+    },
+    {
+      "heading": "(Extra) What Express removes",
+      "points": [
+        "In bare Node you create a server with http.createServer, then branch on req.url and req.method by hand, set the status and Content-Type headers yourself with res.writeHead, and call res.end.",
+        "Express replaces that branching with one method call per route (app.get(path, handler)), sets sensible headers automatically in res.send, and returns a 404 'Cannot GET /path' page for unmatched routes without any extra code.",
+        "Express is itself built on Node's http module: app.listen creates an http.Server under the hood."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "(Extra) The same two-page site in bare Node (no Express), for contrast",
+      "language": "javascript",
+      "code": "import http from \"node:http\";\n\nconst server = http.createServer((req, res) => {\n  if (req.method === \"GET\" && req.url === \"/\") {\n    res.writeHead(200, { \"Content-Type\": \"text/html\" });\n    res.end(\"<h1>Home</h1>\");\n  } else if (req.method === \"GET\" && req.url === \"/about\") {\n    res.writeHead(200, { \"Content-Type\": \"text/html\" });\n    res.end(\"<h1>About</h1>\");\n  } else {\n    res.writeHead(404, { \"Content-Type\": \"text/plain\" });\n    res.end(\"Not found\");\n  }\n});\n\nserver.listen(3000);"
+    },
+    {
+      "caption": "(Extra) The same site in Express (built in the next two lessons)",
+      "language": "javascript",
+      "code": "import express from \"express\";\nconst app = express();\n\napp.get(\"/\", (req, res) => {\n  res.send(\"<h1>Home</h1>\");\n});\n\napp.get(\"/about\", (req, res) => {\n  res.send(\"<h1>About</h1>\");\n});\n\napp.listen(3000);"
+    }
+  ],
+  "task": null,
+  "pitfalls": [
+    "Calling Node a framework. It is a runtime; Express is the framework.",
+    "(Extra) Assuming Express is part of Node. It is a separate npm package that must be installed."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (section 24 has no playground file).",
+    "gaps_and_ideas": [
+      "Proposed lesson 'Node vs Express': blurb contrasting a runtime with a framework.",
+      "Tasks: (1) label which of Node, Express, V8, npm is a runtime, framework, engine or package manager; (2) read a bare http.createServer example and a matching Express example and list what Express removes; (3) list three non-web things Node can do.",
+      "Starter code idea: side-by-side bare http.createServer routing with if/else on req.url versus app.get routes.",
+      "Interactive demo idea: toggle between the two versions and highlight lines of boilerplate that disappear."
+    ]
+  }
+}

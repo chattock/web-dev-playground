@@ -1,0 +1,87 @@
+{
+  "index": 118,
+  "lecture_id": 12383818,
+  "title": "Manipulating and Changing Styles of HTML Elements with Javascript",
+  "section": "16. The Document Object Model (DOM)",
+  "duration_min": 5,
+  "kind": "concept+exercise",
+  "summary": "Shows how to change an element's CSS from JavaScript through its style property: CSS names become camelCase and all values are strings. Ends with a challenge to turn a button's background yellow.",
+  "concepts": [
+    {
+      "heading": "The style property",
+      "points": [
+        "Every selected element has a style object; assign to its properties to set inline styles, e.g. document.querySelector('h1').style.color = 'red'.",
+        "Any CSS property can be set this way."
+      ]
+    },
+    {
+      "heading": "Name conversion rule",
+      "points": [
+        "JavaScript names for properties and methods use camelCase (first word lowercase, later words capitalised), like querySelector.",
+        "So hyphenated CSS names lose the dash and capitalise the next word: font-size becomes fontSize, background-color becomes backgroundColor. Single-word properties (color, padding) stay the same.",
+        "The DOM style object reference on MDN lists every property name; searching it for the CSS name finds the JS spelling."
+      ]
+    },
+    {
+      "heading": "Values are always strings",
+      "points": [
+        "In CSS the value is typed bare (padding: 7%); in JS the value must be a quoted string even if numeric-looking, e.g. style.padding = '7%' or style.fontSize = '10rem'.",
+        "Same for keywords: visibility hidden becomes style.visibility = 'hidden'. The Elements panel in DevTools can be used to preview a CSS edit before writing the JS."
+      ]
+    },
+    {
+      "heading": "Challenge solution",
+      "points": [
+        "CSS equivalent: background-color: yellow, so the JS property is backgroundColor.",
+        "Select the button with querySelector('button') (or '.btn') and assign the string 'yellow'."
+      ]
+    },
+    {
+      "heading": "Next step",
+      "points": [
+        "The following lesson covers separation of concerns: keeping styling in CSS and using JavaScript only to switch it on or off."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Style changes from the reference repo (adds a button style)",
+      "language": "javascript",
+      "code": "document.querySelector(\"h1\").style.color = \"red\";\ndocument.querySelector(\"h1\").style.fontSize = \"5rem\";   // font-size -> fontSize\ndocument.querySelector(\"h1\").style.padding = \"5%\";      // value is a string\ndocument.querySelector(\".btn\").style.backgroundColor = \"yellow\";"
+    }
+  ],
+  "task": {
+    "name": "Make the button background yellow with JavaScript only",
+    "starting_point": "Demo page with an h1 and a button (class btn).",
+    "goal": "Change the button's background colour from the console using JS.",
+    "steps": [
+      "Work out the CSS property (background-color).",
+      "Convert it to camelCase: backgroundColor.",
+      "Select the button with document.querySelector('button').",
+      "Assign the string 'yellow' to .style.backgroundColor."
+    ],
+    "expected_result": "The button turns yellow immediately.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "document.querySelector(\"button\").style.backgroundColor = \"yellow\";"
+    },
+    "reference_repo_path": "Section 16 - The Document Object Model (DOM)/16.04 - Manipulating and Changing Styles of HTML Elements with Javascript/script.js"
+  },
+  "pitfalls": [
+    "Writing style.background-color (a syntax error: JS reads the dash as subtraction); use backgroundColor.",
+    "Forgetting quotes around the value.",
+    "Forgetting units: style.fontSize = 10 is ignored; use '10rem'.",
+    "(Extra) Inline styles override stylesheet rules, so they can be hard to undo; that is why the next lesson moves styling back into CSS classes.",
+    "Reference repo diverges: its script is run on load rather than from the console and the page has a student footer (omitted)."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (section 16 has none).",
+    "gaps_and_ideas": [
+      "New lesson 'Changing styles with JS': blurb on the style property, camelCase and string values.",
+      "Tasks: turn the h1 red; set fontSize to 5rem; add padding; make the button yellow; hide an element with visibility hidden.",
+      "Starter: h1 and button page with a blank script.",
+      "Interactive demo: a CSS-to-JS converter where typing 'border-top-left-radius' shows borderTopLeftRadius and applies it to a preview box."
+    ]
+  }
+}

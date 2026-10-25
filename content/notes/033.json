@@ -1,0 +1,121 @@
+{
+  "index": 33,
+  "lecture_id": 37350312,
+  "title": "How to add CSS",
+  "section": "5. Introduction to CSS",
+  "duration_min": 15,
+  "kind": "concept+exercise",
+  "summary": "Covers the three ways to attach CSS to HTML: inline (style attribute), internal (<style> element) and external (separate .css file connected with <link>). Explains the anatomy of a CSS rule and when each method fits, then an exercise builds a four-page site that uses all three methods.",
+  "concepts": [
+    {
+      "heading": "The three methods at a glance",
+      "points": [
+        "Inline: CSS written in a style attribute on one element. Affects only that element.",
+        "Internal: CSS written inside a <style> element in the HTML file. Affects only that one HTML page.",
+        "External: CSS written in a separate file with a .css extension (often style.css, styles.css or main.css), connected to each page with a <link> element. Affects every page that links to it.",
+        "Rule of thumb from the lecture: inline for a single element, internal for a single page, external for a multi-page site (and for most real work). External is the method used for the rest of the course; the other two are still worth recognising because they show up in other people's code."
+      ]
+    },
+    {
+      "heading": "Inline CSS: the style attribute",
+      "points": [
+        "style is a global attribute: it can go on any element (html, img, br, h1, anything).",
+        "It follows the usual attribute pattern: name, equals sign, then a value in quotes. The value is the CSS.",
+        "Inside the value, a declaration has two parts: the property to change and the value to set it to, separated by a colon and ended with a semicolon. Example: style=\"background: blue;\" on the <html> opening tag makes the whole page background blue.",
+        "Inline CSS always goes in the opening tag of the element being styled.",
+        "Downside: to give many elements the same look you must repeat the attribute on every one, which is tedious and hard to maintain. Use it sparingly: for one-off tweaks, a single element, or quick testing."
+      ]
+    },
+    {
+      "heading": "Internal CSS: the <style> element",
+      "points": [
+        "Open a <style> tag and close it with </style>; everything between them is CSS.",
+        "Because a <style> block can affect any element in the document, each rule needs a selector to say which elements it targets. Inline CSS doesn't need one because it already sits on the target element.",
+        "Rule anatomy: selector, then an opening curly brace, then one or more property: value; declarations, then a closing curly brace. It is usually spread over several lines for readability, but it is the same as writing it on one line: html { background: red; }",
+        "One <style> block can hold as many rules as needed, targeting as many different elements as needed.",
+        "Convention: put the <style> element inside <head>. The browser will still apply it if it's placed elsewhere, but developers keep it in the head.",
+        "Limitation: the rules only apply to the page that contains them, so internal CSS doesn't suit multi-page sites."
+      ]
+    },
+    {
+      "heading": "External CSS: a .css file plus <link>",
+      "points": [
+        "The CSS lives in its own file. That file contains only rules (selectors, properties, values), with no HTML tags and no <style> wrapper.",
+        "Connect it from inside the HTML page's <head> with a <link> element. <link> is a void (self-closing) element: no closing tag.",
+        "rel (relationship) says what role the linked file plays for this page. For CSS it is rel=\"stylesheet\".",
+        "href says where the file is. ./style.css means 'style.css in the same folder as this HTML file'.",
+        "Every page that links the same file gets the same styles, so one edit restyles the whole site. This is why external CSS is the standard approach."
+      ]
+    },
+    {
+      "heading": "Revision used in the exercise: links and relative paths",
+      "points": [
+        "Links between pages are anchor elements: <a href=\"./inline.html\">Inline</a>.",
+        "./ means 'start from the current folder', then the filename follows the forward slash.",
+        "The Solution folder holds a second copy of every file. Preview solution.html to see the target, then collapse that folder in VS Code so the duplicate filenames don't get mixed up."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Inline: style attribute in the opening tag (here on <html> to colour the whole page)",
+      "language": "html",
+      "code": "<html style=\"background: blue;\">\n  ...\n</html>"
+    },
+    {
+      "caption": "Internal: a <style> block in the head with a selector and curly braces",
+      "language": "html",
+      "code": "<head>\n  <style>\n    html {\n      background: red;\n    }\n  </style>\n</head>"
+    },
+    {
+      "caption": "External: link the stylesheet in the head; the .css file holds only rules",
+      "language": "html",
+      "code": "<!-- index.html -->\n<head>\n  <link rel=\"stylesheet\" href=\"./styles.css\" />\n</head>\n\n/* styles.css */\nhtml {\n  background: green;\n}"
+    },
+    {
+      "caption": "Anatomy of a CSS rule",
+      "language": "css",
+      "code": "/* selector  { property: value; } */\nh1 {\n  color: green;\n}"
+    }
+  ],
+  "task": {
+    "name": "5.1 Adding CSS: three methods, four pages",
+    "starting_point": "A project folder with five files: index.html (an h1 'Three Methods of Adding CSS' and a comment asking for three links), inline.html, internal.html and external.html (each with an h1 telling you what colour and method to use), and an empty style.css. A Solution folder holds the finished versions.",
+    "goal": "Turn index.html into a home page that links to the three other pages, then colour each page's h1 using the method that page is named after: blue with inline, red with internal, green with external.",
+    "steps": [
+      "In index.html, under the h1, add three anchor tags whose href values are ./inline.html, ./internal.html and ./external.html, with link text Inline, Internal, External.",
+      "In inline.html, add style=\"color: blue\" to the opening <h1> tag.",
+      "In internal.html, add a <style> element inside <head> containing a rule that selects h1 and sets color: red.",
+      "In style.css, write a rule that selects h1 and sets color: green.",
+      "In external.html, add <link rel=\"stylesheet\" href=\"./style.css\" /> inside <head> so the page loads style.css.",
+      "Preview index.html, click each link and check each h1 is the right colour. Compare with Solution/solution.html."
+    ],
+    "expected_result": "A home page with the heading and three working links. The Inline page shows a blue h1 ('Style Me in Blue!'), the Internal page a red one, and the External page a green one.",
+    "solution_code": {
+      "language": "html",
+      "code": "<!-- index.html (body) -->\n<h1>Three Methods of Adding CSS</h1>\n<a href=\"./inline.html\">Inline</a>\n<a href=\"./internal.html\">Internal</a>\n<a href=\"./external.html\">External</a>\n\n<!-- inline.html (body) -->\n<h1 style=\"color: blue\">Style Me in Blue!</h1>\n\n<!-- internal.html (head) -->\n<style>\n  h1 {\n    color: red;\n  }\n</style>\n\n<!-- external.html (head) -->\n<link rel=\"stylesheet\" href=\"./style.css\" />\n\n/* style.css */\nh1 {\n  color: green;\n}"
+    },
+    "reference_repo_path": "Section 05 - Introduction to CSS/05.01 - Adding CSS/ (index.html, inline.html, internal.html, external.html, style.css; Solution/). The repo's footer 'Made with ... by Harshit Soni' is a personal addition and is left out above."
+  },
+  "pitfalls": [
+    "Writing a selector and braces inside a style attribute. Inline CSS is just property: value pairs.",
+    "Forgetting the selector or curly braces inside <style> or a .css file.",
+    "Putting <style> tags inside the .css file. External files contain only CSS rules.",
+    "Wrong href in <link> (wrong filename, e.g. styles.css vs style.css, or wrong folder), so the stylesheet silently never loads.",
+    "Leaving out rel=\"stylesheet\"; the browser then doesn't treat the file as CSS.",
+    "Adding a closing </link> tag. It is a void element.",
+    "Editing the copy in the Solution folder by mistake because it has the same filenames."
+  ],
+  "playground": {
+    "match": "s05-adding-css (lesson 5.1, data/s05.js)",
+    "coverage": "Covers all three methods with matching colours (inline blue, internal red, external green), uses the CSS pane as the external stylesheet, and has a 'Which one wins?' explore demo plus a notes table with the <link> syntax and what rel/href mean.",
+    "gaps_and_ideas": [
+      "The course exercise is a 4-page site (home page linking to inline/internal/external pages) that also revises anchors and ./ relative paths. The playground squeezes it into one page with three h2s, so that revision is lost. Consider a task that adds the three links, or a note explaining the change.",
+      "The internal-style solution uses a class selector (.internal), but classes are only taught in the next lecture; the course uses the element selector h1. Either switch to a selector learners already know, or add a one-line hint about what .internal means.",
+      "Add a 'rule anatomy' diagram (selector, curly braces, property, colon, value, semicolon) and the comparison that inline CSS has no selector because it is already on the element.",
+      "Mention that style is a global attribute (works on any element, e.g. <html style=\"background: blue\"> to colour the whole page), matching the lecture's slides.",
+      "Add the convention that <style> and <link> go inside <head>, and that <link> is self-closing.",
+      "Explore demo idea: a 'multi-page' toggle showing two mini pages sharing one external stylesheet; edit the shared CSS once and both update, versus internal CSS where only one page changes."
+    ]
+  }
+}

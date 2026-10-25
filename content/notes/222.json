@@ -1,0 +1,41 @@
+{
+  "index": 222,
+  "lecture_id": 12386708,
+  "title": "Optional Git Challenge",
+  "section": "27. Git, Github and Version Control",
+  "duration_min": 0,
+  "kind": "article-task",
+  "summary": "Short optional pointer to an interactive Git tutorial for going deeper into topics not covered in the course, such as cherry-picking and rebasing.",
+  "concepts": [
+    {
+      "heading": "Optional extra practice",
+      "points": [
+        "The course points to the free browser-based Learn Git Branching site (learngitbranching.js.org) for visual, level-by-level Git challenges.",
+        "It covers advanced topics beyond the course, including cherry-pick and rebase.",
+        "(Extra) Cherry-pick copies a single commit onto the current branch; rebase replays a branch's commits on top of another base to produce a linear history.",
+        "Entirely optional; not required for later sections."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": {
+    "name": "Learn Git Branching challenges (optional)",
+    "starting_point": "A web browser; no install needed.",
+    "goal": "Work through the interactive levels to practise branching, merging, cherry-pick and rebase.",
+    "steps": [
+      "Open learngitbranching.js.org.",
+      "Complete the introductory levels, then the advanced ones on rebase and cherry-pick."
+    ],
+    "expected_result": "More confidence manipulating commit history.",
+    "solution_code": null,
+    "reference_repo_path": null
+  },
+  "pitfalls": [],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "Link to learngitbranching.js.org from the future Git lessons as an optional extension."
+    ]
+  }
+}

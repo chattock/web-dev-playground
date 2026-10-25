@@ -1,0 +1,131 @@
+{
+  "index": 19,
+  "lecture_id": 37349804,
+  "title": "Nesting and Indentation",
+  "section": "3. Intermediate HTML",
+  "duration_min": 14,
+  "kind": "concept+exercise",
+  "summary": "Shows how to nest a complete list inside a list item, why the parent li's closing tag must come after the nested list, and why consistent indentation is what makes nested HTML readable. The exercise builds a four-level nested list, and the walkthrough ends with VS Code auto-indentation and using indentation to find a missing closing tag.",
+  "concepts": [
+    {
+      "heading": "Nesting: elements inside elements",
+      "points": [
+        "Nesting means placing one element inside another. You have already done it: every li sits inside a ul or ol, and the code shows that by indenting the li lines one level further than the list tags.",
+        "A list can also be nested inside another list. The inner ul/ol goes inside one of the outer list's li elements, never directly between li elements.",
+        "Rendered result: the inner list appears indented under the bullet (or number) of the li that contains it.",
+        "(Extra) Browsers change the default marker for deeper unordered levels: disc, then circle, then square."
+      ]
+    },
+    {
+      "heading": "How to write a nested list",
+      "points": [
+        "Find the li that should own the sub-list.",
+        "Write that li's own text first (e.g. B), press Enter, then write a complete new <ul>...</ul> or <ol>...</ol> with its own li items.",
+        "Only after the nested list's closing tag do you close the parent li. In a simple item the </li> comes straight after the text; in an item that contains a sub-list the </li> moves down to after the sub-list.",
+        "This is the key rule of the lesson: the closing tag of the outer element must come after everything nested inside it. Tags close in reverse order of opening.",
+        "You can repeat this to any depth, mixing ul and ol freely: an ordered list inside an unordered one, then an unordered one inside that, and so on."
+      ]
+    },
+    {
+      "heading": "Why indentation matters",
+      "points": [
+        "Indentation (leading spaces or tabs) has no effect on what the browser renders. It exists purely for the people reading the code.",
+        "With every nested level indented one step further, you can see at a glance which list belongs to which item. If everything is flush left, you have to read each tag name to work out the structure.",
+        "The more levels there are, the worse unindented code gets. The lecture shows the same three-list example (an outer ul, a ul under item B, and an ol under the second item of that ul) with and without indentation to make the point.",
+        "Write code with other readers in mind: teammates, reviewers, and you in a few months."
+      ]
+    },
+    {
+      "heading": "VS Code helps: auto-indent and indent guides",
+      "points": [
+        "Saving with Cmd+S (Mac) or Ctrl+S (Windows) re-indents the file automatically, because the formatter knows which elements belong inside which (e.g. li inside ul/ol). This works if format-on-save was enabled in the setup lessons.",
+        "So you do not have to indent perfectly by hand while typing, but you do need to understand what the indentation means.",
+        "VS Code draws thin vertical guide lines linking an opening tag to its matching closing tag; the children sit indented between them.",
+        "(Extra) You can also run Format Document on demand: Shift+Option+F on Mac, Shift+Alt+F on Windows."
+      ]
+    },
+    {
+      "heading": "Using indentation to debug a missing closing tag",
+      "points": [
+        "Most HTML elements come in pairs, so every opening tag should have a matching closing tag at the same indentation level.",
+        "Example from the walkthrough: delete the </ol> that should close the B1-B3 list. In the preview, item C suddenly shows up numbered as part of the ordered list instead of as a top-level bullet.",
+        "To diagnose it, follow the guide lines: the outer ul matches its closing tag, each li matches its closing tag, but the ol lines up with a closing </li> instead of a closing </ol>. That mismatch points straight at the missing tag.",
+        "Finding and fixing mistakes like this is called debugging, which gets much more attention later in the course. Indentation is the first debugging tool."
+      ]
+    },
+    {
+      "heading": "Exercise workflow tips",
+      "points": [
+        "Download and extract the 'Nesting and Indentation' zip from the lecture Resources and open it in VS Code.",
+        "Keep goal.png open next to the Live Preview and compare after each step.",
+        "Build from the outside in: first the outer list, then the first sub-list, then the next level down, checking the preview each time.",
+        "The item names encode their position (B2a = item a of the list under B2), which tells you where each list belongs."
+      ]
+    },
+    {
+      "heading": "(Extra) Vocabulary that the rest of the course relies on",
+      "points": [
+        "An element directly inside another is its child; the wrapping element is its parent; elements with the same parent are siblings; anything inside at any depth is a descendant.",
+        "In the exercise, the ol (B1-B3) is a child of the li 'B' and a descendant of the outer ul.",
+        "These relationships drive CSS selectors and JavaScript DOM navigation later."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "A list nested inside a list item: note where the parent </li> goes",
+      "language": "html",
+      "code": "<ul>\n  <li>A</li>\n  <li>\n    B\n    <ul>\n      <li>B1</li>\n      <li>B2</li>\n    </ul>\n  </li>          <!-- closes 'B' only after the nested list -->\n  <li>C</li>\n</ul>"
+    },
+    {
+      "caption": "The same code without indentation: valid, renders the same, much harder to read",
+      "language": "html",
+      "code": "<ul>\n<li>A</li>\n<li>\nB\n<ul>\n<li>B1</li>\n<li>B2</li>\n</ul>\n</li>\n<li>C</li>\n</ul>"
+    },
+    {
+      "caption": "Debugging example: the missing </ol> makes C render as item 4 of the ordered list",
+      "language": "html",
+      "code": "<ul>\n  <li>A</li>\n  <li>\n    B\n    <ol>\n      <li>B1</li>\n      <li>B2</li>\n      <li>B3</li>\n    <!-- </ol> is missing here -->\n  </li>\n  <li>C</li>   <!-- ends up treated as part of the ol -->\n</ul>"
+    }
+  ],
+  "task": {
+    "name": "3.2 Nesting and Indentation: four-level nested list",
+    "starting_point": "index.html is the page to write the list into (the reference repo copy is already completed); goal.png shows the target nested list with items named A, B, C, B1, B2, B3, B2a, B2b, B2c, B2aa, B2ab, B31, B32.",
+    "goal": "Recreate the goal's nested list structure exactly, using the right list type (ul for bullets, ol for numbers) at each level and correct nesting.",
+    "steps": [
+      "Create the top-level ul with three li items: A, B, C. Check the preview.",
+      "Inside li 'B', after the text B, add an ol with three items: B1, B2, B3. Move B's closing </li> to after this ol.",
+      "Inside li 'B2', after its text, add a ul with three items: B2a, B2b, B2c. Close B2's li after that ul.",
+      "Inside li 'B2a' (the first item, not the second), after its text, add a ul with B2aa and B2ab.",
+      "Inside li 'B3', after its text, add an ol with B31 and B32.",
+      "Save (Cmd/Ctrl+S) so VS Code re-indents everything, then compare the preview with goal.png level by level.",
+      "If something lands at the wrong level, follow the indent guides to find the opening tag whose closing partner is missing or misplaced."
+    ],
+    "expected_result": "Bullets A, B, C at the top; under B a list numbered 1-3; under B2 three bullets; under B2a two further bullets; under B3 a list numbered 1-2. Preview identical to goal.png.",
+    "solution_code": {
+      "language": "html",
+      "code": "<body>\n  <ul>\n    <li>A</li>\n    <li>\n      B\n      <ol>\n        <li>B1</li>\n        <li>\n          B2\n          <ul>\n            <li>\n              B2a\n              <ul>\n                <li>B2aa</li>\n                <li>B2ab</li>\n              </ul>\n            </li>\n            <li>B2b</li>\n            <li>B2c</li>\n          </ul>\n        </li>\n        <li>\n          B3\n          <ol>\n            <li>B31</li>\n            <li>B32</li>\n          </ol>\n        </li>\n      </ol>\n    </li>\n    <li>C</li>\n  </ul>\n</body>"
+    },
+    "reference_repo_path": "Section 03 - Intermediate HTML/03.02 - Nesting and Indentation/solution.html"
+  },
+  "pitfalls": [
+    "Closing the parent </li> straight after its text and then putting the sub-list after it. The sub-list then sits directly inside the outer ul/ol, which is invalid, and the structure no longer matches the goal.",
+    "Putting a nested list between two li elements instead of inside one.",
+    "Forgetting a closing </ul> or </ol>, which pulls later items (like C) into the wrong list.",
+    "Nesting B2aa/B2ab under B2b instead of B2a.",
+    "Using ul where the goal shows numbers (or ol where it shows bullets).",
+    "Assuming indentation changes the output. It does not; it only reveals the structure."
+  ],
+  "playground": {
+    "match": "s03-nesting (lesson 3.2, data/s03.js)",
+    "coverage": "Covers nesting a list inside an li with the correct closing-tag position, an explore demo that maps the page to an HTML tree with parent/child/sibling vocabulary, notes on indentation being for humans, the Format Document shortcut, and not overlapping tags. The task is a reduced version of the course structure (A, B with B1/B2/B3, B2 with B2a/B2b, C).",
+    "gaps_and_ideas": [
+      "Match the course's full target: add B2c, a ul with B2aa/B2ab under B2a, and an ol with B31/B32 under B3. That gives four levels and mixes ul and ol at every depth.",
+      "Add a debugging task that reproduces the lecture's example: starter code missing the </ol> so that C renders as item 4. The learner must find and add the missing tag.",
+      "Add a toggle in the explore demo that strips all indentation from the same code, so learners see identical output but much harder-to-read source.",
+      "Mention format-on-save (Cmd/Ctrl+S) as the course's main method; the notes currently only give Shift+Option+F and miss the Windows shortcut Shift+Alt+F.",
+      "Add a short 'where does </li> go?' quiz: three snippets, pick the one where the parent li closes after its sub-list.",
+      "Show the default marker change for deeper ul levels (disc, circle, square) in the explore demo."
+    ]
+  }
+}

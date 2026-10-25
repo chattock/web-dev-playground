@@ -1,0 +1,55 @@
+{
+  "index": 167,
+  "lecture_id": 12643388,
+  "title": "Step 3 - Show the Sequence to the User with Animations and Sounds",
+  "section": "20. Boss Level Challenge 2 - The Simon Game",
+  "duration_min": 1,
+  "kind": "article-task",
+  "summary": "Flash the chosen button and play its sound, using search to find the techniques.",
+  "concepts": [
+    {
+      "heading": "Requirements",
+      "points": [
+        "Select the button whose id matches randomChosenColour with the jQuery id selector: $(\"#\" + randomChosenColour).",
+        "Animate a flash on it. Searching 'animate flash jQuery' leads to chaining fadeIn/fadeOut.",
+        "Play the matching sound with plain JS; search 'play sound javascript' leads to the Audio object.",
+        "The lecture deliberately asks the learner to research instead of giving the method names."
+      ]
+    },
+    {
+      "heading": "Hints",
+      "points": [
+        "id selectors need the # prefix.",
+        "Sound files are named after the colours (blue.mp3 etc.)."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "One possible approach",
+      "language": "javascript",
+      "code": "$(\"#\" + randomChosenColour).fadeIn(100).fadeOut(100).fadeIn(100);\nvar audio = new Audio(\"sounds/\" + randomChosenColour + \".mp3\");\naudio.play();"
+    }
+  ],
+  "task": {
+    "name": "Show the next colour",
+    "starting_point": "nextSequence() picks a colour",
+    "goal": "Button flashes and its sound plays on each call",
+    "steps": [
+      "Select the button by id with jQuery",
+      "Add a flash animation",
+      "Play its mp3 with JavaScript"
+    ],
+    "expected_result": "Each nextSequence() call flashes one button with sound.",
+    "solution_code": null,
+    "reference_repo_path": "Section 20 - Boss Level Challenge 2 - The Simon Game/script.js"
+  },
+  "pitfalls": [
+    "Audio path must match the sounds folder and filename case."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (web-dev-playground has no files for sections 19-20)",
+    "gaps_and_ideas": []
+  }
+}

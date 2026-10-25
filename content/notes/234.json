@@ -1,0 +1,75 @@
+{
+  "index": 234,
+  "lecture_id": 39461822,
+  "title": "Building your own APIs",
+  "section": "30. Build Your Own API",
+  "duration_min": 18,
+  "kind": "theory",
+  "summary": "Opens the section on writing your own API. Covers why APIs are worth building and selling, the three sources of API value, public versus internal APIs, and the five REST constraints, then previews the joke API built over the next lectures.",
+  "concepts": [
+    {
+      "heading": "Why build or consume APIs",
+      "points": [
+        "An API lets a developer reuse someone else's data, service or algorithm instead of collecting data or building the service from scratch, so a product can reach a first working version in minutes.",
+        "Public APIs are open to anyone who registers or holds credentials; some are free, some paid. Marketplaces such as RapidAPI host third-party APIs and bill consumers per request, and also list free ones.",
+        "Marketplace-hosted APIs usually keep their source closed so others cannot just clone them. Open-source APIs (the Domino's Pizza Node.js API on GitHub is the example given) can be read to see how a real one is built."
+      ]
+    },
+    {
+      "heading": "What makes an API valuable enough to charge for",
+      "points": [
+        "Data collection: a large or rare dataset (a big recipe archive, live weather-station readings).",
+        "Algorithm or service: logic that is costly to reproduce, e.g. a route-distance calculator combining mapping APIs, or a large trained AI model exposed through an endpoint.",
+        "Simplified interface: wrapping something awkward behind a few parameters, e.g. ordering a pizza with location and payment inputs, or reducing Google Sheets/Maps to the two or three operations most people need so it takes a few lines of code instead of hundreds."
+      ]
+    },
+    {
+      "heading": "Internal (private) APIs",
+      "points": [
+        "Every backend built so far in the course is effectively an internal API: it serves the company's own front end, is undocumented for outsiders and carries no support promise.",
+        "Internal does not mean secure. Without authentication or other protection, anyone who discovers the endpoints can call them, and people do reverse-engineer private APIs. Keep this in mind both when building and when investigating how a site works."
+      ]
+    },
+    {
+      "heading": "REST: the five constraints",
+      "points": [
+        "REST stands for Representational State Transfer. 'What makes an API RESTful?' is a classic interview question.",
+        "1. Standard HTTP methods: GET reads, POST creates, PUT replaces, PATCH partially updates, DELETE removes.",
+        "2. Standard response format: resources are sent back as a representation, most commonly JSON (or XML). This is the 'representation' in the name.",
+        "3. Client/server separation: the two live on different systems, talk only over the network by request and response, and can be built, deployed and scaled independently.",
+        "4. Statelessness: every request carries everything the server needs to answer it. The server stores no per-client memory between requests (for example it must not assume that a client who got item 4 now wants item 5). This keeps the server simple and lets it serve many clients.",
+        "5. Resource-based: data is modelled as resources, each located by a URI/URL. A URL is a kind of URI that gives the address of a resource.",
+        "The web itself fits all five constraints (URLs as resources, HTTP, standard formats, separate browser and server, stateless requests), which is why it is the standard example of REST."
+      ]
+    },
+    {
+      "heading": "What gets built next",
+      "points": [
+        "A RESTful joke API: the server holds a collection of jokes, each tagged with a category, and clients can fetch, add, replace, amend and delete them using the HTTP methods above."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "(Extra) How the HTTP verbs map to actions on a jokes resource",
+      "language": "text",
+      "code": "GET    /jokes/5     -> read joke 5\nPOST   /jokes       -> create a new joke\nPUT    /jokes/5     -> replace joke 5 entirely\nPATCH  /jokes/5     -> change some fields of joke 5\nDELETE /jokes/5     -> remove joke 5"
+    }
+  ],
+  "task": null,
+  "pitfalls": [
+    "Treating an undocumented internal API as private; without auth it can still be called by anyone who finds it.",
+    "Storing per-client state on the server between requests breaks the stateless constraint.",
+    "(Extra) Mixing up URI and URL: every URL is a URI but not the reverse."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "Create a lesson 'What makes an API RESTful?' with a blurb on the five constraints.",
+      "Tasks: (1) match each HTTP verb to a CRUD action, (2) classify example APIs as data, algorithm or simplified-interface value, (3) decide which of several request designs violate statelessness, (4) write the URL for a given resource.",
+      "Starter idea: a small table of endpoints with blanks for the HTTP method.",
+      "Interactive demo idea: a checklist quiz where the learner toggles a made-up API's traits and sees which of the five REST constraints it breaks."
+    ]
+  }
+}

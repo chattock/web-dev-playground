@@ -1,0 +1,67 @@
+{
+  "index": 107,
+  "lecture_id": 18170350,
+  "title": "Who's Buying Lunch Solution",
+  "section": "15. Intermediate Javascript",
+  "duration_min": 4,
+  "kind": "solution",
+  "summary": "Solution walkthrough: pick a random element from an array of any length by using names.length to scale Math.random(), flooring it to get a valid index, and returning a sentence.",
+  "concepts": [
+    {
+      "heading": "Picking a random array item",
+      "points": [
+        "Array positions run from 0 to length - 1; names[0] is the first and names[4] the last in a 5-item array.",
+        "The function cannot assume a fixed size, so read the size with names.length and store it, e.g. numberOfPeople.",
+        "Math.random() * numberOfPeople yields 0 up to just under the length (for 5 people, 0 to 4.999...).",
+        "Math.floor() of that gives an integer from 0 to length - 1, exactly the valid indices.",
+        "Use that index in square brackets to fetch the name."
+      ]
+    },
+    {
+      "heading": "Returning the result",
+      "points": [
+        "Return (not console.log) the name concatenated with the rest of the sentence: \" is going to buy lunch today!\".",
+        "The leading space in the string literal separates the name from the text.",
+        "Test by calling the function repeatedly, with the same or different arrays."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Step-by-step solution",
+      "language": "javascript",
+      "code": "function whosPaying(names) {\n  var numberOfPeople = names.length;\n  var randomPersonPosition = Math.floor(Math.random() * numberOfPeople);\n  var randomPerson = names[randomPersonPosition];\n  return randomPerson + \" is going to buy lunch today!\";\n}\n\nconsole.log(whosPaying([\"Angela\", \"Ben\", \"Jenny\", \"Michael\", \"Chloe\"]));"
+    }
+  ],
+  "task": {
+    "name": "Who's buying lunch",
+    "starting_point": "A whosPaying(names) function stub and an array of names.",
+    "goal": "Return \"<random name> is going to buy lunch today!\".",
+    "steps": [
+      "Read the array size with names.length.",
+      "Compute Math.floor(Math.random() * length) for a random index.",
+      "Look up names[index].",
+      "Return the name plus \" is going to buy lunch today!\" with the leading space."
+    ],
+    "expected_result": "Each call returns a sentence naming a randomly chosen person from the list.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "var nameList = [\"Angela\", \"Ben\", \"Jenny\", \"Michael\", \"Chloe\"];\n\nfunction whosPaying(names) {\n  var drawnNumber = Math.floor(Math.random() * names.length);\n  return names[drawnNumber] + \" is going to buy lunch today!\";\n}\n\nconsole.log(whosPaying(nameList));"
+    },
+    "reference_repo_path": "Section 15 - Intermediate Javascript/15.09 - Who's Buying Lunch - Code Challenge/script.js"
+  },
+  "pitfalls": [
+    "Hard-coding 5 instead of names.length.",
+    "Using length as the maximum index (off by one).",
+    "Forgetting the space before the sentence text.",
+    "Logging instead of returning."
+  ],
+  "playground": {
+    "match": "s15-lunch (lesson 15.9, data/s15.js)",
+    "coverage": "Matches the challenge closely, including the names.length point and the reusable random-item pattern.",
+    "gaps_and_ideas": [
+      "Add a task testing the function with a 2-person and a 10-person list.",
+      "Demo idea: 'Pick' button repeated 100 times with a tally to show roughly even odds."
+    ]
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "index": 336,
+  "lecture_id": 31673348,
+  "title": "Adding HTML and CSS to Create the Frontend for DBANK",
+  "section": "38. Build Your First Defi (Decentralised Finance) DApp - DBANK",
+  "duration_min": 8,
+  "kind": "setup",
+  "summary": "With the Motoko backend finished, the default ICP template frontend is replaced by a prepared DBank page (HTML, CSS and a logo). The page is previewed locally through the dfx and npm workflow, with the JavaScript left empty until the next lecture.",
+  "concepts": [
+    {
+      "heading": "Why the template frontend gets replaced",
+      "points": [
+        "A new ICP project generated from the template ships a frontend that is just the 'hello world' sample: a Dfinity logo, an index.html and a JS entry file. It knows nothing about the DBank canister's functions.",
+        "The plan is to swap in a DBank-specific UI that can show the balance, top up and withdraw, then wire it to the Motoko canister in the following lecture.",
+        "First step: empty index.html, main.css and the JS entry file (all three parts of the frontend) so they can be replaced."
+      ]
+    },
+    {
+      "heading": "Supplied resources and how to use them",
+      "points": [
+        "The lesson resources contain two files with their extensions stripped (called Index and Main) so a double-click does not open them in a browser. Copy the Index text into index.html and the Main text into main.css.",
+        "A logo image (dbank_logo.png) is also supplied. Drop it into the frontend's assets folder (next to the existing logo.png). The default Dfinity logo can be deleted to avoid confusion.",
+        "The HTML and CSS are not written live because the course already taught them; the advice is to still read pasted code and make sure each part is understood.",
+        "(Extra) In the reference repo the CSS lives at src/dbank_frontend/assets/main.css and is linked as /main.css, because vite.config.js sets publicDir to 'assets', so files there are served from the site root. The logo is referenced as dbank_logo.png for the same reason."
+      ]
+    },
+    {
+      "heading": "Structure of the supplied page",
+      "points": [
+        "A .container div (fixed 300px wide, centred, translucent background, rounded corners) holds everything.",
+        "Inside: the logo img, an h1 'Current Balance: $' with a span id='value' holding the number, a .divider div (a short coloured bar), and a form.",
+        "The span id='value' is the element the JS will later overwrite with the live balance. The initial 234 is only placeholder text.",
+        "The form has two number inputs: id='input-amount' (name topUp) for deposits and id='withdrawal-amount' (name withdraw) for withdrawals. Both use step='0.01' and min='0' so cents are allowed and negatives are blocked by the browser.",
+        "A submit input id='submit-btn' with the label 'Finalise Transaction' sends both values in one go.",
+        "The script tag is type='module' pointing at /src/main.js, so the JS file can use import statements.",
+        "CSS styles the page with a dark background, centred text, white rounded inputs that get a blue border on :focus, hides the number spinners via the webkit spin-button pseudo-elements, and styles #submit-btn with a hover colour and a :disabled look (muted translucent). The :disabled style matters later, because the JS disables the button while the canister calls run."
+      ]
+    },
+    {
+      "heading": "Running the project locally",
+      "points": [
+        "Open a terminal inside the dbank project folder and run npm install to fetch the dependencies listed in package.json (there are few).",
+        "Run dfx start to launch the simulated local Internet Computer replica. Keep this terminal open.",
+        "In a second terminal run dfx deploy to (re)build and install the canisters. Redeploying is advisable after files changed, even if it was done before.",
+        "In a third step run npm start to launch the Vite dev server and open the local site (localhost) to see the frontend.",
+        "At this stage the logo is broken until the PNG is added and nothing is interactive because the JS file is still empty. After adding the logo, save and refresh and the logo appears."
+      ]
+    },
+    {
+      "heading": "Making a logo (optional)",
+      "points": [
+        "The logo used was produced with a free online logo maker: enter the product name, choose fonts, sizes, styles, a colour, optional slogan and icons, then pick from the generated options.",
+        "Downloading usually needs a free sign-up; a screenshot cropped to size works as an alternative."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Core of the supplied index.html body (reference repo)",
+      "language": "html",
+      "code": "<main>\n  <div class=\"container\">\n    <img src=\"dbank_logo.png\" alt=\"DBank logo\" width=\"100\" />\n    <h1>Current Balance: $<span id=\"value\">234</span></h1>\n    <div class=\"divider\"></div>\n    <form action=\"#\">\n      <h2>Amount to Top Up</h2>\n      <input id=\"input-amount\" type=\"number\" step=\"0.01\" min=\"0\" name=\"topUp\" value=\"\" />\n      <h2>Amount to Withdraw</h2>\n      <input id=\"withdrawal-amount\" type=\"number\" name=\"withdraw\" step=\"0.01\" min=\"0\" value=\"\" />\n      <input id=\"submit-btn\" type=\"submit\" value=\"Finalise Transaction\" />\n    </form>\n  </div>\n</main>\n<script type=\"module\" src=\"/src/main.js\"></script>"
+    },
+    {
+      "caption": "Selected CSS: disabled button state and hidden number spinners",
+      "language": "css",
+      "code": "#submit-btn {\n  background-color: #617BFF;\n  border: 2px #617BFF solid;\n  color: white;\n  cursor: pointer;\n  transition: all 0.2s;\n}\n#submit-btn:hover { background-color: #8095FF; }\n#submit-btn:disabled {\n  border: 2px rgba(255, 255, 255, 0.1) solid;\n  background-color: rgba(255, 255, 255, 0.1);\n}\ninput[type=number]::-webkit-inner-spin-button,\ninput[type=number]::-webkit-outer-spin-button {\n  -webkit-appearance: none;\n  margin: 0;\n}"
+    },
+    {
+      "caption": "Startup commands",
+      "language": "bash",
+      "code": "npm install      # install frontend dependencies\ndfx start        # terminal 1: local replica (keep running)\ndfx deploy       # terminal 2: build and install canisters\nnpm start        # run the Vite dev server for the frontend"
+    }
+  ],
+  "task": {
+    "name": "Replace the template frontend with the DBank UI",
+    "starting_point": "A dbank project with the finished Motoko backend and the default template frontend (sample HTML, CSS, JS and Dfinity logo).",
+    "goal": "See the DBank page (logo, balance, two inputs, button) in the browser via the local dev server, ready for JS wiring.",
+    "steps": [
+      "Delete the contents of index.html, main.css and the JS entry file.",
+      "Paste the supplied Index text into index.html and the Main text into main.css.",
+      "Drag the supplied dbank_logo.png into the assets folder; optionally delete the Dfinity logo.",
+      "In the project folder run npm install.",
+      "Run dfx start in one terminal, dfx deploy in another, then npm start.",
+      "Open the local page, save and refresh to confirm the logo shows and the layout matches."
+    ],
+    "expected_result": "A dark card with the DBank logo, 'Current Balance' text, two number fields and a blue 'Finalise Transaction' button. Nothing happens on submit yet.",
+    "solution_code": null,
+    "reference_repo_path": "Section 38 - Build Your First Defi (Decentralised Finance) DApp - DBANK/38.08 Adding HTML and CSS to Create the Frontend for DBANK/Dbank/src/dbank_frontend/"
+  },
+  "pitfalls": [
+    "Saving the supplied files with .html/.css extensions on a double-click can open them in the browser; the stripped-extension files exist to avoid that.",
+    "Forgetting to move the logo into the assets folder leaves a broken image.",
+    "Running npm start without dfx start / dfx deploy means the canister is not available when JS is added later.",
+    "(Extra) The reference repo's 38.08 main.js is empty by design; code appears in 38.09."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (the playground only has files for sections 1-11, 14, 15).",
+    "gaps_and_ideas": [
+      "New lesson 'DBank frontend shell': blurb on how a static HTML form sits in front of a blockchain canister; tasks: (1) build the container card, (2) add the two number inputs with step/min, (3) style :focus and :disabled states, (4) hide number spinners, (5) add a span#value placeholder.",
+      "Starter code idea: the finished HTML/CSS with a stubbed fake 'canister' object in JS.",
+      "Interactive demo idea: a button that toggles the disabled attribute so learners see the :disabled style the real app uses during calls."
+    ]
+  }
+}

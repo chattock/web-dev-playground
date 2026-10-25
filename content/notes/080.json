@@ -1,0 +1,73 @@
+{
+  "index": 80,
+  "lecture_id": 18126409,
+  "title": "Javascript Variables Exercise Solution",
+  "section": "14. Introduction to Javascript ES6",
+  "duration_min": 3,
+  "kind": "solution",
+  "summary": "Walkthrough of the variable-swap exercise: introduce a third variable as temporary storage, then reassign in three steps so a and b trade values without literals or redeclaration.",
+  "concepts": [
+    {
+      "heading": "Why the rules exist",
+      "points": [
+        "The constraints test understanding of how variables hold and replace values. Swap puzzles like this are common in coding interviews to observe how a candidate reasons.",
+        "Editing the given 3 and 8 is not a solution; typing a = 8 and b = 3 uses literals and is not a solution; writing var a = 8 redeclares the names and the editor flags 'already defined'.",
+        "Real-life reasoning helps: to exchange the contents of two buckets you need a third, empty bucket. The hard part of coding is working out the logic, not remembering syntax."
+      ]
+    },
+    {
+      "heading": "The three-step swap",
+      "points": [
+        "Declare a new variable c and copy a's value into it: var c = a; (c now holds 3).",
+        "Overwrite a with b's value: a = b; (a is 8; the original 3 is safe in c).",
+        "Overwrite b with c: b = c; (b is 3).",
+        "Only c is newly declared, so no existing variable is redeclared, and no number literals are typed.",
+        "Order matters: copying b into a first would destroy a's original value."
+      ]
+    },
+    {
+      "heading": "Verifying",
+      "points": [
+        "Running the code logs a is 8 and b is 3; Check Solution then passes.",
+        "(Extra) Modern JavaScript can swap without a temp via destructuring: [a, b] = [b, a]; (needs a preceding semicolon on the previous line)."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Solution lines (inserted between the existing declarations and the logging)",
+      "language": "javascript",
+      "code": "var a = 3;\nvar b = 8;\n\n// --- solution ---\nvar c = a;\na = b;\nb = c;\n// ----------------\n\nconsole.log(\"a is \" + a);   // a is 8\nconsole.log(\"b is \" + b);   // b is 3"
+    }
+  ],
+  "task": {
+    "name": "Swap two variables (solution)",
+    "starting_point": "a = 3, b = 8 with three blank lines.",
+    "goal": "a becomes 8 and b becomes 3 with no number literals, no redeclaration of a or b, and no edits to existing code.",
+    "steps": [
+      "var c = a;  store a's value.",
+      "a = b;  copy b into a.",
+      "b = c;  copy the stored value into b."
+    ],
+    "expected_result": "a is 8 and b is 3.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "var c = a;\na = b;\nb = c;"
+    },
+    "reference_repo_path": null
+  },
+  "pitfalls": [
+    "a = b; b = a; leaves both variables at 8.",
+    "Reusing var for a or b creates a redeclaration warning.",
+    "Hard-coding the numbers passes the output but breaks the rules."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (s14-variables covers declaring and reassigning only).",
+    "gaps_and_ideas": [
+      "Add 'Swap two variables' lesson after s14-variables with the starter, a hidden checker for a===8 and b===3 and a regex check for no number literals.",
+      "Explore demo: step through var c = a; a = b; b = c; highlighting three boxes and their values after each line.",
+      "Follow-up task: swap two values using destructuring and compare."
+    ]
+  }
+}

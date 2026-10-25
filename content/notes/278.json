@@ -1,0 +1,40 @@
+{
+  "index": 278,
+  "lecture_id": 17038570,
+  "title": "What we will make in this React module",
+  "section": "36. React.js",
+  "duration_min": 2,
+  "kind": "tip",
+  "summary": "Preview of the module: several small React practice apps plus the main Keeper project, and the React and ES6 topics that will be covered along the way.",
+  "concepts": [
+    {
+      "heading": "Projects in the module",
+      "points": [
+        "Small apps: a registration screen, a real-time clock, an emoji dictionary and a to-do list.",
+        "Main project: Keeper, a clone of Google Keep where the user adds notes for new ideas."
+      ]
+    },
+    {
+      "heading": "React topics ahead",
+      "points": [
+        "JSX, components, props, containers, the virtual DOM, state management, declarative programming and hooks such as useState."
+      ]
+    },
+    {
+      "heading": "ES6 (ES2015) topics ahead",
+      "points": [
+        "Destructuring, the spread operator, map and filter, and import/export modules; the module doubles as a deeper JavaScript lesson."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (no data file exists for section 36)",
+    "gaps_and_ideas": [
+      "(Extra) Consider a React section roadmap page in the playground listing these topics in order, linking to each future lesson."
+    ]
+  }
+}

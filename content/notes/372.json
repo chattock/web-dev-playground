@@ -1,0 +1,58 @@
+{
+  "index": 372,
+  "lecture_id": 23664410,
+  "title": "AAA 4 - The Live AMA",
+  "section": "43. Optional Module: Ask Angela Anything",
+  "duration_min": 60,
+  "kind": "qa",
+  "summary": "Recording of a live livestream Q&A covering learning strategy, getting hired, building a portfolio, reading documentation and course-roadmap news. No code is taught; the takeaways are career and study advice.",
+  "concepts": [
+    {
+      "heading": "Learning and languages",
+      "points": [
+        "Treat programming languages as tools rather than school subjects: pick up whichever one the current project needs instead of mastering one fully first. An iOS app goal does justify getting solid in Swift first.",
+        "Mixing up syntax when switching languages is normal; lean on a good code editor and its linting/syntax highlighting for the mechanical part and spend your own effort on logic.",
+        "Learn by defining a concrete goal, splitting the topic into the parts that goal needs, then practising those parts repeatedly. Avoid trying to memorise a whole reference (every method of an API).",
+        "Information is cheap to look up, so skip memorising documentation. Search for a worked example (often Stack Overflow), spot the method used, then read the official docs for background as needed. Documentation quality varies a lot between vendors."
+      ]
+    },
+    {
+      "heading": "Getting a developer job",
+      "points": [
+        "Competition exists for any desirable role; focus on the goal and on becoming good enough to be hard to ignore rather than watching other applicants.",
+        "Think from the hiring manager's side: they receive huge numbers of applications and have little time, so visible proof of ability beats listing qualifications.",
+        "Build a portfolio of real projects that go beyond tutorial material. A suggested idea is to clone a tool a manager uses daily (a task board like Trello, for example) and add your own feature that addresses a pain point, so the reviewer instantly grasps its value.",
+        "Apply the same perspective-taking to any goal that involves other people."
+      ]
+    },
+    {
+      "heading": "Building projects and starting out",
+      "points": [
+        "Moving from tutorials to independent building requires struggle; the 100 Days of Code course deliberately reduces hand-holding over time (fewer videos, more docs and Google use) to build that independence, ending in your own portfolio projects.",
+        "Start small and grow a project step by step rather than aiming at a huge product at once.",
+        "For a startup there is no perfect moment: find spare time alongside current work, and expect chances to come from earlier preparation.",
+        "Young learners can try freelance marketplaces: charge very low prices first to gather reviews and experience, then raise the rate as demand grows.",
+        "Involve UI/UX design from the start of a project, not at the end; try many apps and note which experiences you like.",
+        "Pricing software: depends on appeal and niche size; broad-appeal products can be cheaper, niche ones need higher prices to cover development time."
+      ]
+    },
+    {
+      "heading": "Course roadmap notes (as of the stream)",
+      "points": [
+        "No separate new iOS course planned; the existing iOS course was to receive updates, with a gradual shift toward SwiftUI while UIKit stays the job-relevant skill.",
+        "No Java course planned. Python and JavaScript are both viable for web work; the instructor sees no single 'most powerful' language."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [
+    "Content is conversational and time-sensitive (2020 context); the iOS/SwiftUI remarks may be out of date.",
+    "Nothing here is required for the coding curriculum."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (Q&A video, not applicable)",
+    "gaps_and_ideas": []
+  }
+}

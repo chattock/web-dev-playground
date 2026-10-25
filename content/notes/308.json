@@ -1,0 +1,94 @@
+{
+  "index": 308,
+  "lecture_id": 17039526,
+  "title": "Javascript ES6 Destructuring Challenge Solution",
+  "section": "36. React.js",
+  "duration_min": 6,
+  "kind": "solution",
+  "summary": "Walkthrough of the cars destructuring challenge: unpack the array into honda and tesla, then dig into each object for the renamed top speed and the first colour. Each added line removes one more undefined-variable error from the table code.",
+  "concepts": [
+    {
+      "heading": "Step 1: import and inspect the data",
+      "points": [
+        "practice.js needs a default export of cars; the app file imports it below the other imports.",
+        "Logging cars first shows an array of two objects with nested objects and arrays, similar to a real API response.",
+        "Working out which variable names the (unchangeable) table code expects tells you what to create: honda, tesla, hondaTopSpeed, teslaTopSpeed, hondaTopColour, teslaTopColour."
+      ]
+    },
+    {
+      "heading": "Step 2: destructure the array",
+      "points": [
+        "const [honda, tesla] = cars; assigns item 0 and item 1 by position.",
+        "This alone makes honda.model and tesla.model resolve, so the model column renders and the related errors disappear.",
+        "honda now holds the whole Honda Civic object."
+      ]
+    },
+    {
+      "heading": "Step 3: nested object for top speed",
+      "points": [
+        "topSpeed sits inside the speedStats object, so destructure speedStats from honda and open a second pair of braces after a colon to reach inside it.",
+        "Inside, pick topSpeed and rename it with another colon, e.g. topSpeed: hondaTopSpeed. zeroToSixty can be pulled out in the same braces too, though the table does not use it.",
+        "Repeat for tesla with teslaTopSpeed. The top speed column now fills in for both rows.",
+        "(Extra) If zeroToSixty is destructured from both cars without renaming, the second const zeroToSixty clashes with the first; rename one (zeroToSixty: teslaZeroToSixty) or leave it out."
+      ]
+    },
+    {
+      "heading": "Step 4: nested array for top colour",
+      "points": [
+        "coloursByPopularity is an array, so after the colon use square brackets: coloursByPopularity: [hondaTopColour] takes the first element and names it.",
+        "Same again for tesla. The table now shows black for Honda and red for Tesla.",
+        "(Extra) The walkthrough builds the speed and colour patterns as separate statements; the reference repo merges them into one statement per car, which works because a single object pattern may mix array and object sub-patterns."
+      ]
+    },
+    {
+      "heading": "Rule of thumb",
+      "points": [
+        "Mirror the shape of the data in the pattern: braces where the data is an object, brackets where it is an array, a colon to step one level deeper or to rename."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Built up step by step as separate statements (equivalent to the merged final version)",
+      "language": "javascript",
+      "code": "import cars from \"./practice\";\n\nconst [honda, tesla] = cars;\n\nconst {\n  speedStats: { topSpeed: hondaTopSpeed },\n} = honda;\nconst {\n  speedStats: { topSpeed: teslaTopSpeed },\n} = tesla;\n\nconst {\n  coloursByPopularity: [hondaTopColour],\n} = honda;\nconst {\n  coloursByPopularity: [teslaTopColour],\n} = tesla;"
+    },
+    {
+      "caption": "Final destructuring for the challenge (merged form, as in the reference repo)",
+      "language": "javascript",
+      "code": "import cars from \"./practice\";\n\nconst [honda, tesla] = cars;\n\nconst {\n  coloursByPopularity: [hondaTopColour],\n  speedStats: { topSpeed: hondaTopSpeed },\n} = honda;\n\nconst {\n  coloursByPopularity: [teslaTopColour],\n  speedStats: { topSpeed: teslaTopSpeed },\n} = tesla;"
+    }
+  ],
+  "task": {
+    "name": "Solution to the cars destructuring challenge",
+    "starting_point": "The previous lecture's sandbox with the challenge table code uncommented and practice.js holding the cars array.",
+    "goal": "Make the table render model, top speed and top colour for both cars purely by adding destructuring.",
+    "steps": [
+      "Confirm practice.js ends with export default cars; and import it in the app file: import cars from \"./practice\";",
+      "console.log(cars) to inspect the nesting, and list the variable names the table code uses (honda, tesla, hondaTopSpeed, teslaTopSpeed, hondaTopColour, teslaTopColour).",
+      "Destructure [honda, tesla] from cars; the model column now renders.",
+      "Destructure speedStats: { topSpeed: hondaTopSpeed } from honda and the same with teslaTopSpeed from tesla; the top speed column fills in.",
+      "Destructure coloursByPopularity: [hondaTopColour] from honda and coloursByPopularity: [teslaTopColour] from tesla; the colour column fills in.",
+      "Optionally merge each car's two patterns into a single const statement."
+    ],
+    "expected_result": "Table rows show Tesla Model 3 / 150 / red and Honda Civic / 140 / black with no undefined-variable errors.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "import cars from \"./practice\";\n\nconst [honda, tesla] = cars;\nconst {\n  coloursByPopularity: [hondaTopColour],\n  speedStats: { topSpeed: hondaTopSpeed },\n} = honda;\nconst {\n  coloursByPopularity: [teslaTopColour],\n  speedStats: { topSpeed: teslaTopSpeed },\n} = tesla;"
+    },
+    "reference_repo_path": "Section 36 - React.js/36.31 Javascript ES6 Object & Array Destructuring/es6-destructuring/src/App.jsx"
+  },
+  "pitfalls": [
+    "Forgetting the colon-then-braces (or brackets) means you get the nested object itself, not the inner value.",
+    "Names must match the keys exactly (coloursByPopularity, British spelling) or the result is undefined.",
+    "Do not edit the provided table code; create the variables it expects."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (playground data covers only sections 1-11, 14, 15).",
+    "gaps_and_ideas": [
+      "Add as the final task of the proposed Destructuring lesson: starter code gives a cars array (model, coloursByPopularity, speedStats) and a rendered table that references hondaTopSpeed, teslaTopColour etc.; the learner writes only the destructuring lines, and a checker compares each variable's value with the expected one.",
+      "Demo idea: a shape-mirroring visual: show the data object as a tree and highlight, as the learner hovers each part of the pattern ({ }, [ ], colon), which node of the data it grabs and what variable name it creates."
+    ]
+  }
+}

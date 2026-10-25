@@ -1,0 +1,102 @@
+{
+  "index": 228,
+  "lecture_id": 38912016,
+  "title": "Making Server-Side API Requests with Axios",
+  "section": "28. Application Programming Interfaces (APIs)",
+  "duration_min": 18,
+  "kind": "concept+exercise",
+  "summary": "Shows how an Express server can call a third-party API itself, first with Node's built-in https module (verbose) and then with the Axios package (one line). The exercise builds an 'I'm Bored' site that fetches a random activity, filters by type and participants via query parameters, and handles 404 errors.",
+  "concepts": [
+    {
+      "heading": "Why the server makes requests",
+      "points": [
+        "Besides browsers and Postman, a Node/Express backend often needs to call another company's public API and use the response, e.g. to render a page.",
+        "Flow: your server sends a request to the provider's server, which replies with the data; your server then passes it to the template."
+      ]
+    },
+    {
+      "heading": "The native way: https module",
+      "points": [
+        "https ships with Node, no install needed.",
+        "Configure an options object: the host/base URL, the path (endpoint) and the HTTP method.",
+        "Call https.request(options, callback). The response arrives as a stream of chunks, so you append each chunk to a string on the 'data' event.",
+        "On the 'end' event all chunks are in; run JSON.parse on the accumulated string to get an object, then pass it to the view.",
+        "Wrap parsing in try/catch, add an 'error' listener on the request for network failures, and call req.end() to actually send it.",
+        "Conclusion: it works but takes many lines of boilerplate."
+      ]
+    },
+    {
+      "heading": "Axios",
+      "points": [
+        "Axios is an npm package that simplifies server-to-server (and browser) HTTP calls, much as Express simplifies Node's raw server code. It has tens of millions of weekly downloads, used as a popularity signal when choosing packages.",
+        "axios.get(url) takes the full URL (same as you would type in a browser) and returns a promise. Use .then/.catch or async/await.",
+        "response.data holds the body; when the API returns JSON, Axios has already parsed it into a JS object, so no JSON.parse is needed.",
+        "Errors (network failure or non-2xx status) reject the promise, so one try/catch handles them all in one place.",
+        "It has aliases for the common verbs: axios.get, .post, .put, .patch, .delete.",
+        "Install with npm i axios and import it: import axios from \"axios\"."
+      ]
+    },
+    {
+      "heading": "I'm Bored exercise: how it works",
+      "points": [
+        "Dependencies: axios, body-parser, ejs, express. API: bored-api.appbrewery.com with /random (one activity) and /filter (array of activities matching optional type and participants queries).",
+        "GET /: await axios.get on /random, then render the page with data = response.data. Fields shown: activity, type, participants.",
+        "POST /: the form has two selects named type and participants, so req.body.type and req.body.participants arrive as strings; empty string means 'any' (the API treats empty queries as no filter).",
+        "Build the filter URL with a template literal: /filter?type=${type}&participants=${participants}.",
+        "/filter returns an array, but the page shows one card, so pick a random element: result[Math.floor(Math.random() * result.length)].",
+        "No match makes the API answer 404, Axios rejects, and the catch block renders the page with a friendly error string.",
+        "In EJS use locals.data and locals.error to test whether each was passed; show the card when data exists, the error div when error exists."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Axios GET in an Express route (from the reference solution)",
+      "language": "javascript",
+      "code": "app.get(\"/\", async (req, res) => {\n  try {\n    const response = await axios.get(\"https://bored-api.appbrewery.com/random\");\n    res.render(\"solution.ejs\", { data: response.data });\n  } catch (error) {\n    console.error(\"Failed to make request:\", error.message);\n    res.render(\"solution.ejs\", { error: error.message });\n  }\n});"
+    },
+    {
+      "caption": "Native https version (illustrative, own code)",
+      "language": "javascript",
+      "code": "import https from \"https\";\nconst options = { hostname: \"bored-api.appbrewery.com\", path: \"/random\", method: \"GET\" };\nconst req = https.request(options, (resp) => {\n  let body = \"\";\n  resp.on(\"data\", (chunk) => (body += chunk));\n  resp.on(\"end\", () => {\n    try { console.log(JSON.parse(body)); } catch (e) { console.error(e.message); }\n  });\n});\nreq.on(\"error\", (e) => console.error(e.message));\nreq.end();"
+    }
+  ],
+  "task": {
+    "name": "I'm Bored activity finder",
+    "starting_point": "Folder with index.js, views/index.ejs, public styles, solution.js and solution.ejs; dependencies axios, body-parser, ejs, express. Run npm install, then nodemon solution.js to see the finished site.",
+    "goal": "Home page shows a random activity card; the form filters by type and participants and shows a random match; unmatched filters show 'No activities that match your criteria.'",
+    "steps": [
+      "npm install, run nodemon solution.js and try the finished site (random card, education + 1 person works, education + 2 people errors).",
+      "GET /: use axios.get on the /random endpoint inside an async handler; log response.data to learn its shape.",
+      "In index.ejs output the activity, type and participants from the passed data object, and add a block for an error message.",
+      "POST /: console.log(req.body) to see type and participants.",
+      "Request /filter with both values as query parameters via axios.get and a template literal.",
+      "Pick one random item from the returned array and render index.ejs with it.",
+      "In catch, log error.message and render with a user-facing 'No activities that match your criteria.' message (optionally branch on a 404 status for more specific messages)."
+    ],
+    "expected_result": "A card with title, type and participants appears on load; Go with a valid combination shows a random matching card; an impossible combination shows the error text and the server logs a 404.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "app.post(\"/\", async (req, res) => {\n  try {\n    const type = req.body.type;\n    const participants = req.body.participants;\n    const response = await axios.get(\n      `https://bored-api.appbrewery.com/filter?type=${type}&participants=${participants}`\n    );\n    const result = response.data;\n    res.render(\"solution.ejs\", {\n      data: result[Math.floor(Math.random() * result.length)],\n    });\n  } catch (error) {\n    console.error(\"Failed to make request:\", error.message);\n    res.render(\"solution.ejs\", { error: \"No activities that match your criteria.\" });\n  }\n});\n\n/* solution.ejs */\n// <% if (locals.data) { %>\n//   <h2><%= data.activity %></h2> <span><%= data.type %></span>\n//   <span>participants: <%= data.participants %></span>\n// <% } %>\n// <% if (locals.error) { %> <div class=\"tag-error\"><%= error %></div> <% } %>"
+    },
+    "reference_repo_path": "Section 28 - Aplication Programming Interfaces (APIs)/28.04 - Making Server-Side API Requests with Axios"
+  },
+  "pitfalls": [
+    "Forgetting async/await: response would be a pending Promise and response.data undefined.",
+    "Using only .data of the response: the top-level Axios response object also has status, headers, etc.",
+    "/filter returns an array, so rendering it directly will not fit a single-card template; choose one element.",
+    "Any catch is treated as 'no matches' in the reference; network outages would show the same message. Check error.response?.status === 404 to distinguish (Extra).",
+    "In the reference repo the starter index.js already contains the finished logic and its catch renders solution.ejs; it diverges from a true blank starter. The author field in package.json is the repo owner's, ignore it.",
+    "(Extra) Build query strings with axios params ({ params: { type, participants } }) to get automatic URL encoding."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "New lesson 'Server-side requests with Axios' (blurb: your Express server calls another API and renders the result).",
+      "Tasks: (1) axios.get a random endpoint and log response.data; (2) render fields in EJS; (3) POST handler building a filtered URL from form values; (4) choose a random array element; (5) catch errors and show a friendly message depending on error.response?.status.",
+      "Starter code: Express app with an empty async route and a form with two selects.",
+      "Interactive demo: a simulated 'API' with a fake latency and a toggle to force a 404; show the request line, status, response.data and the rendered card side by side, comparing https-module code vs Axios code line counts."
+    ]
+  }
+}

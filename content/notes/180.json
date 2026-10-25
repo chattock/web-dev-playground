@@ -1,0 +1,32 @@
+{
+  "index": 180,
+  "lecture_id": 12664308,
+  "title": "Step 9 - Answer",
+  "section": "20. Boss Level Challenge 2 - The Simon Game",
+  "duration_min": 1,
+  "kind": "solution",
+  "summary": "Solution for step 9: game over branch (restart comes in step 10).",
+  "concepts": [
+    {
+      "heading": "Walkthrough",
+      "points": [
+        "Pointer lecture: the full code for steps up to 9 is a downloadable project under Course Resources. The notes below restate the step's solution from the reference repo.",
+        "The reference also calls startOver() here, which belongs to step 10: it resets level, gamePattern and started."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Reference startOver",
+      "language": "javascript",
+      "code": "function startOver() {\n    level = 0;\n    gamePattern = [];\n    started = false;\n}"
+    }
+  ],
+  "task": null,
+  "pitfalls": [],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (web-dev-playground has no files for sections 19-20)",
+    "gaps_and_ideas": []
+  }
+}

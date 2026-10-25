@@ -1,0 +1,90 @@
+{
+  "index": 76,
+  "lecture_id": 12371344,
+  "title": "Javascript Alerts - Adding Behaviour to Websites",
+  "section": "14. Introduction to Javascript ES6",
+  "duration_min": 14,
+  "kind": "concept",
+  "summary": "First hands-on JavaScript: running alert() in Chrome's DevTools console and Snippets editor, reading a ReferenceError, looking things up on MDN, and learning the grammar (function name, parentheses, string quotes, semicolon) plus style conventions.",
+  "concepts": [
+    {
+      "heading": "Two places to run JavaScript in Chrome",
+      "points": [
+        "DevTools Console (View > Developer > JavaScript Console, or Cmd+Option+J / Ctrl+Shift+J): executes each line the moment Enter is pressed. Good for testing one-liners.",
+        "In the console, Shift+Enter inserts a new line without running, needed for multi-line input. Forgetting it and pressing Enter loses the half-written code.",
+        "Sources tab > left-hand panel arrow > Snippets: create a snippet (+ New snippet, e.g. index.js), write many lines, then run the whole file with the run button at the bottom right (or Cmd/Ctrl+Enter). This works like a mini editor and is what the next lessons use for exercises.",
+        "Output from the run appears in the console; each statement runs in order, and a dialog must be dismissed before the next line executes."
+      ]
+    },
+    {
+      "heading": "The alert function",
+      "points": [
+        "alert(\"Hello\"); shows a pop-up with that message and an OK button. It is a function: a built-in piece of behaviour the browser knows how to perform.",
+        "Anatomy: the function name (alert), parentheses holding the argument (the message), quotation marks marking text as a string rather than code, and a semicolon ending the instruction.",
+        "alert is a method of the global window object, so window.alert(\"Hello\"); is the long form. The short form is standard practice.",
+        "The message can be any text; the browser does not interpret it."
+      ]
+    },
+    {
+      "heading": "Errors and finding valid keywords",
+      "points": [
+        "Calling an unknown name, such as say(\"Hello\"), stops the script with Uncaught ReferenceError: say is not defined. It means the browser has no function or variable with that name.",
+        "Code before the faulty line still ran; execution halts at the error.",
+        "MDN Web Docs (JavaScript section) is the reference for valid keywords and syntax. Searching 'alert' leads to Window.alert(), which shows the syntax, an example and the result."
+      ]
+    },
+    {
+      "heading": "Syntax is grammar",
+      "points": [
+        "Semicolon is like a full stop: it ends one instruction so the browser does not merge it with the next line.",
+        "Quotes mark a string; the contents are text, not code.",
+        "Parentheses hold what the function should receive.",
+        "Different languages (Ruby, Python, Java) use different symbols for the same ideas."
+      ]
+    },
+    {
+      "heading": "Style conventions",
+      "points": [
+        "Use straight code quotes, never typographic 'curly' quotes. Word processors and note apps substitute curly ones, which break code when pasted. Code editors insert the correct ones.",
+        "No spaces between the function name, parentheses, quotes and semicolon: alert(\"Hello\");. Extra spaces work but are not the convention.",
+        "Single or double quotes behave identically for strings; the common convention for text is double quotes. (She notes single quotes are preferred in some situations later.)",
+        "A JavaScript style guide (she points to a community-maintained one) states the goal: code should look as though one person wrote it. Bookmark one and revisit it as you gain experience."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Two alerts in a snippet; the second shows after the first is dismissed",
+      "language": "javascript",
+      "code": "alert(\"Hello\");\nalert(\"World\");"
+    },
+    {
+      "caption": "Unknown keyword causes a ReferenceError",
+      "language": "javascript",
+      "code": "say(\"Hello\");\n// Uncaught ReferenceError: say is not defined"
+    },
+    {
+      "caption": "Reference repo's 14.01 script.js (short and long form)",
+      "language": "javascript",
+      "code": "alert(\"Hello World\");\nwindow.alert(\"Olá Mundo\");"
+    }
+  ],
+  "task": null,
+  "pitfalls": [
+    "Pasting code from Word, Notes or web pages that contain curly quotes.",
+    "Pressing Enter instead of Shift+Enter when writing multi-line code in the console.",
+    "Misspelling a built-in name (Alert vs alert); JavaScript is case-sensitive.",
+    "Leaving out the closing quote or parenthesis."
+  ],
+  "playground": {
+    "match": "s14-alerts (lesson 14.1, data/s14.js)",
+    "coverage": "Covers alert() and console.log(), tasks to alert and log values, note on alert vs console.log, and a semicolon tip. Runs in an in-page console panel.",
+    "gaps_and_ideas": [
+      "Add the anatomy diagram: label function name, parentheses/argument, string quotes, semicolon.",
+      "Add a task that deliberately calls an undefined function (say(\"Hello\")) so learners read the ReferenceError.",
+      "Add a curly-quotes demo: paste a string with typographic quotes and show the SyntaxError.",
+      "Mention window.alert as the long form and add an MDN link for alert.",
+      "Mention single vs double quotes convention and Shift+Enter / snippets for multi-line code in real Chrome DevTools."
+    ]
+  }
+}

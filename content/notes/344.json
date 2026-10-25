@@ -1,0 +1,114 @@
+{
+  "index": 344,
+  "lecture_id": 31673556,
+  "title": "How to Configure a DFX Created Project to Use React",
+  "section": "40. Building DApps on ICP with a React Frontend",
+  "duration_min": 11,
+  "kind": "setup",
+  "summary": "Sets up a fresh dfx project called dkeeper and swaps its default plain HTML/JS frontend for the React Keeper app built earlier in the course. It is a follow-along checklist of file moves, one rename, a webpack edit, a tsconfig and a package.json replacement, ending with the React UI running locally with no backend yet.",
+  "concepts": [
+    {
+      "heading": "Why React on the Internet Computer",
+      "points": [
+        "A DApp frontend is not limited to hand-written HTML/CSS/JS; the frontend canister can serve any bundled web app, and most Web3 frontends use React.",
+        "The module reuses the React-only Keeper app (a Google Keep style note taker with title + content). On its own it has no backend, so notes vanish on refresh.",
+        "Goal of the section: add a Motoko backend canister so notes are stored and survive reloads, on-chain.",
+        "The lecture assumes the React section of the course is done; the steps are many and order matters, so the suggested way to work is watch a step, pause, repeat it yourself."
+      ]
+    },
+    {
+      "heading": "Create the project",
+      "points": [
+        "From the folder that holds your ICP projects, run dfx new dkeeper. Keeping the exact name dkeeper matters because later lessons refer to canister and declaration names derived from it (dkeeper_backend etc. in current dfx, dkeeper / dkeeper_assets in the older template shown in the video).",
+        "Wait for the Dfinity logo, which signals scaffolding finished, then open the folder in VS Code.",
+        "(Extra) Newer dfx templates ask you to choose backend language and frontend framework and generate names like dkeeper_backend and dkeeper_frontend; the reference repo uses these and a Vite frontend instead of webpack."
+      ]
+    },
+    {
+      "heading": "Swap the default frontend for the React app (older webpack template)",
+      "points": [
+        "In src there are two canister folders: the Motoko one (main.mo, left untouched for now) and the assets one containing src/index.html, index.js and assets/main.css. Delete those three default frontend files.",
+        "Download the finished Keeper project from the course resources and extract it. Its public folder has index.html and styles.css; its src folder has the components folder and index.js.",
+        "Move index.html, the components folder and index.js into the project's frontend src folder. Move styles.css into the frontend assets folder.",
+        "Rename index.js to index.jsx. This is the conventional extension for files containing JSX and it is what lets the bundler's loader pick the file up as React code.",
+        "Open webpack.config.js, find module.exports and the entry setting, and change the entry file name from index.js to index.jsx (line number varies between template versions, so search for it).",
+        "Further down the config, a commented block is labelled as the section to enable when using React. Uncomment it (Cmd+/ on Mac, Ctrl+/ on Windows). It wires in the TypeScript loader that compiles the JSX during the build.",
+        "Save, then add the provided tsconfig.json from the course resources next to webpack.config.js. It holds compiler options such as the JavaScript target version and JSX handling.",
+        "Open package.json, delete all contents and paste in the contents of the provided package.txt. This supplies React, ReactDOM, Material UI icon packages and the loader tooling the build needs."
+      ]
+    },
+    {
+      "heading": "Run it locally",
+      "points": [
+        "Terminal 1: dfx start launches the simulated local ICP replica (leave it running).",
+        "Terminal 2: npm install pulls the dependencies listed in package.json. Deprecation warnings (mostly from the icon library) can be ignored; upgrading versions risks cascading dependency conflicts.",
+        "dfx deploy builds and installs the canisters on the local replica.",
+        "npm start runs the dev server; open localhost:8080 to see the React Keeper UI.",
+        "Adding notes works and icons render, which proves the frontend wiring is correct. Refreshing wipes the notes because no Motoko code or storage is involved yet. The next lesson connects main.mo."
+      ]
+    },
+    {
+      "heading": "What the reference repo looks like (Vite version)",
+      "points": [
+        "(Extra) The reference repo is a modern dfx scaffold: src/dkeeper_frontend holds index.html, vite.config.js, tsconfig.json, public/styles.css and src/main.jsx plus App.jsx and the four components. dfx.json declares dkeeper_backend (motoko) and dkeeper_frontend (type assets, source dist, workspace dkeeper_frontend).",
+        "(Extra) index.html lives at the frontend root and loads /src/main.jsx via a module script tag; main.jsx uses createRoot(...).render with StrictMode around App.",
+        "(Extra) vite.config.js proxies /api to the local replica on port 4943, loads CANISTER_ and DFX_ environment variables, and adds an alias to the generated declarations folder. The dev server runs on port 3000 (npm start), not 8080.",
+        "(Extra) Because Vite handles JSX natively, the webpack entry edit, TypeScript-loader uncommenting and package.txt steps are not needed there; the Keeper files are simply copied in."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Command sequence for the whole lesson",
+      "language": "bash",
+      "code": "dfx new dkeeper          # scaffold project\ncd dkeeper\n# ...move Keeper files, rename index.js -> index.jsx, edit webpack.config.js, add tsconfig.json, replace package.json...\ndfx start                # terminal 1: local replica\nnpm install              # terminal 2\ndfx deploy\nnpm start                # then open localhost:8080"
+    },
+    {
+      "caption": "webpack.config.js entry change (older template)",
+      "language": "javascript",
+      "code": "module.exports = {\n  target: \"web\",\n  entry: {\n    index: path.join(__dirname, \"src\", \"dkeeper_assets\", \"src\", \"index.jsx\"),\n  },\n  // ...\n};"
+    },
+    {
+      "caption": "Reference repo entry point (Vite): main.jsx",
+      "language": "jsx",
+      "code": "import { StrictMode } from \"react\";\nimport { createRoot } from \"react-dom/client\";\nimport App from \"./App.jsx\";\n\ncreateRoot(document.getElementById(\"root\")).render(\n  <StrictMode>\n    <App />\n  </StrictMode>\n);"
+    }
+  ],
+  "task": {
+    "name": "Port the Keeper React app into a dfx project",
+    "starting_point": "A brand new dfx new dkeeper project plus the finished Keeper app zip and the tsconfig.json / package.txt downloads from the course resources.",
+    "goal": "Get the React Keeper UI served by the local dfx setup, without any backend logic yet.",
+    "steps": [
+      "Run dfx new dkeeper and open it in VS Code.",
+      "Delete the default frontend index.html, index.js and CSS file.",
+      "Copy index.html, components and index.js into the frontend src folder; copy styles.css into the frontend assets folder.",
+      "Rename index.js to index.jsx and update the webpack entry to match.",
+      "Uncomment the React/TypeScript loader block in webpack.config.js.",
+      "Add tsconfig.json beside webpack.config.js.",
+      "Replace package.json contents with the supplied package.txt.",
+      "Run dfx start, npm install, dfx deploy, npm start and open localhost:8080 (port 3000 in the Vite reference repo)."
+    ],
+    "expected_result": "The Keeper app renders and lets you add notes with working icons; refreshing clears them.",
+    "solution_code": null,
+    "reference_repo_path": "Section 40 - Building DApps on ICP with a React Frontend/40.01 How to Configure a DFX Created Project to Use React/dkeeper"
+  },
+  "pitfalls": [
+    "Forgetting to rename index.js to index.jsx or to update the webpack entry to match.",
+    "Leaving the React loader block in webpack.config.js commented out, so JSX fails to compile.",
+    "Skipping the package.json replacement, which leaves React and icon libraries uninstalled.",
+    "Running npm start before dfx deploy.",
+    "Chasing deprecation warnings by upgrading packages, which causes dependency conflicts.",
+    "Naming the project differently from dkeeper, which breaks later import names.",
+    "(Extra) The reference repo's index.html contains a stray 'font-family' fragment inside the link tag; remove it."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (the site data only has files for sections 1-11, 14, 15).",
+    "gaps_and_ideas": [
+      "New lesson 'Putting React on a canister': blurb explaining frontend vs backend canisters and why a bundler step is needed.",
+      "Tasks: (1) draw the file map of a dfx project and label which canister each folder belongs to; (2) list the six config changes needed to move a React app in; (3) order the shell commands start/install/deploy/start correctly; (4) predict what happens on refresh and why.",
+      "Starter code idea: a trimmed dfx.json and webpack/vite config with blanks to fill (entry file, jsx extension).",
+      "Interactive demo idea: a drag-to-order checklist of the setup steps that flags wrong ordering, plus a toggle showing the webpack vs Vite differences."
+    ]
+  }
+}

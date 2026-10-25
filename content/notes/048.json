@@ -1,0 +1,81 @@
+{
+  "index": 48,
+  "lecture_id": 37368052,
+  "title": "CSS Display",
+  "section": "8. Advanced CSS",
+  "duration_min": 12,
+  "kind": "concept+exercise",
+  "summary": "Opens the Advanced CSS (layout) section with the display property: block, inline, inline-block and none. A two-part exercise changes only display values to put three 200x200 squares in a row, then stack them vertically.",
+  "concepts": [
+    {
+      "heading": "Why display matters",
+      "points": [
+        "A p element spans the whole width of the page (visible when its box is outlined with Pesticide), so the following content always starts on a new line.",
+        "display controls how an element takes part in the line flow. Changing it changes layout without changing the HTML.",
+        "The span element is the standard example of an inline element. It sits inside another element's text, for instance <p>Hello <span>Beautiful</span> World</p>, and does not break the line."
+      ]
+    },
+    {
+      "heading": "The values",
+      "points": [
+        "display: block - the element takes the full available width, so neighbours go above or below it. Width and height can be set. Default for most elements (p, div, h1-h6, etc.).",
+        "display: inline - the element flows like text and shares a line with other inline items until the line is full, then wraps. Width and height are ignored because the size is just the content size. Default for span.",
+        "display: inline-block - a hybrid: the element sits on the same line as siblings (inline behaviour) but accepts width and height (block behaviour). Two boxes of different sizes will line up horizontally if the container is wide enough, and wrap if not.",
+        "display: none - the element is removed from the page entirely. Useful for hide/show buttons or when a to-do item is ticked off and should vanish.",
+        "There are many more display values; these are the ones met most often."
+      ]
+    },
+    {
+      "heading": "Demo site",
+      "points": [
+        "The instructor points to an interactive demo with a block, an inline and an inline-block paragraph whose width and height can be adjusted. Observations: block accepts width/height but never lets a neighbour onto its line; inline never reacts to width/height; inline-block reacts and can share a line if narrow enough.",
+        "(Extra) Between inline-block elements the whitespace in the HTML renders as a small gap; remember that if the boxes do not butt up against each other."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Span inside a paragraph",
+      "language": "html",
+      "code": "<p>Hello <span>Beautiful</span> World</p>"
+    },
+    {
+      "caption": "Setting display in CSS",
+      "language": "css",
+      "code": ".box { display: block; }         /* full row */\n.tag { display: inline; }        /* flows like text, no width/height */\n.tile { display: inline-block; width: 200px; height: 200px; }\n.gone { display: none; }         /* removed from layout */"
+    }
+  ],
+  "task": {
+    "name": "Display property: row then column",
+    "starting_point": "index1.html / index2.html: an h1 and three p elements (red, green, blue, white text) each with width and height 200px. The CSS sets different display values on them at the start (a mix of block and inline-type values), so they do not line up.",
+    "goal": "Using only the display property, (1) make the three squares sit in a horizontal row, all 200x200; (2) make them stack vertically, still 200x200.",
+    "steps": [
+      "Part 1: find the box whose display is inline - it ignores 200x200, so change it to inline-block; it becomes a square.",
+      "The box with display: block takes a whole row; change it to inline-block as well.",
+      "With all three inline-block, they line up in a row on a wide enough window and wrap on a narrow one.",
+      "Part 2: set all three to display: block. Each claims the full width, so they stack vertically.",
+      "Do not touch width, height or any other property."
+    ],
+    "expected_result": "Part 1: three equal squares side by side. Part 2: three equal squares in one column.",
+    "solution_code": {
+      "language": "css",
+      "code": "/* Part 1: row */\n.red, .green, .blue { display: inline-block; width: 200px; height: 200px; }\n\n/* Part 2: column */\n.red, .green, .blue { display: block; width: 200px; height: 200px; }"
+    },
+    "reference_repo_path": "Section 08 - Advanced CSS/08.01 - CSS Display/solution1.html and solution2.html"
+  },
+  "pitfalls": [
+    "Setting width/height on an inline element and wondering why nothing changes.",
+    "Leaving one box as block, which forces a new line and breaks the row.",
+    "Using inline instead of inline-block when sizes are needed.",
+    "(Extra) The repo's index1/index2 are already solved versions and have an author footer; the original starting values differ."
+  ],
+  "playground": {
+    "match": "s08-display (lesson 8.1, data/s08.js)",
+    "coverage": "Very close: tasks cover row layout, vertical stack and display: none; the explore demo switches all four values with width/height sliders; notes list default display values and none vs visibility hidden.",
+    "gaps_and_ideas": [
+      "The playground starts with no display values; the course starts with a mix (block/inline/inline-block) and asks which to fix. Add that mixed starter variant.",
+      "Add a span-in-paragraph example to the explore demo to show inline in text.",
+      "Mention the whitespace gap between inline-blocks."
+    ]
+  }
+}

@@ -1,7 +1,7 @@
 /* ===== Section 6 — CSS Properties ===== */
 
 PG.add({
-  id:'s06-colors', section:'s06', slug:'colors', lesson:'6.1',
+  id:'s06-colors', index:38, udemyId:37350376, minutes:7, section:'s06', slug:'colors', lesson:'6.1',
   title:'CSS Colors',
   blurb:'<code>color</code> paints the text, <code>background-color</code> paints the area behind it. Values can be one of 140 named colours, or a hex code like <code>#c58940</code>.',
   tasks:[
@@ -71,7 +71,7 @@ h2 {
 
 
 PG.add({
-  id:'s06-fonts', section:'s06', slug:'font-properties', lesson:'6.2',
+  id:'s06-fonts', index:39, udemyId:37350414, minutes:21, section:'s06', slug:'font-properties', lesson:'6.2',
   title:'Font Properties',
   blurb:'Four properties do most of the typographic work: <code>font-size</code>, <code>font-weight</code>, <code>font-family</code> and <code>text-align</code>.',
   tasks:[
@@ -214,7 +214,7 @@ body {
 
 
 PG.add({
-  id:'s06-box-model', section:'s06', slug:'box-model', lesson:'6.3',
+  id:'s06-box-model', index:41, udemyId:37350454, minutes:21, section:'s06', slug:'box-model', lesson:'6.3',
   title:'The Box Model',
   blurb:'Every element is a box made of four layers: the <b>content</b>, then <b>padding</b> inside the border, then the <b>border</b> itself, then <b>margin</b> pushing other elements away outside it.',
   tasks:[
@@ -360,7 +360,7 @@ p {
 
 
 PG.add({
-  id:'s06-meme', section:'s06', slug:'motivation-meme', lesson:'6.4', project:true,
+  id:'s06-meme', index:42, udemyId:37350494, minutes:8, section:'s06', slug:'motivation-meme', lesson:'6.4', project:true,
   title:'Motivation Meme Project',
   blurb:'Recreate the classic motivational poster: white text over a photo on a black background, centred, in capitals.',
   tasks:[

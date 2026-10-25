@@ -1,0 +1,99 @@
+{
+  "index": 231,
+  "lecture_id": 38912028,
+  "title": "Secrets Project",
+  "section": "28. Application Programming Interfaces (APIs)",
+  "duration_min": 12,
+  "kind": "project",
+  "summary": "End-of-module project: a small Express + EJS site (called Lisper) that calls the Secrets API /random endpoint with Axios and shows a random anonymous secret and its username on a styled card. No authentication is used, keeping the focus on consuming an API from a server.",
+  "concepts": [
+    {
+      "heading": "Project overview",
+      "points": [
+        "A server-rendered site inspired by the anonymous-confession app Whisper. Each page load shows one random user's name; the secret text is revealed when hovering over the card (hover effect is already in the supplied CSS).",
+        "Only the /random endpoint of the Secrets API is used, so no bearer token, registration or login is needed.",
+        "Skills practised: Express routing and static files, EJS templating with variables, reading API docs, and using Axios with async/await.",
+        "Starting files: index.js with numbered hint comments, solution.js (finished version), views/index.ejs, public/styles/main.css and an image. The CSS can be replaced if the learner wants their own design."
+      ]
+    },
+    {
+      "heading": "Template contract with EJS",
+      "points": [
+        "index.ejs expects exactly two variables: secret (printed inside the card paragraph with the escaping tag) and user (printed in a paragraph with class user).",
+        "The stylesheet is linked as styles/main.css, which only resolves because public is served as a static folder (the public part of the path is omitted in the URL)."
+      ]
+    },
+    {
+      "heading": "Server walkthrough (the six hints)",
+      "points": [
+        "1. Import express and axios (both are listed in package.json dependencies; run npm i first).",
+        "2. Create the app with express() and set port 3000.",
+        "3. app.use(express.static('public')) is built-in Express middleware that serves files from the named folder, so stylesheets and images can be requested relative to it.",
+        "4. Define app.get('/') as the home route.",
+        "5. Inside the handler, await axios.get on the /random URL. The URL can be written in full or split into a base URL and config; Axios methods return promises, so either chain .then() or make the handler async and use await.",
+        "The response body is at result.data and contains id, secret, emScore and username. Map the API keys to the template variable names: secret from result.data.secret, user from result.data.username. Logging result.data is a good way to confirm the keys.",
+        "Wrap the call in try/catch. In the catch block, log error.response.data for the developer (the message from the API) and respond with HTTP status 500 plus a generic message for visitors instead of exposing details.",
+        "6. app.listen(port, callback) with a console message such as server started on port 3000.",
+        "Run with nodemon index.js and visit localhost:3000; refreshing the page fetches a different random secret."
+      ]
+    },
+    {
+      "heading": "API caveat",
+      "points": [
+        "The Secrets API is a teaching service, not production infrastructure. User data (registrations, tokens, secrets) is wiped regularly, roughly every day or two, so it should not be relied on for a real product.",
+        "The next section uses more robust public APIs suitable for portfolio projects."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Finished server (adapted from the reference solution; catch now sends a response)",
+      "language": "javascript",
+      "code": "import express from \"express\";\nimport axios from \"axios\";\n\nconst app = express();\nconst port = 3000;\n\napp.use(express.static(\"public\"));\n\napp.get(\"/\", async (req, res) => {\n  try {\n    const result = await axios.get(\"https://secrets-api.appbrewery.com/random\");\n    res.render(\"index.ejs\", {\n      secret: result.data.secret,\n      user: result.data.username,\n    });\n  } catch (error) {\n    console.log(error.response.data);\n    res.status(500).send(\"Something went wrong on the server.\");\n  }\n});\n\napp.listen(port, () => {\n  console.log(`Server is running on port ${port}`);\n});"
+    },
+    {
+      "caption": "Template section of views/index.ejs",
+      "language": "html",
+      "code": "<h1>What's your secret?</h1>\n<div class=\"card\">\n  <p><%= secret %></p>\n</div>\n<p class=\"user\"><%= user %></p>"
+    }
+  ],
+  "task": {
+    "name": "Secrets Project (Lisper)",
+    "starting_point": "Extracted project with index.js containing six hint comments, a finished views/index.ejs, public/styles/main.css and an image. solution.js runs the completed app.",
+    "goal": "Build an Express server that fetches a random secret from the Secrets API and renders its text and username into index.ejs.",
+    "steps": [
+      "cd into the project folder and run npm i.",
+      "Optionally run nodemon solution.js and open localhost:3000 to see the target behaviour.",
+      "Read index.ejs to learn the two variables it needs: secret and user.",
+      "In index.js import express and axios, create the app, set port 3000.",
+      "Serve the public folder with express.static.",
+      "Add an async GET / route that awaits axios.get('https://secrets-api.appbrewery.com/random').",
+      "Render index.ejs passing secret: result.data.secret and user: result.data.username.",
+      "Add try/catch: log error.response.data and send a 500 with a friendly message.",
+      "Call app.listen with a log message, run nodemon index.js and refresh to see random secrets. Optionally extend the project."
+    ],
+    "expected_result": "A styled card showing a username; hovering reveals the secret. Each refresh shows a different random entry.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "import express from \"express\";\nimport axios from \"axios\";\n\nconst app = express();\nconst port = 3000;\n\napp.use(express.static(\"public\"));\n\napp.get(\"/\", async (req, res) => {\n  try {\n    const result = await axios.get(\"https://secrets-api.appbrewery.com/random\");\n    res.render(\"index.ejs\", {\n      secret: result.data.secret,\n      user: result.data.username,\n    });\n  } catch (error) {\n    console.log(error.response.data);\n    res.status(500).send(\"Something went wrong on the server.\");\n  }\n});\n\napp.listen(port, () => {\n  console.log(`Server is running on port ${port}`);\n});"
+    },
+    "reference_repo_path": "Section 28 - Aplication Programming Interfaces (APIs)/28.07 - Secrets Project/solution.js"
+  },
+  "pitfalls": [
+    "Template variable names (secret, user) must match the keys passed to res.render; the API field is username, not user, so it needs mapping.",
+    "Forgetting express.static means the CSS and image return 404.",
+    "Forgetting await leaves result as a pending promise and result.data is undefined.",
+    "The reference repo's catch block only calls res.status(500) without sending anything, so the browser request hangs; add .send(...) (the lecture describes showing a message).",
+    "(Extra) error.response is undefined on network failures, so logging error.response.data can itself throw; log error.message as a fallback."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (section 28 has no data file).",
+    "gaps_and_ideas": [
+      "Proposed lesson: 'Random secret viewer'. Blurb: call a single public GET endpoint from Express and render the fields into a template.",
+      "Tasks: (1) set up express + static folder; (2) await axios.get on /random; (3) pass selected fields to the template; (4) add try/catch with a 500 response; (5) extend by showing emScore.",
+      "Starter code idea: server skeleton with the six hint comments and a mock fetch function standing in for Axios.",
+      "Interactive demo idea: a fake API response viewer where learners click which JSON keys to map to template variables and see the rendered card update."
+    ]
+  }
+}

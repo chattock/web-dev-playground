@@ -1,0 +1,102 @@
+{
+  "index": 206,
+  "lecture_id": 38911656,
+  "title": "Custom Middlewares",
+  "section": "24. Express.js with Node.js",
+  "duration_min": 19,
+  "kind": "concept+exercise",
+  "summary": "Covers the morgan logging middleware, then how to write custom middleware (a function with req, res, next), why next() and registration order matter, and finishes with the Band Name Generator exercise that combines body-parser, sendFile and a custom middleware.",
+  "concepts": [
+    {
+      "heading": "Middleware categories",
+      "points": [
+        "Four broad kinds: pre-processing (body-parser belongs here), logging (morgan), authentication, and error handling.",
+        "All are attached the same way: app.use(...) before the route handlers."
+      ]
+    },
+    {
+      "heading": "morgan: request logging",
+      "points": [
+        "Package name morgan, roughly 4 million weekly npm downloads. Install with npm i morgan, import morgan from 'morgan', then app.use(morgan('format')).",
+        "It runs before the route handler, so every request is logged: method, URL, status code, response time and (depending on format) date, user agent, content length and so on.",
+        "Predefined formats: combined, common, dev, short, tiny. Combined is the most verbose (Apache-style, includes client and browser info); tiny prints just method, URL, status, content length and response time.",
+        "Because middleware runs first, a POST to a route with no handler is still logged, with status 404. Logging does not depend on the route existing.",
+        "(Extra) The morgan docs show require(); with ES modules use import instead, as the course does."
+      ]
+    },
+    {
+      "heading": "Writing a custom middleware",
+      "points": [
+        "A middleware is a function with three parameters: req, res, next. Express supplies all three.",
+        "Inside it you can read or modify req and res. When finished, call next() to hand control to the next middleware, or to the matching route handler if none are left.",
+        "req.method gives the HTTP verb (GET, POST) and req.url gives the requested path; together they make a minimal logger.",
+        "Write the function separately and pass it by name, app.use(logger), so it looks like app.use(bodyParser...) or app.use(morgan(...)). Pass the function itself, without calling it. (Extra) Library middleware such as morgan('tiny') is a factory call that returns a function; your own plain middleware is passed uncalled.",
+        "If next() is never called and no response is sent, the request hangs: the logs appear but the client never gets an answer.",
+        "Order matters: middleware runs top to bottom in the order of the app.use calls. Put anything that depends on earlier work (e.g. authentication or parsing) after the middleware that provides it."
+      ]
+    },
+    {
+      "heading": "Band Name Generator walkthrough (index4 / solution4)",
+      "points": [
+        "Reuse from index1: the path/url imports and __dirname, the GET / route with res.sendFile, and the urlencoded body-parser line. Break the job into steps and test each (first verify the page is served, then the parsing).",
+        "Custom middleware bandNameGenerator reads req.body.street and req.body.pet, concatenates them into a module-level variable bandName, logs the body, then calls next().",
+        "Register it with app.use(bandNameGenerator) after the body-parser line. The POST /submit handler then sends <h1>Your band name is:</h1><h2>bandName + emoji</h2> via res.send.",
+        "Putting the logic straight in the POST handler works too and is shorter; the separate middleware is just a demonstration.",
+        "Swapping the order so the generator runs before body-parser gives an error about reading properties of undefined, since req.body does not exist yet. This proves the order rule.",
+        "Copy-pasting earlier code is fine as long as you understand what it does."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "morgan with the tiny format (index2 solution style)",
+      "language": "javascript",
+      "code": "import express from \"express\";\nimport morgan from \"morgan\";\n\nconst app = express();\nconst port = 3000;\n\napp.use(morgan(\"tiny\")); // try \"combined\", \"dev\", \"short\", \"common\"\n\napp.get(\"/\", (req, res) => {\n  res.send(\"Hello\");\n});\n\napp.listen(port, () => console.log(`Listening on port ${port}`));"
+    },
+    {
+      "caption": "Custom logger middleware",
+      "language": "javascript",
+      "code": "function logger(req, res, next) {\n  console.log(\"Request method: \", req.method);\n  console.log(\"Request URL: \", req.url);\n  next(); // omit this and every request hangs\n}\n\napp.use(logger);"
+    },
+    {
+      "caption": "Band name middleware plus POST route",
+      "language": "javascript",
+      "code": "var bandName = \"\";\n\napp.use(bodyParser.urlencoded({ extended: true }));\n\nfunction bandNameGenerator(req, res, next) {\n  console.log(req.body);\n  bandName = req.body[\"street\"] + req.body[\"pet\"];\n  next();\n}\napp.use(bandNameGenerator);\n\napp.post(\"/submit\", (req, res) => {\n  res.send(`<h1>Your band name is:</h1><h2>${bandName}✌️</h2>`);\n});"
+    }
+  ],
+  "task": {
+    "name": "Mini-challenges: morgan, custom logger, Band Name Generator",
+    "starting_point": "Exercise 3.4 Middleware folder: index2.js (express + morgan skeleton), index3.js (plain server with no logger), index4.js (basic server, imports missing). Each has a matching solution file.",
+    "goal": "(a) Log requests with morgan using a chosen format. (b) Write a logger middleware that prints req.method and req.url. (c) Build the Band Name Generator that replies with street name plus pet name.",
+    "steps": [
+      "index2.js: npm install morgan if needed, import it, and add app.use(morgan('tiny')) (or another format) above the routes. Test with GET / and a POST to /submit in Postman and read the log lines.",
+      "index3.js: define function logger(req, res, next) that console.logs req.method and req.url and calls next(). Register with app.use(logger). Test GET and POST. Then remove next() once to see the hang.",
+      "index4.js: import express, path/url helpers and body-parser; recreate __dirname; serve public/index.html on GET /.",
+      "Add app.use(bodyParser.urlencoded({ extended: true })).",
+      "On POST /submit respond with an h1 and h2 showing street + pet; optionally move the concatenation into a custom middleware registered after the parser.",
+      "Run solution4.js to compare behaviour; check index.html field names are street and pet."
+    ],
+    "expected_result": "Morgan prints a line per request; the logger prints method and URL; submitting the form shows 'Your band name is:' followed by the combined words and an emoji.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "import express from \"express\";\nimport bodyParser from \"body-parser\";\nimport { dirname } from \"path\";\nimport { fileURLToPath } from \"url\";\n\nconst __dirname = dirname(fileURLToPath(import.meta.url));\nconst app = express();\nconst port = 3000;\nvar bandName = \"\";\n\napp.use(bodyParser.urlencoded({ extended: true }));\n\nfunction bandNameGenerator(req, res, next) {\n  console.log(req.body);\n  bandName = req.body[\"street\"] + req.body[\"pet\"];\n  next();\n}\napp.use(bandNameGenerator);\n\napp.get(\"/\", (req, res) => {\n  res.sendFile(__dirname + \"/public/index.html\");\n});\n\napp.post(\"/submit\", (req, res) => {\n  res.send(`<h1>Your band name is:</h1><h2>${bandName}✌️</h2>`);\n});\n\napp.listen(port, () => {\n  console.log(`Listening on port ${port}`);\n});"
+    },
+    "reference_repo_path": "Section 24 - Express.js with Node.js/24.04 - Introduction to Middlewares/solution4.js (also solution2.js, solution3.js)"
+  },
+  "pitfalls": [
+    "Forgetting next() in custom middleware, so requests never finish.",
+    "Placing the band-name middleware before body-parser, so req.body is undefined.",
+    "Storing the band name in a shared module variable (as in the solution) is unsafe with concurrent users. (Extra) Use res.locals or req.bandName instead.",
+    "Calling app.use(logger()) instead of app.use(logger).",
+    "Reference repo diverges slightly: solution2 uses the combined format rather than tiny, and public/index.html has a personal footer to ignore."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (data/s24.js does not exist).",
+    "gaps_and_ideas": [
+      "Extend the 'Middleware and req.body' lesson, or add 'Custom middleware', with tasks: add morgan('tiny'), write a logger, deliberately drop next(), reorder body-parser and the generator, build the band name page.",
+      "Starter code: three tiny servers with TODO comments for each mini-challenge.",
+      "Interactive demo idea: a stack of draggable middleware cards that reorders the app.use sequence, with a toggle to skip next() on any card, showing where the request stops."
+    ]
+  }
+}

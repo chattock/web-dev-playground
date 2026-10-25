@@ -1,0 +1,68 @@
+{
+  "index": 4,
+  "lecture_id": 35001070,
+  "title": "Download the Required Software",
+  "section": "1. Front-End Web Development",
+  "duration_min": 1,
+  "kind": "setup",
+  "summary": "Checklist of the tools used for the front-end part of the course: the VS Code editor, three VS Code extensions (Live Preview, Prettier, vscode-icons) and the Google Chrome browser for its developer tools.",
+  "concepts": [
+    {
+      "heading": "Code editor: Visual Studio Code",
+      "points": [
+        "VS Code is Microsoft's free editor and is where all course code is written. Download from code.visualstudio.com.",
+        "Some older videos show the Atom editor. Atom has been retired by GitHub, so wherever a video says to open Atom or do something in Atom, do the same thing in VS Code instead."
+      ]
+    },
+    {
+      "heading": "VS Code extensions to install",
+      "points": [
+        "Extensions are add-ons that give VS Code extra features. Each link in the article opens the Visual Studio Marketplace page; clicking Install there hands off to the VS Code app.",
+        "Live Preview (Microsoft, marketplace id ms-vscode.live-server): shows an HTML file in a browser pane inside VS Code and refreshes as you save. Used from the next section onward to view exercise files (right-click index.html → Show Preview).",
+        "Prettier (esbenp.prettier-vscode): an automatic code formatter that fixes indentation and spacing so files stay tidy and readable.",
+        "vscode-icons (vscode-icons-team.vscode-icons): replaces the generic file icons in the Explorer sidebar with per-file-type icons, which makes .html, .css and .js files easier to tell apart.",
+        "(Extra) You can also install from inside VS Code: open the Extensions view (Cmd+Shift+X on Mac, Ctrl+Shift+X on Windows/Linux), search the name, check the publisher, click Install.",
+        "(Extra) To have Prettier run every time you save, enable Settings → 'Format On Save' and set 'Default Formatter' to Prettier. This is why files can re-indent themselves on save in later lessons."
+      ]
+    },
+    {
+      "heading": "Browser: Google Chrome",
+      "points": [
+        "Chrome is free and is the browser used throughout the course, mainly for Chrome DevTools, which later lessons rely on heavily (inspecting HTML/CSS, the JavaScript console, etc.).",
+        "Install it even if you normally browse with something else, so your screen matches the videos.",
+        "(Extra) DevTools opens with F12, Cmd+Option+I (Mac) or Ctrl+Shift+I (Windows/Linux), or right-click → Inspect."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": {
+    "name": "Set up the development environment",
+    "starting_point": "A computer without the course tools installed.",
+    "goal": "Have VS Code with the three extensions, plus Chrome, ready before the HTML section begins.",
+    "steps": [
+      "Download and install VS Code from code.visualstudio.com.",
+      "Install the Live Preview extension (publisher Microsoft).",
+      "Install the Prettier code formatter extension.",
+      "Install the vscode-icons extension.",
+      "Download and install Google Chrome.",
+      "(Extra) Check it works: open any folder in VS Code, create index.html, right-click it and confirm 'Show Preview' appears."
+    ],
+    "expected_result": "VS Code opens, the Explorer shows file-type icons, a right-click on an HTML file offers Show Preview, and Chrome is installed with DevTools available.",
+    "solution_code": null,
+    "reference_repo_path": null
+  },
+  "pitfalls": [
+    "Following old videos that mention Atom; use VS Code for everything.",
+    "Installing a different 'Live Server' style extension instead of Microsoft's Live Preview, then not finding the Show Preview option used in later lessons.",
+    "Skipping Chrome and then finding DevTools steps look different in another browser."
+  ],
+  "playground": {
+    "match": "s01-how-the-web-works (lesson 1.1, data/s01.js), closest only",
+    "coverage": "The playground runs code in the browser, so no local install is needed and the lesson does not mention the course toolchain.",
+    "gaps_and_ideas": [
+      "Add a short 'Your toolkit' note to the s01 lesson: what VS Code, Live Preview, Prettier, vscode-icons and Chrome DevTools each do, and that the playground's built-in preview plays the role of Live Preview.",
+      "Add a tip box listing the DevTools keyboard shortcuts so learners can inspect the playground's preview iframe.",
+      "Optional mini-demo: a 'messy vs Prettier-formatted' toggle showing the same HTML before and after auto-formatting, to explain why indentation changes on save."
+    ]
+  }
+}

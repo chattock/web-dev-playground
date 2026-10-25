@@ -1,0 +1,48 @@
+{
+  "index": 243,
+  "lecture_id": 12385692,
+  "title": "SQL Commands: READ, SELECT, and WHERE",
+  "section": "32. SQL",
+  "duration_min": 3,
+  "kind": "concept",
+  "summary": "Covers the R of CRUD in SQL: SELECT to read all or chosen columns, and WHERE to filter rows by a condition.",
+  "concepts": [
+    {
+      "heading": "SELECT",
+      "points": [
+        "SELECT reads data. The playground's Show table action simply runs SELECT * FROM products behind the scenes.",
+        "The asterisk is a wildcard meaning every column. FROM names the table to read.",
+        "To read only some columns, list them separated by commas instead of the asterisk: SELECT name, price FROM products. The result omits the other columns (here id). The table itself is unchanged."
+      ]
+    },
+    {
+      "heading": "WHERE",
+      "points": [
+        "WHERE adds a search condition and limits the result to rows that satisfy it: SELECT * FROM products WHERE id = 1 returns just the row whose id is 1.",
+        "Text comparisons use single-quoted strings, e.g. WHERE Country = 'Mexico'. The same clause works with column lists in place of the asterisk.",
+        "SQL has more operators for conditions: equals, greater than, less than, BETWEEN, LIKE and others, listed in the W3Schools documentation. (Extra) Conditions can be combined with AND / OR.",
+        "SELECT with WHERE will be used constantly when working with SQL databases."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Reading data",
+      "language": "sql",
+      "code": "SELECT * FROM products;                    -- every column, every row\nSELECT name, price FROM products;          -- only two columns\nSELECT * FROM products WHERE id = 1;       -- only matching rows\nSELECT name FROM products WHERE price > 1; -- (Extra) comparison operator"
+    }
+  ],
+  "task": null,
+  "pitfalls": [
+    "(Extra) Using a double = sign as in JavaScript; SQL uses a single = for comparison.",
+    "(Extra) Double-quoting string values in WHERE; single quotes are the standard for string literals."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "Combine with the other CRUD SQL lessons in one 'SQL basics' lesson. Tasks for this part: select all, select two columns, filter by id, filter with > and LIKE, filter text with single quotes.",
+      "Demo idea: a table viewer where typing a SELECT/WHERE query highlights the rows and columns it returns."
+    ]
+  }
+}

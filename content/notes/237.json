@@ -1,0 +1,85 @@
+{
+  "index": 237,
+  "lecture_id": 39461844,
+  "title": "Creating the DELETE Route",
+  "section": "30. Build Your Own API",
+  "duration_min": 7,
+  "kind": "concept+exercise",
+  "summary": "Finishes the joke API with two DELETE routes: remove one joke by id, and wipe the whole collection only when the caller supplies the correct master key as a query parameter, a minimal form of API-key protection.",
+  "concepts": [
+    {
+      "heading": "Challenge 7: DELETE /jokes/:id",
+      "points": [
+        "Uses Express's app.delete(route, callback). The id arrives as a path variable in req.params.id; convert with parseInt and use ===, or skip the conversion and use ==.",
+        "Locate the joke with findIndex, which returns -1 when nothing matches.",
+        "If the index is greater than -1, jokes.splice(searchIndex, 1) removes exactly one element starting at that index (splice mutates the array in place), then res.sendStatus(200) replies OK.",
+        "Otherwise reply with res.status(404).json({ error: ... }) saying the joke was not found and that nothing was deleted.",
+        "A single-joke delete is low risk, so no authentication is applied.",
+        "The solution file leaves an optional prompt about edge cases when deleting by id; the missing-id case handled by the 404 branch is the one it points at."
+      ]
+    },
+    {
+      "heading": "Challenge 8: DELETE /all with a master key",
+      "points": [
+        "Wiping the whole collection is dangerous, so the route demands a secret key sent as a query parameter named key (e.g. /all?key=<code>). In Postman this is under Params > Query Parameters.",
+        "The starter file defines a masterKey constant near the top, representing the secret kept on the server. Later modules cover generating real keys and proper authentication.",
+        "Handler: read req.query.key into userKey and compare with masterKey. If equal, reassign the array to an empty array (jokes = []) and send status 200. If not, respond with a 404 status and a JSON error saying the caller is not authorised.",
+        "Because the handler reassigns jokes, the array must be declared with var or let rather than const (the reference file uses var).",
+        "This is a very simplified key check; it only illustrates guarding risky operations. Real systems add hashed credentials, tokens, HTTPS and so on, which come later in the course.",
+        "(Extra) A 401 or 403 status is more conventional than 404 for failed authorisation, and sending secrets in the query string leaves them in logs and browser history."
+      ]
+    },
+    {
+      "heading": "Wrap-up",
+      "points": [
+        "Compare your behaviour with solution.js and confirm both DELETE requests in the Postman collection respond as expected. The next lesson applies all of these routes to a blog API."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Delete one joke (reference solution)",
+      "language": "javascript",
+      "code": "app.delete(\"/jokes/:id\", (req, res) => {\n  const id = parseInt(req.params.id);\n  const searchIndex = jokes.findIndex((joke) => joke.id === id);\n  if (searchIndex > -1) {\n    jokes.splice(searchIndex, 1);\n    res.sendStatus(200);\n  } else {\n    res\n      .status(404)\n      .json({ error: `Joke with id: ${id} not found. No jokes were deleted.` });\n  }\n});"
+    },
+    {
+      "caption": "Delete all jokes, guarded by a master key (reference solution)",
+      "language": "javascript",
+      "code": "const masterKey = \"<server-side secret>\"; // defined near the top of the file\n\napp.delete(\"/all\", (req, res) => {\n  const userKey = req.query.key;\n  if (userKey === masterKey) {\n    jokes = [];\n    res.sendStatus(200);\n  } else {\n    res\n      .status(404)\n      .json({ error: `You are not authorised to perform this action.` });\n  }\n});"
+    }
+  ],
+  "task": {
+    "name": "DIY API: DELETE routes",
+    "starting_point": "DIY API project with GET, POST, PUT and PATCH done; index.js has slots for challenges 7 and 8 and a masterKey constant near the top; Postman collection has DELETE a Joke and DELETE All Jokes requests.",
+    "goal": "Implement DELETE /jokes/:id to remove one joke and DELETE /all to clear all jokes only when the correct key query parameter is supplied.",
+    "steps": [
+      "Challenge 7: add app.delete('/jokes/:id', ...); parse the id and find its index with findIndex.",
+      "If the index exists, splice one element out at that index and respond with status 200; otherwise respond 404 with a JSON error message.",
+      "Challenge 8: add app.delete('/all', ...); read req.query.key.",
+      "If it equals masterKey, set jokes to an empty array and send status 200; otherwise send an error status with a JSON 'not authorised' message.",
+      "Run nodemon index.js and send both DELETE requests from Postman, trying a valid id, an unknown id, a wrong key and the right key; then GET to see the array changed."
+    ],
+    "expected_result": "Deleting an existing id returns OK 200 and that joke disappears; an unknown id returns a 404 JSON error; /all with the right key returns 200 and leaves an empty collection; a wrong or missing key returns the error and deletes nothing.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "app.delete(\"/jokes/:id\", (req, res) => {\n  const id = parseInt(req.params.id);\n  const searchIndex = jokes.findIndex((joke) => joke.id === id);\n  if (searchIndex > -1) {\n    jokes.splice(searchIndex, 1);\n    res.sendStatus(200);\n  } else {\n    res.status(404).json({ error: `Joke with id: ${id} not found. No jokes were deleted.` });\n  }\n});\n\napp.delete(\"/all\", (req, res) => {\n  const userKey = req.query.key;\n  if (userKey === masterKey) {\n    jokes = [];\n    res.sendStatus(200);\n  } else {\n    res.status(404).json({ error: `You are not authorised to perform this action.` });\n  }\n});"
+    },
+    "reference_repo_path": "Section 30 - Build Your Own API/30.02 DIY API/solution.js"
+  },
+  "pitfalls": [
+    "Calling splice(-1, 1) when findIndex returns -1 would delete the last joke; always check the index is greater than -1 first.",
+    "Declaring the jokes array with const and then trying to reassign it to [] in the delete-all route.",
+    "Leaving the key check out so anyone can wipe the data.",
+    "(Extra) Hard-coding a secret in source; the course does this only for teaching."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "New lesson 'DELETE routes and simple API-key protection' with a blurb on removing resources and guarding destructive endpoints.",
+      "Tasks: (1) delete one item by id using findIndex and splice, (2) return a 404 JSON error for an unknown id, (3) add a /all route requiring ?key=, (4) (Extra) move the key to an environment variable, (5) (Extra) use 401/403 for bad keys.",
+      "Starter code idea: Express app with an items array and a secret constant.",
+      "Interactive demo idea: a visual array where the learner sends DELETE requests with different ids and keys and sees elements vanish or the error response."
+    ]
+  }
+}

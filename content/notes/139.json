@@ -1,0 +1,98 @@
+{
+  "index": 139,
+  "lecture_id": 12383968,
+  "title": "How to Play Sounds on a Website",
+  "section": "18. Advanced Javascript and DOM Manipulation",
+  "duration_min": 11,
+  "kind": "concept+exercise",
+  "summary": "Plays a drum sound from JavaScript using new Audio and play(), styles each drum button with a background image, and introduces the keyword this to learn which button triggered a listener. Includes three small challenges: play a sound, add button images, and turn the clicked button's text white.",
+  "concepts": [
+    {
+      "heading": "Finding and understanding a snippet",
+      "points": [
+        "When unsure how to do something, search plainly (e.g. 'play sound javascript'); a Stack Overflow answer shows the pattern: create an audio object and call play on it.",
+        "Don't paste snippets blindly. Look up each part on MDN to learn what it does before using it."
+      ]
+    },
+    {
+      "heading": "Audio objects",
+      "points": [
+        "new Audio(url) constructs an HTMLAudioElement (a kind of HTMLMediaElement) that points at a sound file. Keep it in a variable.",
+        "The path is relative to the HTML page, so a file in the sounds folder is written as sounds/tom-1.mp3 (the reference repo uses ./sounds/tom-1.mp3).",
+        "Media elements have properties (e.g. currentTime, paused) and methods; audio.play() starts playback.",
+        "Replacing the alert in the click listener with these two lines makes every button play the tom-1 sound. All buttons sound the same until each is tied to its own file (done in the next lesson)."
+      ]
+    },
+    {
+      "heading": "Challenge: button images",
+      "points": [
+        "The images folder has seven drum pictures (tom1 to tom4, snare, crash, kick). Give each button a background-image in styles.css using url() with a path such as images/tom1.png.",
+        "Assign them to the w, a, s, d, j, k, l button classes in whatever order you like (the course uses tom1-4 for the first four keys, then snare, crash, kick), but remember the order so sounds can be matched later.",
+        "In the reference repo: .w tom1, .a tom2, .s tom3, .d tom4, .j snare, .k crash, .l kick."
+      ]
+    },
+    {
+      "heading": "Identifying the clicked button with this",
+      "points": [
+        "Inside an event listener's function, this refers to the element that triggered the event. console.log(this) prints the button that was clicked.",
+        "Because this is the element, its properties are available: this.innerHTML gives the key letter shown on the button, which can later be used to choose a sound.",
+        "Flow recap: the loop selects every .drum element in turn and attaches a listener; a click on any one calls the function with this set to that button.",
+        "The sound code was commented out while experimenting so only one thing is tested at a time."
+      ]
+    },
+    {
+      "heading": "Challenge: change style with this",
+      "points": [
+        "this.style.color = \"white\" changes the text colour of whichever button was clicked, using the same DOM style property seen in earlier lessons."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Play a sound on click",
+      "language": "javascript",
+      "code": "var numberOfDrumButtons = document.querySelectorAll(\".drum\").length;\n\nfor (var i = 0; i < numberOfDrumButtons; i++) {\n  document.querySelectorAll(\".drum\")[i].addEventListener(\"click\", function () {\n    var audio = new Audio(\"./sounds/tom-1.mp3\");\n    audio.play();\n  });\n}"
+    },
+    {
+      "caption": "Button images (CSS, reference repo)",
+      "language": "css",
+      "code": ".w { background-image: url(./images/tom1.png); }\n.a { background-image: url(./images/tom2.png); }\n.s { background-image: url(./images/tom3.png); }\n.d { background-image: url(./images/tom4.png); }\n.j { background-image: url(./images/snare.png); }\n.k { background-image: url(./images/crash.png); }\n.l { background-image: url(./images/kick.png); }"
+    },
+    {
+      "caption": "Using this inside the listener",
+      "language": "javascript",
+      "code": "document.querySelectorAll(\".drum\")[i].addEventListener(\"click\", function () {\n  console.log(this);            // the clicked button\n  console.log(this.innerHTML);  // its letter\n  this.style.color = \"white\";   // restyle it\n});"
+    }
+  ],
+  "task": {
+    "name": "Sound, images and this",
+    "starting_point": "Drum Kit with the click listener loop from the previous lesson (alert inside).",
+    "goal": "Clicking a button plays a drum sound, each button shows a drum image, and the clicked button's text turns white.",
+    "steps": [
+      "Replace the alert with new Audio(\"sounds/tom-1.mp3\") and a call to .play().",
+      "Add background-image rules for the w, a, s, d, j, k, l classes pointing at the files in images.",
+      "Log this in the listener, click each button and inspect the output.",
+      "Replace the log with this.style.color = \"white\"."
+    ],
+    "expected_result": "Every button plays the tom-1 sound for now, shows its drum picture, and (with the last step) its letter turns white after clicking.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "var audio = new Audio(\"./sounds/tom-1.mp3\");\naudio.play();"
+    },
+    "reference_repo_path": "Section 18 - Advanced Javascript and DOM Manipulation/18.03 - How to Play Sounds on a Website/script.js"
+  },
+  "pitfalls": [
+    "Wrong relative path to the sound or image file, so nothing plays or shows (check the folder name and that the extension matches).",
+    "(Extra) The reference repo's sounds folder here contains only tom-1.mp3; the full set arrives in the next lessons.",
+    "(Extra) Browsers may block audio until the user has interacted with the page; clicks count as interaction.",
+    "Using the arrow-function form would change what this refers to; the lecture uses a regular function."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (section 18 has no playground file).",
+    "gaps_and_ideas": [
+      "Proposed lesson 'Playing audio and this': tasks: (1) create an Audio and call play(), (2) style buttons with background images, (3) log this in a listener, (4) change this.style.color, (5) show this.innerHTML in a status line.",
+      "Interactive demo: buttons that synthesize beeps (Web Audio) so no files are needed, with a panel showing what this is on each click."
+    ]
+  }
+}

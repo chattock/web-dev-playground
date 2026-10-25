@@ -1,0 +1,90 @@
+{
+  "index": 188,
+  "lecture_id": 12384438,
+  "title": "Creating, Opening, and Removing Files through the Command Line",
+  "section": "21. The Unix Command Line",
+  "duration_min": 9,
+  "kind": "concept+exercise",
+  "summary": "Covers mkdir, touch, open, pwd, rm, rm with a wildcard, and rm -r, with a strong warning about how destructive removal commands are.",
+  "concepts": [
+    {
+      "heading": "Creating",
+      "points": [
+        "mkdir name creates a directory in the current location; cd into it and ls shows it is empty.",
+        "touch name.ext creates an empty file (e.g. touch Text2.txt), far quicker than making one in an editor and saving it.",
+        "(Extra) touch on an existing file only updates its timestamp."
+      ]
+    },
+    {
+      "heading": "Opening files (macOS)",
+      "points": [
+        "open file opens it with the default application.",
+        "open -a AppName file opens it in a chosen application via the -a flag.",
+        "(Extra) Git Bash on Windows uses start file instead; the cheat sheet in the reference repo lists start."
+      ]
+    },
+    {
+      "heading": "Knowing where you are",
+      "points": [
+        "The prompt shows the current folder name; pwd (print working directory) prints the full path.",
+        "Check location before any destructive command."
+      ]
+    },
+    {
+      "heading": "Removing",
+      "points": [
+        "rm file deletes a file, and the deletion bypasses any trash bin.",
+        "rm * uses the * wildcard to match every file in the current directory, so it only works as intended in the right folder.",
+        "rm folder alone fails with a message that the target is a directory.",
+        "rm -r folder removes a directory and everything inside it (the -r flag means recursive).",
+        "Windows/Git Bash and Mac behave the same for these commands."
+      ]
+    },
+    {
+      "heading": "Danger",
+      "points": [
+        "The GUI offers safeguards that the command line lacks.",
+        "sudo runs a command with admin rights; -f forces removal with no confirmation; combining sudo rm -rf with a root target wipes a disk irrecoverably. Never run it. The online story shown in the lecture was a hoax, but the command is real.",
+        "Further reading: the free 'Learn Enough Command Line to Be Dangerous' tutorial (covers grep, curl and more)."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Full workflow",
+      "language": "bash",
+      "code": "mkdir Angela\ncd Angela\ntouch Text2.txt\nopen Text2.txt\nopen -a TextEdit Text2.txt\npwd\nrm Text2.txt\ntouch a.txt b.txt c.txt\nrm *\ncd ..\nrm -r Angela"
+    }
+  ],
+  "task": {
+    "name": "Make and delete files via the terminal",
+    "starting_point": "Terminal in a scratch location (never your home or root for deletes).",
+    "goal": "Create a folder, put files in it, open one, then clean everything up.",
+    "steps": [
+      "mkdir a new folder and cd into it.",
+      "touch several .txt files and ls to confirm.",
+      "open one in the default app, then in a chosen app with -a.",
+      "Confirm location with pwd.",
+      "Remove one file with rm, then all with rm *.",
+      "cd .. and delete the folder with rm -r."
+    ],
+    "expected_result": "Folder and files appear in Finder/Explorer as created, and disappear when removed.",
+    "solution_code": null,
+    "reference_repo_path": "Section 21 - The Unix Command Line/The Unix Command Line.txt"
+  },
+  "pitfalls": [
+    "rm * in the wrong directory deletes the wrong files.",
+    "rm on a folder needs -r.",
+    "Never combine sudo, -rf and a root path."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "Proposed new lesson 'Creating and removing files'. Blurb: mkdir and touch create folders and empty files, open (macOS) or start (Git Bash) opens them, pwd confirms where you are, and rm / rm -r delete permanently with no trash bin.",
+      "Tasks: (1) mkdir a project folder and cd into it; (2) touch index.html styles.css script.js in one command and ls to confirm; (3) run pwd and copy the printed path into an answer box; (4) remove one file with rm; (5) cd .. and remove the folder, first trying plain rm to see the 'is a directory' error, then rm -r.",
+      "Starter code idea: extend the fake file-tree object from the navigation lesson with commands mkdir, touch, pwd, rm, rm *, rm -r, so learners keep the same tree across lessons.",
+      "Interactive demo / safety layer: the simulator refuses rm on a folder without -r (showing the real error text pattern), asks for confirmation when rm * is run in ~, and shows an explanatory warning card (never executing) if someone types sudo rm -rf /."
+    ]
+  }
+}

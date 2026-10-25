@@ -1,0 +1,99 @@
+{
+  "index": 323,
+  "lecture_id": 31673276,
+  "title": "How does the Blockchain actually work?",
+  "section": "37. Web3 Decentralised App (DApp) Development with the Internet Computer",
+  "duration_min": 26,
+  "kind": "theory",
+  "summary": "Builds up blockchain from first principles: a ledger, why encryption is not enough, one-way hash functions, blocks mined with a nonce, chaining by previous-block hash, distribution across peers, and finally smart contracts. Uses two interactive hash and blockchain demos linked in the course resources.",
+  "concepts": [
+    {
+      "heading": "The ledger and its two problems",
+      "points": [
+        "A blockchain is a ledger: an ordered record of who owes or paid whom and how much (e.g. A owes B 10, A paid C 5).",
+        "Problem 1: every participant must agree on which transactions belong in the ledger.",
+        "Problem 2: whoever holds the ledger must be trusted not to edit past entries. A paper or plain database ledger can be altered (changing 10 to 100), so a way to make history immutable is required."
+      ]
+    },
+    {
+      "heading": "Encryption (reversible) and why it is insufficient",
+      "points": [
+        "Encryption turns a message into a ciphertext that is hard to read, and it can be reversed by anyone who knows the method and key. The Caesar cipher is the simplest example: shift every letter by a fixed number (shift 4 turns E into I).",
+        "In the demo, repeated letters in the plaintext produce repeated letters in the ciphertext, so patterns leak and you can brute force all 26 shifts.",
+        "Because encryption can always be decrypted, a ledger protected by it could still be tampered with by someone who recovers the key or breaks the scheme (the Enigma machine is cited as a broken cipher). (Extra) Encryption protects secrecy; blockchains need tamper evidence, which is a different property."
+      ]
+    },
+    {
+      "heading": "Hashing: a one-way function",
+      "points": [
+        "A hash function takes any input and produces a fixed-length output (the hash/digest). SHA-256 always yields 64 hex characters, whether you hash 'abc' or a whole novel.",
+        "Changing even one character of the input changes the hash completely and unpredictably.",
+        "It is one-way: computing the hash is fast, but recovering the input from the hash is practically impossible except by guessing.",
+        "Intuition via factoring: multiplying 3 x 19 to get 57 is instant, but finding the factors of a large number means trying divisors one by one. Real cryptography uses numbers hundreds of digits long; a 240-digit number took researchers about 900 years of computing time to factor in 2019. (Extra) SHA-256 is not literally factoring; the analogy only conveys easy forwards / infeasible backwards."
+      ]
+    },
+    {
+      "heading": "A block: data + nonce + hash",
+      "points": [
+        "A block holds a piece of data (a transaction). Hashing the block's contents gives a hash that acts as its fingerprint/identifier.",
+        "The chain sets a rule for a valid block, for example the hash must start with a number of zeros (the difficulty). Five leading zeros is harder than three.",
+        "The data should stay clean, so a changeable number called the nonce is added to the hashed content. Mining means trying nonce = 0, 1, 2 ... until the hash meets the rule. It is pure brute force and the demo's Mine button automates it (the video's runs found nonces like 3885 for three zeros and 53,792 for five).",
+        "A nonce only works for that exact data. Edit the data afterwards and the hash no longer meets the rule, so the block shows as invalid (red in the demo)."
+      ]
+    },
+    {
+      "heading": "The chain: linking by previous hash",
+      "points": [
+        "Each block's hash is computed from three things: its data, its nonce and the previous block's hash. That linkage is the chain.",
+        "The first block is the Genesis block; it has no predecessor so its previous hash is all zeros (64 of them).",
+        "Editing an old block changes its hash, which changes the input of the next block, invalidating it and every block after. To repair the chain an attacker must re-mine every later block.",
+        "On real networks such as Bitcoin or Ethereum, re-mining is infeasible with current computing power; even the small demo chain can freeze the browser at high difficulty."
+      ]
+    },
+    {
+      "heading": "Distribution: solving agreement",
+      "points": [
+        "In the distributed demo, several peers (A, B, C) each hold a full copy of the chain. Identical data gives identical hashes across peers.",
+        "If one peer alters a block and re-mines their own chain to look valid, their hashes now differ from everyone else's, so the network identifies that peer as dishonest.",
+        "The result is a distributed, trustless ledger: you rely on the protocol and the many copies, not on a single company holding the records (the example contrasts it with trusting a payment provider)."
+      ]
+    },
+    {
+      "heading": "Smart contracts",
+      "points": [
+        "Ethereum's extension: blocks can store code as well as data. Stored code is covered by the hash so it cannot be changed afterwards.",
+        "Example: a crowdfunding contract that, when total pledges reach a goal, automatically credits the project owner's account. The outcome is recorded on-chain, replacing an intermediary that holds the escrow.",
+        "Building apps whose logic runs automatically on-chain is the aim of the rest of the module."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Toy blockchain: SHA-256, mining a nonce, chaining and tamper check (own illustrative code)",
+      "language": "javascript",
+      "code": "// Illustrative toy blockchain (Node.js) - own code, not from the lecture\nconst crypto = require(\"crypto\");\nconst sha256 = (s) => crypto.createHash(\"sha256\").update(s).digest(\"hex\"); // always 64 hex chars\n\nfunction mine(data, prevHash, difficulty) {\n  const target = \"0\".repeat(difficulty);\n  let nonce = 0;\n  while (true) {\n    const hash = sha256(`${nonce}${data}${prevHash}`);\n    if (hash.startsWith(target)) return { data, prevHash, nonce, hash };\n    nonce++;                          // brute force: try the next number\n  }\n}\n\nconst genesisPrev = \"0\".repeat(64);\nconst b1 = mine(\"Angela owes Jack $10\", genesisPrev, 4);\nconst b2 = mine(\"Angela gives Jenny $5\", b1.hash, 4);   // chained via b1.hash\n\n// Validity check: recompute hash and confirm the zeros rule\nconst valid = (b, d) => sha256(`${b.nonce}${b.data}${b.prevHash}`) === b.hash && b.hash.startsWith(\"0\".repeat(d));\nb1.data = \"Jack owes Angela $10\";   // tamper\nconsole.log(valid(b1, 4));          // false - and b2.prevHash no longer matches b1's real hash"
+    },
+    {
+      "caption": "Smart contract idea in pseudocode",
+      "language": "text",
+      "code": "// Smart contract idea in pseudocode (Extra: Ethereum would use Solidity)\nif (totalPledged >= goal) {\n  balances[owner] += totalPledged;   // runs automatically, code is fixed on-chain\n}"
+    }
+  ],
+  "task": null,
+  "pitfalls": [
+    "Confusing hashing with encryption: hashes cannot be reversed, ciphertext can.",
+    "Thinking the nonce is part of the data; it is an extra value tuned until the hash meets the difficulty rule.",
+    "Assuming one peer's edited chain is accepted: other peers' copies disagree with it.",
+    "(Extra) Real Bitcoin mining also hashes the block header, uses double SHA-256 and a dynamic difficulty target; the course demo is simplified."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (the playground has no section 37 data file).",
+    "gaps_and_ideas": [
+      "Proposed lesson 'Build a mini blockchain': blurb covering hashing, nonce mining, chaining and tamper detection.",
+      "Tasks: (1) hash a string with crypto.subtle.digest and show the 64-char hex; (2) write mine(data, prevHash, difficulty); (3) chain three blocks and print validity; (4) tamper with block 1 and show blocks 2-3 turn invalid; (5) compare timings for difficulty 2, 3, 4.",
+      "Starter code idea: an array of block objects with data, nonce, prevHash, hash fields and a stub isValid().",
+      "Interactive demo: editable block cards that go green/red live, a Mine button with nonce counter, and a three-peer view that highlights the peer whose hashes differ."
+    ]
+  }
+}

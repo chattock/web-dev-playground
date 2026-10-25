@@ -1,0 +1,30 @@
+{
+  "index": 214,
+  "lecture_id": 17967358,
+  "title": "Tip from Angela - Location, Location, Location!",
+  "section": "25. EJS",
+  "duration_min": 2,
+  "kind": "tip",
+  "summary": "A short learning-habits talk about the gap between following a tutorial and building alone, and the confidence curve most learners go through. No code is covered.",
+  "concepts": [
+    {
+      "heading": "Key takeaways",
+      "points": [
+        "Understanding a demo while watching is not the same as being able to reproduce it. Skill comes from doing the work yourself.",
+        "Suggested routine: watch for the overall idea, jot down function names and tools you may need, then pause the video and attempt the exercise on your own before seeing the solution.",
+        "Early on, new learners often overestimate what they know (the Dunning-Kruger effect). As knowledge grows, the gaps become visible and confidence drops into a low point, often experienced as impostor syndrome.",
+        "Both extremes are distortions; the realistic position is somewhere between. Consistent practice and applying what is learned is what moves you forward."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [
+    "Treating passive video watching as learning and skipping the pause-and-try step."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": []
+  }
+}

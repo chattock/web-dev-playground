@@ -1,0 +1,30 @@
+{
+  "index": 59,
+  "lecture_id": 17966772,
+  "title": "Tip from Angela - Building a Programming Habit",
+  "section": "9. Flexbox",
+  "duration_min": 3,
+  "kind": "tip",
+  "summary": "A short motivational tip on habit building: attach the new coding habit to an existing routine so the old habit acts as a trigger.",
+  "concepts": [
+    {
+      "heading": "Habit stacking with a cue",
+      "points": [
+        "Pick a habit you already do reliably (for example brushing teeth) and perform the new habit straight after it.",
+        "The existing routine becomes the trigger, so you do not rely on remembering or on willpower.",
+        "Applied to coding: choose a fixed daily cue, then do a set block (about 30-60 minutes) of coding right after it.",
+        "Keep the new habit specific and small enough to start immediately, with nothing else slotted in between."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [
+    "Leaving the habit unanchored so something else always gets in the way."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": []
+  }
+}

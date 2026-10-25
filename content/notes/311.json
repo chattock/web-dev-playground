@@ -1,0 +1,64 @@
+{
+  "index": 311,
+  "lecture_id": 17039546,
+  "title": "Class Components vs. Functional Components",
+  "section": "36. React.js",
+  "duration_min": 6,
+  "kind": "theory",
+  "summary": "Compares the older class-based way of writing React components, which was needed for state, with function components plus hooks. Uses the same counter built both ways so legacy class code is recognisable, while recommending hooks for new code.",
+  "concepts": [
+    {
+      "heading": "Class components: structure",
+      "points": [
+        "Write class App extends React.Component instead of function App(). The class is not called with parentheses and must extend Component from the react module.",
+        "The JSX to display goes in a render() method that returns it. Output is identical to the function version.",
+        "A class component is used in JSX exactly like a function component, e.g. <ClassComponent />.",
+        "(Extra) In the reference repo App itself is a class whose render() returns <ClassComponent />; swapping it to <FunctionalComponent /> shows the identical counter."
+      ]
+    },
+    {
+      "heading": "State in classes",
+      "points": [
+        "Historically state required a class: the constructor calls super() and sets this.state = { count: 0 }.",
+        "Read state through this.state.count in render().",
+        "Update with the inherited this.setState({ count: this.state.count + 1 }), called from the increase() method. (Extra) Class setState merges the given keys into the existing state object, unlike the useState setter, which replaces the value.",
+        "Handler methods are bound in the constructor (this.increase = this.increase.bind(this)); this binding is part of the boilerplate. (Extra) Without it, this is undefined inside increase when the button calls it."
+      ]
+    },
+    {
+      "heading": "Why hooks replaced them",
+      "points": [
+        "Class code carries extra boilerplate, repeated this references and binding, and reusing stateful logic between components is awkward.",
+        "The React team introduced hooks (2018) and recommends them for new code. Hooks work only in function components, not classes, but classes and function components can coexist in one app.",
+        "With useState the counter becomes: const [count, setCount] = useState(0); the handler calls setCount(count + 1); the JSX uses count directly. No this, no binding, less code.",
+        "Takeaway: you may meet this.state and this.setState in older tutorials and codebases; they achieve what useState does."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Counter as a class component",
+      "language": "jsx",
+      "code": "import React from \"react\";\n\nclass ClassComponent extends React.Component {\n  constructor() {\n    super();\n    this.state = { count: 0 };\n    this.increase = this.increase.bind(this);\n  }\n\n  increase() {\n    this.setState({ count: this.state.count + 1 });\n  }\n\n  render() {\n    return (\n      <div>\n        <h1>{this.state.count}</h1>\n        <button onClick={this.increase}>+</button>\n      </div>\n    );\n  }\n}\n\nexport default ClassComponent;"
+    },
+    {
+      "caption": "Same counter with a function component and useState",
+      "language": "jsx",
+      "code": "import React, { useState } from \"react\";\n\nfunction FunctionalComponent() {\n  const [count, setCount] = useState(0);\n\n  function increase() {\n    setCount(count + 1);\n  }\n\n  return (\n    <div>\n      <h1>{count}</h1>\n      <button onClick={increase}>+</button>\n    </div>\n  );\n}\n\nexport default FunctionalComponent;"
+    }
+  ],
+  "task": null,
+  "pitfalls": [
+    "Forgetting to bind class methods so this is undefined inside the handler.",
+    "Trying to call useState inside a class component; hooks are function-only.",
+    "(Extra) Directly mutating this.state instead of calling setState does not trigger a re-render."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (playground data covers only sections 1-11, 14, 15).",
+    "gaps_and_ideas": [
+      "Inside a future React state lesson, add a comparison card showing ClassComponent and FunctionalComponent counters side by side; task: match each class line (this.state = { count: 0 }, this.setState(...), this.state.count, the bind call) to its hooks equivalent (useState(0), setCount(count + 1), count, nothing needed).",
+      "Extra task idea: give a small class component with this.state = { liked: false } and a toggle method, and ask the learner to convert it to a function component with useState."
+    ]
+  }
+}

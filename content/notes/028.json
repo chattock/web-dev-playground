@@ -1,0 +1,125 @@
+{
+  "index": 28,
+  "lecture_id": 37350000,
+  "title": "[Project] Portfolio Website",
+  "section": "4. Multi-Page Websites",
+  "duration_min": 9,
+  "kind": "project",
+  "summary": "End-of-section project: build an HTML-only web developer portfolio that links to the Movie Ranking (section 2) and Birthday Invite (section 3) projects, shows a screenshot preview of each, and links to About Me and Contact Me pages. Brings together the boilerplate, headings, hr, anchors, images and relative paths from the section.",
+  "concepts": [
+    {
+      "heading": "Why a portfolio",
+      "points": [
+        "Developers and designers keep a personal site that shows what they have built and links to each piece of work, so potential employers or clients can browse it and get in touch.",
+        "This version is deliberately simple (HTML only). It gets restyled once CSS is covered and is put online in the next lesson, so treat it as a real, public page: use your own content."
+      ]
+    },
+    {
+      "heading": "Project folder layout",
+      "points": [
+        "index.html at the top level is the portfolio home page; it starts with TODO comments describing each step.",
+        "public/ holds the other pages: movie-ranking.html, birthday-invite.html, about.html, contact.html. The supplied project pages are the standard versions; overwrite them with your own code from the earlier sections, since yours will have your dates, films and customisations.",
+        "assets/images/ holds the preview screenshots. Ready-made screenshots of both projects are included as a fallback.",
+        "goal.png shows the target: title, subtitle, hr, two project links each with a preview image, another hr, then About Me and Contact Me links."
+      ]
+    },
+    {
+      "heading": "Making preview images with screenshots",
+      "points": [
+        "The skill needed is taking a screenshot on your OS (search for the method for Windows, Mac or Linux if unsure).",
+        "(Extra) Common shortcuts: Mac Cmd+Shift+4 (drag a region; Cmd+Shift+5 for options), Windows Win+Shift+S (Snipping Tool), most Linux desktops PrtSc or Shift+PrtSc.",
+        "Workflow: right-click a project file (e.g. public/birthday-invite.html) > Show Preview, screenshot the rendered preview, drag the image file into assets/images, and rename it to something sensible.",
+        "(Extra) Prefer lowercase, hyphenated file names with no spaces or apostrophes (birthday-invite.png). Names with spaces work locally but must be URL-encoded (%20) on a web server and are easy to mistype."
+      ]
+    },
+    {
+      "heading": "Controlling image size with the height attribute",
+      "points": [
+        "A raw screenshot is usually large and can fill the whole page.",
+        "Add height=\"200\" to the img element: the image renders 200 pixels tall and the browser works out the width automatically, keeping the original proportions.",
+        "The starter file links to the MDN documentation for the img element's height attribute for further reading.",
+        "(Extra) Set only one of width/height to keep the aspect ratio; setting both to values that don't match the original ratio distorts the image."
+      ]
+    },
+    {
+      "heading": "Linking the project pages",
+      "points": [
+        "Each project title is an anchor whose href is the relative path from index.html into public/, e.g. ./public/movie-ranking.html and ./public/birthday-invite.html.",
+        "In the instructor's version the anchor is placed inside an h3 so the link text displays at heading size: <h3><a href=...>Movie Ranking Project</a></h3>.",
+        "The preview img goes below its heading, with src pointing into ./assets/images/.",
+        "About Me and Contact Me links at the bottom point to ./public/about.html and ./public/contact.html; edit those two pages so they describe you."
+      ]
+    },
+    {
+      "heading": "Breaking a big job into TODOs",
+      "points": [
+        "Professional developers split a large task into a list of small ones. The starter index.html does this with numbered TODO comments that can be ticked off one at a time.",
+        "Beyond the required parts, any HTML elements learned so far can be added; this is your page."
+      ]
+    },
+    {
+      "heading": "Instructor's solution notes",
+      "points": [
+        "Starts from the boilerplate with the unnecessary meta tags removed (the IE compatibility line) and a custom title.",
+        "Uses an h1 for the name, an h2 subtitle, and hr elements to separate the sections.",
+        "Each project: an h3 containing the link, followed by its preview image; About and Contact links at the very bottom.",
+        "It is only one example; layout and wording are up to you."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Project structure (reference repo folder '04.03 - HTML Portfolio Project')",
+      "language": "text",
+      "code": "4.3 HTML Portfolio Project/\n├── index.html          <- portfolio home page (TODOs)\n├── solution.html\n├── goal.png\n├── assets/\n│   └── images/         <- project screenshots go here\n└── public/\n    ├── movie-ranking.html\n    ├── birthday-invite.html\n    ├── about.html\n    └── contact.html"
+    },
+    {
+      "caption": "Height-only sizing keeps proportions",
+      "language": "html",
+      "code": "<!-- 200px tall, width calculated automatically -->\n<img src=\"./assets/images/movie-ranking.png\" alt=\"Movie ranking page preview\" height=\"200\" />"
+    }
+  ],
+  "task": {
+    "name": "4.3 HTML Portfolio Project",
+    "starting_point": "Downloaded project zip: index.html containing only TODO comments, public/ with stock versions of movie-ranking.html, birthday-invite.html, about.html and contact.html, assets/images/ with two stock screenshots, plus goal.png and solution.html.",
+    "goal": "An HTML-only portfolio home page with a title and subtitle, a linked heading and preview image for each of the two earlier projects, and links to About Me and Contact Me, all using relative paths.",
+    "steps": [
+      "Learn how to take a screenshot on your computer if you don't already know.",
+      "Extract the zip, open it in VS Code, and look at goal.png.",
+      "TODO: create the HTML boilerplate in index.html (type it or use ! + Enter), removing the unneeded IE meta tag.",
+      "TODO: set the title element to your own page title.",
+      "TODO: paste your own Movie Ranking and Birthday Invite code into public/movie-ranking.html and public/birthday-invite.html, replacing the stock code.",
+      "TODO: preview each project (right-click > Show Preview), screenshot it, move the screenshot into assets/images and give it a clear name (or use the provided images).",
+      "TODO: add an h1 with your name/portfolio title and an h2 subtitle such as 'I'm a Web Developer', followed by an hr.",
+      "TODO: for each project add a heading containing a link to its page: <h3><a href=\"./public/movie-ranking.html\">Movie Ranking Project</a></h3>, and the same for ./public/birthday-invite.html.",
+      "TODO: under each heading add the preview img with src=\"./assets/images/<file>\", an alt description and height=\"200\" so it doesn't fill the page.",
+      "Finally add another hr and links to ./public/about.html and ./public/contact.html, then personalise those two pages.",
+      "Click every link in the preview to confirm each page opens."
+    ],
+    "expected_result": "Matches goal.png: large name heading, 'I'm a Web Developer' subtitle, hr, blue underlined 'Movie Ranking Project' link with a 200px-tall screenshot below, the same for 'Birthday Invite Project', hr, then 'About Me' and 'Contact Me' links side by side.",
+    "solution_code": {
+      "language": "html",
+      "code": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"UTF-8\" />\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\n    <title>HTML Portfolio Project</title>\n  </head>\n  <body>\n    <h1>Your Name's Portfolio</h1>\n    <h2>I'm a Web Developer</h2>\n    <hr />\n\n    <!-- project 1: linked heading + preview -->\n    <h3><a href=\"./public/movie-ranking.html\">Movie Ranking Project</a></h3>\n    <img src=\"./assets/images/movie-ranking.png\"\n         alt=\"Preview of the movie ranking page\" height=\"200\" />\n\n    <!-- project 2 -->\n    <h3><a href=\"./public/birthday-invite.html\">Birthday Invite Project</a></h3>\n    <img src=\"./assets/images/birthday-invite.png\"\n         alt=\"Preview of the birthday invite page\" height=\"200\" />\n\n    <hr />\n    <a href=\"./public/about.html\">About Me</a>\n    <a href=\"./public/contact.html\">Contact Me</a>\n  </body>\n</html>"
+    },
+    "reference_repo_path": "Section 04 - Multi-Page Websites/04.03 - HTML Portfolio Project/index.html. Divergences: the repo overwrote the TODO starter, uses its author's name in the h1, keeps the stock screenshot names with spaces and apostrophes ('The Best Movies According to Wesley.png', \"It's My Birthday.png\"), has an alt text that doesn't match its image, and adds a personal footer. The solution above uses neutral names and hyphenated file names instead."
+  },
+  "pitfalls": [
+    "Forgetting the public/ segment in the project links (./movie-ranking.html instead of ./public/movie-ranking.html).",
+    "Full-size screenshots swamping the page; add height=\"200\" (and only height, so proportions are kept).",
+    "Screenshot file names with spaces or apostrophes that are hard to type and break when mistyped; rename them.",
+    "Leaving the stock project code, placeholder About text and fake contact details in place when the site is about to be published.",
+    "Inside public/ pages, any link back to the home page needs ../index.html, not ./index.html."
+  ],
+  "playground": {
+    "match": "s04-portfolio (lesson 4.3, data/s04.js)",
+    "coverage": "Project lesson with an empty starter and a solution that has an h1 intro, h3 linked project titles with ./public/... hrefs, preview images with height=\"200\", and contact links. Notes explain height-only sizing, the folder structure, and that the page is later restyled and published on GitHub Pages.",
+    "gaps_and_ideas": [
+      "Mirror the course's TODO-driven starter: put the seven TODO comments into the starter file (boilerplate, title, add project code, screenshots, headings, project links, preview images) plus the About/Contact links, so learners practise working through a task list.",
+      "Swap the Unsplash preview images for local ./assets/images/ paths and ship two stock screenshots, matching the course and reinforcing relative paths.",
+      "Add About Me and Contact Me links to ./public/about.html and ./public/contact.html (the course requires them; the playground solution only has mailto and GitHub links), and an h2 subtitle plus hr dividers to match goal.png.",
+      "Add a screenshot how-to callout (Mac Cmd+Shift+4, Windows Win+Shift+S, Linux PrtSc) and a file-naming tip (lowercase, hyphens, no spaces or apostrophes).",
+      "Extra task: wrap each preview image in the same anchor as its heading so the thumbnail is clickable too (connects back to lesson 4.2).",
+      "Explore idea: a height/width slider demo on one screenshot showing height-only, width-only and both-set (distorted) results side by side."
+    ]
+  }
+}

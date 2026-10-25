@@ -1,0 +1,28 @@
+{
+  "index": 2,
+  "lecture_id": 12685347,
+  "title": "Download the Course Syllabus",
+  "section": "1. Front-End Web Development",
+  "duration_min": 0,
+  "kind": "admin",
+  "summary": "Short resource page with a single button linking to a PDF of the full course syllabus (hosted on Google Drive). No teaching content.",
+  "concepts": [
+    {
+      "heading": "Key takeaways",
+      "points": [
+        "The syllabus PDF lists every topic in the bootcamp. Use it to see where each module sits and to choose a starting point if you already know some of the material.",
+        "The download is a Google Drive link. If it fails, the article explains that heavy traffic is the usual cause and a later retry normally works.",
+        "(Extra) A copy of the syllabus is also in the reference repo as 'Section 01 - Front-End Web Development/01.01 - Web Dev Syllabus.pdf'.",
+        "(Extra) The reference repo's folder names give a quick map of the course order: HTML, intermediate HTML, multi-page sites, CSS (intro, properties, intermediate, advanced), Flexbox, Grid, Bootstrap, web design, a personal-site capstone, JavaScript ES6, DOM, two 'boss level' games (Dicee, Simon), jQuery, Unix command line, Node, Express, EJS, Git/GitHub, APIs, SQL/PostgreSQL, authentication, React, then Web3/ICP DApps."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (download page only).",
+    "gaps_and_ideas": []
+  }
+}

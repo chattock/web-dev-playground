@@ -1,0 +1,28 @@
+{
+  "index": 368,
+  "lecture_id": 31673812,
+  "title": "Join the $6 Million Dollar Supernova Hackathon",
+  "section": "42. Minting NFTs and Building an NFT Marketplace like OpenSea",
+  "duration_min": 1,
+  "kind": "admin",
+  "summary": "Promotional article closing the Internet Computer section: it points learners to a 2022 global hackathon run by the Internet Computer ecosystem. No code or exercise.",
+  "concepts": [
+    {
+      "heading": "Key takeaways",
+      "points": [
+        "Announcement for a global Internet Computer hackathon (10 May to 20 June 2022) with more than $6 million in prizes and grants, aimed at learners who now know Motoko and ICP development.",
+        "Contains a registration link and asks participants to share their projects with the instructor on Twitter.",
+        "(Extra) The event dates are long past, so treat this as an admin or marketing item; the useful idea is that DFINITY grants and hackathons exist for ICP projects.",
+        "(Extra) Content taken from the reference repo's README for this lesson, because the lecture page in the browser tab showed only an Open button rather than the article body."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": []
+  }
+}

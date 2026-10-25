@@ -1,0 +1,52 @@
+{
+  "index": 129,
+  "lecture_id": 12400594,
+  "title": "Dicee Challenge Step 5 - Change both <img> Elements",
+  "section": "17. Boss Level Challenge 1 - The Dicee Game",
+  "duration_min": 1,
+  "kind": "article-task",
+  "summary": "Step 5: repeat the previous step for the right-hand die using a second random number.",
+  "concepts": [
+    {
+      "heading": "Second player",
+      "points": [
+        "Create randomNumber2 with the same formula.",
+        "Select the second img (class img2) and set its src with randomNumber2.",
+        "The two rolls are independent, so equal values are possible and need handling in the next step."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Both dice",
+      "language": "javascript",
+      "code": "var randomNumber2 = Math.floor(Math.random() * 6) + 1;\ndocument.querySelector(\".img2\").setAttribute(\"src\", \"./images/dice\" + randomNumber2 + \".png\");"
+    }
+  ],
+  "task": {
+    "name": "Step 5: both dice",
+    "starting_point": "Left die already randomised.",
+    "goal": "Both dice show independent random faces.",
+    "steps": [
+      "Declare randomNumber2.",
+      "Set the img2 src from it.",
+      "Refresh and confirm the dice differ at times."
+    ],
+    "expected_result": "Each refresh shows two independent faces.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "var randomNumber2 = Math.floor(Math.random() * 6) + 1;\ndocument.querySelector(\".img2\").setAttribute(\"src\", \"./images/dice\" + randomNumber2 + \".png\");"
+    },
+    "reference_repo_path": "Section 17 - Boss Level Challenge 1 - The Dicee Game"
+  },
+  "pitfalls": [
+    "Reusing randomNumber1 for both images, so dice always match."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (no s17.js data file); covered by the proposed Dicee project lesson.",
+    "gaps_and_ideas": [
+      "Task: refactor into a function rollDie() to avoid the duplicate code."
+    ]
+  }
+}

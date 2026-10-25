@@ -1,0 +1,64 @@
+{
+  "index": 244,
+  "lecture_id": 12385714,
+  "title": "Updating Single Values and Adding Columns in SQL",
+  "section": "32. SQL",
+  "duration_min": 5,
+  "kind": "concept+exercise",
+  "summary": "Covers the U of CRUD: UPDATE ... SET ... WHERE to change existing records, and ALTER TABLE ... ADD to add a column. Ends with a small challenge that fills a new stock column for two products.",
+  "concepts": [
+    {
+      "heading": "UPDATE",
+      "points": [
+        "Syntax: UPDATE table SET column = value WHERE condition. UPDATE names the table, SET lists the new values, and WHERE restricts which rows are touched.",
+        "Use case: the pencil row was inserted with a NULL price; UPDATE products SET price = 0.8 WHERE id = 2 gives it one.",
+        "Danger: without WHERE the statement applies to every row, so UPDATE products SET price = 0.8 would overwrite all prices. Always include WHERE, ideally on the primary key, and check it before running.",
+        "(Extra) Several columns can be set in one statement by separating assignments with commas."
+      ]
+    },
+    {
+      "heading": "ALTER TABLE ... ADD",
+      "points": [
+        "ALTER TABLE changes the table's structure (add, delete or modify columns) rather than a record.",
+        "To add a column give the table name, the ADD keyword, the new column name and its data type: ALTER TABLE products ADD stock INTEGER.",
+        "Every existing row receives NULL in the new column, so existing records need a follow-up UPDATE.",
+        "The lecture's takeaway: patching in missing columns and back-filling values is tedious, so plan the schema carefully at creation time."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Update one row, add a column, back-fill it",
+      "language": "sql",
+      "code": "UPDATE products SET price = 0.8 WHERE id = 2;\n\nALTER TABLE products ADD stock INTEGER;\n\nUPDATE products SET stock = 32 WHERE id = 1;\nUPDATE products SET stock = 12 WHERE id = 2;"
+    }
+  ],
+  "task": {
+    "name": "Fill the stock column",
+    "starting_point": "products table with Pen (id 1) and Pencil (id 2). After ALTER TABLE, a stock column exists with NULL in both rows.",
+    "goal": "Give each product its stock count: 32 pens and 12 pencils.",
+    "steps": [
+      "Write UPDATE products SET stock = 32 WHERE id = 1 and run it.",
+      "Clear the editor, write UPDATE products SET stock = 12 WHERE id = 2 and run it.",
+      "Run SELECT * FROM products to confirm no NULLs remain."
+    ],
+    "expected_result": "Pen has stock 32 and Pencil stock 12; pencil price 0.8; no NULL values anywhere.",
+    "solution_code": {
+      "language": "sql",
+      "code": "UPDATE products SET stock = 32 WHERE id = 1;\nUPDATE products SET stock = 12 WHERE id = 2;"
+    },
+    "reference_repo_path": "Section 32 - SQL/32.03 Updating Single Values and Adding Columns in SQL/README.md (text only)"
+  },
+  "pitfalls": [
+    "Running UPDATE without WHERE changes every row.",
+    "Forgetting that a new column is NULL for existing rows until updated."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "Add to a combined SQL lesson: tasks to fix the NULL price with UPDATE, add stock with ALTER TABLE, back-fill it, then predict what an UPDATE with no WHERE would do before running it.",
+      "Demo idea: a 'safety check' toggle that highlights which rows a WHERE will affect before executing an UPDATE."
+    ]
+  }
+}

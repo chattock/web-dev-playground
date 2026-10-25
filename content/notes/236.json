@@ -1,0 +1,104 @@
+{
+  "index": 236,
+  "lecture_id": 39461834,
+  "title": "Creating POST, PUT, and PATCH Routes",
+  "section": "30. Build Your Own API",
+  "duration_min": 15,
+  "kind": "concept+exercise",
+  "summary": "Builds the three write endpoints of the joke API in the DIY project: POST /jokes to add a joke, PUT /jokes/:id to replace one completely, and PATCH /jokes/:id to change only the supplied fields. Each is a challenge followed by a walkthrough.",
+  "concepts": [
+    {
+      "heading": "Challenge 4: POST /jokes (create)",
+      "points": [
+        "The client sends the new joke in the request body as x-www-form-urlencoded data with two fields, text and type (set these in Postman's Body tab).",
+        "The id is not supplied by the client. It is generated as jokes.length + 1, so with 100 jokes the next id is 101, then 102 and so on. (Extra) This breaks if jokes are ever deleted, since lengths and ids drift apart; using the highest existing id plus one is safer.",
+        "The starter file already registers body-parser (bodyParser.urlencoded with extended: true) via app.use, which is the middleware that fills req.body. Express has its own built-in parser, but body-parser is kept for clarity and because it is widely used.",
+        "Build a newJoke object with id, jokeText (from req.body.text) and jokeType (from req.body.type), then jokes.push(newJoke) to add it to the end of the array.",
+        "console.log(jokes.slice(-1)) prints the last array element: a negative index to slice counts from the end, and the result is a one-item array.",
+        "Respond with res.json(newJoke) so the client can confirm what was created. The response comes from the object built out of the request, not from re-reading the array; that is a design choice.",
+        "Possible extensions mentioned: validate text length and restrict type to an allowed list. They are not required."
+      ]
+    },
+    {
+      "heading": "Challenge 5: PUT /jokes/:id (full replacement)",
+      "points": [
+        "PUT means a complete update: every non-automatic field must be sent, and the stored resource is overwritten with them. The id stays the same because it identifies the item.",
+        "Because the whole object is replaced, a field sent blank or left out ends up empty in the stored joke. That is correct PUT behaviour.",
+        "In Postman the id goes in the path (Params > Path Variables, e.g. 2) and text and type go in the form-encoded body.",
+        "Handler steps: read the id from req.params.id (parseInt for strict comparison, or use ==), build replacementJoke = { id, jokeText: req.body.text, jokeType: req.body.type }, locate the position with findIndex, assign jokes[searchIndex] = replacementJoke, then respond with the new object.",
+        "Array.prototype.findIndex(callback) is like find, but returns the index of the first match (or -1 if none), which is what is needed to overwrite an element in place.",
+        "A real API would normally implement either PUT or PATCH for updates; both are shown here for practice."
+      ]
+    },
+    {
+      "heading": "Challenge 6: PATCH /jokes/:id (partial update)",
+      "points": [
+        "PATCH changes only part of a resource and is what most updates really need (e.g. change one field of a user without resending everything).",
+        "The example goal: change the type of joke 2 to a new category such as Agriculture while leaving its text alone.",
+        "Handler steps: parseInt the id, find the existing joke, then build replacementJoke with each field set to req.body.field || existingJoke.field. The || operator keeps the value from the request when it is present (truthy) and otherwise falls back to the stored value.",
+        "Then findIndex on the same id, overwrite jokes[searchIndex] with replacementJoke, and send it back as JSON.",
+        "The same logic could be written with if statements for readability; the || form is a common compact idiom. Test it in a console if it is unfamiliar.",
+        "(Extra) The || fallback cannot set a field to an empty string or other falsy value; ?? or an explicit undefined check handles that."
+      ]
+    },
+    {
+      "heading": "Verifying",
+      "points": [
+        "Run index.js with nodemon and send the POST, PUT and PATCH requests from the JokeAPI collection (check both the Params and Body tabs, which are pre-filled). Before the routes exist Postman shows an error; once they work it shows the expected JSON.",
+        "Re-read any unfamiliar method (slice, find, findIndex) on MDN before moving on."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "POST a new joke (reference solution)",
+      "language": "javascript",
+      "code": "app.post(\"/jokes\", (req, res) => {\n  const newJoke = {\n    id: jokes.length + 1,\n    jokeText: req.body.text,\n    jokeType: req.body.type,\n  };\n  jokes.push(newJoke);\n  console.log(jokes.slice(-1));\n  res.json(newJoke);\n});"
+    },
+    {
+      "caption": "PUT: replace a joke entirely (reference solution)",
+      "language": "javascript",
+      "code": "app.put(\"/jokes/:id\", (req, res) => {\n  const id = parseInt(req.params.id);\n  const replacementJoke = {\n    id: id,\n    jokeText: req.body.text,\n    jokeType: req.body.type,\n  };\n  const searchIndex = jokes.findIndex((joke) => joke.id === id);\n  jokes[searchIndex] = replacementJoke;\n  res.json(replacementJoke);\n});"
+    },
+    {
+      "caption": "PATCH: update only the fields that were sent (reference solution)",
+      "language": "javascript",
+      "code": "app.patch(\"/jokes/:id\", (req, res) => {\n  const id = parseInt(req.params.id);\n  const existingJoke = jokes.find((joke) => joke.id === id);\n  const replacementJoke = {\n    id: id,\n    jokeText: req.body.text || existingJoke.jokeText,\n    jokeType: req.body.type || existingJoke.jokeType,\n  };\n  const searchIndex = jokes.findIndex((joke) => joke.id === id);\n  jokes[searchIndex] = replacementJoke;\n  res.json(replacementJoke);\n});"
+    }
+  ],
+  "task": {
+    "name": "DIY API: POST, PUT and PATCH routes",
+    "starting_point": "The DIY API project from the previous lecture with the three GET routes done; index.js has empty slots for challenges 4-6 and body-parser already configured; the JokeAPI Postman collection has the POST, PUT and PATCH requests ready.",
+    "goal": "Implement POST /jokes, PUT /jokes/:id and PATCH /jokes/:id so the Postman requests succeed and the in-memory jokes array changes accordingly.",
+    "steps": [
+      "Challenge 4: add app.post('/jokes', ...) that builds newJoke with id jokes.length + 1 and text/type from req.body, pushes it onto jokes, logs the last item and responds with the new joke.",
+      "Challenge 5: add app.put('/jokes/:id', ...) that parses the id, builds a replacement object from the id and body fields, uses findIndex to locate the joke, overwrites that slot and responds with the replacement.",
+      "Challenge 6: add app.patch('/jokes/:id', ...) that finds the existing joke and builds a replacement using req.body.x || existing.x for text and type, writes it back by index and responds with it.",
+      "Run nodemon index.js and send the POST, PUT and PATCH requests from the Postman collection, checking Params and Body.",
+      "Re-send a GET for the changed id (or filter by type) to confirm the data actually changed."
+    ],
+    "expected_result": "POST returns the new joke with the next id; PUT with id 2 returns joke 2 fully replaced (blank fields become empty); PATCH with only type=Agriculture returns joke 2 with the new type and original text.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "app.post(\"/jokes\", (req, res) => {\n  const newJoke = {\n    id: jokes.length + 1,\n    jokeText: req.body.text,\n    jokeType: req.body.type,\n  };\n  jokes.push(newJoke);\n  res.json(newJoke);\n});\n\napp.put(\"/jokes/:id\", (req, res) => {\n  const id = parseInt(req.params.id);\n  const replacementJoke = {\n    id: id,\n    jokeText: req.body.text,\n    jokeType: req.body.type,\n  };\n  const searchIndex = jokes.findIndex((joke) => joke.id === id);\n  jokes[searchIndex] = replacementJoke;\n  res.json(replacementJoke);\n});\n\napp.patch(\"/jokes/:id\", (req, res) => {\n  const id = parseInt(req.params.id);\n  const existingJoke = jokes.find((joke) => joke.id === id);\n  const replacementJoke = {\n    id: id,\n    jokeText: req.body.text || existingJoke.jokeText,\n    jokeType: req.body.type || existingJoke.jokeType,\n  };\n  const searchIndex = jokes.findIndex((joke) => joke.id === id);\n  jokes[searchIndex] = replacementJoke;\n  res.json(replacementJoke);\n});"
+    },
+    "reference_repo_path": "Section 30 - Build Your Own API/30.02 DIY API/solution.js"
+  },
+  "pitfalls": [
+    "Sending the body as JSON or raw in Postman when the server only has the urlencoded parser, leaving req.body fields undefined; use x-www-form-urlencoded.",
+    "Forgetting parseInt on the id, so === never finds a match and findIndex returns -1 (writing jokes[-1] silently adds a bogus property).",
+    "(Extra) PATCH on an unknown id: existingJoke is undefined and reading its properties throws; no 404 handling is shown.",
+    "Mistaking PUT for a partial update; omitted fields are wiped.",
+    "(Extra) Data lives only in memory, so restarts (nodemon reloads) reset all additions and edits."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "New lesson 'Write routes: POST, PUT, PATCH' with a blurb contrasting create, replace and amend.",
+      "Tasks: (1) POST a new item with an auto id, (2) PUT to replace an item by id, (3) PATCH with the || fallback, (4) (Extra) PATCH using ?? so empty strings can be saved, (5) (Extra) return 404 JSON when the id is not found.",
+      "Starter code idea: Express server with body-parser and a short array, route stubs marked TODO.",
+      "Interactive demo idea: side-by-side panel showing the array before and after a simulated PUT versus PATCH using the same partial form data."
+    ]
+  }
+}

@@ -1,0 +1,94 @@
+{
+  "index": 317,
+  "lecture_id": 17039614,
+  "title": "Managing a Component Tree Practice",
+  "section": "36. React.js",
+  "duration_min": 8,
+  "kind": "concept+exercise",
+  "summary": "Challenge and walkthrough: the to-do list's input and Add button have been extracted into an InputArea component and the app is broken. The fix keeps the typed text in InputArea's own state while the items array stays in App, and passes the text up through an onAdd callback prop.",
+  "concepts": [
+    {
+      "heading": "The starting situation",
+      "points": [
+        "The starter has InputArea (input plus button only) already rendered inside App, but the old handlers and state were left in App, so the compiler shows many errors.",
+        "Goal: behave exactly as before (add items, click to delete) with the new component tree: App at the top, one InputArea, and many ToDoItem children.",
+        "Rules in the starter comments: do not edit ToDoItem.jsx and do not move the input/button back into App.jsx.",
+        "Hints: decide where the input's state should live, and how the typed value gets back to addItem in App."
+      ]
+    },
+    {
+      "heading": "Deciding where state lives",
+      "points": [
+        "The raw text in the input matters only to InputArea until Add is pressed, so `inputText` state and `handleChange` move into InputArea. Local state keeps App simpler.",
+        "The items array stays in App: both InputArea (to add) and the ToDoItems (to display and delete) need to influence it, so it belongs at the common ancestor.",
+        "When code is copied between files by hand, the editor will not add the `useState` import automatically; add `import { useState } from \"react\"` yourself or the error 'useState is not defined' appears."
+      ]
+    },
+    {
+      "heading": "Passing the text up with a callback prop",
+      "points": [
+        "In App.jsx, render `<InputArea onAdd={addItem} />`: the prop name is arbitrary, the value is the addItem function.",
+        "InputArea receives `props` and calls `props.onAdd(...)` on button click. If confused about which props arrive, inspect the component in React DevTools.",
+        "addItem now takes a parameter: `function addItem(inputText) { setItems((prev) => [...prev, inputText]); }`, so it is told which text to add rather than reading state from App.",
+        "The click handler in InputArea must be an arrow function wrapping the call so the text can be passed as an argument: `onClick={() => { props.onAdd(inputText); setInputText(\"\"); }}`. Passing `props.onAdd(inputText)` directly would run at render.",
+        "Clearing the field moves here too: after calling onAdd, `setInputText(\"\")` resets the local state, since the value has already been handed up.",
+        "Data flow summary: InputArea owns the draft text, App owns the list, the callback sends data up, and the list is passed back down to ToDoItem children via props."
+      ]
+    },
+    {
+      "heading": "Retained from previous lesson",
+      "points": [
+        "deleteItem(id) with filter and the ToDoItem calling `props.onChecked(props.id)` are unchanged.",
+        "Next: using these ideas in the third iteration of the Keeper app."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "InputArea.jsx (reference solution)",
+      "language": "jsx",
+      "code": "import { useState } from \"react\";\n\nfunction InputArea(props) {\n  const [inputText, setInputText] = useState(\"\");\n\n  function handleChange(event) {\n    const newValue = event.target.value;\n    setInputText(newValue);\n  }\n\n  return (\n    <div className=\"form\">\n      <input onChange={handleChange} type=\"text\" value={inputText} />\n      <button\n        onClick={() => {\n          props.onAdd(inputText);\n          setInputText(\"\");\n        }}\n      >\n        <span>Add</span>\n      </button>\n    </div>\n  );\n}\n\nexport default InputArea;"
+    },
+    {
+      "caption": "App.jsx (reference solution, challenge comments removed): items-only state and addItem with a parameter",
+      "language": "jsx",
+      "code": "import React, { useState } from \"react\";\nimport ToDoItem from \"./components/ToDoItem\";\nimport InputArea from \"./components/InputArea\";\n\nfunction App() {\n  const [items, setItems] = useState([]);\n\n  function addItem(inputText) {\n    setItems((prevItems) => [...prevItems, inputText]);\n  }\n\n  function deleteItem(id) {\n    setItems((prevItems) => prevItems.filter((item, index) => index !== id));\n  }\n\n  return (\n    <div className=\"container\">\n      <div className=\"heading\"><h1>To-Do List</h1></div>\n      <InputArea onAdd={addItem} />\n      <ul>\n        {items.map((todoItem, index) => (\n          <ToDoItem key={index} id={index} text={todoItem} onChecked={deleteItem} />\n        ))}\n      </ul>\n    </div>\n  );\n}\n\nexport default App;"
+    }
+  ],
+  "task": {
+    "name": "Extracted InputArea component",
+    "starting_point": "App.jsx renders `<InputArea />` but still has the old inputText state and handlers (broken); InputArea.jsx has the input and button markup only; ToDoItem.jsx is finished and must not change.",
+    "goal": "Make the app work as before, with the input state in InputArea and the items array in App.",
+    "steps": [
+      "Move `inputText` state, its setter and handleChange from App into InputArea, importing useState.",
+      "Bind the input's value to inputText and onChange to handleChange.",
+      "Pass `onAdd={addItem}` from App to InputArea.",
+      "Change addItem in App to accept the new text as an argument and append it with the spread operator.",
+      "In InputArea make the button's onClick an arrow function that calls props.onAdd(inputText) and then setInputText(\"\").",
+      "Remove unused state from App and test: add several items, then delete one by clicking it."
+    ],
+    "expected_result": "Typing then clicking Add inserts a new ToDoItem and empties the input; clicking an item removes it.",
+    "solution_code": {
+      "language": "jsx",
+      "code": "// InputArea button\n<button onClick={() => { props.onAdd(inputText); setInputText(\"\"); }}>\n  <span>Add</span>\n</button>\n\n// App.jsx\n<InputArea onAdd={addItem} />\nfunction addItem(inputText) {\n  setItems((prevItems) => [...prevItems, inputText]);\n}"
+    },
+    "reference_repo_path": "Section 36 - React.js/36.41 Managing a Component Tree Practice/managing-a-component-tree-practice/src/components/InputArea.jsx"
+  },
+  "pitfalls": [
+    "Missing useState import after moving code by copy and paste.",
+    "Passing `props.onAdd(inputText)` directly as onClick, which executes during render.",
+    "Leaving the clear-input call in App, where it can no longer reach InputArea's state.",
+    "Not giving addItem a parameter, so it reads a variable that no longer exists in App.",
+    "(Extra) The reference repo's App.jsx already contains the completed solution along with the challenge comments; the starter state is not preserved there."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (no React section files in the playground).",
+    "gaps_and_ideas": [
+      "New lesson 'Child to parent data flow': blurb on keeping state at the lowest component that needs it and sending data up via callbacks.",
+      "Tasks: (1) move input state into InputArea, (2) pass onAdd, (3) add a parameter to addItem, (4) wrap onClick in an arrow function, (5) clear the field after adding.",
+      "Starter: broken App with extracted InputArea, as in the lecture.",
+      "Interactive demo: a diagram of App, InputArea and ToDoItem showing which component owns each piece of state, with arrows lighting up as the user types, adds and deletes."
+    ]
+  }
+}

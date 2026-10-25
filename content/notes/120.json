@@ -1,0 +1,60 @@
+{
+  "index": 120,
+  "lecture_id": 12383870,
+  "title": "Text Manipulation and the Text Content Property",
+  "section": "16. The Document Object Model (DOM)",
+  "duration_min": 3,
+  "kind": "concept",
+  "summary": "Compares textContent with innerHTML for reading and changing an element's content. textContent deals with plain text only, while innerHTML reads and writes the markup between the tags, so it can inject new elements.",
+  "concepts": [
+    {
+      "heading": "innerHTML vs textContent",
+      "points": [
+        "Both properties can be read and assigned on a selected element, and both can replace what the element shows.",
+        "innerHTML returns the raw markup inside the element, including nested tags. With <h1><strong>Hello</strong></h1>, reading it gives the string with the strong tags still in it.",
+        "textContent returns only the text, with all tags stripped (just Hello in the same example).",
+        "Assigning to innerHTML parses the string as HTML, so you can add elements on the fly. Setting it to an em-wrapped word replaces the text and renders it in italics.",
+        "Assigning to textContent treats the string as literal text; any angle brackets appear on screen instead of becoming elements.",
+        "Whatever you assign must be a string in quotes, the same as with style values. Unquoted HTML would be read as JavaScript and throw an error.",
+        "(Extra) Avoid innerHTML with untrusted user input because it can run injected markup (XSS). textContent is the safe choice for plain text."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Reading and writing with both properties (starting from <h1 id=\"title\"><strong>Hello</strong></h1>)",
+      "language": "javascript",
+      "code": "console.log(document.getElementById(\"title\").innerHTML);   // <strong>Hello</strong>\nconsole.log(document.getElementById(\"title\").textContent); // Hello\ndocument.getElementById(\"title\").textContent = \"Text Content\"; // plain text, tags gone\ndocument.getElementById(\"title\").innerHTML = \"<em>Inner HTML</em>\"; // rendered as italic"
+    }
+  ],
+  "task": {
+    "name": "Experiment with injecting HTML",
+    "starting_point": "An h1 containing a strong-wrapped Hello and a linked script.js.",
+    "goal": "See the difference between the two properties by reading each and then assigning HTML through JS.",
+    "steps": [
+      "Log innerHTML and textContent of the h1 and compare.",
+      "Set textContent to a new string and note what happens to the strong tag.",
+      "Set innerHTML to a string that wraps a word in em (or another tag) and confirm it renders."
+    ],
+    "expected_result": "innerHTML output includes tags, textContent does not, and the em-wrapped text shows in italics.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "document.getElementById(\"title\").innerHTML = \"<em>Good Bye</em>\";"
+    },
+    "reference_repo_path": "Section 16 - The Document Object Model (DOM)/16.06 - Text Manipulation and the Text Content Property"
+  },
+  "pitfalls": [
+    "Forgetting the quotes around HTML assigned to innerHTML.",
+    "Assigning textContent and expecting tags to render.",
+    "Overwriting innerHTML or textContent wipes any child elements that were inside."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (no s16.js data file).",
+    "gaps_and_ideas": [
+      "Fold into a DOM text lesson: blurb on reading and writing element content.",
+      "Tasks: log both properties, set each, inject an em, try a script-looking string in each and compare.",
+      "Interactive demo: text box feeding a target element via a toggle between textContent and innerHTML, with the resulting DOM shown."
+    ]
+  }
+}

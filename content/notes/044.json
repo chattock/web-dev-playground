@@ -1,0 +1,113 @@
+{
+  "index": 44,
+  "lecture_id": 37350562,
+  "title": "Combining CSS Selectors",
+  "section": "7. Intermediate CSS",
+  "duration_min": 23,
+  "kind": "concept+exercise",
+  "summary": "Shows how to build precise CSS selectors by combining simpler ones: grouping with commas, direct-child with >, descendant with a space, and chaining with no space. Five small exercises on a to-do list page practise each combination, with the HTML locked.",
+  "concepts": [
+    {
+      "heading": "Why combine selectors",
+      "points": [
+        "Adding a class to every element that needs a different style clutters the HTML and does not scale. Combining selectors lets CSS aim at an element using its surroundings or its multiple attributes instead.",
+        "Example from the previous exercise: instead of putting white-text on the paragraph, target any p that sits inside .inner-box with the rule .inner-box p."
+      ]
+    },
+    {
+      "heading": "Group: comma",
+      "points": [
+        "Syntax: selector1, selector2 { ... }. Each selector is separated by a comma, and the one block of declarations applies to every element matched by any of them.",
+        "Works with any selector type: elements, classes, ids, or a mix, and with two or more selectors.",
+        "(Extra) Splitting onto one selector per line is a common formatting habit. A comma-separated list is equivalent to writing the rules out separately."
+      ]
+    },
+    {
+      "heading": "Child: >",
+      "points": [
+        "Syntax: parent > child. The left side is the parent, the right side must be a direct child, one generation down.",
+        "Grandchildren and deeper do not match. In the exercise, div.box has two children (a p and a ul), while the li items inside the ul are grandchildren.",
+        "Used to separate a paragraph inside .box from similar paragraphs elsewhere on the page."
+      ]
+    },
+    {
+      "heading": "Descendant: space",
+      "points": [
+        "Syntax: ancestor descendant, with a single space. The right side matches if any ancestor at any depth satisfies the left side.",
+        ".box li hits the list items even though they are two levels below .box. .box > li would match nothing here.",
+        "Preferred by the instructor over > unless you really need the strict parent-child relationship, since it is broader and usually what you want. Both are valid.",
+        "Useful on large pages: restricting to a container prevents the rule from leaking onto unrelated li elements elsewhere."
+      ]
+    },
+    {
+      "heading": "Chaining: no space",
+      "points": [
+        "Writing selectors directly against each other means one element must satisfy all of them, e.g. h1#title.big.heading is an h1 with id title and both classes big and heading.",
+        "Selectors that carry a prefix (. for class, # for id) can follow each other in any order, but a type (element) selector has to come first. Otherwise .doneli would be read as a single class name.",
+        "Compare li.done (one li that has class done) with li .done (an element with class done inside an li). A stray space completely changes the meaning.",
+        "Chaining is the way to separate li.done from p.done when the HTML cannot be edited."
+      ]
+    },
+    {
+      "heading": "Mixing combinations",
+      "points": [
+        "All of the above can be stacked: a space for ancestry, chaining for the target element, and commas to group several such selectors.",
+        "Read the selector as a plain sentence to check it, e.g. ul p.done means a p with class done that sits somewhere inside a ul.",
+        "(Extra) Hovering over a selector in the DevTools Styles panel highlights the elements it matches, a quick way to verify a selector."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "The four ways to combine selectors",
+      "language": "css",
+      "code": "h1, h2 { color: blueviolet; }       /* group */\n.box > p { color: firebrick; }      /* child: direct children only */\n.box li { color: blue; }            /* descendant: any depth */\nli.done { color: seagreen; }        /* chained: li AND class done */"
+    },
+    {
+      "caption": "Combined: ancestor plus chained target",
+      "language": "css",
+      "code": "ul p.done {\n  font-size: 0.5rem;\n}\n/* alternative using child, valid here because the p is a direct child of ul */\nul > p.done {\n  font-size: 0.5rem;\n}"
+    },
+    {
+      "caption": "A very specific chain",
+      "language": "css",
+      "code": "h1#title.big.heading {\n  color: black;\n}"
+    }
+  ],
+  "task": {
+    "name": "7.2 Combining Selectors: to-do list styling",
+    "starting_point": "index.html (do not change it) has an h1 and h2, a div.box containing p.done and ul.list with three li (two with class done), then a separate ul that holds a p.done, and a final plain paragraph. style.css is empty apart from a comment.",
+    "goal": "Style five specific groups of elements using only selector combinations.",
+    "steps": [
+      "Group h1 and h2 in one rule with colour blueviolet.",
+      "Make only the paragraph that is a direct child of .box firebrick, using the child combinator. Other paragraphs stay untouched.",
+      "Make the three bullet items blue using the descendant combinator from .box, not the bare li selector. A child combinator would fail because the li items are two levels deep.",
+      "Make the two li elements that carry class done seagreen by chaining li.done (no space, element first).",
+      "Shrink the p.done inside the standalone ul to font-size 0.5rem: use ul p.done, or ul > p.done."
+    ],
+    "expected_result": "Heading and sub-heading in blueviolet; the intro paragraph in the box firebrick; li items blue, with the two done items overriding to seagreen; the odd paragraph inside the stray ul tiny. The final plain paragraph keeps defaults.",
+    "solution_code": {
+      "language": "css",
+      "code": "h1,\nh2 {\n  color: blueviolet;\n}\n\n.box > p {\n  color: firebrick;\n}\n\n.box li {\n  color: blue;\n}\n\nli.done {\n  color: seagreen;\n}\n\nul p.done {\n  font-size: 0.5rem;\n}"
+    },
+    "reference_repo_path": "Section 07 - Intermediate CSS/07.02 - Combining Selectors/solution.css"
+  },
+  "pitfalls": [
+    "Adding a space inside a chain (li .done) when you meant li.done, or putting the class first (.doneli).",
+    "Using > when the target is deeper than one level.",
+    "Using a bare li or p.done selector, which also hits elements the exercise wants left alone.",
+    "Editing the HTML to add classes, which the exercises forbid.",
+    "Rule order: .box li (blue) is written before li.done (seagreen). Both have the same specificity (one class plus one element), so the later li.done wins. Reversing them would turn the done items blue."
+  ],
+  "playground": {
+    "match": "s07-combining (lesson 7.2, data/s07.js)",
+    "coverage": "Covers group, child, descendant and chained with four tasks, starter HTML nearly identical, plus an interactive combinator lab that highlights matches and counts them. Notes include a combinator table and a callout on li.done vs li .done.",
+    "gaps_and_ideas": [
+      "Missing the fifth exercise: add a stray ul containing p.done to the starter HTML and a task for ul p.done with font-size 0.5rem, plus the ul > p.done alternative.",
+      "The playground solution uses green for li.done; the course uses seagreen. Align to avoid confusion.",
+      "Add a note that li.done and .box li tie on specificity so source order matters in the exercise.",
+      "Add the h1#title.big.heading chaining example and the rule that the type selector must come first (.doneli pitfall) to the notes or lab.",
+      "Lab idea: add a selector text input so learners can type their own combination and see matches."
+    ]
+  }
+}

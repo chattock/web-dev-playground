@@ -1,0 +1,100 @@
+{
+  "index": 182,
+  "lecture_id": 12664312,
+  "title": "Step 10 - Answer",
+  "section": "20. Boss Level Challenge 2 - The Simon Game",
+  "duration_min": 0,
+  "kind": "solution",
+  "summary": "Answer page for the last Simon step. The solution download (Course Resources button, top left of the lecture screen) is the finished app, with each challenge step labelled in comments; the notes below reconstruct the complete game.js with the Step 10 startOver() logic.",
+  "concepts": [
+    {
+      "heading": "How to use the answer download",
+      "points": [
+        "The download is the whole finished project, not just Step 10, so it doubles as the reference for every earlier step. Each step is marked with a comment so you can jump to the part you are checking.",
+        "It is reached from the Course Resources button in the top-left corner of the lecture player.",
+        "Your version does not have to match line for line. Different code that produces the same behaviour (same sequence logic, sounds, animations and restart) counts as a correct solution."
+      ]
+    },
+    {
+      "heading": "Step 10 solution: startOver()",
+      "points": [
+        "startOver() reassigns the three globals: level = 0, gamePattern = [], started = false.",
+        "It is called at the end of the else branch in checkAnswer(), after the wrong sound, the red game-over flash and the 'Game Over, Press Any Key to Restart' heading.",
+        "Because started is false again, the next key press passes the if (!started) check in the keyboard listener, which sets the heading, calls nextSequence() and flips started back to true.",
+        "nextSequence() clears userClickedPattern and increments level from 0 to 1, so the new game starts cleanly."
+      ]
+    },
+    {
+      "heading": "How the finished game fits together (all ten steps)",
+      "points": [
+        "State: buttonColours = ['red','blue','green','yellow'] (lookup table for random picks), gamePattern (computer's sequence), userClickedPattern (player's clicks this round), started (game in progress?), level (round number).",
+        "Start (Step 7): $(document).keypress(...) runs once per key press; the started flag makes sure only the first press after load or after a game over starts a game.",
+        "New round (Steps 2-3): nextSequence() resets userClickedPattern, increments level and updates #level-title, picks Math.floor(Math.random() * 4) (an integer 0-3), looks up that colour, pushes it onto gamePattern, flashes the button with .fadeIn(100).fadeOut(100).fadeIn(100) and plays its sound.",
+        "Player input (Steps 4-6): $('.btn').click(...) reads the clicked div's id with $(this).attr('id'), pushes it onto userClickedPattern, plays the matching sound and calls animatePress() to add the .pressed class for 100 ms.",
+        "Checking (Step 8): checkAnswer(userClickedPattern.length - 1) passes the index of the most recent click. If gamePattern and userClickedPattern agree at that index the click was right; if the player has now matched the whole sequence (lengths equal), nextSequence() is scheduled with setTimeout(..., 1000).",
+        "Game over (Step 9): on a mismatch, play wrong.mp3, add the game-over class to body and remove it after 200 ms, and change the heading text.",
+        "Restart (Step 10): startOver() resets the state so the keyboard listener can start again.",
+        "Helpers: playSound(name) builds new Audio('sounds/' + name + '.mp3') and calls .play(); animatePress(currentColour) adds then removes the pressed class via setTimeout."
+      ]
+    },
+    {
+      "heading": "Reference repo differences",
+      "points": [
+        "(Extra) The reference repo names the script script.js and listens with $(document).keydown(...); the course project uses game.js. keydown and keypress both work here; keydown also fires for keys like Shift and arrows, and keypress is deprecated in modern browsers.",
+        "(Extra) Bug in the reference nextSequence(): it calls playSound(randomNumber), which requests sounds/0.mp3 to sounds/3.mp3 (files that do not exist), so the computer's flash is silent. The call should be playSound(randomChosenColour).",
+        "(Extra) The reference index.html has a typo, <div lass=\"row\"> instead of class=\"row\", and a personal footer; both are stripped from these notes."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Complete game.js for the finished Simon game (reconstructed; reference bug fixed)",
+      "language": "javascript",
+      "code": "var buttonColours = [\"red\", \"blue\", \"green\", \"yellow\"];\nvar gamePattern = [];\nvar userClickedPattern = [];\nvar started = false;\nvar level = 0;\n\n// Step 7: first key press starts the game\n$(document).keypress(function () {\n  if (!started) {\n    $(\"#level-title\").text(\"Level \" + level);\n    nextSequence();\n    started = true;\n  }\n});\n\n// Steps 4-6: record, sound and animate each click, then check it\n$(\".btn\").click(function () {\n  var userChosenColour = $(this).attr(\"id\");\n  userClickedPattern.push(userChosenColour);\n  playSound(userChosenColour);\n  animatePress(userChosenColour);\n  checkAnswer(userClickedPattern.length - 1);\n});\n\n// Steps 8-10\nfunction checkAnswer(currentLevel) {\n  if (gamePattern[currentLevel] === userClickedPattern[currentLevel]) {\n    if (userClickedPattern.length === gamePattern.length) {\n      setTimeout(function () {\n        nextSequence();\n      }, 1000);\n    }\n  } else {\n    playSound(\"wrong\");\n    $(\"body\").addClass(\"game-over\");\n    $(\"#level-title\").text(\"Game Over, Press Any Key to Restart\");\n    setTimeout(function () {\n      $(\"body\").removeClass(\"game-over\");\n    }, 200);\n    startOver();\n  }\n}\n\n// Steps 2-3\nfunction nextSequence() {\n  userClickedPattern = [];\n  level++;\n  $(\"#level-title\").text(\"Level \" + level);\n  var randomNumber = Math.floor(Math.random() * 4);\n  var randomChosenColour = buttonColours[randomNumber];\n  gamePattern.push(randomChosenColour);\n  $(\"#\" + randomChosenColour).fadeIn(100).fadeOut(100).fadeIn(100);\n  playSound(randomChosenColour);\n}\n\nfunction animatePress(currentColour) {\n  $(\"#\" + currentColour).addClass(\"pressed\");\n  setTimeout(function () {\n    $(\"#\" + currentColour).removeClass(\"pressed\");\n  }, 100);\n}\n\nfunction playSound(name) {\n  var audio = new Audio(\"sounds/\" + name + \".mp3\");\n  audio.play();\n}\n\n// Step 10\nfunction startOver() {\n  level = 0;\n  gamePattern = [];\n  started = false;\n}"
+    },
+    {
+      "caption": "index.html body for the game (reference typo and footer removed)",
+      "language": "html",
+      "code": "<h1 id=\"level-title\">Press A Key to Start</h1>\n<div class=\"container\">\n  <div class=\"row\">\n    <div type=\"button\" id=\"green\" class=\"btn green\"></div>\n    <div type=\"button\" id=\"red\" class=\"btn red\"></div>\n  </div>\n  <div class=\"row\">\n    <div type=\"button\" id=\"yellow\" class=\"btn yellow\"></div>\n    <div type=\"button\" id=\"blue\" class=\"btn blue\"></div>\n  </div>\n</div>\n<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js\"></script>\n<script src=\"game.js\"></script>"
+    },
+    {
+      "caption": "The two CSS classes the script toggles",
+      "language": "css",
+      "code": ".pressed {\n  box-shadow: 0 0 20px white;\n  background-color: grey;\n}\n\n.game-over {\n  background-color: red;\n  opacity: 0.8;\n}"
+    }
+  ],
+  "task": {
+    "name": "Simon Step 10 answer: restart the game",
+    "starting_point": "Your game.js after attempting Step 10, plus the finished solution project from Course Resources.",
+    "goal": "Confirm the restart works and compare your full script with the finished version.",
+    "steps": [
+      "Download the solution from the Course Resources button and unzip it.",
+      "Find the Step 10 comment and compare startOver() with yours: three assignments, level 0, empty gamePattern, started false.",
+      "Check that startOver() is called inside the else branch of checkAnswer().",
+      "Play several games in a row to verify each restart begins at Level 1 with a single flash.",
+      "Optionally walk through the other labelled steps to tidy any earlier differences."
+    ],
+    "expected_result": "A complete, replayable Simon game: key press to start, growing random sequence with sounds and flashes, red flash plus game-over heading on a mistake, and a fresh game on the next key press.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "// inside checkAnswer(), wrong-answer branch\n} else {\n  playSound(\"wrong\");\n  $(\"body\").addClass(\"game-over\");\n  $(\"#level-title\").text(\"Game Over, Press Any Key to Restart\");\n  setTimeout(function () {\n    $(\"body\").removeClass(\"game-over\");\n  }, 200);\n  startOver();\n}\n\nfunction startOver() {\n  level = 0;        // nextSequence() bumps this to 1\n  gamePattern = []; // forget the old sequence\n  started = false;  // re-arm the key listener\n}"
+    },
+    "reference_repo_path": "Section 20 - Boss Level Challenge 2 - The Simon Game/script.js"
+  },
+  "pitfalls": [
+    "Treating a different-but-working solution as wrong; matching behaviour is what counts.",
+    "Copying the reference repo's playSound(randomNumber) line, which silences the computer's turn because no numbered mp3 files exist.",
+    "Comparing whole arrays with === (gamePattern === userClickedPattern is always false for two different arrays); compare one index at a time as checkAnswer() does.",
+    "Calling nextSequence() immediately instead of after a delay, so the next flash overlaps the player's last click."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "Blurb for a new 'Simon game: finished build' project lesson: assemble state, a start listener, sequence generation, click handling, answer checking, game over and restart into one working game.",
+      "Tasks: (1) write nextSequence() with the random pick and flash; (2) handle clicks and push to userClickedPattern; (3) write checkAnswer() comparing the latest index; (4) add game-over feedback; (5) add startOver().",
+      "Starter code: the HTML grid of four coloured divs, styles.css with .pressed and .game-over, and a game.js skeleton with the five global variables and empty functions marked by step comments.",
+      "Interactive demo: a step-through mode that pauses after each event and highlights which function ran and how the arrays changed, plus a 'bug hunt' toggle that swaps in the playSound(randomNumber) mistake for learners to diagnose."
+    ]
+  }
+}

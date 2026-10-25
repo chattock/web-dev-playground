@@ -1,0 +1,110 @@
+{
+  "index": 204,
+  "lecture_id": 38911684,
+  "title": "Postman",
+  "section": "24. Express.js with Node.js",
+  "duration_min": 19,
+  "kind": "concept+exercise",
+  "summary": "Covers HTTP response status codes and their five families, then shows the Express methods for POST, PUT, PATCH and DELETE using res.sendStatus. Introduces Postman for testing non-GET routes without building a front end, with an exercise that exercises all five verbs against a provided server.",
+  "concepts": [
+    {
+      "heading": "Request and response flow",
+      "points": [
+        "The client (desktop, laptop or phone) sends a request to the server side, which includes the machine, the application (index.js) and any database. The server sends a response back.",
+        "A response can carry text or HTML, but it can also be just a status code."
+      ]
+    },
+    {
+      "heading": "HTTP status code families",
+      "points": [
+        "Codes are three-digit numbers, grouped by first digit (MDN documents them at developer.mozilla.org under Web/HTTP/Status).",
+        "100s: informational. 200s: success. 300s: redirection. 400s: client error. 500s: server error.",
+        "A memory aid: 1xx means wait or here is some info, 2xx means success, 3xx means go elsewhere, 4xx means the client made a mistake, 5xx means the server has a fault (bug, missing resource).",
+        "201 Created: a new resource was created, typical reply to a POST. (Extra) A 201 response may still carry a body or a Location header pointing at the new resource; in this lesson it is sent with no content.",
+        "201 Created: a new resource was created, typical after a POST (or PUT) where nothing needs to be sent back.",
+        "301: the resource moved permanently and the response gives the new URL. A mistyped domain that redirects to the right site shows this in the browser dev tools Network tab (tick Preserve log, filter All).",
+        "404: the server cannot find the requested resource, usually a wrong URL.",
+        "(Extra) 200 OK is the general-purpose success code; 201 is specific to creation, so do not treat it as the default success reply."
+      ]
+    },
+    {
+      "heading": "Other HTTP methods in Express",
+      "points": [
+        "Express has one method per verb: app.get, app.post, app.put, app.patch and app.delete. Each takes a path and a (req, res) callback, just like app.get.",
+        "POST requests usually originate from an HTML form (sign-up page) carrying data in the request body. The server may validate or store it, then replies with 200 plus data or 201 with nothing.",
+        "res.sendStatus(code) replies with just a status code (and its standard text) instead of a body. Use it when the route has no content to return.",
+        "(Extra) res.sendStatus(code) sets the status and sends the code's standard reason phrase as a plain-text body (201 gives 'Created', 200 gives 'OK'). It is shorthand for res.status(code).send(text). To send a custom body with a status, chain res.status(201).send(...) or res.status(201).json(...).",
+        "In a browser address bar only GET routes can be tested, since typing a URL always makes a GET request. The other verbs need a form or a testing tool.",
+        "(Extra) Express does not parse a request body by default: inside these handlers req.body is undefined until a body-parsing middleware such as express.urlencoded({ extended: true }) is added (covered in the middleware lessons). Body fields sent from Postman are therefore ignored here."
+      ]
+    },
+    {
+      "heading": "Postman",
+      "points": [
+        "Postman is a free desktop API client (postman.com/downloads) for sending HTTP requests to a server without writing a front end. Developers use it to test routes before the front end exists.",
+        "Each request tab has a method dropdown (GET, POST, PUT, PATCH, DELETE), a URL field for the host, port and endpoint, and a Body tab for sending data, such as x-www-form-urlencoded key and value pairs like name and email.",
+        "Click Send to fire the request. The response status code, time, size and body appear below; hovering over the status explains its meaning.",
+        "Connection refused means nothing is listening on that port, i.e. the server is not running.",
+        "PUT is meant to replace a whole resource, so the client would normally send the complete data. PATCH sends only the field(s) to change. DELETE needs just the right path.",
+        "Real handlers would update or delete data; in this lesson the routes only return status codes to demonstrate the mechanics."
+      ]
+    },
+    {
+      "heading": "Running a downloaded Node project",
+      "points": [
+        "Downloaded projects normally omit node_modules because it is large. cd into the project folder and run npm install with no package names; it reads package.json and installs every listed dependency.",
+        "Then start the server with nodemon index.js."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Routes for each verb, returning status codes (from the lesson project)",
+      "language": "javascript",
+      "code": "import express from \"express\";\nconst app = express();\nconst port = 3000;\n\napp.get(\"/\", (req, res) => {\n  res.send(\"<h1>Hello World</h1>\");\n});\n\napp.post(\"/register\", (req, res) => {\n  res.sendStatus(201);\n});\n\napp.put(\"/user/angela\", (req, res) => {\n  res.sendStatus(200);\n});\n\napp.patch(\"/user/angela\", (req, res) => {\n  res.sendStatus(200);\n});\n\napp.delete(\"/user/angela\", (req, res) => {\n  res.sendStatus(200);\n});\n\napp.listen(port, () => {\n  console.log(`Server running on port ${port}.`);\n});"
+    },
+    {
+      "caption": "Set up the downloaded project",
+      "language": "bash",
+      "code": "cd \"3.3 Postman\"\nnpm install\nnodemon index.js"
+    }
+  ],
+  "task": {
+    "name": "3.3 Postman: test all five verbs",
+    "starting_point": "Download and extract the 3.3 Postman zip. It holds an Express server with a GET route at the root, POST /register, and PUT, PATCH and DELETE routes on a user path, all returning status codes. Postman installed.",
+    "goal": "Create one Postman tab per HTTP method and confirm each returns the expected success status code.",
+    "steps": [
+      "cd into the extracted project and run npm install to fetch dependencies.",
+      "Start the server with nodemon index.js.",
+      "In Postman create a GET request to localhost:3000 (the trailing slash is optional) and Send. Expect the h1 body and status 200.",
+      "Create a POST to localhost:3000/register; optionally add urlencoded body fields. Expect 201 Created.",
+      "Create a PUT to localhost:3000/user/angela (the path must match the one in index.js exactly). Expect 200 OK.",
+      "Create a PATCH to the same user path, optionally with one changed field in the body. Expect 200.",
+      "Create a DELETE to the same path. Expect 200.",
+      "(Extra) Try a wrong path or method (for example a POST to /user/angela/x) to see Express's 404 'Cannot POST ...' response."
+    ],
+    "expected_result": "Five Postman tabs, each returning the correct status (200, 201, 200, 200, 200), with bodies '<h1>Hello World</h1>', 'Created', 'OK', 'OK', 'OK'. With the server stopped, Postman shows connection refused.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "// Routes added to the server for each non-GET verb\napp.post(\"/register\", (req, res) => {\n  res.sendStatus(201);\n});\n\napp.put(\"/user/angela\", (req, res) => {\n  res.sendStatus(200);\n});\n\napp.patch(\"/user/angela\", (req, res) => {\n  res.sendStatus(200);\n});\n\napp.delete(\"/user/angela\", (req, res) => {\n  res.sendStatus(200);\n});"
+    },
+    "reference_repo_path": "Section 24 - Express.js with Node.js/24.03 - Postman/index.js"
+  },
+  "pitfalls": [
+    "Testing POST, PUT, PATCH or DELETE by typing a URL in the browser; that always sends GET and gives Cannot GET or the wrong route.",
+    "Using a path in Postman that does not match the one in the server code (the username segment must match), giving 404.",
+    "Forgetting npm install after downloading a project, so express is missing.",
+    "Connection refused because the server is not running or the port differs.",
+    "Reference repo note: the repo uses the student's own username in the user path (replaced with angela in these notes), changes the home h1 text, and adds an extra GET /about route and a status-codes image; the five verb routes otherwise match the lesson."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (section 24 has no playground file).",
+    "gaps_and_ideas": [
+      "Proposed lesson 'Status codes and Postman': blurb on reading response codes and testing verbs.",
+      "Tasks: (1) classify codes 200, 201, 301, 404, 500 into their families; (2) pick the right code for a given scenario; (3) read an Express route list and say what each returns; (4) write a PATCH route that returns 200; (5) list the Postman settings for a POST with form data.",
+      "Starter code idea: an Express file with app.post and app.put stubs missing their sendStatus calls.",
+      "Interactive demo idea: a mini Postman simulator in the page where choosing method and path against a fake route table shows status code, meaning and body, with 404 for unknown routes."
+    ]
+  }
+}

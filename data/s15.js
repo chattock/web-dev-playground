@@ -1,7 +1,7 @@
 /* ===== Section 15 — Intermediate JavaScript ===== */
 
 PG.add({
-  id:'s15-random', section:'s15', slug:'random-numbers', lesson:'15.1', layout:'js',
+  id:'s15-random', index:99, udemyId:12373892, minutes:11, section:'s15', slug:'random-numbers', lesson:'15.1', layout:'js',
   title:'Random Numbers — Love Calculator',
   blurb:'<code>Math.random()</code> gives a decimal between 0 and (just under) 1. The pattern for a whole number in a range is <code>Math.floor(Math.random() * range) + start</code>.',
   tasks:[
@@ -53,7 +53,7 @@ console.log("Random name:", names[Math.floor(Math.random() * names.length)]);
 
 
 PG.add({
-  id:'s15-if-else', section:'s15', slug:'if-else', lesson:'15.2', layout:'js',
+  id:'s15-if-else', index:100, udemyId:12373964, minutes:5, section:'s15', slug:'if-else', lesson:'15.2', layout:'js',
   title:'If / Else',
   blurb:'The first branch in the road: run one block when a condition is true, another when it is false. Chain them with <code>else if</code>.',
   tasks:[
@@ -107,7 +107,7 @@ console.log(n % 2 === 0 ? "even" : "odd");
 
 
 PG.add({
-  id:'s15-comparators', section:'s15', slug:'comparators', lesson:'15.3', layout:'js',
+  id:'s15-comparators', index:101, udemyId:12373978, minutes:3, section:'s15', slug:'comparators', lesson:'15.3', layout:'js',
   title:'Comparators & Equality',
   blurb:'<code>&gt; &lt; &gt;= &lt;=</code> compare sizes. For equality there are two: <code>==</code> only checks the value, <code>===</code> checks value <b>and</b> type. Use <code>===</code>.',
   tasks:[
@@ -167,7 +167,7 @@ console.log(10 > 5, 10 >= 10, 3 < 3, 3 <= 3);
 
 
 PG.add({
-  id:'s15-combining', section:'s15', slug:'combining-comparators', lesson:'15.4', layout:'js',
+  id:'s15-combining', index:102, udemyId:12373992, minutes:3, section:'s15', slug:'combining-comparators', lesson:'15.4', layout:'js',
   title:'Combining Comparators',
   blurb:'<code>&amp;&amp;</code> means both must be true. <code>||</code> means at least one. <code>!</code> flips a true into a false.',
   tasks:[
@@ -229,7 +229,7 @@ false && shout();
 
 
 PG.add({
-  id:'s15-bmi-advanced', section:'s15', slug:'bmi-advanced', lesson:'15.5', layout:'js',
+  id:'s15-bmi-advanced', index:102, sub:'b', udemyId:12373992, minutes:0, section:'s15', slug:'bmi-advanced', lesson:'15.5', layout:'js',
   title:'BMI Calculator — Advanced',
   blurb:'Take your BMI function from section 14 and make it interpret the number with an if/else chain.',
   tasks:[
@@ -273,7 +273,7 @@ console.log(bmiCalculator(95, 1.8));   // overweight
 
 
 PG.add({
-  id:'s15-leap-year', section:'s15', slug:'leap-year', lesson:'15.6', layout:'js',
+  id:'s15-leap-year', index:103, udemyId:18143246, minutes:4, section:'s15', slug:'leap-year', lesson:'15.6', layout:'js',
   title:'Challenge — Leap Year',
   blurb:'A year is a leap year if it is divisible by 4 — except centuries, unless they are divisible by 400. A genuinely fiddly nest of conditions.',
   tasks:[
@@ -335,7 +335,7 @@ console.log("--- one-liner version ---");
 
 
 PG.add({
-  id:'s15-arrays', section:'s15', slug:'arrays', lesson:'15.7', layout:'js',
+  id:'s15-arrays', index:105, udemyId:12374004, minutes:9, section:'s15', slug:'arrays', lesson:'15.7', layout:'js',
   title:'Arrays',
   blurb:'An array is an ordered list in square brackets. Items are fetched by <b>index</b>, counting from <b>0</b>.',
   tasks:[
@@ -397,7 +397,7 @@ guests.length                 -> 4</pre>
 
 
 PG.add({
-  id:'s15-array-methods', section:'s15', slug:'array-methods', lesson:'15.8', layout:'js',
+  id:'s15-array-methods', index:106, udemyId:12374030, minutes:16, section:'s15', slug:'array-methods', lesson:'15.8', layout:'js',
   title:'Adding & Removing Items',
   blurb:'<code>.push()</code> adds to the end, <code>.pop()</code> removes from the end, <code>.shift()</code> and <code>.unshift()</code> do the same at the start.',
   tasks:[
@@ -459,7 +459,7 @@ console.log("a,b,c".split(","));
 
 
 PG.add({
-  id:'s15-lunch', section:'s15', slug:'whos-buying-lunch', lesson:'15.9', layout:'js',
+  id:'s15-lunch', index:106, sub:'b', udemyId:12374030, minutes:0, section:'s15', slug:'whos-buying-lunch', lesson:'15.9', layout:'js',
   title:"Challenge — Who's Buying Lunch",
   blurb:'Given an array of names, pick one at random to pay. Random plus arrays plus a return value.',
   tasks:[
@@ -499,7 +499,7 @@ for (let i = 0; i < 5; i++) {
 
 
 PG.add({
-  id:'s15-while', section:'s15', slug:'while-loops', lesson:'15.10', layout:'js',
+  id:'s15-while', index:108, udemyId:12374056, minutes:8, section:'s15', slug:'while-loops', lesson:'15.10', layout:'js',
   title:'While Loops',
   blurb:'A <code>while</code> loop repeats a block for <b>as long as</b> its condition stays true. Something inside must eventually make it false, or the loop never ends.',
   tasks:[
@@ -554,7 +554,7 @@ while (i &lt; 5) {           // 2. test before every round
 
 
 PG.add({
-  id:'s15-bottles', section:'s15', slug:'99-bottles', lesson:'15.11', layout:'js',
+  id:'s15-bottles', index:108, sub:'b', udemyId:12374056, minutes:0, section:'s15', slug:'99-bottles', lesson:'15.11', layout:'js',
   title:'Challenge — 99 Bottles of Beer',
   blurb:'Print the whole song. The catch is the last verse, where "bottles" becomes "bottle" and then "no more bottles".',
   tasks:[
@@ -607,7 +607,7 @@ for (let i = 3; i >= 0; i--) {
 
 
 PG.add({
-  id:'s15-for', section:'s15', slug:'for-loops', lesson:'15.12', layout:'js',
+  id:'s15-for', index:110, udemyId:12374074, minutes:6, section:'s15', slug:'for-loops', lesson:'15.12', layout:'js',
   title:'For Loops',
   blurb:'A <code>for</code> loop packs the setup, the test and the step into one line — the standard tool for "do this n times" or "go through this array".',
   tasks:[
@@ -682,7 +682,7 @@ for (let i = 1; i <= 15; i++) {
 
 
 PG.add({
-  id:'s15-fibonacci', section:'s15', slug:'fibonacci', lesson:'15.13', layout:'js', project:true,
+  id:'s15-fibonacci', index:111, udemyId:18143224, minutes:7, section:'s15', slug:'fibonacci', lesson:'15.13', layout:'js', project:true,
   title:'Challenge — Fibonacci',
   blurb:'Return an array of the first n Fibonacci numbers: each one is the sum of the two before it. <code>[0, 1, 1, 2, 3, 5, 8, 13…]</code>',
   tasks:[

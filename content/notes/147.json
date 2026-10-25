@@ -1,0 +1,27 @@
+{
+  "index": 147,
+  "lecture_id": 12409876,
+  "title": "Download the Completed Website",
+  "section": "18. Advanced Javascript and DOM Manipulation",
+  "duration_min": 0,
+  "kind": "admin",
+  "summary": "Resource lecture offering the finished drum kit project as a download so the learner can compare it with their own build.",
+  "concepts": [
+    {
+      "heading": "Using the download",
+      "points": [
+        "Use the Resources button on this lecture to get the completed drum kit (HTML, CSS, JS, images and sounds).",
+        "Compare it against your own version only after attempting the build, especially script.js (makeSound, buttonAnimation) and the .pressed rule in styles.css.",
+        "(Extra) The reference repo's version of this project lives in the 18.09 folder and has the keydown listener, makeSound and buttonAnimation."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [],
+  "playground": {
+    "match": null,
+    "coverage": "Not applicable (admin).",
+    "gaps_and_ideas": []
+  }
+}

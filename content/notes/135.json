@@ -1,0 +1,28 @@
+{
+  "index": 135,
+  "lecture_id": 12409852,
+  "title": "Download the Starting Files",
+  "section": "18. Advanced Javascript and DOM Manipulation",
+  "duration_min": 0,
+  "kind": "admin",
+  "summary": "Admin step: grab the starter files for the Drum Kit project from the lecture's Resources button. No video or substantial article body was readable on the page.",
+  "concepts": [
+    {
+      "heading": "Setup",
+      "points": [
+        "Use the Resources dropdown on this lecture to download the Drum Kit starter zip, then extract it and move the folder into the Web Development Projects folder before opening it in VS Code.",
+        "(Extra) The reference repo's later lessons show the starter assets: index.html, styles.css, an images folder (one image per drum) and a sounds folder (one audio file per drum), with script.js as the file you write."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [
+    "Opening the still-zipped download in VS Code instead of extracting it first."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (section 18 has no playground file).",
+    "gaps_and_ideas": []
+  }
+}

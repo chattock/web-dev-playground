@@ -1,0 +1,106 @@
+{
+  "index": 351,
+  "lecture_id": 31673638,
+  "title": "Showing the User's Token Balance on the Frontend",
+  "section": "41. Create Your Own Crypto Token",
+  "duration_min": 14,
+  "kind": "concept+exercise",
+  "summary": "Wires the Balance React component to the Motoko canister: a controlled input holds a principal string, it is converted with the @dfinity/principal library, balanceOf is awaited through the generated declarations, and the formatted result is shown. A challenge then adds a getSymbol query so the ticker appears, and a hidden flag hides the result line until a balance has loaded.",
+  "concepts": [
+    {
+      "heading": "Controlled input with useState",
+      "points": [
+        "Balance.jsx already has the markup and a handleClick handler on the Check Balance button; initially the handler only logs to the console.",
+        "To read what the user typed, keep it in state: const [inputValue, setInput] = useState(\"\") with an empty string as the starting value.",
+        "Make the input controlled: value={inputValue} plus onChange={(e) => setInput(e.target.value)}. e is the change event, e.target is the input element that fired it and .value is its current text. This value/onChange pairing is the standard React pattern for form fields.",
+        "Quick check: log inputValue in handleClick and confirm the typed text appears when the button is clicked."
+      ]
+    },
+    {
+      "heading": "Calling the canister from the browser",
+      "points": [
+        "Text from an input is a string, but balanceOf expects a Principal. Convert it first with Principal.fromText(inputValue) from the JavaScript package @dfinity/principal. This mirrors Motoko's Principal module; the @ prefix marks a scoped npm package (a way of grouping related packages) already listed in package.json.",
+        "Import the backend actor from the generated declarations folder: a relative path climbing out of components and src to reach declarations, then the canister's folder (the lecture names it token; the reference repo names it DANG_backend). These declarations are produced by dfx deploy.",
+        "Call it with await: const balance = await token.balanceOf(principal). The function must be async because the call is a network request to the canister.",
+        "The balance arrives as a number-like Nat (a BigInt). To show it in the page convert with balance.toLocaleString(), which returns a string with thousands separators (note the spelling locale, not local).",
+        "Store the display string in state, balanceResult/setBalance, initial value an empty string, and render {balanceResult} inside the result paragraph."
+      ]
+    },
+    {
+      "heading": "Challenge: show the token symbol",
+      "points": [
+        "Requirement: modify both Motoko and React so the symbol appears after the balance, e.g. '... 1,000,000,000 DANG'.",
+        "Backend: add a public query func getSymbol() : async Text that simply returns the symbol variable. Remember the trailing semicolon after the function body.",
+        "Frontend: add const [cryptoSymbol, setSymbol] = useState(\"\"); in handleClick call setSymbol(await token.getSymbol()); render {cryptoSymbol} right after {balanceResult}."
+      ]
+    },
+    {
+      "heading": "Redeploy whenever the backend changes",
+      "points": [
+        "Error 'token.getSymbol is not a function' appears if only the React file was saved. npm start hot-reloads the frontend but does not rebuild the canister or regenerate declarations.",
+        "After any change to main.mo, run dfx deploy again so the new method exists on the canister and in the declarations the frontend imports. This will come up repeatedly in ICP development."
+      ]
+    },
+    {
+      "heading": "UX polish: hiding the empty message",
+      "points": [
+        "On first load the sentence 'This account has a balance of .' makes no sense.",
+        "Add const [isHidden, setHidden] = useState(true) and put hidden={isHidden} on the paragraph. The HTML hidden attribute removes the element from view while true.",
+        "At the end of handleClick call setHidden(false) so the line appears only after a balance and symbol were fetched."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Balance.jsx after the lesson (excerpt-level reconstruction; canister import name differs by project)",
+      "language": "jsx",
+      "code": "import React, { useState } from \"react\";\nimport { Principal } from \"@dfinity/principal\";\nimport { token } from \"../../../declarations/token\"; // reference repo: DANG_backend\n\nfunction Balance() {\n  const [inputValue, setInput] = useState(\"\");\n  const [balanceResult, setBalance] = useState(\"\");\n  const [cryptoSymbol, setSymbol] = useState(\"\");\n  const [isHidden, setHidden] = useState(true);\n\n  async function handleClick() {\n    const principal = Principal.fromText(inputValue);\n    const balance = await token.balanceOf(principal);\n    setBalance(balance.toLocaleString());\n    setSymbol(await token.getSymbol());\n    setHidden(false);\n  }\n\n  return (\n    <div className=\"window white\">\n      <label>Check account token balance:</label>\n      <p>\n        <input\n          id=\"balance-principal-id\"\n          type=\"text\"\n          placeholder=\"Enter a Principal ID\"\n          value={inputValue}\n          onChange={(e) => setInput(e.target.value)}\n        />\n      </p>\n      <p className=\"trade-buttons\">\n        <button id=\"btn-request-balance\" onClick={handleClick}>\n          Check Balance\n        </button>\n      </p>\n      <p hidden={isHidden}>\n        This account has a balance of {balanceResult} {cryptoSymbol}.\n      </p>\n    </div>\n  );\n}\nexport default Balance;"
+    },
+    {
+      "caption": "New Motoko query added in the challenge",
+      "language": "motoko",
+      "code": "  public query func getSymbol() : async Text {\n    return symbol;\n  };"
+    },
+    {
+      "caption": "Redeploy after backend edits",
+      "language": "bash",
+      "code": "dfx deploy"
+    }
+  ],
+  "task": {
+    "name": "Show the token symbol next to the balance",
+    "starting_point": "Balance.jsx wired to balanceOf, showing only the number; main.mo with balanceOf.",
+    "goal": "After clicking Check Balance the page shows the formatted balance followed by the token symbol, and the sentence is hidden until a check is done.",
+    "steps": [
+      "In main.mo add public query func getSymbol() : async Text returning symbol.",
+      "Run dfx deploy to publish the new method and regenerate declarations.",
+      "In Balance.jsx add cryptoSymbol/setSymbol state, empty-string initial value.",
+      "In handleClick call setSymbol(await token.getSymbol()).",
+      "Render {cryptoSymbol} after {balanceResult} in the result paragraph.",
+      "Add isHidden/setHidden state (true), set hidden={isHidden} on the paragraph and call setHidden(false) at the end of handleClick.",
+      "Paste a principal id, click Check Balance, and confirm the line appears with the symbol."
+    ],
+    "expected_result": "'This account has a balance of 1,000,000,000 DANG.' appears only after clicking; before that no text shows under the button.",
+    "solution_code": {
+      "language": "jsx",
+      "code": "import React, { useState } from \"react\";\nimport { Principal } from \"@dfinity/principal\";\nimport { token } from \"../../../declarations/token\"; // reference repo: DANG_backend\n\nfunction Balance() {\n  const [inputValue, setInput] = useState(\"\");\n  const [balanceResult, setBalance] = useState(\"\");\n  const [cryptoSymbol, setSymbol] = useState(\"\");\n  const [isHidden, setHidden] = useState(true);\n\n  async function handleClick() {\n    const principal = Principal.fromText(inputValue);\n    const balance = await token.balanceOf(principal);\n    setBalance(balance.toLocaleString());\n    setSymbol(await token.getSymbol());\n    setHidden(false);\n  }\n\n  return (\n    <div className=\"window white\">\n      <label>Check account token balance:</label>\n      <p>\n        <input\n          id=\"balance-principal-id\"\n          type=\"text\"\n          placeholder=\"Enter a Principal ID\"\n          value={inputValue}\n          onChange={(e) => setInput(e.target.value)}\n        />\n      </p>\n      <p className=\"trade-buttons\">\n        <button id=\"btn-request-balance\" onClick={handleClick}>\n          Check Balance\n        </button>\n      </p>\n      <p hidden={isHidden}>\n        This account has a balance of {balanceResult} {cryptoSymbol}.\n      </p>\n    </div>\n  );\n}\nexport default Balance;"
+    },
+    "reference_repo_path": "Section 41 - Create Your Own Crypto Token/41.04 Showing the User's Token Balance on the Frontend/DANG/src/DANG_frontend/src/components/Balance.jsx"
+  },
+  "pitfalls": [
+    "Passing the raw string to balanceOf instead of a Principal object: convert with Principal.fromText.",
+    "Forgetting dfx deploy after editing main.mo, producing 'is not a function' errors.",
+    "Misspelling toLocaleString as toLocalString.",
+    "Calling Principal.fromText with an empty or invalid string throws, so clicking with a blank field fails. (Extra) Wrap it in try/catch or validate first.",
+    "(Extra) Reference repo imports DANG_backend from declarations, not token; use your own canister name. Its main.mo also marks balances as transient, a newer persistence syntax not used in the video."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "Proposed lesson 'Connect React to a canister': blurb on controlled inputs plus generated actor bindings. Tasks: (1) make a controlled input with useState, (2) convert text to a Principal, (3) await balanceOf and show toLocaleString, (4) add getSymbol and display it, (5) hide the message with an isHidden flag.",
+      "Starter code idea: Balance.jsx with a handleClick containing only console.log and TODO comments.",
+      "Interactive demo idea: an in-page fake canister object with async balanceOf/getSymbol and a toggle that removes getSymbol to demonstrate the 'not a function' error and why a redeploy is needed."
+    ]
+  }
+}

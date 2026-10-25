@@ -1,0 +1,53 @@
+{
+  "index": 125,
+  "lecture_id": 12400506,
+  "title": "Dicee Challenge Step 1 - Create an External Javascript File",
+  "section": "17. Boss Level Challenge 1 - The Dicee Game",
+  "duration_min": 1,
+  "kind": "article-task",
+  "summary": "Step 1 of the Dicee challenge: add a new JavaScript file and link it from the HTML page so later steps have somewhere to put code.",
+  "concepts": [
+    {
+      "heading": "External script file",
+      "points": [
+        "Create a JS file in the project folder (the lecture names it index.js; the reference repo calls it script.js, any name works if the link matches).",
+        "Link it from index.html with a script tag whose src points at the file.",
+        "(Extra) Put the script tag just before the closing body tag so the elements it selects already exist when it runs; alternatively use defer in the head."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Linking the script at the end of the body",
+      "language": "html",
+      "code": "<body>\n  <!-- page content -->\n  <script src=\"./script.js\"></script>\n</body>"
+    }
+  ],
+  "task": {
+    "name": "Step 1: external JS file",
+    "starting_point": "Skeleton Dicee project with HTML and CSS only.",
+    "goal": "Have a JS file loading on the page.",
+    "steps": [
+      "Create a new JavaScript file in the project folder.",
+      "Add a script tag with a matching src in index.html, placed just before </body>.",
+      "Add a console.log in the file and check the browser console to confirm it runs."
+    ],
+    "expected_result": "Page loads with no errors and the console message appears.",
+    "solution_code": {
+      "language": "html",
+      "code": "<script src=\"./script.js\"></script>"
+    },
+    "reference_repo_path": "Section 17 - Boss Level Challenge 1 - The Dicee Game"
+  },
+  "pitfalls": [
+    "Wrong file path or name in src, so the script silently does not load.",
+    "Placing the tag in the head without defer, so querySelector returns null later."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (no s17.js data file); covered by the proposed Dicee project lesson.",
+    "gaps_and_ideas": [
+      "Include in the Dicee lesson as task 1 with a console.log check."
+    ]
+  }
+}

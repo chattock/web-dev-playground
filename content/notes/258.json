@@ -1,0 +1,100 @@
+{
+  "index": 258,
+  "lecture_id": 40494260,
+  "title": "One to One Relationships & Inner Joins",
+  "section": "33. PostgreSQL",
+  "duration_min": 12,
+  "kind": "concept+exercise",
+  "summary": "Introduces relational design in Postgres through the simplest relationship, one to one, using student and contact_detail tables linked by a primary key / foreign key pair. Shows how an INNER JOIN with ON combines the two tables into one wide result.",
+  "concepts": [
+    {
+      "heading": "Why relationships matter",
+      "points": [
+        "Linking tables is the main strength of SQL databases; the next three lessons cover one to one, one to many and many to many.",
+        "Relationships are usually planned on a crow's-foot (ER) diagram first. Free tools like draw.io let you draw tables, fields and the links between them."
+      ]
+    },
+    {
+      "heading": "One to one relationship",
+      "points": [
+        "One row in table A maps to at most one row in table B. Here one student has one contact_detail row.",
+        "Common motive is modularity: databases cope well with very many rows but get unwieldy with very many columns, so rarely-used or grouped columns can be split into a second table.",
+        "The student table holds first_name, last_name and an id SERIAL PRIMARY KEY (auto-incrementing from 1). contact_detail holds tel and address (e.g. for contacting parents)."
+      ]
+    },
+    {
+      "heading": "Linking with a foreign key",
+      "points": [
+        "contact_detail.id is declared INTEGER (it must match the type of the student primary key) and REFERENCES student(id). REFERENCES marks the column as a FOREIGN KEY pointing at student's primary key.",
+        "UNIQUE on that column stops the same student id appearing twice in contact_detail, which is what enforces the one-to-one rule (without it you would get one to many).",
+        "(Extra) Postgres also rejects inserting a contact_detail row whose id does not exist in student, which is referential integrity.",
+        "The PRIMARY KEY uniquely identifies rows within its own table; the FOREIGN KEY identifies which row in another table a record belongs to."
+      ]
+    },
+    {
+      "heading": "Inserting related data",
+      "points": [
+        "Insert the student first. Because id is SERIAL, the first student gets id 1.",
+        "Then insert into contact_detail using that same value (1) as the foreign key, plus a made-up phone and address.",
+        "Insert order matters: the referenced row must exist before the row that points at it."
+      ]
+    },
+    {
+      "heading": "INNER JOIN",
+      "points": [
+        "SELECT * FROM student JOIN contact_detail ON student.id = contact_detail.id returns one wide row combining both tables' columns.",
+        "JOIN on its own means INNER JOIN: only rows with a match on both sides appear.",
+        "ON states the matching rule, here primary key equals foreign key. Table-qualified names (student.id) are needed because both tables have a column called id.",
+        "The result has columns from student first, then contact_detail, so id shows twice."
+      ]
+    },
+    {
+      "heading": "SQL comments and setup",
+      "points": [
+        "SQL comments start with two dashes (--) and are ignored when run, used to label sections in queries.sql.",
+        "Download the lesson resources (Family Travel Tracker starter) which include queries.sql with all the lesson's statements, to copy rather than retype."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "One to one tables, data and inner join",
+      "language": "sql",
+      "code": "CREATE TABLE student (\n  id SERIAL PRIMARY KEY,\n  first_name TEXT,\n  last_name TEXT\n);\n\n-- One to One\nCREATE TABLE contact_detail (\n  id INTEGER REFERENCES student(id) UNIQUE,\n  tel TEXT,\n  address TEXT\n);\n\nINSERT INTO student (first_name, last_name) VALUES ('Angela', 'Yu');\nINSERT INTO contact_detail (id, tel, address)\nVALUES (1, '+123456789', '123 App Brewery Road');\n\nSELECT *\nFROM student\nJOIN contact_detail\nON student.id = contact_detail.id;"
+    }
+  ],
+  "task": {
+    "name": "Build the school database and run the one-to-one join",
+    "starting_point": "Resources zip containing queries.sql with all statements for the next three lessons; pgAdmin connected to your server.",
+    "goal": "Create a school database, build the student and contact_detail tables, insert linked data and join them.",
+    "steps": [
+      "In pgAdmin collapse existing databases, create a new database named school and save.",
+      "Open the Query Tool on school.",
+      "Paste and run the two CREATE TABLE statements; refresh Schemas > Tables to confirm both exist.",
+      "Run the INSERT statements from the Data section: first the student, then the contact_detail row using id 1.",
+      "Run the SELECT ... JOIN ... ON query and confirm one combined row with all five fields appears."
+    ],
+    "expected_result": "A single result row: id, first_name, last_name, id, tel, address for Angela Yu.",
+    "solution_code": {
+      "language": "sql",
+      "code": "SELECT *\nFROM student\nJOIN contact_detail\nON student.id = contact_detail.id"
+    },
+    "reference_repo_path": "Section 33 - PostgreSQL/33.11 - One to One Relationships & Inner Joins/queries.sql"
+  },
+  "pitfalls": [
+    "Forgetting UNIQUE on the foreign key silently allows many contact rows per student.",
+    "Mismatched column types between primary and foreign key.",
+    "Inserting the child row before the parent exists.",
+    "Running the join in the wrong database (check the Query Tool is on school)."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (section 33 has no playground data file).",
+    "gaps_and_ideas": [
+      "New lesson 'SQL relationships: one to one': blurb on primary vs foreign keys and joins.",
+      "Tasks: create student table; add contact_detail with REFERENCES and UNIQUE; insert linked rows; write the INNER JOIN; try inserting a duplicate id to see the UNIQUE error.",
+      "Starter: the two CREATE TABLE statements with the join left blank.",
+      "Interactive demo: two small editable tables side by side with a button that animates matching ids joining into one table (e.g. via sql.js in the browser)."
+    ]
+  }
+}

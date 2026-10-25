@@ -1,0 +1,81 @@
+{
+  "index": 49,
+  "lecture_id": 37368102,
+  "title": "CSS Float",
+  "section": "8. Advanced CSS",
+  "duration_min": 12,
+  "kind": "concept+exercise",
+  "summary": "Explains float (left/right) for wrapping text around an element, and clear for stopping later elements from wrapping. The exercise floats images, floats a cat block left and a dog block right, and clears the footer below both. Ends with advice to use floats only for text wrap and to prefer modern layout tools.",
+  "concepts": [
+    {
+      "heading": "What float does",
+      "points": [
+        "float moves an element to the left or right edge of its container and lets following inline content (text) wrap around it. This mirrors print layout where text flows around a picture.",
+        "Values used in practice: left and right. Syntax: img { float: left; }.",
+        "In normal flow, an img and each p is block-level and takes a full row. A floated element is lifted out of that flow, so surrounding text wraps around it.",
+        "The property goes on the element that floats (the image), but the visible effect appears on the neighbouring text, which wraps."
+      ]
+    },
+    {
+      "heading": "Stopping the wrap with clear",
+      "points": [
+        "If a footer follows floated content, it gets pulled up beside the float, which looks wrong; it should sit at the bottom at full width.",
+        "The fix is set on the footer, not the float: footer { clear: left | right | both }. It tells the element to drop below earlier floats on that side.",
+        "clear: left handles left floats, clear: right handles right floats, clear: both handles a layout that floats elements on both sides.",
+        "Typical case: two floated divs (one left, one right) with a footer needing clear: both."
+      ]
+    },
+    {
+      "heading": "When to use it",
+      "points": [
+        "Floats used to be stretched into complex page layouts. That is now discouraged because results can be unpredictable.",
+        "Use float mainly to wrap text around an image. For layouts, use Flexbox, Grid or frameworks such as Bootstrap (covered later).",
+        "(Extra) Floated children do not give their parent any height, a classic reason a container collapses; clear or modern layout avoids this."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Text wrapping around an image",
+      "language": "css",
+      "code": "img { float: left; }   /* or right */"
+    },
+    {
+      "caption": "Footer cleared of floats",
+      "language": "css",
+      "code": "footer { clear: both; }"
+    }
+  ],
+  "task": {
+    "name": "Cats and dogs float layout",
+    "starting_point": "index.html with a div.cat (aquamarine background, h2, img, p) and a div.dog (coral), each at 40% width and display: inline-block, followed by a footer. The two blocks sit side by side and text does not wrap around the images.",
+    "goal": "Match goal.png: text wraps around each image, the cat block hugs the left, the dog block hugs the right, and the footer spans below both.",
+    "steps": [
+      "Add img { float: left; } so each paragraph wraps around its image (needs enough window width).",
+      "Add float: left to .cat and float: right to .dog.",
+      "The footer jumps up between the blocks; add clear: both to footer so it returns to the bottom.",
+      "Slightly different block heights (different text lengths) are expected, not a bug."
+    ],
+    "expected_result": "Two coloured columns at the page edges with wrapped text and a full-width footer underneath.",
+    "solution_code": {
+      "language": "css",
+      "code": "div { display: inline-block; width: 40%; }\np { font-size: 2em; }\n.cat { float: left;  background-color: aquamarine; }\n.dog { float: right; background-color: coral; }\nimg  { float: left; }\nfooter { clear: both; text-align: center; background-color: blueviolet; }"
+    },
+    "reference_repo_path": "Section 08 - Advanced CSS/08.02 - CSS Float/solution.html"
+  },
+  "pitfalls": [
+    "Putting clear on the floated element instead of the one that must drop below.",
+    "Footer rising between floated blocks because clear was omitted.",
+    "Using float as a general layout system.",
+    "(Extra) Repo files include the author footer ('Made with...') which is not part of the exercise."
+  ],
+  "playground": {
+    "match": "s08-float (lesson 8.2, data/s08.js)",
+    "coverage": "Tasks match the exercise (float images/blocks, clear: both on footer); explore sandbox toggles float and clear; notes explain left/right/clear and recommend flexbox/grid.",
+    "gaps_and_ideas": [
+      "Add a clear: left vs right vs both demonstration with floats on both sides.",
+      "Add a collapsed-parent demo (container with only floated children has zero height) and the fix.",
+      "The playground task list does not mention image float inside the blocks as a required step; make the 'wrap text around images' step explicit."
+    ]
+  }
+}

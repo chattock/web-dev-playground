@@ -1,0 +1,167 @@
+{
+  "index": 271,
+  "lecture_id": 41780540,
+  "title": "Managing Cookies and Sessions",
+  "section": "35. Authentication and Security",
+  "duration_min": 33,
+  "kind": "concept+exercise",
+  "summary": "Explains what cookies and sessions are using a shopping-basket example, then adds persistent login to the secrets app with express-session, Passport and the passport-local strategy: protecting /secrets with req.isAuthenticated(), moving the login check into a verify function, serialising the user into the session and logging users in after registration with req.login.",
+  "concepts": [
+    {
+      "heading": "Cookies and sessions: the idea",
+      "points": [
+        "A cookie is a small piece of data the server asks the browser to store. The browser sends it back automatically with each later request to that site.",
+        "Typical flow: browser GETs a page, the user does something (e.g. a POST adding an item to a basket), the server replies and includes a Set-Cookie instruction, and from then on every GET to that server carries the cookie so the server can recognise the visitor and restore their state.",
+        "Shop-style cookies usually hold just an identifier (a session id or token); the real basket data lives on the server and is looked up by that id. Deleting the site's cookies makes the server forget the visitor.",
+        "The same mechanism underlies retargeting ads, since a stored identifier lets sites recall past behaviour.",
+        "A session is the period during which a browser interacts with a server. For authentication it normally starts at login, when a cookie marking the user as authenticated is created; it lasts until logout, when the cookie is destroyed.",
+        "Cookies can be inspected in browser dev tools, Application tab, Cookies section (or in the browser's cookie settings)."
+      ]
+    },
+    {
+      "heading": "Packages used",
+      "points": [
+        "express-session: middleware that creates a session and stores the session id in a cookie, so returning users bypass the login form.",
+        "passport: authentication framework for Node with hundreds of interchangeable strategies (Google, Facebook, GitHub, etc.), which can be plugged in one after another.",
+        "passport-local: the strategy for username/email plus password, which is what the app uses now.",
+        "All three are in the lesson's package.json, so npm install adds them. The app also still needs bcrypt, pg, body-parser, ejs and express."
+      ]
+    },
+    {
+      "heading": "Configuring express-session",
+      "points": [
+        "import session from \"express-session\" and register it with app.use(session({...})) before anything that depends on it.",
+        "secret: string used to sign the session cookie. Required. Any string works, but treat it as a key (the next lesson moves it into an environment variable).",
+        "resave: false: do not force the session to be written back to the store on every request if unchanged.",
+        "saveUninitialized: true: store sessions even if nothing has been put in them yet.",
+        "Default store is server memory, so sessions vanish when the server restarts. For persistence use a store backed by Postgres (look up a session store package).",
+        "cookie: { maxAge: ms } sets the expiry in milliseconds. 1000 * 60 * 60 * 24 gives one day. Without it the cookie expires when the browser is closed, so reopening the browser asks for login again."
+      ]
+    },
+    {
+      "heading": "Initialising Passport",
+      "points": [
+        "import passport from \"passport\". After the session middleware, add app.use(passport.initialize()) and app.use(passport.session()).",
+        "Order matters because middleware runs top to bottom: the session must exist before Passport's session support runs, otherwise authentication will not work.",
+        "(Extra) Both lines must also sit above the routes that use req.isAuthenticated or req.user."
+      ]
+    },
+    {
+      "heading": "Protecting the /secrets route",
+      "points": [
+        "Instead of rendering secrets.ejs straight from the login/register handlers, add app.get(\"/secrets\", ...).",
+        "Inside, use req.isAuthenticated() (added to the request by Passport). If true, res.render(\"secrets.ejs\"); otherwise res.redirect(\"/login\").",
+        "Visiting /secrets with no session redirects to /login. After login the session cookie lets the user return to /secrets directly, even in a new tab."
+      ]
+    },
+    {
+      "heading": "The local strategy and verify function",
+      "points": [
+        "import { Strategy } from \"passport-local\". Register it near the bottom with passport.use(new Strategy(async function verify(username, password, cb) {...})).",
+        "Passport calls verify whenever a request is authenticated. By default it reads fields named username and password from the submitted form, so the form inputs must have those exact name attributes. This replaces manually reading req.body.",
+        "The function is async because it awaits the database query.",
+        "Move the old login logic here: query users WHERE email = $1 with [username]; if a row is found, take its stored hash and run bcrypt.compare(password, storedHashedPassword, callback).",
+        "Report results through the Passport callback cb(err, user): success is cb(null, user) with the user row; wrong password is cb(null, false), which is not an error, just a failed authentication; an error is cb(err); an unknown email is also returned through cb (the reference passes a 'User not found' value).",
+        "The user object passed to cb becomes req.user later, containing id, email and password hash from the row.",
+        "The docs for passport-local (username and password tutorial, verify section) are the source for this pattern. The docs use Node's crypto for hashing, while this course uses bcrypt."
+      ]
+    },
+    {
+      "heading": "serializeUser and deserializeUser",
+      "points": [
+        "passport.serializeUser((user, cb) => cb(null, user)) decides what gets stored in the session when someone logs in.",
+        "passport.deserializeUser((user, cb) => cb(null, user)) turns the stored data back into the object exposed as req.user on later requests.",
+        "Here the whole user object is saved, which is simple for teaching. (Extra) In larger apps the usual practice is to serialise only the id and load the full user from the database in deserialize."
+      ]
+    },
+    {
+      "heading": "Login route via passport.authenticate",
+      "points": [
+        "The POST /login handler no longer needs its own function body: app.post(\"/login\", passport.authenticate(\"local\", { successRedirect: \"/secrets\", failureRedirect: \"/login\" })).",
+        "passport.authenticate is middleware that triggers the registered local strategy. On success it starts the session and redirects to /secrets; on failure it redirects back to /login.",
+        "Console-logging req.user in the /secrets route shows the stored user object after login. The Application tab shows a new cookie for localhost:3000."
+      ]
+    },
+    {
+      "heading": "Registration with req.login",
+      "points": [
+        "Change the INSERT to end with RETURNING * so the new row comes back in result.rows.",
+        "Take const user = result.rows[0] and call req.login(user, callback) (lowercase i, provided by Passport). It places the user in the session exactly like a normal login, with serialization.",
+        "In the callback, handle any error (log it), then res.redirect(\"/secrets\") so the new user lands on the protected page already authenticated.",
+        "Because req.user is set everywhere after authentication, any route can check who is logged in and use their data."
+      ]
+    },
+    {
+      "heading": "Why this matters",
+      "points": [
+        "Persisting sessions adds convenience rather than extra cryptographic security, but it is how modern sites keep users logged in.",
+        "The session secret in the code is sensitive; next lesson shows how to keep it out of the repository via environment variables."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Session and Passport middleware, in the required order",
+      "language": "javascript",
+      "code": "import session from \"express-session\";\nimport passport from \"passport\";\nimport { Strategy } from \"passport-local\";\n\napp.use(\n  session({\n    secret: \"TOPSECRETWORD\",\n    resave: false,\n    saveUninitialized: true,\n    cookie: {\n      maxAge: 1000 * 60 * 60 * 24, // one day in milliseconds\n    },\n  })\n);\napp.use(bodyParser.urlencoded({ extended: true }));\napp.use(express.static(\"public\"));\n\napp.use(passport.initialize());\napp.use(passport.session());"
+    },
+    {
+      "caption": "Protected route and login via Passport",
+      "language": "javascript",
+      "code": "app.get(\"/secrets\", (req, res) => {\n  if (req.isAuthenticated()) {\n    res.render(\"secrets.ejs\");\n  } else {\n    res.redirect(\"/login\");\n  }\n});\n\napp.post(\n  \"/login\",\n  passport.authenticate(\"local\", {\n    successRedirect: \"/secrets\",\n    failureRedirect: \"/login\",\n  })\n);"
+    },
+    {
+      "caption": "Register: save user, then log them in",
+      "language": "javascript",
+      "code": "bcrypt.hash(password, saltRounds, async (err, hash) => {\n  if (err) {\n    console.error(\"Error hashing password:\", err);\n  } else {\n    const result = await db.query(\n      \"INSERT INTO users (email, password) VALUES ($1, $2) RETURNING *\",\n      [email, hash]\n    );\n    const user = result.rows[0];\n    req.login(user, (err) => {\n      console.log(\"success\");\n      res.redirect(\"/secrets\");\n    });\n  }\n});"
+    },
+    {
+      "caption": "Local strategy, plus serialise/deserialise",
+      "language": "javascript",
+      "code": "passport.use(\n  new Strategy(async function verify(username, password, cb) {\n    try {\n      const result = await db.query(\"SELECT * FROM users WHERE email = $1\", [username]);\n      if (result.rows.length > 0) {\n        const user = result.rows[0];\n        const storedHashedPassword = user.password;\n        bcrypt.compare(password, storedHashedPassword, (err, valid) => {\n          if (err) {\n            return cb(err);\n          } else if (valid) {\n            return cb(null, user);   // authenticated\n          } else {\n            return cb(null, false);  // wrong password\n          }\n        });\n      } else {\n        return cb(\"User not found\");\n      }\n    } catch (err) {\n      return cb(err);\n    }\n  })\n);\n\npassport.serializeUser((user, cb) => cb(null, user));\npassport.deserializeUser((user, cb) => cb(null, user));"
+    }
+  ],
+  "task": {
+    "name": "Add cookies and sessions with Passport to the secrets app",
+    "starting_point": "Project 'Sessions & Cookies' (previous lesson's code): bcrypt-based register and login routes that render secrets.ejs directly. package.json already lists express-session, passport and passport-local. Postgres secrets database with users table.",
+    "goal": "Users stay logged in across tabs and visits via a session cookie, /secrets is only reachable when authenticated, and registering logs the new user in.",
+    "steps": [
+      "Extract, open in VS Code, cd into the folder and run npm install.",
+      "Import session, passport and Strategy (from passport-local).",
+      "Add app.use(session({ secret, resave: false, saveUninitialized: true })) above everything else, then app.use(passport.initialize()) and app.use(passport.session()) after it.",
+      "Add GET /secrets that renders secrets.ejs only if req.isAuthenticated(), else redirects to /login.",
+      "Create passport.use(new Strategy(async function verify(username, password, cb) {...})); move the login query and bcrypt.compare logic in and report results via cb.",
+      "Confirm login.ejs inputs are named username and password so Passport finds them.",
+      "Add serializeUser and deserializeUser.",
+      "Replace the POST /login body with passport.authenticate(\"local\", { successRedirect: \"/secrets\", failureRedirect: \"/login\" }).",
+      "Update POST /register: INSERT ... RETURNING *, take rows[0], call req.login(user, cb), redirect to /secrets.",
+      "Test: visit /secrets while logged out (redirects), log in (lands on secrets, req.user logged), refresh, open a new tab, inspect the cookie in dev tools.",
+      "Optionally add cookie: { maxAge: 1000 * 60 * 60 * 24 } to the session options and confirm login survives closing the browser."
+    ],
+    "expected_result": "Logging in or registering redirects to /secrets; direct visits to /secrets work while the session lasts and redirect to /login otherwise.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "// Key pieces are shown in code_examples. Reference structure:\napp.use(session({ secret: \"TOPSECRETWORD\", resave: false, saveUninitialized: true }));\napp.use(passport.initialize());\napp.use(passport.session());\n\napp.get(\"/secrets\", (req, res) => {\n  if (req.isAuthenticated()) res.render(\"secrets.ejs\");\n  else res.redirect(\"/login\");\n});\n\napp.post(\"/login\", passport.authenticate(\"local\", { successRedirect: \"/secrets\", failureRedirect: \"/login\" }));\n\n// register: INSERT ... RETURNING * -> req.login(user, cb) -> res.redirect(\"/secrets\")\n// passport.use(new Strategy(async function verify(username, password, cb) { ... }));\n// passport.serializeUser / deserializeUser pass the user through unchanged"
+    },
+    "reference_repo_path": "Section 35 - Authentication and Security - Handling Credentials & Designing a Secure Login/35.06 Managing Cookies and Sessions/solution.js"
+  },
+  "pitfalls": [
+    "Registering passport.initialize()/passport.session() before the session middleware.",
+    "Form field names not being username and password, so verify receives nothing.",
+    "Mixing up req.login (lowercase i, needs a user object) with unrelated names such as login.",
+    "Wrong password should call cb(null, false), not cb(err).",
+    "Memory session store loses sessions on server restart.",
+    "Forgetting maxAge, so the login ends when the browser closes.",
+    "Reference repo quirks: the already-registered branch calls req.redirect(\"/login\") which should be res.redirect; the logout route uses next without declaring it as a parameter; the DB password string has a trailing space; the reference does not set cookie maxAge (the lecture demonstrates it)."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (playground has no section 35 file).",
+    "gaps_and_ideas": [
+      "New lesson 'Cookies and sessions': blurb covering what a cookie is, session id vs data on the server, and the Set-Cookie/Cookie header round trip.",
+      "Tasks: (1) log in to a tiny Express app and find the session cookie in dev tools, (2) add a visit counter to req.session, (3) protect a /secrets route with a manual req.session.loggedIn check, (4) set cookie maxAge to 10 seconds and watch it expire, (5) delete the cookie and observe the logout effect.",
+      "Starter code: minimal Express with express-session and a hard-coded user, no database.",
+      "Interactive demo: a fake browser/server diagram where clicking 'Login' shows the Set-Cookie header and later requests visibly carry the cookie, with a button to delete it."
+    ]
+  }
+}

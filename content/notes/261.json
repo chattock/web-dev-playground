@@ -1,0 +1,129 @@
+{
+  "index": 261,
+  "lecture_id": 40494288,
+  "title": "The Family Travel Tracker",
+  "section": "33. PostgreSQL",
+  "duration_min": 35,
+  "kind": "project",
+  "summary": "Capstone for the relationships lessons: upgrade the Travel Tracker so several family members each have their own visited countries and map colour. Needs a users table, a one to many link from visited_countries, tab switching, a new-member form and per-user inserts. The second half walks through the solution.",
+  "concepts": [
+    {
+      "heading": "What the finished app does",
+      "points": [
+        "Tabs across the top, one per family member, each tab tinted with that person's colour. Clicking a tab shows only that person's visited countries on the map and their total.",
+        "The Add button inserts a country for whichever user's tab is active, leaving other users unchanged.",
+        "An extra 'Add Family Member' tab opens a form for a name and a colour (radio buttons using CSS colour names); the new member becomes the active user.",
+        "Starter files supply index.ejs, new.ejs and CSS already working; you only need to pass a users array plus the other variables from index.js and write the missing routes. index.ejs may look red in the editor because of EJS tags inside attribute strings, but it is valid."
+      ]
+    },
+    {
+      "heading": "Database design",
+      "points": [
+        "Relationship is one to many: one user, many visited countries.",
+        "users table: id SERIAL PRIMARY KEY, name (unique, not null) and color (a CSS colour name such as teal or powderblue).",
+        "visited_countries gets a user_id INTEGER column with REFERENCES users(id): a foreign key on the many side pointing to the one side's primary key.",
+        "Either ALTER the table or drop and recreate (DROP TABLE IF EXISTS visited_countries, users; or right-click delete in pgAdmin). queries.sql contains the setup plus seed rows; run it in the world database, not school.",
+        "Final SELECT * FROM visited_countries JOIN users ON users.id = user_id shows rows with repeating user details."
+      ]
+    },
+    {
+      "heading": "Reading a user's countries (checkVisited)",
+      "points": [
+        "Old query selected every country_code; now it joins users and filters: ... JOIN users ON users.id = user_id WHERE user_id = $1 with [currentUserId] as the parameter.",
+        "The join isn't strictly required for the code list, but it shows the relationship; the WHERE is what narrows to one user.",
+        "currentUserId is a module-level variable defaulting to 1, so the first tab shows on first load.",
+        "Result rows are mapped to an array of two-letter codes; its length is the total passed to the view."
+      ]
+    },
+    {
+      "heading": "Loading users and the current one",
+      "points": [
+        "getCurrentUser runs SELECT * FROM users, stores the rows into the users array (a list of objects with id, name, color), then returns the matching one with users.find.",
+        "Keeping a sample users array at the top documents the data shape.",
+        "Use loose == in the comparison, because an id submitted from a form arrives as a string, and strict === against a number would fail. Debug by logging typeof on both sides.",
+        "The / route renders index.ejs with countries, total, users and the current user's color."
+      ]
+    },
+    {
+      "heading": "How index.ejs uses the data",
+      "points": [
+        "users.forEach emits one submit input and label per user: the input's name is user and its value is user.id, the label shows user.name and its background uses user.color.",
+        "The form posts to /user. A further submit button named add with value new leads to the new-member page.",
+        "The Add button background and the JavaScript that fills map paths use the same color variable."
+      ]
+    },
+    {
+      "heading": "Routes",
+      "points": [
+        "POST /user: if req.body.add equals new, render new.ejs; otherwise set currentUserId = req.body.user and redirect to /.",
+        "POST /new: read name and color from the body, run INSERT INTO users (name, color) VALUES ($1, $2) RETURNING *, take rows[0].id as the new currentUserId, redirect to /.",
+        "RETURNING * makes Postgres return the inserted row(s), which is how the app learns the auto-generated id.",
+        "POST /add: look up the country code as before, then INSERT INTO visited_countries (country_code, user_id) VALUES ($1, $2) with currentUserId, then redirect.",
+        "Because / reloads data for currentUserId, redirecting after each change refreshes tabs, colours and map."
+      ]
+    },
+    {
+      "heading": "Tips",
+      "points": [
+        "Use VS Code's 'Select for Compare' then 'Compare with Selected' to diff index.js against solution.js.",
+        "Plan data shapes by writing them out; it prevents bugs.",
+        "(Extra) The solution does not validate duplicate countries or empty names; the first catch only logs errors."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Database setup (queries.sql)",
+      "language": "sql",
+      "code": "DROP TABLE IF EXISTS visited_countries, users;\n\nCREATE TABLE users(\n  id SERIAL PRIMARY KEY,\n  name VARCHAR(15) UNIQUE NOT NULL,\n  color VARCHAR(15)\n);\n\nCREATE TABLE visited_countries(\n  id SERIAL PRIMARY KEY,\n  country_code CHAR(2) NOT NULL,\n  user_id INTEGER REFERENCES users(id)\n);\n\nINSERT INTO users (name, color)\nVALUES ('Angela', 'teal'), ('Jack', 'powderblue');\n\nINSERT INTO visited_countries (country_code, user_id)\nVALUES ('FR', 1), ('GB', 1), ('CA', 2), ('FR', 2);\n\nSELECT *\nFROM visited_countries\nJOIN users ON users.id = user_id;"
+    },
+    {
+      "caption": "Key server code (solution.js, condensed)",
+      "language": "javascript",
+      "code": "let currentUserId = 1;\nlet users = [\n  { id: 1, name: \"Angela\", color: \"teal\" },\n  { id: 2, name: \"Jack\", color: \"powderblue\" },\n];\n\nasync function checkVisited() {\n  const result = await db.query(\n    \"SELECT country_code FROM visited_countries JOIN users ON users.id = user_id WHERE user_id = $1;\",\n    [currentUserId]\n  );\n  return result.rows.map((row) => row.country_code);\n}\n\nasync function getCurrentUser() {\n  const result = await db.query(\"SELECT * FROM users\");\n  users = result.rows;\n  return users.find((user) => user.id == currentUserId);\n}\n\napp.get(\"/\", async (req, res) => {\n  const countries = await checkVisited();\n  const currentUser = await getCurrentUser();\n  res.render(\"index.ejs\", {\n    countries, total: countries.length, users, color: currentUser.color,\n  });\n});\n\napp.post(\"/add\", async (req, res) => {\n  const input = req.body[\"country\"];\n  try {\n    const result = await db.query(\n      \"SELECT country_code FROM countries WHERE LOWER(country_name) LIKE '%' || $1 || '%';\",\n      [input.toLowerCase()]\n    );\n    const countryCode = result.rows[0].country_code;\n    await db.query(\n      \"INSERT INTO visited_countries (country_code, user_id) VALUES ($1, $2)\",\n      [countryCode, currentUserId]\n    );\n    res.redirect(\"/\");\n  } catch (err) { console.log(err); }\n});\n\napp.post(\"/user\", async (req, res) => {\n  if (req.body.add === \"new\") {\n    res.render(\"new.ejs\");\n  } else {\n    currentUserId = req.body.user;\n    res.redirect(\"/\");\n  }\n});\n\napp.post(\"/new\", async (req, res) => {\n  const { name, color } = req.body;\n  const result = await db.query(\n    \"INSERT INTO users (name, color) VALUES($1, $2) RETURNING *;\",\n    [name, color]\n  );\n  currentUserId = result.rows[0].id;\n  res.redirect(\"/\");\n});"
+    },
+    {
+      "caption": "Tab form in index.ejs",
+      "language": "html",
+      "code": "<form action=\"/user\" method=\"post\">\n  <% users.forEach(function(user) { %>\n    <input type=\"submit\" name=\"user\" value=\"<%= user.id %>\" id=\"<%= user.id %>\">\n    <label for=\"<%= user.id %>\" style=\"background-color: <%= user.color %>;\"><%= user.name %></label>\n  <% }); %>\n  <input type=\"submit\" name=\"add\" value=\"new\" id=\"tab\">\n  <label for=\"tab\">Add Family Member</label>\n</form>"
+    }
+  ],
+  "task": {
+    "name": "Family Travel Tracker",
+    "starting_point": "Family Travel Tracker.zip: previous Travel Tracker code, index.ejs and new.ejs ready, plus queries.sql containing the answer SQL at the bottom and solution.js.",
+    "goal": "Support multiple family members, each with a colour and their own visited countries, and let new members be added.",
+    "steps": [
+      "Run nodemon on index.js and confirm the starter renders two tabs.",
+      "Design the users table (id, name, colour) and add a user_id foreign key to visited_countries, recreating the tables if needed; seed some data.",
+      "Make the home route pass users, countries, total and the current user's colour.",
+      "Change the countries query to filter by the current user id.",
+      "Add POST /user: show new.ejs when add is new, else switch currentUserId and redirect.",
+      "Add POST /new: insert the user with RETURNING *, make them current, redirect.",
+      "Change POST /add to insert with the current user's id.",
+      "Test: switch tabs, add a country for one user, add a new member and a country for them."
+    ],
+    "expected_result": "Tabs for each member in their colour, per-user maps and totals, and new members appearing with their own empty map.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "let currentUserId = 1;\nlet users = [\n  { id: 1, name: \"Angela\", color: \"teal\" },\n  { id: 2, name: \"Jack\", color: \"powderblue\" },\n];\n\nasync function checkVisited() {\n  const result = await db.query(\n    \"SELECT country_code FROM visited_countries JOIN users ON users.id = user_id WHERE user_id = $1;\",\n    [currentUserId]\n  );\n  return result.rows.map((row) => row.country_code);\n}\n\nasync function getCurrentUser() {\n  const result = await db.query(\"SELECT * FROM users\");\n  users = result.rows;\n  return users.find((user) => user.id == currentUserId);\n}\n\napp.get(\"/\", async (req, res) => {\n  const countries = await checkVisited();\n  const currentUser = await getCurrentUser();\n  res.render(\"index.ejs\", {\n    countries, total: countries.length, users, color: currentUser.color,\n  });\n});\n\napp.post(\"/add\", async (req, res) => {\n  const input = req.body[\"country\"];\n  try {\n    const result = await db.query(\n      \"SELECT country_code FROM countries WHERE LOWER(country_name) LIKE '%' || $1 || '%';\",\n      [input.toLowerCase()]\n    );\n    const countryCode = result.rows[0].country_code;\n    await db.query(\n      \"INSERT INTO visited_countries (country_code, user_id) VALUES ($1, $2)\",\n      [countryCode, currentUserId]\n    );\n    res.redirect(\"/\");\n  } catch (err) { console.log(err); }\n});\n\napp.post(\"/user\", async (req, res) => {\n  if (req.body.add === \"new\") {\n    res.render(\"new.ejs\");\n  } else {\n    currentUserId = req.body.user;\n    res.redirect(\"/\");\n  }\n});\n\napp.post(\"/new\", async (req, res) => {\n  const { name, color } = req.body;\n  const result = await db.query(\n    \"INSERT INTO users (name, color) VALUES($1, $2) RETURNING *;\",\n    [name, color]\n  );\n  currentUserId = result.rows[0].id;\n  res.redirect(\"/\");\n});"
+    },
+    "reference_repo_path": "Section 33 - PostgreSQL/33.14 - The Family Travel Tracker/solution.js"
+  },
+  "pitfalls": [
+    "Using === when comparing ids from the form (strings) with numeric ids.",
+    "Running the setup SQL in the school database instead of world.",
+    "Forgetting user_id when inserting visited countries.",
+    "Not redirecting after POST /new so the new user is not current.",
+    "Reference code has a typo checkVisisted (normalised above) and a hard-coded password; use your own credentials."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (section 33 has no playground data file).",
+    "gaps_and_ideas": [
+      "New project lesson 'Family Travel Tracker' with an ER diagram of users 1:N visited_countries.",
+      "Tasks: create users and visited_countries with foreign key; join query filtered by user; switch-user route; add-user route with RETURNING; per-user insert.",
+      "Starter: the previous Travel Tracker plus tabs markup, with TODO comments in routes.",
+      "Interactive demo: simulated in-browser users and visited_countries tables where clicking a tab runs and shows the filtered JOIN result."
+    ]
+  }
+}

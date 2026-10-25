@@ -1,0 +1,112 @@
+{
+  "index": 307,
+  "lecture_id": 17039494,
+  "title": "Javascript ES6 Object & Array Destructuring",
+  "section": "36. React.js",
+  "duration_min": 18,
+  "kind": "concept+exercise",
+  "summary": "A deep dive into ES6 destructuring: array destructuring by position, object destructuring by key, renaming, default values, nested objects, and a custom useAnimals function that mimics how useState returns [value, setter]. It ends by setting a challenge: destructure a nested cars array to fill an HTML table in React.",
+  "concepts": [
+    {
+      "heading": "Array destructuring (by position)",
+      "points": [
+        "Square brackets on the left of the assignment declare the variables: const [cat, dog] = animals; takes item 0 into cat and item 1 into dog.",
+        "It is a shorter way of writing cat = animals[0]; dog = animals[1].",
+        "Because matching is positional, the variable names are free choice: [c, d] would hold the same objects.",
+        "Names declared this way share the file's normal scope rules: re-declaring cat elsewhere in the same scope throws an error saying the identifier has already been declared.",
+        "Typical use: data arrives from an API, a module or a framework (React's useState) and you log it first to see its shape, then unpack it."
+      ]
+    },
+    {
+      "heading": "Object destructuring (by key)",
+      "points": [
+        "Curly braces on the left: const { name, sound } = cat; creates variables name and sound equal to cat.name and cat.sound.",
+        "Unlike arrays, matching is by property name. A name that does not exist as a key (e.g. animalSound) just yields undefined.",
+        "You may pull out only the properties you need; the rest of the object is ignored.",
+        "Rename while destructuring with a colon: const { name: catName, sound: catSound } = cat. After that only catName and catSound exist; name and sound are not created. Handy for terse or unclear API field names.",
+        "Default values use equals: const { name = \"Fluffy\", sound = \"Purr\" } = cat. The default is used only when the property is undefined (for example the key was deleted from the data). Useful when remote data has gaps and the page should not break."
+      ]
+    },
+    {
+      "heading": "Nested destructuring",
+      "points": [
+        "If cat has a feedingRequirements property that itself is an object { food, water }, you can destructure it in the same statement: const { name, sound, feedingRequirements: { food, water } } = cat.",
+        "Instead of giving the nested key an alias, you open another pair of braces and list the inner keys. Afterwards food and water are plain variables (2 and 3 in the demo).",
+        "(Extra) The nested key itself (feedingRequirements) is not created as a variable when you do this; add it separately if you also need the whole object.",
+        "The same pattern works for arrays inside objects, e.g. coloursByPopularity: [firstColour] takes the first array item."
+      ]
+    },
+    {
+      "heading": "How useState-style returns work",
+      "points": [
+        "A function can return an array of two things, a value and a function. The demo useAnimals(animal) returns [animal.name, () => console.log(animal.sound)].",
+        "Calling it and destructuring the result: const [animal, makeSound] = useAnimals(cat); gives animal === \"cat\" and makeSound() logs \"meow\".",
+        "useState follows the same shape: it returns [currentValue, setterFunction], and you choose the names when destructuring. This is why array destructuring is used there.",
+        "Exporting multiple things from data.js: animals stays the default export and useAnimals is added as a named export, so the import becomes import animals, { useAnimals } from \"./data\"; (default name outside the braces, named exports inside).",
+        "(Extra) Hooks such as useState are named with a use prefix by convention; useAnimals borrows the prefix only to show the shape, it is not a real React hook."
+      ]
+    },
+    {
+      "heading": "The challenge set at the end",
+      "points": [
+        "practice.js exports a cars array of two objects; each has model, coloursByPopularity (array) and speedStats (object with topSpeed, zeroToSixty).",
+        "The App already renders a table using certain variable names; those lines must not be changed. Only destructuring code is added so the Brand, Top Speed and Top Colour cells fill with model, speedStats.topSpeed and the first colour.",
+        "Console warnings about table markup come from how the simple table is structured in React and are unrelated to the task."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "data.js exports and the matching import in index.js / App.jsx",
+      "language": "javascript",
+      "code": "// data.js\nconst animals = [\n  { name: \"cat\", sound: \"meow\", feedingRequirements: { food: 2, water: 3 } },\n  { name: \"dog\", sound: \"woof\" }\n];\n\nfunction useAnimals(animal) {\n  return [\n    animal.name,\n    function () {\n      console.log(animal.sound);\n    }\n  ];\n}\n\nexport default animals;\nexport { useAnimals };\n\n// index.js / App.jsx\nimport animals, { useAnimals } from \"./data\";\nconsole.log(animals); // inspect the shape before destructuring"
+    },
+    {
+      "caption": "Array and object destructuring side by side (each line is an alternative; names must not repeat in one scope)",
+      "language": "javascript",
+      "code": "const animals = [\n  { name: \"cat\", sound: \"meow\", feedingRequirements: { food: 2, water: 3 } },\n  { name: \"dog\", sound: \"woof\" }\n];\n\nconst [cat, dog] = animals;                       // by position\nconst { name, sound } = cat;                      // by key\nconst { name: catName, sound: catSound } = cat;   // rename\nconst { name: n = \"Fluffy\" } = cat;               // default if undefined\nconst { feedingRequirements: { food, water } } = cat; // nested"
+    },
+    {
+      "caption": "A homemade useState lookalike",
+      "language": "javascript",
+      "code": "function useAnimals(animal) {\n  return [animal.name, () => console.log(animal.sound)];\n}\n\nconst [animal, makeSound] = useAnimals(cat);\nconsole.log(animal); // \"cat\"\nmakeSound();         // \"meow\""
+    }
+  ],
+  "task": {
+    "name": "Destructure the cars array for a table",
+    "starting_point": "CodeSandbox starter with practice.js (cars array of Honda Civic and Tesla Model 3 objects with nested coloursByPopularity array and speedStats object) and an index/App file with commented-out table code under a CHALLENGE line.",
+    "goal": "Uncomment the challenge code and, without editing it, add destructuring so the table shows each car's model, top speed and most popular colour.",
+    "steps": [
+      "Uncomment the code below the CHALLENGE line in the app file; do not edit those lines.",
+      "Import cars from practice.js (it is the default export): import cars from \"./practice\";",
+      "Optionally console.log(cars) to see the shape: an array of two objects, each with model, coloursByPopularity (array) and speedStats (object).",
+      "Destructure the array by position into two variables: const [honda, tesla] = cars; this makes honda.model and tesla.model work.",
+      "From each car object, destructure speedStats and open braces after a colon to reach topSpeed, renaming it with another colon (topSpeed: hondaTopSpeed / topSpeed: teslaTopSpeed).",
+      "From each car object, destructure coloursByPopularity and open square brackets after a colon to take the first item as hondaTopColour / teslaTopColour.",
+      "Check the table renders all three cells per row and the undefined-variable errors are gone (the table-markup warnings may remain)."
+    ],
+    "expected_result": "A table with rows for Tesla Model 3 (150, red) and Honda Civic (140, black).",
+    "solution_code": {
+      "language": "jsx",
+      "code": "import cars from \"./practice\";\n\nconst [honda, tesla] = cars;\n\n// one statement per car; object pattern mixes an array sub-pattern and an object sub-pattern\nconst {\n  coloursByPopularity: [hondaTopColour],\n  speedStats: { topSpeed: hondaTopSpeed },\n} = honda;\n\nconst {\n  coloursByPopularity: [teslaTopColour],\n  speedStats: { topSpeed: teslaTopSpeed },\n} = tesla;\n\n// used by the unchanged table code, e.g.\n// <td>{tesla.model}</td><td>{teslaTopSpeed}</td><td>{teslaTopColour}</td>"
+    },
+    "reference_repo_path": "Section 36 - React.js/36.31 Javascript ES6 Object & Array Destructuring/es6-destructuring/src/App.jsx"
+  },
+  "pitfalls": [
+    "Re-declaring a destructured name already used in the same scope causes an identifier-already-declared error.",
+    "Misspelling a key when destructuring an object silently gives undefined instead of an error.",
+    "Renaming with a colon removes the original name; using the old variable afterwards fails.",
+    "(Extra) Defaults only apply when the value is undefined, not for null or empty strings.",
+    "(Extra) The reference repo's table has only two <th> cells (Brand, Top Speed) although each row has three <td> cells; add a Top Colour header if you want the columns labelled.",
+    "(Extra) Putting <tr> directly inside <table> (no <tbody>) is what produces the React validateDOMNesting console warnings; wrapping rows in <thead>/<tbody> silences them."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (playground data only covers sections 1-11, 14, 15).",
+    "gaps_and_ideas": [
+      "New lesson 'Destructuring' (blurb: unpack values from arrays by position and from objects by key, rename, give defaults, and reach into nested data; the pattern behind React's useState). Tasks: (1) destructure [first, second] from an array, (2) pull name and sound from an object and rename one with a colon, (3) add a default for a missing key and show it only applies to undefined, (4) destructure a nested object two levels deep, (5) write a useAnimals-style function returning [value, fn] and destructure it.",
+      "Starter code idea: the animals and cars data from this lecture.",
+      "Interactive demo idea: a live editor with a data object on the left and a destructuring pattern the user types; show the resulting variables (and undefined for misspelt keys) on the right."
+    ]
+  }
+}

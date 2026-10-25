@@ -1,0 +1,57 @@
+{
+  "index": 177,
+  "lecture_id": 12640450,
+  "title": "Step 8 - Check the User's Answer Against the Game Sequence",
+  "section": "20. Boss Level Challenge 2 - The Simon Game",
+  "duration_min": 1,
+  "kind": "article-task",
+  "summary": "Compare the user's latest click to the pattern and advance the level when the sequence is complete.",
+  "concepts": [
+    {
+      "heading": "Game rules",
+      "points": [
+        "Game shows first colour; user repeats; then game adds another, user repeats whole sequence; one mistake ends the game."
+      ]
+    },
+    {
+      "heading": "checkAnswer(currentLevel)",
+      "points": [
+        "Called from the click handler with userClickedPattern.length - 1, the index of the latest click (4 clicks -> index 3).",
+        "Compare gamePattern[currentLevel] === userClickedPattern[currentLevel]; log 'success' or 'wrong' while debugging.",
+        "If correct and userClickedPattern.length === gamePattern.length, the user finished the sequence: call nextSequence() after setTimeout 1000 ms.",
+        "nextSequence() resets userClickedPattern to [] for the next round."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "checkAnswer",
+      "language": "javascript",
+      "code": "function checkAnswer(currentLevel) {\n  if (gamePattern[currentLevel] === userClickedPattern[currentLevel]) {\n    if (userClickedPattern.length === gamePattern.length) {\n      setTimeout(function () { nextSequence(); }, 1000);\n    }\n  } else {\n    console.log(\"wrong\");\n  }\n}"
+    }
+  ],
+  "task": {
+    "name": "Check the answer",
+    "starting_point": "Level and click tracking done",
+    "goal": "Game advances when user repeats sequence",
+    "steps": [
+      "Create checkAnswer(currentLevel)",
+      "Call it with userClickedPattern.length - 1",
+      "Compare latest entries",
+      "If right and lengths match, nextSequence after 1000ms",
+      "Reset userClickedPattern in nextSequence"
+    ],
+    "expected_result": "Game is playable until the first wrong click.",
+    "solution_code": null,
+    "reference_repo_path": "Section 20 - Boss Level Challenge 2 - The Simon Game/script.js"
+  },
+  "pitfalls": [
+    "Compare only the last index per click, not whole arrays.",
+    "Forgetting to reset userClickedPattern breaks later levels."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (web-dev-playground has no files for sections 19-20)",
+    "gaps_and_ideas": []
+  }
+}

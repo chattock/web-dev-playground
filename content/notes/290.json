@@ -1,0 +1,85 @@
+{
+  "index": 290,
+  "lecture_id": 17038790,
+  "title": "Javascript ES6 - Import, Export and Modules",
+  "section": "36. React.js",
+  "duration_min": 11,
+  "kind": "concept+exercise",
+  "summary": "A focused look at ES6 modules: default exports, named exports, the matching import syntax, wildcard imports, and how this differs from Node's require. Demonstrated with a math.js module exporting pi, doublePi and triplePi into a React list.",
+  "concepts": [
+    {
+      "heading": "Modules in general",
+      "points": [
+        "Any JavaScript file can be a module: it keeps its contents private unless it exports them, and other files pull in only what they need.",
+        "This is the mechanism behind import React from \"react\" and behind splitting React components across files; it is not React-specific.",
+        "math.js here is a plain JS file, not a component, so it uses the .js extension."
+      ]
+    },
+    {
+      "heading": "Default export",
+      "points": [
+        "export default pi; exposes one main value. A file can have at most one default export.",
+        "The importer chooses the local name: import pi from \"./math.js\" or import PI from \"./math.js\" both receive the same value, as long as the code then uses the same name consistently.",
+        "The extension in the path is optional with bundlers like Babel/Vite; it was kept in the demo for visibility."
+      ]
+    },
+    {
+      "heading": "Named exports",
+      "points": [
+        "Additional exports go in a braces list: export { doublePi, triplePi };. A file can have any number of these.",
+        "Import them with braces after the default import, separated by a comma: import PI, { doublePi, triplePi } from \"./math.js\";.",
+        "Names inside the braces must exactly match the exported names; renaming on import requires the 'as' keyword (import { doublePi as double }). (Extra)",
+        "Exported functions are imported as functions: to display a result in JSX, call it, e.g. {doublePi()}."
+      ]
+    },
+    {
+      "heading": "Wildcard import",
+      "points": [
+        "import * as pi from \"./math.js\"; collects every export into one namespace object, which must be given a name.",
+        "The object has the named functions as properties (pi.doublePi(), pi.triplePi()) and the default export under the property default (pi.default).",
+        "Style guides tend to discourage this: it hides which things are really used and loses the clarity of a clear default plus specific named imports."
+      ]
+    },
+    {
+      "heading": "ES6 import/export versus Node require",
+      "points": [
+        "Before ES6 modules, Node code used const x = require(\"x\"). require is a Node feature, not part of the JavaScript language, and it does not work in browsers directly.",
+        "At the time of the lecture, browser support for ES6 modules was incomplete; Babel (compiling to older syntax) made ES6 safe in React apps. (Extra) Today all modern browsers support ES modules natively.",
+        "The instructor prefers import/export syntax for its clarity."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "math.js with one default export and two named exports",
+      "language": "javascript",
+      "code": "const pi = 3.1415962;\n\nfunction doublePi() {\n  return pi * 2;\n}\n\nfunction triplePi() {\n  return pi * 3;\n}\n\nexport default pi;\nexport { doublePi, triplePi };"
+    },
+    {
+      "caption": "Consuming the module in a component",
+      "language": "jsx",
+      "code": "import PI, { doublePi, triplePi } from \"./math.js\";\n\nfunction App() {\n  return (\n    <ul>\n      <li>{PI}</li>\n      <li>{doublePi()}</li>\n      <li>{triplePi()}</li>\n    </ul>\n  );\n}\n\nexport default App;"
+    },
+    {
+      "caption": "Wildcard version",
+      "language": "jsx",
+      "code": "import * as pi from \"./math.js\";\n\n// <li>{pi.default}</li>\n// <li>{pi.doublePi()}</li>\n// <li>{pi.triplePi()}</li>"
+    }
+  ],
+  "task": null,
+  "pitfalls": [
+    "Putting more than one export default in a file is a syntax error.",
+    "Named imports are case-sensitive and must match the export; a typo yields undefined or a missing-export error.",
+    "Writing {doublePi} instead of {doublePi()} in JSX tries to render the function itself rather than its result.",
+    "Omitting curly braces around named imports imports the default export instead."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (section 36 is not in the playground data files). Earlier playground JS lessons may touch modules; none cover this React context.",
+    "gaps_and_ideas": [
+      "New lesson 'ES6 modules': blurb on default vs named exports and wildcard imports.",
+      "Tasks: (1) export a constant as default and import it under a new name, (2) add two named exports, (3) import them with braces, (4) try the wildcard form and log the object, (5) rename a named import with 'as'.",
+      "Interactive demo: a two-pane editor with a module file and consumer file showing which import form maps to which export, with live results."
+    ]
+  }
+}

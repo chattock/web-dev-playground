@@ -1,0 +1,138 @@
+{
+  "index": 362,
+  "lecture_id": 31673764,
+  "title": "Enabling the Minting Functionality on the Frontend",
+  "section": "42. Minting NFTs and Building an NFT Marketplace like OpenSea",
+  "duration_min": 31,
+  "kind": "project",
+  "summary": "Turns the OpenD minting form into a working feature: the form collects an image and a name with React Hook Form, converts the image file to a byte array, and calls a new mint function on the main canister. That function programmatically creates an NFT canister (funded with cycles) and returns its principal, which the UI then uses to display the new NFT, with a loading spinner during minting.",
+  "concepts": [
+    {
+      "heading": "Goal and starting point",
+      "points": [
+        "Previous lesson displayed an NFT that had been minted by hand from the command line. This lesson lets any user upload an image in the browser and have a fresh NFT canister created on the fly.",
+        "Minter.jsx already contains static markup (an upload input, a collection-name input and a Mint NFT button built from a span). The first step is to render it from App.jsx between Header and Footer: comment out the temporary Item and add a self-closing <Minter /> (the editor auto-import adds the import line).",
+        "Data flow overview: user fills inputs -> inputs registered with React Hook Form -> clicking the button calls handleSubmit -> handleSubmit calls onSubmit with the collected data -> onSubmit calls the backend mint function -> backend creates a canister -> its principal returns to the frontend -> Item renders it."
+      ]
+    },
+    {
+      "heading": "Collecting form input with React Hook Form",
+      "points": [
+        "Instead of controlled inputs (value plus onChange), the lesson uses the useForm hook from the react-hook-form package (already installed in the project). Import it: import { useForm } from \"react-hook-form\".",
+        "Destructure with curly braces (object destructuring, unlike the array destructuring of useState): const { register, handleSubmit } = useForm();. register is a function used to attach an input to the form; handleSubmit wraps the submit handler.",
+        "Register an input by spreading the result of register into it: <input {...register(\"name\", { required: true })} />. The first argument is the key under which the value will appear in the submitted data object; the options object sets validation, and required: true stops submission when the field is empty.",
+        "Trigger submission from the Mint NFT button: put onClick={handleSubmit(onSubmit)} on the span. handleSubmit validates first and only calls onSubmit when all required fields are filled.",
+        "Define async function onSubmit(data). To verify wiring, console.log(data.name) first; typing text and clicking Mint prints it.",
+        "Do the same for the file input, registering it under the key \"image\" with required: true. Logging data.image shows a FileList (a file input can hold several files), and the chosen file is element 0. Sample 20x20 CryptoDunks PNGs are provided as a lesson download; they are enlarged by CSS on the frontend.",
+        "Then replace the logs with real values: const name = data.name; const image = data.image[0];."
+      ]
+    },
+    {
+      "heading": "Converting the image to Nat8-compatible bytes",
+      "points": [
+        "The File object carries metadata (file name, size and so on) that should not be stored on the blockchain. Only the raw bytes are needed.",
+        "image.arrayBuffer() (a Blob method) returns a Promise resolving to an ArrayBuffer of the binary content, so it must be awaited.",
+        "Wrap the buffer in new Uint8Array(buffer) to view it as unsigned 8-bit integers, then spread into an array: const imageByteData = [...new Uint8Array(imageArray)];. The resulting plain array of numbers 0-255 is what the Candid type vec nat8 / Motoko [Nat8] expects.",
+        "Splitting it across two lines (const imageArray = await image.arrayBuffer(); then the Uint8Array line) is equivalent and easier to read."
+      ]
+    },
+    {
+      "heading": "Backend: public shared mint function in main.mo",
+      "points": [
+        "Minting lives in the main canister (main.mo), not in the NFT actor class, because main is the canister that creates and tracks NFT canisters (backend-to-backend interaction, later stored in a HashMap).",
+        "Signature: public shared (msg) func mint(imgData : [Nat8], name : Text) : async Principal. shared (msg) exposes the caller's identity via msg.caller. The type must be [Nat8], not [Nat], or it will not be compatible with the NFT class.",
+        "Import Principal (mo:base/Principal) to use the type. Then let owner : Principal = msg.caller;. Once authentication is wired in, the logged-in user's principal becomes the owner. The lesson skips authentication (covered earlier in the course), so the caller is the anonymous principal for now.",
+        "Import the actor class file with a relative path: import NFTActorClass \"../NFT/nft\";.",
+        "Create the canister with await NFTActorClass.NFT(name, owner, imgData). The constructor arguments are, in order, the name, the owner and the content. Initialisation is asynchronous, so await is required.",
+        "Returning the new canister's id needs a helper: there is no direct way to read the id from the instance. In nft.mo bind the class instance with = this after the class parameter list and add public query func getCanisterId() : async Principal { return Principal.fromActor(this); }. Principal.fromActor takes an actor and returns its principal; binding this is what lets an actor class (which needs constructor arguments) refer to itself.",
+        "Back in mint: let newNFTPrincipal = await newNFT.getCanisterId(); return newNFTPrincipal;."
+      ]
+    },
+    {
+      "heading": "Cycles for programmatic canister creation",
+      "points": [
+        "On the live Internet Computer every new canister must be funded with cycles. A local dfx replica does not enforce accounting, so it works locally without them, but the code should include them before deployment.",
+        "Use the ExperimentalCycles base module: import Cycles \"mo:base/ExperimentalCycles\"; then call Cycles.add(amount) immediately before the canister-creating call. The cycles are taken from the main canister's balance and attached to the next outgoing creation call.",
+        "Lecture figures: roughly 100 billion cycles to create a canister, plus about 500 million to keep it running, so add the sum. (Extra) The reference repo simply uses Cycles.add(1_200_000_000_000), a larger round number.",
+        "The module is called experimental because the final cycles API was undecided at the time (2022).",
+        "To observe the effect, import Debug and print Debug.print(debug_show(Cycles.balance())) before and after creating the canister; the second value is lower."
+      ]
+    },
+    {
+      "heading": "Frontend: calling mint and showing the result",
+      "points": [
+        "Import the backend actor into Minter.jsx from the generated declarations folder (relative path with ../../../declarations/OPEND_backend). (Extra) The reference repo imports { OPEND_backend } from that path.",
+        "Inside onSubmit: const newNFTId = await OPEND_backend.mint(imageByteData, name);. The return value is a Principal object. console.log(newNFTId.toText()) shows its textual form; toText is a method of the Principal type from @dfinity/principal.",
+        "Redeploy after backend changes using the deploy command from the project README, then test: both cycle balances print in the replica logs, the second smaller, and the new canister id prints in the browser console.",
+        "Rendering the minted item: Minter keeps state const [nftPrincipal, setNFTPrincipal] = useState(\"\"). If nftPrincipal is an empty string, return the form; else return a success block (heading 'Minted!' plus a div with class horizontal-center containing <Item id={nftPrincipal.toText()} />). The markup for the else-branch is supplied in the lesson README to copy rather than type, because of its many class names.",
+        "Item expects a text prop named id, so the Principal must be converted with toText(). After a successful mint, call setNFTPrincipal(newNFTId) to switch views."
+      ]
+    },
+    {
+      "heading": "Loader while minting",
+      "points": [
+        "Minting takes noticeable time, so a spinner (HTML supplied in the README, class lds-ellipsis with four child divs) is placed inside the minter-container above the h3.",
+        "Control it with the hidden attribute: <div hidden={loaderHidden} ...>, state const [loaderHidden, setLoaderHidden] = useState(true). Start hidden; call setLoaderHidden(false) at the start of onSubmit; set it back to true after the canister id returns."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "main.mo: mint creates a canister and returns its principal (from reference repo 42.04)",
+      "language": "motoko",
+      "code": "import Cycles \"mo:base/ExperimentalCycles\";\nimport Principal \"mo:base/Principal\";\nimport NFTActorClass \"../NFT/nft\";\n\npersistent actor OpenD {\n\n  public shared (msg) func mint(imgData : [Nat8], name : Text) : async Principal {\n    let owner : Principal = msg.caller;\n    Cycles.add(1_200_000_000_000);\n    let newNFT = await NFTActorClass.NFT(name, owner, imgData);\n    let newNFTPrincipal = await newNFT.getCanisterId();\n    return newNFTPrincipal;\n  };\n};"
+    },
+    {
+      "caption": "nft.mo: actor class with self-reference for getCanisterId (reference repo, trimmed)",
+      "language": "motoko",
+      "code": "import Principal \"mo:base/Principal\";\n\npersistent actor class NFT(name : Text, owner : Principal, content : [Nat8]) = this {\n  let itemName = name;\n  let nftOwner = owner;\n  let imageBytes = content;\n\n  public query func getName() : async Text { return itemName; };\n  public query func getOwner() : async Principal { return nftOwner; };\n  public query func getAsset() : async [Nat8] { return imageBytes; };\n\n  // \"= this\" binds the class instance so it can report its own canister id\n  public query func getCanisterId() : async Principal {\n    return Principal.fromActor(this);\n  };\n};"
+    },
+    {
+      "caption": "Minter.jsx: form handling, byte conversion, mint call, loader and result view (reference repo, markup trimmed)",
+      "language": "jsx",
+      "code": "import React, { useState } from \"react\";\nimport { useForm } from \"react-hook-form\";\nimport { OPEND_backend } from \"../../../declarations/OPEND_backend\";\nimport Item from \"./Item\";\n\nfunction Minter() {\n  const { register, handleSubmit } = useForm();\n  const [nftPrincipal, setNFTPrincipal] = useState(\"\");\n  const [loaderHidden, setLoaderHidden] = useState(true);\n\n  async function onSubmit(data) {\n    setLoaderHidden(false);\n    const name = data.name;\n    const image = data.image[0];               // FileList -> first File\n    const imageArray = await image.arrayBuffer();\n    const imageByteData = [...new Uint8Array(imageArray)]; // plain number[] -> [Nat8]\n    const newNFTId = await OPEND_backend.mint(imageByteData, name);\n    setNFTPrincipal(newNFTId);\n    setLoaderHidden(true);\n  }\n\n  if (nftPrincipal == \"\") {\n    return (\n      <div className=\"minter-container\">\n        <div hidden={loaderHidden} className=\"lds-ellipsis\">\n          <div></div><div></div><div></div><div></div>\n        </div>\n        <h3>Create NFT</h3>\n        <form>\n          <input {...register(\"image\", { required: true })} className=\"upload\" type=\"file\" accept=\"image/x-png,image/jpeg,image/gif,image/svg+xml,image/webp\" />\n          <input {...register(\"name\", { required: true })} placeholder=\"e.g. CryptoDunks\" type=\"text\" />\n          <span onClick={handleSubmit(onSubmit)} className=\"form-Chip-label\">Mint NFT</span>\n        </form>\n      </div>\n    );\n  } else {\n    return (\n      <div className=\"minter-container\">\n        <h3>Minted!</h3>\n        <div className=\"horizontal-center\">\n          <Item id={nftPrincipal.toText()} />\n        </div>\n      </div>\n    );\n  }\n}\nexport default Minter;"
+    }
+  ],
+  "task": {
+    "name": "Enable minting from the Minter form",
+    "starting_point": "OpenD project from lesson 42.03: nft.mo actor class (name, owner, content), main.mo backend, Item component that renders an NFT by canister id, and a static Minter.jsx not yet used in App.jsx.",
+    "goal": "A user selects an image, types a name, clicks Mint NFT, sees a loader, and then sees the newly minted NFT (image, name, owner) rendered by Item.",
+    "steps": [
+      "In App.jsx, comment out the hard-coded Item and render <Minter /> between Header and Footer.",
+      "In Minter.jsx call useForm, destructure register and handleSubmit, and register the file input as \"image\" and the text input as \"name\", both with required: true.",
+      "Add onClick={handleSubmit(onSubmit)} to the Mint NFT span and define async function onSubmit(data); log data.name and data.image to confirm wiring (image is a FileList).",
+      "Take data.image[0], await arrayBuffer(), and spread new Uint8Array(buffer) into an array of byte numbers.",
+      "In nft.mo, bind the class with = this and add getCanisterId using Principal.fromActor(this).",
+      "In main.mo import Cycles, Principal and the NFT class; add public shared (msg) func mint(imgData : [Nat8], name : Text) : async Principal that sets owner to msg.caller, calls Cycles.add, awaits NFTActorClass.NFT(name, owner, imgData), then returns await newNFT.getCanisterId().",
+      "Import the backend actor in Minter.jsx and call await mint(imageByteData, name) inside onSubmit; store the result via setNFTPrincipal.",
+      "Add the if/else render: form when nftPrincipal is an empty string, otherwise the 'Minted!' block with <Item id={nftPrincipal.toText()} />.",
+      "Paste the loader markup above the h3, bind hidden to loaderHidden state (initially true), set false on submit and true when mint finishes.",
+      "Redeploy with the README command and test with a CryptoDunk image."
+    ],
+    "expected_result": "After clicking Mint NFT the spinner appears; when mint returns, the form is replaced by a 'Minted!' heading and a card showing the uploaded image, its name and the owner principal. The replica log shows the main canister's cycle balance dropping after creation.",
+    "solution_code": {
+      "language": "jsx",
+      "code": "import React, { useState } from \"react\";\nimport { useForm } from \"react-hook-form\";\nimport { OPEND_backend } from \"../../../declarations/OPEND_backend\";\nimport Item from \"./Item\";\n\nfunction Minter() {\n  const { register, handleSubmit } = useForm();\n  const [nftPrincipal, setNFTPrincipal] = useState(\"\");\n  const [loaderHidden, setLoaderHidden] = useState(true);\n\n  async function onSubmit(data) {\n    setLoaderHidden(false);\n    const name = data.name;\n    const image = data.image[0];               // FileList -> first File\n    const imageArray = await image.arrayBuffer();\n    const imageByteData = [...new Uint8Array(imageArray)]; // plain number[] -> [Nat8]\n    const newNFTId = await OPEND_backend.mint(imageByteData, name);\n    setNFTPrincipal(newNFTId);\n    setLoaderHidden(true);\n  }\n\n  if (nftPrincipal == \"\") {\n    return (\n      <div className=\"minter-container\">\n        <div hidden={loaderHidden} className=\"lds-ellipsis\">\n          <div></div><div></div><div></div><div></div>\n        </div>\n        <h3>Create NFT</h3>\n        <form>\n          <input {...register(\"image\", { required: true })} className=\"upload\" type=\"file\" accept=\"image/x-png,image/jpeg,image/gif,image/svg+xml,image/webp\" />\n          <input {...register(\"name\", { required: true })} placeholder=\"e.g. CryptoDunks\" type=\"text\" />\n          <span onClick={handleSubmit(onSubmit)} className=\"form-Chip-label\">Mint NFT</span>\n        </form>\n      </div>\n    );\n  } else {\n    return (\n      <div className=\"minter-container\">\n        <h3>Minted!</h3>\n        <div className=\"horizontal-center\">\n          <Item id={nftPrincipal.toText()} />\n        </div>\n      </div>\n    );\n  }\n}\nexport default Minter;"
+    },
+    "reference_repo_path": "Section 42 - Minting NFTs and Building an NFT Marketplace like OpenSea/42.04 Enabling the Minting Functionality on the Frontend/OPEND/src (OPEND_backend/main.mo, NFT/nft.mo, OPEND_frontend/src/components/Minter.jsx)"
+  },
+  "pitfalls": [
+    "Using [Nat] instead of [Nat8] for the image data in mint makes it incompatible with the NFT class.",
+    "Passing the Principal object to Item instead of a text string; use toText() so Principal.fromText in Item works.",
+    "Forgetting the return in one branch of the if/else gives the React error that nothing was returned from render; both branches need a return.",
+    "Not awaiting arrayBuffer() or the canister constructor.",
+    "Leaving out Cycles.add works locally but fails on the live network.",
+    "Uploading the raw File or FileList instead of its bytes; metadata is not wanted on-chain.",
+    "(Extra) The reference Minter.jsx imports unused { set } from react-hook-form and Principal; these can be dropped."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (section 42 has no data file)",
+    "gaps_and_ideas": [
+      "Proposed lesson: 'Reading a file into bytes in the browser'. Blurb: turn a user-chosen image into a number array and preview it.",
+      "Tasks: (1) add a file input and log input.files[0]; (2) call await file.arrayBuffer() and log byteLength; (3) spread new Uint8Array(buffer) into an array and show the first 16 bytes; (4) rebuild the image with new Blob([new Uint8Array(bytes)]) and URL.createObjectURL into an img; (5) add a hidden spinner toggled around the async work.",
+      "Starter code: HTML with file input, button, img and a div with the hidden attribute.",
+      "Interactive demo: a byte viewer that shows file size, first bytes in hex, and the reconstructed image, plus a fake 'mint' that waits 2 seconds with a spinner and then reveals a 'Minted!' card."
+    ]
+  }
+}

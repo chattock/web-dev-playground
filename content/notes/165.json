@@ -1,0 +1,64 @@
+{
+  "index": 165,
+  "lecture_id": 12407832,
+  "title": "Step 2 - Create A New Pattern",
+  "section": "20. Boss Level Challenge 2 - The Simon Game",
+  "duration_min": 1,
+  "kind": "article-task",
+  "summary": "Generate a random colour and append it to the game's pattern array.",
+  "concepts": [
+    {
+      "heading": "Data structures",
+      "points": [
+        "buttonColours is a global array holding red, blue, green, yellow in a fixed order; index 0-3 maps to a colour.",
+        "gamePattern is a global empty array that grows by one colour per level."
+      ]
+    },
+    {
+      "heading": "Random number",
+      "points": [
+        "Math.random() returns a float in [0,1) and never 1. Multiply by 4 and wrap in Math.floor() to get an integer 0-3.",
+        "Use the console to sanity check the range."
+      ]
+    },
+    {
+      "heading": "Picking and storing",
+      "points": [
+        "randomChosenColour = buttonColours[randomNumber].",
+        "gamePattern.push(randomChosenColour) adds it to the end."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "nextSequence so far",
+      "language": "javascript",
+      "code": "var buttonColours = [\"red\", \"blue\", \"green\", \"yellow\"];\nvar gamePattern = [];\n\nfunction nextSequence() {\n  var randomNumber = Math.floor(Math.random() * 4);\n  var randomChosenColour = buttonColours[randomNumber];\n  gamePattern.push(randomChosenColour);\n}"
+    }
+  ],
+  "task": {
+    "name": "Create the next pattern entry",
+    "starting_point": "game.js linked with jQuery",
+    "goal": "nextSequence() appends a random colour to gamePattern",
+    "steps": [
+      "Create function nextSequence()",
+      "Inside, make randomNumber 0-3 (Math.floor(Math.random()*4))",
+      "At the top create buttonColours array in order red, blue, green, yellow",
+      "Make randomChosenColour from the array using randomNumber",
+      "At the top create empty gamePattern",
+      "push randomChosenColour onto gamePattern"
+    ],
+    "expected_result": "Calling nextSequence() in the console grows gamePattern by one random colour each call.",
+    "solution_code": null,
+    "reference_repo_path": "Section 20 - Boss Level Challenge 2 - The Simon Game/script.js"
+  },
+  "pitfalls": [
+    "Math.random()*3 gives only 0-2 after flooring; multiply by 4.",
+    "Declare the arrays outside the function or they reset each call."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (web-dev-playground has no files for sections 19-20)",
+    "gaps_and_ideas": []
+  }
+}

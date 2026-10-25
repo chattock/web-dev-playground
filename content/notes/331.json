@@ -1,0 +1,107 @@
+{
+  "index": 331,
+  "lecture_id": 31673312,
+  "title": "Motoko Functions and the Candid User Interface",
+  "section": "38. Build Your First Defi (Decentralised Finance) DApp - DBANK",
+  "duration_min": 16,
+  "kind": "concept+exercise",
+  "summary": "Adds functions to the DBank actor: private then public, with a typed Nat parameter. Shows calling canister methods through dfx canister call and through the generated Candid UI, and ends with a challenge to write a withdraw function.",
+  "concepts": [
+    {
+      "heading": "Defining functions with func",
+      "points": [
+        "Functions use the `func` keyword (Swift-like), then a name, parameter list in parentheses and a body in braces. First version: topUp with no parameters that adds 1 to currentValue.",
+        "Finish the function with a print of the new value (Debug.print with debug_show).",
+        "The closing brace of a function declaration needs a semicolon after it; leaving it out causes errors. Motoko expects a semicolon after every declaration.",
+        "Calling it inside the actor body (`topUp();`) runs it at deploy time, so the printed value is one higher (101 in the demo)."
+      ]
+    },
+    {
+      "heading": "Private vs public functions",
+      "points": [
+        "A plain func is private: it can only be used inside the actor's braces.",
+        "Trying `dfx canister call dbank topUp` against a private function errors with a message saying the canister has no update method with that name.",
+        "Add `public` before func to expose it to the outside world (command line, other canisters, a frontend). Redeploy with dfx deploy after editing."
+      ]
+    },
+    {
+      "heading": "Calling canister methods from the CLI",
+      "points": [
+        "Syntax: `dfx canister call <canister-name> <function-name> [argument]`. The canister name comes from dfx.json / the project (lowercase dbank in the lecture).",
+        "Arguments go in parentheses, in Candid syntax, e.g. `(12)`; with no inputs nothing is needed."
+      ]
+    },
+    {
+      "heading": "Candid UI",
+      "points": [
+        "Candid is an interface description language: it describes a canister's public methods and types, independent of the language it was written in (Motoko, Rust). Candid UI reads that description and builds a clickable test page, comparable to the try-it-out section of interactive API docs.",
+        "Setup: get the Candid UI canister ID with `dfx canister id __Candid_UI` (two leading underscores). Open the local replica address with `?canisterId=<that id>` in the query string.",
+        "The page then asks for the ID of your own canister: get it with `dfx canister id dbank` and paste it in. A .did file is not needed, so ignore that prompt. Press Go.",
+        "The UI lists each public function with a Call button and input fields. Results/prints still appear in the terminal running dfx start.",
+        "After changing the code and redeploying, refresh the Candid UI page to see new or changed functions."
+      ]
+    },
+    {
+      "heading": "Parameters and the Nat type",
+      "points": [
+        "Add a parameter inside the parentheses as `name : Type`. Here `amount : Nat`.",
+        "Nat is a natural number: zero and above, no negatives or decimals. Candid UI shows a numeric field and states that it expects a natural number.",
+        "Replace the fixed +1 with `currentValue += amount;`. `+=` and `-=` are compound-assign operators like JavaScript."
+      ]
+    },
+    {
+      "heading": "State resets on redeploy",
+      "points": [
+        "After redeploying, the balance went back to its initial value (100), so a top-up of 12 gave 112 rather than 103+12. Each dfx deploy re-initialised the variables in this version.",
+        "The lecture defers the explanation to the orthogonal persistence lesson."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "topUp and withdraw as public functions with a Nat parameter",
+      "language": "motoko",
+      "code": "persistent actor DBank {\n  var currentValue = 300;\n  currentValue := 100;\n\n  public func topUP(amount : Nat) {\n    currentValue += amount;\n    Debug.print(debug_show (currentValue));\n  };\n\n  public func withdraw(amount : Nat) {\n    currentValue -= amount;\n    Debug.print(debug_show (currentValue));\n  };\n};"
+    },
+    {
+      "caption": "CLI and Candid UI helper commands",
+      "language": "bash",
+      "code": "dfx deploy\ndfx canister call dbank topUP '(12)'\ndfx canister id __Candid_UI\ndfx canister id dbank\n# open: http://localhost:8000/?canisterId=<candid_ui_id>"
+    }
+  ],
+  "task": {
+    "name": "Write a withdraw function",
+    "starting_point": "The DBank actor with a public topUp(amount : Nat) function and Candid UI working.",
+    "goal": "Add a public function that subtracts a given amount from currentValue and prints the result.",
+    "steps": [
+      "Declare `public func withdraw(amount : Nat)` (a public function so Candid UI and the CLI can reach it).",
+      "Inside, use `currentValue -= amount;`.",
+      "Print the new value with Debug.print(debug_show(currentValue)); end the function with a semicolon.",
+      "Run dfx deploy, refresh Candid UI, call the function with an amount such as 10 and check the terminal shows the lower balance."
+    ],
+    "expected_result": "Withdrawing 10 from 100 prints 90. Withdrawing more than the balance traps with a natural-subtraction underflow error, which the next lesson fixes with conditionals.",
+    "solution_code": {
+      "language": "motoko",
+      "code": "public func withdraw(amount : Nat) {\n  currentValue -= amount;\n  Debug.print(debug_show (currentValue));\n};"
+    },
+    "reference_repo_path": "Section 38 - Build Your First Defi (Decentralised Finance) DApp - DBANK/38.03 Motoko Functions and the Candid User Interface/DBANK/src/DBANK/main.mo"
+  },
+  "pitfalls": [
+    "Forgetting the semicolon after a function's closing brace.",
+    "Calling a function that is not public: the CLI says there is no such update method.",
+    "Forgetting to redeploy and refresh Candid UI after edits.",
+    "Mixing up the Candid UI canister id and your own canister id.",
+    "Assuming the balance survives a redeploy (it does not yet).",
+    "Withdrawing more than the balance: Nat underflow error.",
+    "(Extra) The reference repo spells the function topUP, so CLI calls must use that exact casing."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (no section 38 file).",
+    "gaps_and_ideas": [
+      "New lesson 'Motoko functions and Candid UI': explain func, public, parameters and Nat.",
+      "Tasks: (1) write topUp with a Nat input; (2) make it public and explain why the CLI call fails otherwise; (3) write withdraw; (4) predict the output of withdraw(500) on a balance of 100; (5) list the commands needed to open Candid UI.",
+      "Interactive demo idea: a simulated Candid UI with buttons for the user's functions, a mock terminal log and a toggle between public and private that changes whether the function appears."
+    ]
+  }
+}

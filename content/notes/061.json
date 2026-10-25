@@ -1,0 +1,116 @@
+{
+  "index": 61,
+  "lecture_id": 37368474,
+  "title": "Grid Sizing",
+  "section": "10. Grid",
+  "duration_min": 24,
+  "kind": "concept+exercise",
+  "summary": "Covers every way to size grid tracks: fixed units, auto, fr, minmax(), repeat(), the grid-template shorthand, and implicit tracks via grid-auto-rows/columns. Also shows Chrome DevTools' grid overlay and finishes with an exercise that reproduces a responsive grid.",
+  "concepts": [
+    {
+      "heading": "Fixed-size tracks",
+      "points": [
+        "grid-template-rows: 100px 200px and grid-template-columns: 400px 800px create exactly those track sizes. With four items you get a 2x2 grid.",
+        "Fixed tracks are not responsive: resizing the window does not change them.",
+        "rem also counts as fixed for this purpose. It scales with the root font size but not with the viewport.",
+        "grid-template is a shorthand: rows first, a slash, then columns, e.g. grid-template: 100px 200px / 400px 800px. It is compact but hides intent, so prefer the explicit longhands while learning; you will still meet it in other people's code."
+      ]
+    },
+    {
+      "heading": "auto tracks",
+      "points": [
+        "A column set to auto stretches to use the remaining horizontal space of the container (the grid fills 100% of the available width). With 200px auto, the second column grows and shrinks with the window.",
+        "A row set to auto behaves differently: it only becomes as tall as its content and does not follow the viewport height.",
+        "So auto on columns = fill available space; auto on rows = fit content."
+      ]
+    },
+    {
+      "heading": "Fractional units (fr)",
+      "points": [
+        "fr tracks share the available space in ratio, e.g. 1fr 2fr gives the second track double the first. Decimals and other ratios such as 2.5fr or 3fr 5fr are fine.",
+        "Columns use the available width; rows follow content height. If you add more content to one cell, its fr row grows and the others adjust to keep the ratio.",
+        "(Extra) Before fr ratios are applied, fixed-size tracks are subtracted from the container's free space."
+      ]
+    },
+    {
+      "heading": "minmax()",
+      "points": [
+        "minmax(min, max) lets a track flex within limits. For example a column of minmax(400px, 800px) shrinks as far as 400px and grows up to 800px, then stops. Useful to stop images or text blocks from becoming too narrow or too wide.",
+        "(Extra) The repo demo uses minmax(400px, 5fr), mixing a length and an fr value, which is also valid."
+      ]
+    },
+    {
+      "heading": "repeat()",
+      "points": [
+        "repeat(count, size) removes repetition: repeat(8, 1fr) replaces eight copies of 1fr, and repeat(2, 200px) replaces 200px 200px.",
+        "It produces the same layout as listing each track by hand."
+      ]
+    },
+    {
+      "heading": "Explicit versus implicit tracks",
+      "points": [
+        "Items fill cells left to right, then continue on the next row, starting at the top-left.",
+        "A template larger than the number of items just leaves empty cells at the end (a 2x3 grid with four items leaves two cells empty).",
+        "If there are more items than the template provides, extra items go into automatically created tracks. New rows are as tall as their content; they reuse the existing column widths.",
+        "grid-auto-rows and grid-auto-columns set the size of these automatically created tracks, e.g. grid-auto-rows: 300px. Handy when items are added dynamically."
+      ]
+    },
+    {
+      "heading": "Chrome DevTools grid overlay",
+      "points": [
+        "Open DevTools (right-click, Inspect, or the three-dot menu, More tools). Elements with display: grid show a 'grid' badge in the Elements panel; clicking it toggles an overlay.",
+        "The Layout tab lets you change the overlay colour and toggle line numbers, track sizes and extended lines.",
+        "Overlay track-size labels show the real size of each column and row, which helps to debug sizing."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Fixed, auto, fr and minmax tracks side by side",
+      "language": "css",
+      "code": "/* fixed */\n.a { display: grid; grid-template-rows: 100px 200px; grid-template-columns: 400px 800px; }\n/* shorthand: rows / columns */\n.b { display: grid; grid-template: 100px 200px / 400px 800px; }\n/* auto: column fills, row fits content */\n.c { display: grid; grid-template-rows: 100px auto; grid-template-columns: 200px auto; }\n/* fractions */\n.d { display: grid; grid-template-rows: 1fr 2fr; grid-template-columns: 1fr 2fr; }\n/* limits */\n.e { display: grid; grid-template-columns: 200px minmax(400px, 800px); }"
+    },
+    {
+      "caption": "repeat() and implicit rows (from the reference repo)",
+      "language": "css",
+      "code": ".grid-container {\n  display: grid;\n  grid-template-rows: repeat(2, 200px);\n  grid-template-columns: repeat(2, 200px);\n  grid-auto-rows: 300px; /* the 5th item gets a new 300px row */\n}"
+    }
+  ],
+  "task": {
+    "name": "Grid Sizing test: match the green grid",
+    "starting_point": "The 'Test' page of the course's grid-sizing demo site: a CSS text box with 'Apply CSS', a green target grid (.parent) and a purple grid you control. Size hints are written in the cells. Only CSS for the grid container may be written.",
+    "goal": "Make the purple grid look and resize like the green one.",
+    "steps": [
+      "Set display: grid on the container.",
+      "Rows: the first two are equal and the third is twice as tall, so grid-template-rows: 1fr 1fr 2fr.",
+      "Columns: first expands to fill space (auto), second is fixed (400px), third has limits (minmax(200px, 500px)).",
+      "The extra last row is 50px high; set grid-auto-rows: 50px rather than adding a fourth explicit row.",
+      "Click Apply CSS, then resize the window to check the responsive behaviour matches. If nothing works, check spelling, e.g. the 's' in grid-template-rows and -columns."
+    ],
+    "expected_result": "Same layout as the green grid at any width: first column flexes, second stays 400px, third flexes between 200 and 500px; the fourth row stays 50px.",
+    "solution_code": {
+      "language": "css",
+      "code": ".parent {\n  display: grid;\n  grid-template-rows: 1fr 1fr 2fr;\n  grid-template-columns: auto 400px minmax(200px, 500px);\n  grid-auto-rows: 50px;\n}"
+    },
+    "reference_repo_path": "Section 10 - Grid/10.02 - Grid Sizing/test.html"
+  },
+  "pitfalls": [
+    "Typos such as grid-template-row (missing s); the property is silently ignored.",
+    "Expecting auto rows to fill the viewport height; they only fit content.",
+    "Assuming rem-sized tracks respond to viewport size.",
+    "Defining too few explicit tracks and being surprised by content-sized implicit rows; set grid-auto-rows.",
+    "(Extra) The repo's footers ('Made with ...') are not part of the lesson."
+  ],
+  "playground": {
+    "match": "s10-grid-sizing (lesson 10.2, data/s10.js)",
+    "coverage": "Blurb lists fixed, fr, auto and minmax tracks. Tasks cover 2x2 with a 1:2 ratio, repeat(2, 200px) plus grid-auto-rows: 300px with a fifth item, and 200px minmax(400px, 5fr) with a draggable preview width.",
+    "gaps_and_ideas": [
+      "Add the grid-template shorthand (rows / columns) with a note on why the longhand is clearer.",
+      "Explain auto on columns versus rows explicitly, with a live demo showing rows not following the window height.",
+      "Add the DevTools grid overlay walk-through (badge, Layout tab, line numbers) as a task.",
+      "Add the match-the-green-grid exercise (1fr 1fr 2fr / auto 400px minmax(200px, 500px) / grid-auto-rows 50px) with a target grid and Apply CSS box.",
+      "Explore-demo idea: item-count slider plus column/row count inputs to show empty cells and implicit rows, with grid-auto-rows toggle.",
+      "Add spelling pitfall note (grid-template-rows needs the final s)."
+    ]
+  }
+}

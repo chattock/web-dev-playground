@@ -1,0 +1,113 @@
+{
+  "index": 254,
+  "lecture_id": 40494186,
+  "title": "Query data using SELECT, WHERE, and LIKE",
+  "section": "33. PostgreSQL",
+  "duration_min": 19,
+  "kind": "concept+exercise",
+  "summary": "Builds a world_food table in pgAdmin from a CSV, then works through progressively more selective SELECT queries: all rows, one column, several columns, WHERE with comparison operators, and pattern matching with LIKE, % and the || concatenation operator.",
+  "concepts": [
+    {
+      "heading": "Setting up the practice data",
+      "points": [
+        "Dataset: world-food.csv, nine countries with rice and wheat production for 2021 in million metric tons. It lives in the existing database called world.",
+        "Table spec: id (SERIAL, PRIMARY KEY), country (VARCHAR(45)), rice_production (FLOAT), wheat_production (FLOAT). FLOAT is the new type here; it stores numbers with decimals.",
+        "Write the CREATE TABLE in the pgAdmin Query tool. Columns sit inside parentheses, separated by commas, with no comma after the last column, and the statement ends with a semicolon.",
+        "After running it, refresh the Tables node to see world_food. Viewing all rows at this point shows an empty grid.",
+        "Import: right-click the table, choose Import/Export Data, pick the CSV, keep Import (not Export) selected, and switch on Header in Options.",
+        "The CSV has no id column, so remove id from the 'Columns to import' list. SERIAL then generates ids 1 to 9 automatically."
+      ]
+    },
+    {
+      "heading": "SELECT: choosing columns",
+      "points": [
+        "SELECT * FROM table returns every row and every column. The asterisk means 'all columns'.",
+        "SELECT column FROM table isolates one column, e.g. one phone-number column from a customers table.",
+        "SELECT col1, col2 FROM table returns several columns; separate the names with commas, no trailing comma before FROM.",
+        "The general shape so far: SELECT (what columns) FROM (which table)."
+      ]
+    },
+    {
+      "heading": "WHERE: filtering rows",
+      "points": [
+        "WHERE goes after the FROM clause and keeps only the rows whose condition is true.",
+        "Equality uses a single = sign (unlike JavaScript's == or ===). String values need single quotes in SQL: WHERE country = 'United States'.",
+        "The column you filter on does not have to be the column you select, so one query can look up one cell of data (e.g. a user's credit balance by username).",
+        "Comparison operators work as in other languages: <, >, <=, >=, plus = for equality.",
+        "Exercise results: US rice production is 8.7; countries with wheat_production > 20 give a reduced list."
+      ]
+    },
+    {
+      "heading": "LIKE: fuzzy matching",
+      "points": [
+        "= only matches an exact value, so 'United States' would miss a stored 'United States of America'. LIKE matches against a pattern instead.",
+        "% is the wildcard standing for any run of characters (including none).",
+        "|| is the string concatenation operator in Postgres, not a logical OR as in many languages. 'U' || '%' builds the pattern 'U%'.",
+        "'U%' matches values that start with U (Ukraine, United States). '%a' matches values ending in a (Australia, China, Ethiopia, India).",
+        "Writing the pattern as a literal ('U%') works the same. The || form matters later when the value is a variable or expression coming from backend code and must be joined to the wildcard.",
+        "Pattern matching is easy to get too broad: 'United%' would also match United Kingdom."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Create the table",
+      "language": "sql",
+      "code": "CREATE TABLE world_food (\n  id SERIAL PRIMARY KEY,\n  country VARCHAR(45),\n  rice_production FLOAT,\n  wheat_production FLOAT\n);"
+    },
+    {
+      "caption": "SELECT variations",
+      "language": "sql",
+      "code": "SELECT * FROM world_food;\nSELECT country FROM world_food;\nSELECT country, wheat_production FROM world_food;"
+    },
+    {
+      "caption": "WHERE with equality and comparison",
+      "language": "sql",
+      "code": "SELECT rice_production FROM world_food WHERE country = 'United States';\nSELECT country FROM world_food WHERE wheat_production > 20;"
+    },
+    {
+      "caption": "LIKE with wildcard and concatenation",
+      "language": "sql",
+      "code": "SELECT * FROM world_food WHERE country LIKE 'U' || '%';\nSELECT * FROM world_food WHERE country LIKE '%' || 'a';\n-- equivalent literals: 'U%' and '%a'"
+    }
+  ],
+  "task": {
+    "name": "World food queries",
+    "starting_point": "world-food.csv from the lesson resources and the existing world database in pgAdmin.",
+    "goal": "Create and fill world_food, then write each query listed in the steps.",
+    "steps": [
+      "Create world_food with id SERIAL PRIMARY KEY, country VARCHAR(45), rice_production FLOAT, wheat_production FLOAT.",
+      "Import the CSV with Header on and the id column excluded; confirm nine rows.",
+      "Select all rows and columns.",
+      "Select only the country column.",
+      "Select country and wheat_production.",
+      "Get the rice production of the United States (single value, 8.7).",
+      "List countries whose wheat production is greater than 20.",
+      "List countries starting with U (Ukraine, United States) using LIKE and ||.",
+      "List countries ending in a (Australia, China, Ethiopia, India)."
+    ],
+    "expected_result": "Each query returns the reduced result grid described above.",
+    "solution_code": {
+      "language": "sql",
+      "code": "SELECT rice_production FROM world_food WHERE country = 'United States';\nSELECT country FROM world_food WHERE wheat_production > 20;\nSELECT * FROM world_food WHERE country LIKE 'U' || '%';\nSELECT * FROM world_food WHERE country LIKE '%' || 'a';"
+    },
+    "reference_repo_path": "Section 33 - PostgreSQL/33.07 - Query data using SELECT, WHERE, and LIKE/README.md"
+  },
+  "pitfalls": [
+    "Leaving id in the import column list when the CSV has no id values.",
+    "Trailing comma after the last column in CREATE TABLE.",
+    "Using double quotes around string values (Postgres treats them as identifiers); use single quotes.",
+    "Reading || as OR; it concatenates strings.",
+    "Using = when only part of the value is known."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "New lesson 'Querying with SELECT, WHERE and LIKE': blurb on reading and filtering rows.",
+      "Tasks: select all, select columns, WHERE with a comparison, LIKE starts-with, LIKE ends-with.",
+      "Starter idea: an in-browser sample table of nine countries (e.g. via sql.js or a JS array) with a query box.",
+      "Interactive demo idea: type a LIKE pattern and highlight which rows match, showing how % behaves at the start, end or both sides."
+    ]
+  }
+}

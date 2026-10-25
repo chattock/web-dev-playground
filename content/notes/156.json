@@ -1,0 +1,85 @@
+{
+  "index": 156,
+  "lecture_id": 12384224,
+  "title": "Adding Event Listeners with jQuery",
+  "section": "19. jQuery",
+  "duration_min": 8,
+  "kind": "concept+exercise",
+  "summary": "Shows how jQuery attaches event listeners with shortcut methods (.click, .keypress) and the general .on() method, and how a single selection applies the handler to every matched element without a loop. Includes a small challenge: show the pressed key inside the h1.",
+  "concepts": [
+    {
+      "heading": "Click listeners with .click()",
+      "points": [
+        "$(\"h1\").click(function () { ... }) registers a click listener on the h1; the function is the callback that runs on each click.",
+        "Inside the callback another jQuery call changes something, for example $(\"h1\").css(\"color\", \"purple\").",
+        "Comparison with vanilla JS: to listen on all five buttons you need querySelectorAll, an index loop, addEventListener(\"click\", ...) and querySelector inside the callback, setting .style.color. Watch for typos; the editor's syntax colouring can hint that a function name is unknown.",
+        "With jQuery, $(\"button\").click(function () { ... }) is enough, because the selection already contains every button and jQuery attaches the listener to each. No for loop."
+      ]
+    },
+    {
+      "heading": "Keyboard events with .keypress()",
+      "points": [
+        "Add an input element to the HTML, then $(\"input\").keypress(function (event) { console.log(event.key); }) logs the key pressed while typing in the box. The callback receives the event object; event.key holds the character or name, such as k or Enter.",
+        "To listen across the whole page instead of one input, select the body, or pass the document object itself, with no quotes: $(document).keypress(...). Click into the page first so it receives focus.",
+        "(Extra) keypress is deprecated in browsers; keydown (also available as $(document).keydown(...), which the reference repo uses) is the modern choice and also fires for non-character keys."
+      ]
+    },
+    {
+      "heading": "Challenge: show the pressed key in the h1",
+      "points": [
+        "Goal: when any key is pressed anywhere on the page, the h1 text becomes that key.",
+        "Solution: in the document-level key handler replace console.log with $(\"h1\").text(event.key). It reuses the .text() method from the earlier lecture."
+      ]
+    },
+    {
+      "heading": "The general .on() method",
+      "points": [
+        "$(selector).on(eventName, callback) takes the event type as a string and the handler as a second argument.",
+        "Any DOM event from the MDN event list works: \"mouseover\", \"click\", \"keydown\", and so on.",
+        "Example: $(\"h1\").on(\"mouseover\", function () { $(\"h1\").css(\"color\", \"purple\"); }) changes colour when the pointer enters the heading.",
+        "It is more flexible than the shorthand methods since a single method covers every event type."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Vanilla JS vs jQuery for button clicks",
+      "language": "javascript",
+      "code": "// vanilla: loop required\nfor (var i = 0; i < document.querySelectorAll(\"button\").length; i++) {\n  document.querySelectorAll(\"button\")[i].addEventListener(\"click\", function () {\n    document.querySelector(\"h1\").style.color = \"purple\";\n  });\n}\n\n// jQuery: no loop\n$(\"button\").click(function () {\n  $(\"h1\").css(\"color\", \"purple\");\n});"
+    },
+    {
+      "caption": "Key presses and .on() (reference repo uses keydown and red/blue)",
+      "language": "javascript",
+      "code": "document.addEventListener(\"keydown\", function (event) {\n  console.log(event.code);\n});\n\n// challenge solution: show the key in the h1\n$(document).keydown(function (event) {\n  $(\"h1\").text(event.key);\n});\n\n$(\"h1\").on(\"mouseover\", function () {\n  $(\"h1\").css(\"color\", \"blue\");\n});"
+    }
+  ],
+  "task": {
+    "name": "Show the pressed key in the h1",
+    "starting_point": "A page with an h1, five buttons, an input, jQuery loaded before the script, and a keypress listener that logs event.key.",
+    "goal": "Whenever a key is pressed anywhere on the page, display it in the h1.",
+    "steps": [
+      "Attach the key listener to the document, not just the input.",
+      "In the callback, select the h1.",
+      "Call .text() on it with event.key as the argument.",
+      "Reload, type, and see the heading change with every key."
+    ],
+    "expected_result": "The h1 always shows the last key pressed.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "$(document).keypress(function (event) {\n  $(\"h1\").text(event.key);\n});"
+    },
+    "reference_repo_path": "Section 19 - JQuery/19.06 - Adding Event Listeners with jQuery"
+  },
+  "pitfalls": [
+    "Do not wrap document in quotes: $(\"document\") would look for an element named document.",
+    "With .keypress on a specific input, only typing inside that input is detected.",
+    "The reference repo's button colours differ (red/blue/purple) from the lecture's purple; it also mixes in a vanilla loop for comparison, and contains an author footer to ignore."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "Lesson 'jQuery events'. Tasks: click on h1; click on all five buttons without a loop; log event.key from a document key listener; show the key in the h1; use .on(\"mouseover\"). Demo: an event log panel listing events fired through .on() for a chosen event name."
+    ]
+  }
+}

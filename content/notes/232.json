@@ -1,0 +1,29 @@
+{
+  "index": 232,
+  "lecture_id": 17967488,
+  "title": "Tip from Angela - Use Accountability in your Favour",
+  "section": "28. Application Programming Interfaces (APIs)",
+  "duration_min": 3,
+  "kind": "tip",
+  "summary": "A motivation tip: announce your learning goals to other people so social accountability helps you stick with them.",
+  "concepts": [
+    {
+      "heading": "Accountability tip",
+      "points": [
+        "Goals known only to you are easy to drop; telling others adds a social cost to quitting.",
+        "Make the intention concrete and public, for example a fixed daily time commitment over a set number of days, with regular progress check-ins.",
+        "Social platforms host an established community around this: the #100DaysOfCode and #codingnewbie hashtags, where learners log daily progress and encourage each other.",
+        "Benefits: a visible track record of what was done each day, plus encouragement from people going through the same thing.",
+        "Action: post your goal and begin logging progress using those hashtags."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [],
+  "playground": {
+    "match": null,
+    "coverage": "Not applicable (motivation tip).",
+    "gaps_and_ideas": []
+  }
+}

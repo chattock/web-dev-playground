@@ -1,0 +1,114 @@
+{
+  "index": 213,
+  "lecture_id": 38911810,
+  "title": "Band Generator Project",
+  "section": "25. EJS",
+  "duration_min": 12,
+  "kind": "project",
+  "summary": "Module project: a styled Band Name Generator built with Express and EJS. A POST route picks a random adjective and noun, passes them to the template, a conditional switches the heading, shared partials carry the CSS link and footer, and the footer shows the current year computed on the server.",
+  "concepts": [
+    {
+      "heading": "Project setup and target behaviour",
+      "points": [
+        "Download and unzip the starter, run npm i, then launch the finished version with nodemon solution.js to view the target at localhost:3000.",
+        "Target: the home page shows a default welcome h1 and a Generate Name button. Each click posts a form and the page comes back with a new 'adjective noun' heading. The page is styled and its footer shows a copyright with the current year.",
+        "The starter index.js lists four numbered steps with hints. The work is split across index.js, views/index.ejs and the two partials."
+      ]
+    },
+    {
+      "heading": "Step 1: render the home page",
+      "points": [
+        "app.get(\"/\") responds with res.render(\"index.ejs\"). Test after every step: the default h1 and the button should appear."
+      ]
+    },
+    {
+      "heading": "Step 2: random name generation and conditional heading",
+      "points": [
+        "The button lives inside a form with action=\"/submit\" and method=\"POST\", so clicking it sends a POST to /submit. body-parser (app.use(bodyParser.urlencoded({ extended: true }))) is already wired in; this form carries no fields, so it is not strictly needed here.",
+        "Random pick from an array: arr[Math.floor(Math.random() * arr.length)]. Math.random() returns a decimal in [0, 1), multiplying by the length scales it to the index range, Math.floor drops the decimals to a valid integer index.",
+        "Do this once for the adj array and once for the noun array (both are long word lists at the bottom of the file).",
+        "Send the result to the template with local data: res.render(\"index.ejs\", { adjective: randomAdj, noun: randomNoun }). The object's keys become variable names inside the EJS file.",
+        "In the template, print them with the escaped output tag: <%= adjective %> <%= noun %>, with a space between so the heading reads 'adjective noun'.",
+        "On first page load (GET) no data is passed, so referencing a bare adjective variable would throw a ReferenceError. Guard with a conditional using the scriptlet tag <% ... %>: if (locals.adjective && locals.noun) render the generated heading, else render the default heading.",
+        "locals is the object holding everything passed to render. Reading a property on it returns undefined instead of throwing, which makes it the safe way to test whether data was supplied.",
+        "Each line of JavaScript control flow needs its own EJS tag: <% if (...) { %>, <% } else { %>, <% } %>. HTML written between the tags is output only for the branch that runs.",
+        "(Extra) The reference repo's starter version of the file wraps the generator in a helper function and passes a single bandName key instead of two keys; the lecture's own version passes adjective and noun separately."
+      ]
+    },
+    {
+      "heading": "Step 3: make the styling show up",
+      "points": [
+        "CSS is a static file: place it at public/styles/main.css and register the folder with app.use(express.static(\"public\")).",
+        "The stylesheet link goes in the head of the header partial. Its href is written from the point of view of the public folder: styles/main.css (a leading slash, /styles/main.css, is the safer form).",
+        "Pages must actually use the partials: add <%- include(\"partials/header.ejs\") %> at the top of index.ejs and <%- include(\"partials/footer.ejs\") %> at the bottom. Include paths are relative to the views folder.",
+        "Verify styling appears on both the initial GET page and the page rendered after the POST."
+      ]
+    },
+    {
+      "heading": "Step 4: dynamic year in the footer",
+      "points": [
+        "Hard-coded years in a copyright line go stale. Replace the placeholder year in the footer partial with <%= new Date().getFullYear() %>.",
+        "new Date() builds a Date for now and getFullYear() returns its four-digit year as a number. The output tag <%= %> prints the value into the page, while a plain <% %> tag would run the code and print nothing.",
+        "Because the code runs on the server each time the template is rendered, no client-side script is required."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Server: routes, random pick, passing data to the template",
+      "language": "javascript",
+      "code": "import express from \"express\";\nimport bodyParser from \"body-parser\";\n\nconst app = express();\nconst port = 3000;\n\napp.use(express.static(\"public\"));\napp.use(bodyParser.urlencoded({ extended: true }));\n\napp.get(\"/\", (req, res) => {\n  res.render(\"index.ejs\");\n});\n\napp.post(\"/submit\", (req, res) => {\n  const randomAdj = adj[Math.floor(Math.random() * adj.length)];\n  const randomNoun = noun[Math.floor(Math.random() * noun.length)];\n  res.render(\"index.ejs\", {\n    adjective: randomAdj,\n    noun: randomNoun,\n  });\n});\n\napp.listen(port, () => {\n  console.log(`Listening on port ${port}`);\n});\n\nconst adj = [\"able\", \"adventurous\", \"boiling\" /* ... long list ... */];\nconst noun = [\"hamburger\", \"gerbil\", \"oak\" /* ... long list ... */];"
+    },
+    {
+      "caption": "views/index.ejs: partials, conditional heading, form",
+      "language": "html",
+      "code": "<%- include(\"partials/header.ejs\") %>\n\n<% if (locals.adjective && locals.noun) { %>\n  <h1><%= adjective %> <%= noun %></h1>\n<% } else { %>\n  <h1>Welcome to the Band Generator</h1>\n<% } %>\n\n<form action=\"/submit\" method=\"POST\">\n  <input type=\"submit\" value=\"Generate Name\">\n</form>\n\n<%- include(\"partials/footer.ejs\") %>"
+    },
+    {
+      "caption": "views/partials/header.ejs (opens html, head, body and main)",
+      "language": "html",
+      "code": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <link rel=\"stylesheet\" href=\"/styles/main.css\">\n  <title>Band Generator</title>\n</head>\n<body>\n  <main>"
+    },
+    {
+      "caption": "views/partials/footer.ejs (closes main, body and html)",
+      "language": "html",
+      "code": "  </main>\n  <footer>\n    <p>Copyright &copy; <%= new Date().getFullYear() %></p>\n  </footer>\n</body>\n</html>"
+    }
+  ],
+  "task": {
+    "name": "Band Name Generator",
+    "starting_point": "Zip containing index.js (routes missing, four commented steps with hints, adjective and noun arrays at the bottom), views/index.ejs and partials header.ejs/footer.ejs with comments marking where code goes, public/styles/main.css, and a finished solution.js with solution.ejs.",
+    "goal": "A fully functional, styled generator: default heading on first visit, a random 'adjective noun' heading after each button click, and a footer with the current year.",
+    "steps": [
+      "Step 1: add the GET / route that renders index.ejs.",
+      "Step 2: in the POST /submit route pick a random adjective and noun from the arrays, then render index.ejs with those values. In index.ejs show them in the h1 when present and show the default h1 otherwise.",
+      "Step 3: serve the public folder with express.static, link styles/main.css inside the header partial, and include the header and footer partials in index.ejs.",
+      "Step 4: replace the placeholder year in the footer partial with a server-computed current year using new Date().getFullYear().",
+      "Test each step in the browser at localhost:3000 before moving to the next."
+    ],
+    "expected_result": "Visiting / shows the styled welcome heading and button. Clicking Generate Name shows a new random band name each time. The footer reads Copyright followed by the current year.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "app.get(\"/\", (req, res) => {\n  res.render(\"solution.ejs\");\n});\n\napp.post(\"/submit\", (req, res) => {\n  const randomAdj = adj[Math.floor(Math.random() * adj.length)];\n  const randomNoun = noun[Math.floor(Math.random() * noun.length)];\n  res.render(\"solution.ejs\", {\n    adjective: randomAdj,\n    noun: randomNoun,\n  });\n});"
+    },
+    "reference_repo_path": "Section 25 - EJS/25.05 - Band Generator Project/solution.js (views/solution.ejs, views/partials/solution-header.ejs and solution-footer.ejs)"
+  },
+  "pitfalls": [
+    "Accessing adjective or noun without the locals guard, which throws a ReferenceError on the initial GET.",
+    "Using <% %> where <%= %> is needed (nothing printed) or <%= %> for include (HTML escaped).",
+    "Forgetting the stylesheet link in the header partial, or not including the partials in index.ejs, so no styling shows.",
+    "Index maths: Math.floor(Math.random() * arr.length) must use the array length; using length - 1 would exclude the last item.",
+    "(Extra) The starter repo's index.js lists duplicate words in the arrays, and the student's footer partial carries a personal credit line that should be dropped when reusing it.",
+    "(Extra) Rendering directly from a POST means a browser refresh asks to resubmit the form; a redirect pattern avoids that but then needs another way to carry the data."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "New lesson 'Band Name Generator (EJS project)': blurb on combining POST route, local data, conditional rendering and partials.",
+      "Tasks: (1) render the home page, (2) write a pickRandom(arr) helper and use it in POST /submit, (3) pass adjective and noun to render and show them with <%= %>, (4) wrap the heading in locals-based if/else, (5) add a footer partial with new Date().getFullYear().",
+      "Starter code idea: index.js with the two arrays and empty routes, index.ejs with a form and the default h1.",
+      "Interactive demo idea: a mock browser with a Generate button that animates the request: shows the POST, the data object passed to render, and which branch of the if/else was taken, with a toggle that removes the locals guard to display the resulting error."
+    ]
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "index": 172,
+  "lecture_id": 12664298,
+  "title": "Step 5 - Answer",
+  "section": "20. Boss Level Challenge 2 - The Simon Game",
+  "duration_min": 1,
+  "kind": "solution",
+  "summary": "Solution for step 5: playSound helper.",
+  "concepts": [
+    {
+      "heading": "Walkthrough",
+      "points": [
+        "Pointer lecture: the full code for steps up to 5 is a downloadable project under Course Resources. The notes below restate the step's solution from the reference repo.",
+        "One function removes duplicated audio code; the parameter is the file's base name."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Reference excerpt",
+      "language": "javascript",
+      "code": "function playSound(name) {\n    var audio = new Audio(\"./sounds/\" + name + \".mp3\");\n    audio.play();\n}"
+    }
+  ],
+  "task": null,
+  "pitfalls": [],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (web-dev-playground has no files for sections 19-20)",
+    "gaps_and_ideas": []
+  }
+}

@@ -1,0 +1,128 @@
+{
+  "index": 56,
+  "lecture_id": 37368332,
+  "title": "Flex Layout",
+  "section": "9. Flexbox",
+  "duration_min": 19,
+  "kind": "concept+exercise",
+  "summary": "Tour of the main flexbox layout properties, split into item-level (order, align-self) and container-level (flex-wrap, justify-content, align-items, align-content). Practised on a rainbow demo page and finished with the Flexbox Froggy game on intermediate difficulty.",
+  "concepts": [
+    {
+      "heading": "Parent versus child properties",
+      "points": [
+        "Always ask whether a property belongs on the container (parent) or on the flex items (children). A child-only property placed on the container is ignored.",
+        "Container properties covered: flex-wrap, justify-content, align-items, align-content. Item properties covered: order, align-self.",
+        "A cheat sheet (CSS-Tricks flexbox guide) separates parent and child properties and lists every value; the advice is to look things up as needed rather than memorise, and revisit them when a project needs them."
+      ]
+    },
+    {
+      "heading": "order (item property)",
+      "points": [
+        "Every flex item defaults to order: 0, so items follow HTML source order.",
+        "Giving one item a higher order (for example 1, 10 or 20) moves it after items with lower values; only the relative ranking matters, and ties fall back to source order.",
+        "Typical use: select one child (such as the green div) and set its order to push it to the end without editing the HTML. Negative values place items first.",
+        "(Extra) order changes visual order only; keyboard focus and screen readers still follow the HTML order, which can hurt accessibility."
+      ]
+    },
+    {
+      "heading": "flex-wrap (container property)",
+      "points": [
+        "Default is nowrap (no hyphen): all items stay on one line and are squeezed until they can no longer shrink, after which they overflow off the page.",
+        "flex-wrap: wrap lets items that do not fit move to the next line, which makes layouts respond to narrower windows.",
+        "wrap-reverse also wraps but lines stack in the opposite cross direction (new lines go above rather than below).",
+        "Set on the container; it affects how all the children behave."
+      ]
+    },
+    {
+      "heading": "justify-content (container, main axis)",
+      "points": [
+        "Distributes items along the main axis (horizontal for row, vertical for column, so it flips with flex-direction).",
+        "flex-start packs items at the start, flex-end at the end, center centres them. Centering this way is far simpler than older techniques.",
+        "space-between: first and last items touch the container edges with equal gaps between items.",
+        "space-around: equal space around each item, so gaps at the ends are half the size of gaps between items.",
+        "space-evenly: every gap, including the ends, is the same size.",
+        "Only has a visible effect when there is leftover room on the main axis."
+      ]
+    },
+    {
+      "heading": "align-items (container, cross axis)",
+      "points": [
+        "Positions items along the cross axis (vertical for row).",
+        "The container needs extra height for this to be visible; by default it is only as tall as its tallest item. The demo sets height to 70vh (vh = percentage of the viewport height, 100vh is the full window).",
+        "Values: flex-start, flex-end, center, baseline and stretch (default).",
+        "Keep flex-wrap at nowrap while experimenting, because with wrapping on, multi-line behaviour is governed by align-content."
+      ]
+    },
+    {
+      "heading": "align-self (item property)",
+      "points": [
+        "Overrides the container's align-items for one single item, e.g. centre all but make one item sit at the top.",
+        "Accepts the same family of values (flex-start, flex-end, center, etc.)."
+      ]
+    },
+    {
+      "heading": "align-content (container, wrapped lines)",
+      "points": [
+        "Like align-items but for the group of lines in a multi-line flex container; it only takes effect when flex-wrap is wrap (or wrap-reverse) and items have actually wrapped onto more than one line.",
+        "With nowrap it appears to do nothing. Values such as center, flex-start, flex-end control how the wrapped lines are spaced in the container."
+      ]
+    },
+    {
+      "heading": "Practice resources",
+      "points": [
+        "A hosted flex-layout demo page (rainbow items with selectors for each property) for experimenting by resizing the window.",
+        "Flexbox Froggy: an interactive game where you write CSS to move a frog onto a lily pad. Task: complete all levels in Intermediate difficulty (settings menu), which hides the direction hints; switch to Beginner only if stuck.",
+        "Example from the demo level: with a row flex container, justify-content: flex-end moves the frog to the end."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Container-level layout properties",
+      "language": "css",
+      "code": ".container {\n  display: flex;\n  flex-wrap: wrap;                 /* nowrap (default) | wrap | wrap-reverse */\n  justify-content: space-between;  /* along the main axis */\n  align-items: center;             /* along the cross axis */\n  align-content: flex-start;       /* only matters when items wrap onto several lines */\n  height: 70vh;                    /* gives align-items room to work */\n}"
+    },
+    {
+      "caption": "Item-level properties",
+      "language": "css",
+      "code": ".green { order: 10; }        /* pushed after the items that default to 0 */\n.red   { align-self: flex-start; } /* ignores the container's align-items */"
+    },
+    {
+      "caption": "Centring a child in its parent",
+      "language": "css",
+      "code": ".parent {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n}"
+    }
+  ],
+  "task": {
+    "name": "Flexbox Froggy (intermediate mode)",
+    "starting_point": "Online Flexbox Froggy game with a frog and lily pad per level and a CSS editor; difficulty set to Intermediate in settings.",
+    "goal": "Finish every level by writing flexbox CSS that moves the frog onto the lily pad, using the cheat sheet and what was learned in the lesson.",
+    "steps": [
+      "Open the game and choose Intermediate in settings (optionally language / colour-blind mode).",
+      "Read the level, inspect the starting display: flex rule, and decide which axis the frog has to move along.",
+      "Write container properties such as justify-content, align-items, flex-direction, flex-wrap, align-content, plus item properties such as order and align-self, as the levels demand.",
+      "Use the cheat sheet or demo page when stuck; drop to Beginner only if needed."
+    ],
+    "expected_result": "All levels complete with the frog on the lily pad.",
+    "solution_code": null,
+    "reference_repo_path": null
+  },
+  "pitfalls": [
+    "Using align-items for something that needs the container to be taller; without a set height there is no free cross-axis space.",
+    "Expecting align-content to work without flex-wrap: wrap.",
+    "Forgetting that justify-content / align-items swap meaning when flex-direction is column.",
+    "Putting order or align-self on the container.",
+    "Remember the unhyphenated nowrap value."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No dedicated lesson for this video. The s09-display-flex explore demo already offers selects for flex-direction, justify-content, align-items, flex-wrap and gap with an axis readout, which covers most container properties.",
+    "gaps_and_ideas": [
+      "Add a new lesson 'Flex Layout' with a blurb about parent versus child properties, plus 3-5 tasks: centre the items with justify-content/align-items, spread them with space-between, make them wrap, reorder one with order, override one with align-self.",
+      "Starter code: seven coloured rainbow divs in a gold-bordered container with height: 70vh.",
+      "Extend the existing flexbox playground demo with align-content, wrap-reverse, space-around/evenly visualisations, plus per-item order and align-self inputs and a resizable container.",
+      "Add a built-in mini Flexbox Froggy style challenge set (frog on lily pad targets) with a check against computed positions.",
+      "Add a parent/child property cheat-sheet panel."
+    ]
+  }
+}

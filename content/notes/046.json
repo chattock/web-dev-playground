@@ -1,0 +1,99 @@
+{
+  "index": 46,
+  "lecture_id": 37350652,
+  "title": "[Project] CSS Flag",
+  "section": "7. Intermediate CSS",
+  "duration_min": 18,
+  "kind": "project",
+  "summary": "Capstone for the Intermediate CSS section: rebuild the flag of Laos from a fixed, class-light HTML file using only CSS. It exercises combinators, specificity, the cascade and absolute/relative positioning. The walkthrough also shows Chrome's 'copy selector' as a shortcut for targeting unlabeled elements.",
+  "concepts": [
+    {
+      "heading": "Why the project exists",
+      "points": [
+        "The intro showcases CSS art (a painted portrait and a Simpsons set built from divs with border-radius, width, height and colours) to show how far plain CSS goes. The flag is deliberately far smaller than those.",
+        "Constraint: index.html must not be edited. There are almost no classes or IDs, so the selectors have to come from structure (child and descendant combinators) and from positioning knowledge.",
+        "Skills being tested: combining selectors, specificity and cascade, and position relative/absolute. Exact placement is not graded; roughly matching the goal image is enough."
+      ]
+    },
+    {
+      "heading": "Reading the HTML structure",
+      "points": [
+        "Outer div.flag is the red rectangle. Its children are a p (title text), then a div (blue rectangle).",
+        "Inside the blue div sits another div (the white circle), which contains a p with the second line of text.",
+        "So: .flag > div selects the blue box, and .flag > div > div (or .flag div div) selects the circle. Both are structural selectors, not class-based.",
+        "(Extra) Hints in the HTML comments give the flag size and circle size; the flag colours were read from the real flag image."
+      ]
+    },
+    {
+      "heading": "Getting exact colours",
+      "points": [
+        "Inspect the flag image in Chrome DevTools, open the three-dot menu, More tools, CSS overview, then Capture overview. It lists the hex colours found (red #ce1126, blue #002868).",
+        "This re-uses the colour-picking technique from the earlier inspection lesson."
+      ]
+    },
+    {
+      "heading": "Step-by-step build",
+      "points": [
+        "Red rectangle: .flag gets width 900px, height 600px and the red background-color.",
+        "Blue rectangle: .flag > div gets width 100% (equivalent to 900px, taken from the parent), height 300px (half the red box) and the blue background.",
+        "Circle: .flag > div > div gets width 200px, height 200px, white background, then border-radius 50% turns the square into a circle.",
+        "Layout of blue box: it should sit a quarter of the flag height (150px) down. Make .flag position: relative (it does not move; it becomes the reference) and the blue div position: absolute with top: 150px. This relative-parent / absolute-child pairing is the standard pattern.",
+        "Centre the circle in the blue box: blue is 900x300 and circle is 200x200, so top = (300-200)/2 = 50px and left = (900-200)/2 = 350px. For the offsets to refer to the blue box, the blue box itself must be a positioned element, which absolute positioning provides.",
+        "Why a naive centring looked off: the default margins on the p elements stayed in normal flow and pushed content down. Deleting them in DevTools fixed it, so the code sets p { margin: 0 } (padding 0 too in the solution).",
+        "Text: font-size 5rem on all p, text-align: center to centre both lines. The Pesticide extension / DevTools was used to see the paragraph box that caused the offset."
+      ]
+    },
+    {
+      "heading": "Text colours and the 'copy selector' trick",
+      "points": [
+        "Easiest approach: set all p to white, then override only the circle's p to black. The default colour is already black, so alternatively only the top p could be made white.",
+        "Targeting the circle's p without classes: in the Elements panel, right-click the element, Copy, Copy selector. This yields a long chain like body > div > div > div > p.",
+        "Do not paste blindly. Understand it and simplify: drop the body, swap in .flag, and replace > with spaces (descendant combinator), giving something like .flag div div p { color: black }.",
+        "This selector is more specific than the plain p rule, so it wins regardless of order (cascade and specificity)."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Final CSS for the Laos flag (cross-checked with the reference solution)",
+      "language": "css",
+      "code": ".flag {\n  width: 900px;\n  height: 600px;\n  position: relative;          /* reference point for the blue box */\n  background-color: #ce1126;\n}\n.flag > div {                   /* blue band */\n  background-color: #002868;\n  width: 100%;\n  height: 300px;\n  position: absolute;\n  top: 150px;                   /* a quarter of 600px */\n}\n.flag > div > div {             /* white circle */\n  background-color: white;\n  width: 200px;\n  height: 200px;\n  border-radius: 50%;\n  position: absolute;\n  top: 50px;                    /* (300 - 200) / 2 */\n  left: 350px;                  /* (900 - 200) / 2 */\n}\np {\n  font-size: 5rem;\n  color: white;\n  text-align: center;\n  margin: 0;\n  padding: 0;\n}\n.flag > div div p {\n  color: black;                 /* only the text inside the circle */\n}"
+    }
+  ],
+  "task": {
+    "name": "Laos flag in pure CSS",
+    "starting_point": "index.html with a div.flag containing a p, a div, and inside that div another div holding a p. HTML is fixed and has almost no classes; a goal.png and solution.html are provided.",
+    "goal": "Using only CSS in the style block, recreate the flag: red field, blue band across the middle half, white circle centred in the band, a white heading line on top and black text inside the circle.",
+    "steps": [
+      "Size the .flag div 900x600 and colour it red (#ce1126).",
+      "Select the blue child div with .flag > div, size it to 100% x 300px and colour it #002868.",
+      "Select the circle div (grandchild), size 200x200, white, border-radius 50%.",
+      "Make .flag position: relative; make the blue div absolute with top 150px; make the circle absolute with top 50px and left 350px.",
+      "Remove default paragraph margins and set font-size 5rem and text-align center.",
+      "Make the top text white and the circle's text black using a descendant selector.",
+      "Compare with solution.html (right-click, show preview)."
+    ],
+    "expected_result": "A 900x600 flag: red top and bottom quarters, a blue band in the middle, a white circle in its centre with black text, white title text at the top.",
+    "solution_code": {
+      "language": "css",
+      "code": ".flag { width: 900px; height: 600px; position: relative; background-color: #ce1126; }\n.flag > div { background-color: #002868; height: 300px; width: 100%; position: absolute; top: 150px; }\n.flag > div > div { background-color: white; position: absolute; height: 200px; width: 200px; border-radius: 50%; top: 50px; left: 350px; }\np { font-size: 5rem; color: white; text-align: center; padding: 0; margin: 0; }\n.flag > div div p { color: black; }"
+    },
+    "reference_repo_path": "Section 07 - Intermediate CSS/07.04 - CSS Flag Project/solution.html"
+  },
+  "pitfalls": [
+    "Forgetting position: relative on the parent, so absolute offsets are measured from the page instead of from the flag.",
+    "Leaving default p margins, which shift the content and make the circle look off-centre.",
+    "Pasting a long copied selector without understanding it; simplify it so it stays readable.",
+    "(Extra) The repo's index.html is a student's own attempt (relative blue box at top: 60px, author footer), not the starter; use solution.html as the reference and ignore the 'Made with' footer."
+  ],
+  "playground": {
+    "match": "s07-flag (lesson 7.4, data/s07.js)",
+    "coverage": "Covers the relative-parent / absolute-child centring with a simple flag (Japan-style circle) and gives the centring maths and the translate(-50%,-50%) alternative.",
+    "gaps_and_ideas": [
+      "The playground has classes on every element; the real project forbids editing HTML. Add a variant task using only structural selectors (.flag > div, .flag > div > div).",
+      "Add the DevTools 'Copy selector then simplify' exercise.",
+      "Include the paragraph-margin gotcha and a toggle in an explore demo that shows margins pushing content.",
+      "Add a three-layer version (red, blue band, circle) matching the Laos flag, with hex colours and a CSS overview tip."
+    ]
+  }
+}

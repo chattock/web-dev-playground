@@ -1,7 +1,7 @@
 /* ===== Section 3 — Intermediate HTML ===== */
 
 PG.add({
-  id:'s03-lists', section:'s03', slug:'lists', lesson:'3.1',
+  id:'s03-lists', index:18, udemyId:37349778, minutes:11, section:'s03', slug:'lists', lesson:'3.1',
   title:'List Elements',
   blurb:'Two kinds of list: <code>&lt;ul&gt;</code> when the order does not matter (bullets) and <code>&lt;ol&gt;</code> when it does (numbers). Either way, every item goes in an <code>&lt;li&gt;</code>.',
   tasks:[
@@ -139,7 +139,7 @@ html:`<!DOCTYPE html>
 
 
 PG.add({
-  id:'s03-nesting', section:'s03', slug:'nesting', lesson:'3.2',
+  id:'s03-nesting', index:19, udemyId:37349804, minutes:14, section:'s03', slug:'nesting', lesson:'3.2',
   title:'Nesting & Indentation',
   blurb:'Elements live inside other elements, forming a tree. Indentation does nothing to the page — it exists so that <em>you</em> can see the tree and spot where a tag has not been closed.',
   tasks:[
@@ -278,7 +278,7 @@ html:`<!DOCTYPE html>
 
 
 PG.add({
-  id:'s03-anchors', section:'s03', slug:'anchors', lesson:'3.3',
+  id:'s03-anchors', index:20, udemyId:37349818, minutes:11, section:'s03', slug:'anchors', lesson:'3.3',
   title:'Anchor Elements',
   blurb:'The <code>&lt;a&gt;</code> tag makes a link — the thing that turned documents into a <em>web</em>. The <code>href</code> attribute says where it goes; the text between the tags is what people click.',
   tasks:[
@@ -377,7 +377,7 @@ html:`<!DOCTYPE html>
 
 
 PG.add({
-  id:'s03-images', section:'s03', slug:'images', lesson:'3.4',
+  id:'s03-images', index:21, udemyId:37349846, minutes:8, section:'s03', slug:'images', lesson:'3.4',
   title:'Image Elements',
   blurb:'<code>&lt;img&gt;</code> is a void element with two attributes that matter: <code>src</code> (where the picture lives) and <code>alt</code> (what it shows, for anyone who cannot see it).',
   tasks:[
@@ -480,7 +480,7 @@ html:`<!DOCTYPE html>
 
 
 PG.add({
-  id:'s03-birthday', section:'s03', slug:'birthday-invite', lesson:'3.5', project:true,
+  id:'s03-birthday', index:22, udemyId:37349866, minutes:4, section:'s03', slug:'birthday-invite', lesson:'3.5', project:true,
   title:'Birthday Invite Project',
   blurb:'Everything from sections 2 and 3 in one page: headings, paragraphs, a rule, lists, links and an image.',
   tasks:[

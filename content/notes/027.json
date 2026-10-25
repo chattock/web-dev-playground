@@ -1,0 +1,135 @@
+{
+  "index": 27,
+  "lecture_id": 37349876,
+  "title": "The HTML Boilerplate",
+  "section": "4. Multi-Page Websites",
+  "duration_min": 13,
+  "kind": "concept+exercise",
+  "summary": "Walks line by line through the standard HTML5 boilerplate (doctype, html with lang, head with charset meta and title, body), explains nesting and indentation, and shows the VS Code ! shortcut that generates the boilerplate. Ends with a free-form 'build your own burger' exercise using invented, properly nested elements.",
+  "concepts": [
+    {
+      "heading": "What a boilerplate is",
+      "points": [
+        "Every HTML file follows the same outer skeleton, the way a formal letter always has an address block, greeting, body and sign-off. That reusable starting skeleton is called the boilerplate.",
+        "Start every new HTML file from it, then add page content inside the body."
+      ]
+    },
+    {
+      "heading": "<!DOCTYPE html>: the doctype declaration",
+      "points": [
+        "Must be the very first line of the file. Its job is to declare the HTML version used, so the browser parses the document correctly.",
+        "<!DOCTYPE html> (angle bracket, exclamation mark, DOCTYPE in capitals, then html) declares HTML5, the current version.",
+        "It is a declaration, not an element: it has no closing tag."
+      ]
+    },
+    {
+      "heading": "<html lang=\"en\">: the root element",
+      "points": [
+        "The html element is the root of the document. Every other element (headings, images, links, head, body) goes between <html> and </html>.",
+        "The lang attribute states the language of the text inside the element, e.g. lang=\"en\" for English.",
+        "Sighted visitors don't notice it; screen readers and other assistive technology read it to choose the right pronunciation when reading the page aloud.",
+        "(Extra) lang also helps search engines and browser translation features, and can be set on individual elements for passages in another language."
+      ]
+    },
+    {
+      "heading": "<head>: information about the page, not shown on it",
+      "points": [
+        "The head holds information the browser needs to render the page correctly. Nothing in it (no text, images or links) appears in the page content area.",
+        "Two items always belong in the head: the character-set meta tag and the title.",
+        "<meta charset=\"UTF-8\" /> sets the character encoding so every character displays correctly. Some encodings can't show emoji or symbols such as × and ÷; UTF-8 is one of the most common and covers them, so the line is normally copied in unchanged.",
+        "<title>My Website</title>: the text between the title tags is what the browser shows on the tab.",
+        "Many more tags can go in the head (the Google home page has lots of them); others will be introduced as they come up.",
+        "To inspect a real site's boilerplate in Chrome, right-click the page and choose View Page Source: doctype, html, head, charset and title are all visible near the top."
+      ]
+    },
+    {
+      "heading": "<body>: all visible content",
+      "points": [
+        "The body comes after the head (like a person: head, then body).",
+        "Everything the user sees goes between <body> and </body>: headings, paragraphs, images, links and every other content or structure element.",
+        "This is where almost all the work in the HTML sections of the course happens."
+      ]
+    },
+    {
+      "heading": "Nesting and indentation",
+      "points": [
+        "Elements sit inside other elements: head and body inside html, h1 and img inside body. This is nesting, and it becomes increasingly important throughout the course.",
+        "The analogy used is a burger: html is the top and bottom bun, body is a pair of tomato slices inside it, and the page content is sandwiched between those.",
+        "A short element whose opening and closing tags fit easily on one line (e.g. <title>My Website</title>) can stay on one line; it still has a start and an end.",
+        "Indent each nested level (two spaces in the slides) so every closing tag lines up vertically with its opening tag. Correct indentation shows at a glance which element contains which and keeps code tidy.",
+        "When starting out, type the boilerplate by hand a few times to learn it before relying on the shortcut."
+      ]
+    },
+    {
+      "heading": "VS Code shortcut: ! then Enter",
+      "points": [
+        "In a file saved with the .html extension, type ! and press Enter on the first suggestion; VS Code (via its built-in Emmet) inserts the whole boilerplate.",
+        "It only works once the file has been named/saved as something.html; with any other extension the suggestion does not appear.",
+        "The generated version contains two extra meta tags not covered above.",
+        "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"> exists only for Internet Explorer compatibility. IE is retired, so this line can be deleted to keep the file clean.",
+        "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> controls how the page is sized relative to the screen it opens on, i.e. how the browser displays it initially.",
+        "(Extra) width=device-width makes the layout width match the device's screen width instead of a phone pretending to be ~980px wide, and initial-scale=1.0 means no zoom on load. This matters a lot once responsive CSS is introduced. Recent Emmet versions already leave out the X-UA-Compatible line.",
+        "The default <title>Document</title> should be replaced with a real page title."
+      ]
+    },
+    {
+      "heading": "Attributes refresher",
+      "points": [
+        "An attribute goes inside the opening tag as name=\"value\" (name, equals sign, value in quotes).",
+        "An element can carry as many attributes as needed, separated by spaces."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Minimal HTML5 boilerplate, annotated",
+      "language": "html",
+      "code": "<!DOCTYPE html>               <!-- HTML5 doctype: first line, no closing tag -->\n<html lang=\"en\">              <!-- root element; lang helps screen readers -->\n  <head>                      <!-- page info, not displayed -->\n    <meta charset=\"UTF-8\" />  <!-- character encoding -->\n    <title>My Website</title> <!-- text on the browser tab -->\n  </head>\n  <body>                      <!-- all visible content goes here -->\n    <h1>Hello World</h1>\n  </body>\n</html>"
+    },
+    {
+      "caption": "What VS Code's ! + Enter generates (Emmet); the X-UA-Compatible line can be deleted",
+      "language": "html",
+      "code": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Document</title>\n</head>\n<body>\n    \n</body>\n</html>"
+    },
+    {
+      "caption": "Build-your-own-burger exercise: invented elements practising nesting, attributes and indentation (illustrative)",
+      "language": "html",
+      "code": "<bun type=\"brioche\" toasted=\"yes\">\n  <sauce flavour=\"chipotle\"></sauce>\n  <lettuce leaves=\"2\"></lettuce>\n  <patty kind=\"bean\" cooked=\"well-done\">\n    <cheese style=\"smoked\"></cheese>\n  </patty>\n  <tomato slices=\"3\"></tomato>\n  <pickles></pickles>\n</bun>"
+    }
+  ],
+  "task": {
+    "name": "Build your own burger (nesting practice)",
+    "starting_point": "No starter files. Open VS Code and create any new .html file (or practise in the same file where you typed out the boilerplate).",
+    "goal": "Describe an imaginary burger as HTML-style code using invented elements, to practise opening/closing tags, attributes and nesting with clean indentation.",
+    "steps": [
+      "First, type the full boilerplate from memory in a new .html file, then try the ! + Enter shortcut and compare the two.",
+      "Create an outer bun element with an opening and closing tag, and give it one or more attributes in name=\"value\" form.",
+      "Inside the bun, add whatever fillings you like as their own elements (tomato, lettuce, patty, cheese, sauce...), each with opening and closing tags.",
+      "Nest at least one element inside another filling to create a deeper level.",
+      "Indent each nested level so every closing tag lines up with its opening tag.",
+      "Optionally share your burger code in the course Q&A."
+    ],
+    "expected_result": "A neatly indented block where it is obvious which elements sit inside which, and every opening tag has a matching closing tag. (Invented tags won't render as anything meaningful; the point is the structure.)",
+    "solution_code": null,
+    "reference_repo_path": null
+  },
+  "pitfalls": [
+    "Putting visible content (headings, images, paragraphs) inside head instead of body.",
+    "Typing ! in a file that hasn't been saved with a .html extension and wondering why no boilerplate appears.",
+    "Leaving the auto-generated title as 'Document'.",
+    "Poor indentation that hides which element a closing tag belongs to; mismatched or missing closing tags in nested code.",
+    "Treating <!DOCTYPE html> as an element and trying to close it, or placing anything above it."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet. Every s04 lesson's starter code already includes a doctype, html lang, head with charset and title, and body, but nothing explains those lines. The viewport meta tag is only explained later, in s08.",
+    "gaps_and_ideas": [
+      "New lesson 's04-boilerplate' (place it between 4.2 Multi-Page Websites and 4.3 Portfolio). Blurb: every HTML file shares one skeleton; learn what each line does, then let the editor write it for you.",
+      "Tasks: (1) start from an empty file and type the boilerplate from memory; (2) set the title so the tab text changes; (3) set lang to a language other than English and add a paragraph in that language; (4) move an h1 into the head and observe that browsers silently relocate it, then put it back in the body; (5) build an indented 'burger' of invented nested elements with attributes.",
+      "Starter code idea: a file containing only <h1>Hello</h1>, with a checker that confirms doctype first, html lang present, head with meta charset and title, body containing the h1.",
+      "Explore demo: a clickable, colour-coded boilerplate where hovering each line highlights its nesting level (burger layers) and shows a one-sentence explanation; a toggle shows the Emmet ! output with the X-UA-Compatible line struck through as obsolete.",
+      "Explore demo 2: a charset switcher that renders the same text with emoji and × ÷ symbols decoded as UTF-8 vs ISO-8859-1, showing the garbled output when the encoding is wrong.",
+      "Notes: add the 'View Page Source' tip and the rule that ! only works in files saved as .html."
+    ]
+  }
+}

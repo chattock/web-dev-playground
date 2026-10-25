@@ -1,0 +1,109 @@
+{
+  "index": 6,
+  "lecture_id": 12286990,
+  "title": "How Do Websites Actually Work?",
+  "section": "1. Front-End Web Development",
+  "duration_min": 8,
+  "kind": "theory",
+  "summary": "Explains the three kinds of files a server sends for a web page (HTML for content, CSS for appearance, JavaScript for behaviour) and how the browser combines them to render the page. Then uses Chrome DevTools' Inspect feature to edit text on a live site, and shows why a refresh wipes those edits.",
+  "concepts": [
+    {
+      "heading": "Recap from the previous lecture",
+      "points": [
+        "Clients and servers are joined by the internet's wiring. A DNS server acts as a directory that turns a domain name into the server's IP address.",
+        "With the IP address the browser contacts the website's server directly, and the server returns the files the browser needs to draw (render) the page."
+      ]
+    },
+    {
+      "heading": "The three file types and their separate jobs",
+      "points": [
+        "A site is split into several files because each type has a different responsibility.",
+        "HTML = content. It holds what is on the page: text, images, buttons, links. In the course's house comparison, HTML is the bricks, the raw building material.",
+        "CSS = styling. It decides how that content looks: page background colour, rounded button corners, fonts, colours. In the house comparison it is the wall colour and the shape of the door. CSS works by targeting elements created in HTML (a piece of text, a button) and applying styles to them, e.g. make a button red, round its corners and give its label a particular font.",
+        "JavaScript = functionality. It lets the page do things and respond to the user, turning a static page of text and images into something interactive. House comparison: working light switches and a cooker that actually heats, which make the house usable. Real examples: sending an email in Gmail, posting a photo on Instagram.",
+        "(Extra) A useful summary: HTML is nouns (what exists), CSS is adjectives (what it looks like), JavaScript is verbs (what it does)."
+      ]
+    },
+    {
+      "heading": "How the browser combines them (Google home page example)",
+      "points": [
+        "A browser is software built specifically to read and render HTML, CSS and JavaScript files.",
+        "Loading the HTML gives the raw components: for Google, one image (the logo), two buttons and a text box for the search term.",
+        "Loading the CSS changes only the appearance of those components (the search box shape, the button colours). CSS adds no new buttons or images; it restyles what HTML already created.",
+        "Loading the JavaScript adds behaviour, so typing a search term and pressing search actually does something.",
+        "Content + styling + functionality together make a modern website.",
+        "Side note from the video: Google used to have an Easter egg where searching 'Google in 1998' restyled the results page to look like the 1998 site. (Extra) It may no longer work."
+      ]
+    },
+    {
+      "heading": "Chrome DevTools: inspecting and editing a live page",
+      "points": [
+        "Right-click any element on a page (e.g. the 'Google Search' button) and choose Inspect. This opens Chrome Developer Tools with the HTML for that element automatically highlighted in the Elements panel.",
+        "Chrome is used because its developer tool suite is one of the best available; this is why the course asked you to install it. Later lessons explore DevTools in more depth.",
+        "For Google's search button the visible label is stored in the value attribute (value=\"Google Search\"). Double-click that attribute's text, type something new (the video uses 'Angela Search') and press Enter: the button on the page updates straight away.",
+        "The same element also has aria-label=\"Google Search\". aria-label is read by screen readers (assistive technology) and is not shown on screen, so editing it changes nothing you can see. Make sure you double-click the value attribute, not aria-label.",
+        "Where the text lives depends on the element. For a news headline (the video uses techcrunch.com) the visible text is the content between the opening and closing tags, displayed in black in the Elements panel. Double-click it to rewrite the headline. This works on any site (BBC News etc.).",
+        "(Extra) The Elements panel shows the live DOM, the browser's in-memory version of the page, which is why edits appear instantly. View Page Source (Cmd+Option+U / Ctrl+U) shows the original HTML file the server sent."
+      ]
+    },
+    {
+      "heading": "Why the edits disappear on refresh",
+      "points": [
+        "DevTools edits only change your local copy of the page inside your own browser. Nothing is sent back to the site's server.",
+        "Refreshing asks the server for the HTML, CSS and JavaScript files again, so the page re-renders from the originals and your changes are gone.",
+        "To make pages that permanently say, look and behave the way you want, you write and host your own HTML, CSS and JavaScript, which is what the rest of the course teaches."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "(Extra) Simplified version of the Google search button seen in DevTools. 'value' is the visible label; 'aria-label' is only for screen readers.",
+      "language": "html",
+      "code": "<input type=\"submit\" name=\"btnK\" value=\"Google Search\" aria-label=\"Google Search\">\n\n<!-- After double-clicking the value text in DevTools and editing it: -->\n<input type=\"submit\" name=\"btnK\" value=\"Angela Search\" aria-label=\"Google Search\">"
+    },
+    {
+      "caption": "(Extra) A headline: here the visible text is the element's content, not an attribute",
+      "language": "html",
+      "code": "<h2 class=\"post-title\">\n  <a href=\"/2026/10/some-story/\">Original headline text</a>\n</h2>"
+    },
+    {
+      "caption": "(Extra) The three layers in one tiny page: HTML content, CSS styling, JavaScript behaviour",
+      "language": "html",
+      "code": "<!-- HTML: content -->\n<button id=\"btn\">Click me</button>\n\n<!-- CSS: appearance -->\n<style>\n  #btn { background: red; color: white; border-radius: 8px; font-family: Georgia, serif; }\n</style>\n\n<!-- JavaScript: behaviour -->\n<script>\n  document.getElementById(\"btn\").addEventListener(\"click\", function () {\n    alert(\"The button did something!\");\n  });\n</script>"
+    }
+  ],
+  "task": {
+    "name": "Try-it: edit a live website with Chrome DevTools",
+    "starting_point": "Google Chrome open on google.com (and optionally a news site such as techcrunch.com or bbc.co.uk/news).",
+    "goal": "Change visible text on a real website using Inspect, then see why the change is only local.",
+    "steps": [
+      "Go to google.com in Chrome.",
+      "Right-click the 'Google Search' button and choose Inspect. DevTools opens with that button's HTML highlighted.",
+      "Find the value=\"Google Search\" attribute and double-click the text inside the quotes.",
+      "Type a new label (e.g. your name + ' Search') and press Enter. Check the button on the page now shows it.",
+      "Note the aria-label attribute: editing that one changes nothing visible because only screen readers use it.",
+      "Open a news site, right-click a headline → Inspect, double-click the headline text between the tags in the Elements panel, and rewrite it.",
+      "Press refresh and watch the original text return."
+    ],
+    "expected_result": "The edited button label and headline appear on screen immediately, then revert to the originals after a refresh because the browser re-downloads the server's files.",
+    "solution_code": null,
+    "reference_repo_path": null
+  },
+  "pitfalls": [
+    "Editing aria-label instead of value on the Google button and concluding that the edit did not work.",
+    "Assuming DevTools changes are saved to the website; they exist only in your browser tab until you refresh.",
+    "Thinking CSS can add new elements. It only changes the look of elements that HTML already created (content comes from HTML).",
+    "Using a browser other than Chrome and finding the Inspect panel looks different from the videos."
+  ],
+  "playground": {
+    "match": "s01-how-the-web-works (lesson 1.1, data/s01.js), explore demo 'The three languages, layered' and the lesson notes",
+    "coverage": "The layered demo toggles CSS and JavaScript on and off over the same HTML page, which matches the content/styling/behaviour split well. The notes describe HTML as markup, CSS as styling and JavaScript as a programming language, plus a house analogy.",
+    "gaps_and_ideas": [
+      "Align the house analogy with the course: HTML = bricks/raw materials, CSS = wall colour and door shape, JavaScript = working lights and cooker (functionality). The current notes say rooms/furniture/plumbing, which is close but not what the course uses.",
+      "Add the point that CSS never adds content, only restyles existing elements; the layered demo shows this well, so say it explicitly in its note.",
+      "Add a DevTools task to the lesson: right-click → Inspect on the playground preview, double-click an h1's text, edit it, then press Run/refresh and see it revert. This teaches 'local copy vs files from the server'.",
+      "New explore demo idea, 'Fake Inspect': a mini mock page (logo, search box, two buttons) beside a mock Elements panel. Clicking a page element highlights its HTML line; double-clicking the value or text makes it editable; a 'Refresh from server' button restores the originals. Include an aria-label attribute that changes nothing visible when edited, with a note explaining screen readers.",
+      "Add a breakdown card for the Google home page: HTML gives 1 image + 2 buttons + 1 text box; CSS changes shapes/colours; JS makes search work."
+    ]
+  }
+}

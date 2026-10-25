@@ -1,0 +1,99 @@
+{
+  "index": 16,
+  "lecture_id": 37349766,
+  "title": "[Project] Movie Ranking",
+  "section": "2. Introduction to HTML",
+  "duration_min": 6,
+  "kind": "project",
+  "summary": "End-of-section project: build a one-page 'favourite movies' site using only the elements from Section 2 (h1, h2, hr, h3, p). The brief sets a minimum structure of a title, subtitle, divider and at least three films, each with a short description; the walkthrough builds a sample version.",
+  "concepts": [
+    {
+      "heading": "Purpose of the project",
+      "points": [
+        "Combines everything from the section into one page; no new elements are introduced.",
+        "Inspiration: film critic sites such as rogerebert.com, which list reviews and ratings. A personal list of favourites is handy when someone asks for a recommendation.",
+        "Scope is up to the learner: favourites of all time, of the past year, or any other theme."
+      ]
+    },
+    {
+      "heading": "Required structure (minimum spec)",
+      "points": [
+        "h1: the site title (e.g. 'The Best Movies According to <your name>'). One per page, as the top of the outline.",
+        "h2: a subtitle directly beneath it (e.g. 'My top 3 movies of all-time.').",
+        "hr: a void element that separates the title block from the movie list.",
+        "h3: one per film title, at least three films. h3 is used because each film sits beneath the h2 in the heading hierarchy, so no level is skipped.",
+        "p: under each film's h3, a paragraph saying why you like it.",
+        "Every one of these elements must appear at least once; beyond that the content is free.",
+        "The wording typed in the video walkthrough differs slightly from goal.png (title and subtitle phrasing); only the element structure is checked, so the text should be your own."
+      ]
+    },
+    {
+      "heading": "How the elements map to the layout",
+      "points": [
+        "The browser's default heading sizes (h1 > h2 > h3) give the page a visual hierarchy with no CSS at all: big title, smaller subtitle, then medium film names.",
+        "The hr draws a full-width grey line under the subtitle.",
+        "Each p renders as normal body text with a gap above and below, so each film's description is visually tied to the heading above it.",
+        "(Extra) Ranking order here comes purely from source order. A later section introduces ordered lists (ol), which would number the ranking automatically."
+      ]
+    },
+    {
+      "heading": "Going further (optional)",
+      "points": [
+        "Add more to the descriptions, extra films, or br elements, e.g. a short poem about a favourite movie with a br at each line end.",
+        "Share a screenshot of the finished page in the course Q&A to swap recommendations with other students."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Skeleton of the required structure",
+      "language": "html",
+      "code": "<h1>Site title</h1>\n<h2>Subtitle</h2>\n<hr />\n\n<h3>Movie 1</h3>\n<p>Why I like it.</p>\n\n<h3>Movie 2</h3>\n<p>Why I like it.</p>\n\n<h3>Movie 3</h3>\n<p>Why I like it.</p>"
+    },
+    {
+      "caption": "(Extra) Optional extension: a short poem under a film using br inside one p",
+      "language": "html",
+      "code": "<h3>Drive</h3>\n<p>\n  Neon on the freeway,<br />\n  a quiet man, a fast car,<br />\n  a synth score that hums all night.\n</p>"
+    }
+  ],
+  "task": {
+    "name": "2.4 Movie Ranking Project",
+    "starting_point": "Download the 'Movie Ranking Project' zip from the lesson resources, extract it, and open the folder in VS Code. It contains index.html (a basic HTML page to fill in), solution.html (a sample answer, scrolled down) and goal.png (the target look).",
+    "goal": "Build a page listing at least three favourite films with a title, subtitle, divider, a heading per film and a paragraph explaining each choice, matching the structure in goal.png (with your own text).",
+    "steps": [
+      "Inside body, add an h1 with the site title, e.g. 'The Best Movies According to <your name>'.",
+      "Add an h2 underneath as a subtitle, e.g. 'My top 3 movies of all-time.'",
+      "Add <hr /> to separate the heading block from the list.",
+      "Add an h3 with the name of your first film.",
+      "Under it, add a p with a sentence or two about why you like it.",
+      "Repeat the h3 + p pair for at least two more films (in ranked order).",
+      "Preview with Live Preview and check that all five element types appear and the hierarchy looks like goal.png.",
+      "Optional: extend the page (longer descriptions, more films, br-formatted poem) and post a screenshot in the Q&A."
+    ],
+    "expected_result": "A plain, unstyled page: large bold title, slightly smaller bold subtitle, a horizontal grey line, then three medium-size bold film names, each followed by a normal-weight description paragraph. goal.png shows Spirited Away, Ex Machina and Drive.",
+    "solution_code": {
+      "language": "html",
+      "code": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\" />\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\n  <title>Movie Ranking Project</title>\n</head>\n<body>\n  <h1>The Best Movies According to Angela</h1>\n  <h2>My top 3 movies of all-time.</h2>\n  <hr />\n  <h3>Spirited Away</h3>\n  <p>This is my favourite anime. I love the beautiful images.</p>\n  <h3>Ex Machina</h3>\n  <p>Really cool sci-fi movie.</p>\n  <h3>Drive</h3>\n  <p>Super beautiful film. Really artistic.</p>\n</body>\n</html>"
+    },
+    "reference_repo_path": "Section 02 - Introduction to HTML/02.04 - Movie Ranking Project/solution.html"
+  },
+  "pitfalls": [
+    "Using h2 (or h4) for the film titles: films sit under the subtitle, so h3 keeps the outline in order without skipping a level.",
+    "Adding a second h1 for each film instead of one h1 for the whole page.",
+    "Writing <hr></hr> or putting text inside the hr; it is a void element.",
+    "Leaving out one of the required elements (often the hr or the description paragraphs).",
+    "(Extra) Reference repo divergence: the student's files say 'According to Wesley', replace the first film title with the student's own name, include the typo 'favotite', and add a personal 'Made with ... by Harshit Soni' footer. The solution above follows goal.png instead."
+  ],
+  "playground": {
+    "match": "s02-movie-ranking (lesson 2.4, data/s02.js)",
+    "coverage": "Tasks list the exact required structure (h1 title, h2 subtitle, hr, h3 per film, p description) and invite learners to use their own films. Solution uses the same three films as the course, with numbered h3s ('1. Spirited Away') and different descriptions. 'Go further' notes suggest a footer credit, hr between films, and restyling after Section 6.",
+    "gaps_and_ideas": [
+      "State the 'at least three films' minimum explicitly in the tasks and say every listed element must appear at least once.",
+      "Add an automatic checklist that inspects the learner's HTML: exactly one h1, at least one h2, at least one hr, at least three h3s, at least three p elements, and no skipped heading levels. Show ticks as each requirement is met.",
+      "Add the course's optional extension as a task: a short poem about a film using br inside a single p (reinforces lesson 2.3).",
+      "Mention the inspiration (critic sites like rogerebert.com) in the blurb so learners see the real-world equivalent.",
+      "Note that numbering the films by hand is fine for now; link forward to ordered lists (ol) in Section 3, where this project could be refactored to number itself.",
+      "Explore-demo idea: an outline viewer (reuse the 2.1 heading-outline demo) that renders the learner's page structure as h1 > h2 > h3 so they can check the hierarchy of their own project."
+    ]
+  }
+}

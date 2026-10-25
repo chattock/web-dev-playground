@@ -1,0 +1,87 @@
+{
+  "index": 78,
+  "lecture_id": 12371610,
+  "title": "Javascript Variables",
+  "section": "14. Introduction to Javascript ES6",
+  "duration_min": 10,
+  "kind": "concept+exercise",
+  "summary": "Introduces variables as named containers for data, using var. Shows prompt() for user input, why unsaved input is lost, reassigning a variable, using a variable inside alert, and combining strings and variables with +.",
+  "concepts": [
+    {
+      "heading": "Why variables",
+      "points": [
+        "A variable stores a value in the computer's memory under a name so it can be reused without retyping or re-asking for it.",
+        "Without storing, data from a prompt is gone as soon as the dialog closes."
+      ]
+    },
+    {
+      "heading": "prompt()",
+      "points": [
+        "prompt(\"What is your name?\"); looks like alert but also shows a text field. The user types text and clicks OK.",
+        "The call evaluates to the entered text (a string), so it can be assigned to a variable. (Extra) Cancel returns null, and numbers typed in still arrive as strings.",
+        "Run a snippet with Cmd/Ctrl+Enter or the run button in Chrome DevTools > Sources > Snippets."
+      ]
+    },
+    {
+      "heading": "Declaring and assigning with var",
+      "points": [
+        "Syntax: var myName = \"Angela\"; The keyword var creates a new container, myName is its label, = places the value on the right into it, and the semicolon ends the statement.",
+        "After running the snippet, typing myName in the Console returns the stored string, proving it stays in memory.",
+        "Reassign by writing the name alone: myName = \"Jimmy\"; The old value is replaced. Do not repeat var; it is used only once, when the variable is first created.",
+        "Referring to a variable (no quotes) retrieves its value. alert(myName); shows the value; alert(\"myName\"); would show the literal word.",
+        "(Extra) The course uses var here; modern code prefers let and const (the playground teaches those). var is function-scoped and can be redeclared, which causes bugs."
+      ]
+    },
+    {
+      "heading": "Combining text and variables",
+      "points": [
+        "The + operator joins strings and variable values into one message: alert(\"My name is \" + myName + \", welcome to my course \" + yourName + \"!\");",
+        "Spaces and punctuation must be placed inside the quoted pieces, because + adds nothing between them.",
+        "Variables hold changing state: a gameLevel variable can start at 1, be updated to 2 and 3 as the player progresses, and be shown with alert(\"Your level is currently: \" + gameLevel);."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Store prompt input in a variable and reuse it",
+      "language": "javascript",
+      "code": "var myName = \"Angela\";\nvar yourName = prompt(\"What is your name?\");\nalert(\"My name is \" + myName + \", welcome to my course \" + yourName + \"!\");"
+    },
+    {
+      "caption": "Reassigning and a changing game level",
+      "language": "javascript",
+      "code": "var gameLevel = 1;\ngameLevel = 2;\ngameLevel = 3;\nalert(\"Your level is currently: \" + gameLevel);"
+    }
+  ],
+  "task": {
+    "name": "Mini challenge: alert the variable without typing a string",
+    "starting_point": "A snippet containing var myName = \"Angela\";",
+    "goal": "Show the contents of myName in an alert without typing the string itself again.",
+    "steps": [
+      "Write alert( ) and place the variable name myName between the parentheses, without quotes.",
+      "Run the snippet to see the stored value appear."
+    ],
+    "expected_result": "A pop-up showing Angela.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "var myName = \"Angela\";\nalert(myName);"
+    },
+    "reference_repo_path": "Section 14 - Introduction to Javascript ES6/14.03 - Javascript Variables/script.js (prompt plus greeting only; the challenge itself is not in the repo)"
+  },
+  "pitfalls": [
+    "Putting quotes around the variable name, which prints the name instead of its value.",
+    "Repeating var when you only want to change the value.",
+    "Missing spaces inside concatenated strings, so words run together.",
+    "Calling prompt() without assigning it, so the input is lost."
+  ],
+  "playground": {
+    "match": "s14-variables (lesson 14.3, data/s14.js)",
+    "coverage": "Covers prompt into a variable, a greeting with +, let vs const vs var table, reassigning, and the prompt-returns-a-string tip. The playground uses let/const rather than var as the course does.",
+    "gaps_and_ideas": [
+      "Add the 'box with a label' mental model with a small diagram showing reassignment replacing the content.",
+      "Add the gameLevel example as a task: start at 1, change to 3, alert 'Your level is currently: ' plus the variable.",
+      "Add a task showing alert(myName) versus alert(\"myName\").",
+      "Explain that the course's var is legacy and the playground deliberately uses let/const."
+    ]
+  }
+}

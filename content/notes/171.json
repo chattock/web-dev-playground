@@ -1,0 +1,47 @@
+{
+  "index": 171,
+  "lecture_id": 12652760,
+  "title": "Step 5 - Add Sounds to Button Clicks",
+  "section": "20. Boss Level Challenge 2 - The Simon Game",
+  "duration_min": 1,
+  "kind": "article-task",
+  "summary": "Refactor sound playing into a reusable playSound(name) function.",
+  "concepts": [
+    {
+      "heading": "Refactor",
+      "points": [
+        "Create playSound(name) taking the colour name.",
+        "Move the Audio code from nextSequence into it, building the path as \"sounds/\" + name + \".mp3\".",
+        "Call playSound(randomChosenColour) in nextSequence and playSound(userChosenColour) in the click handler.",
+        "Same function also serves \"wrong\" later because wrong.mp3 follows the same naming."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "playSound",
+      "language": "javascript",
+      "code": "function playSound(name) {\n  var audio = new Audio(\"sounds/\" + name + \".mp3\");\n  audio.play();\n}"
+    }
+  ],
+  "task": {
+    "name": "Extract playSound",
+    "starting_point": "Step 3 sound code in nextSequence",
+    "goal": "Both game and user presses play the right sound",
+    "steps": [
+      "Create playSound(name)",
+      "Move the audio code there with name in the path",
+      "Call it from nextSequence",
+      "Call it from the click handler"
+    ],
+    "expected_result": "Clicking green plays green.mp3; the pattern flash plays its colour sound.",
+    "solution_code": null,
+    "reference_repo_path": "Section 20 - Boss Level Challenge 2 - The Simon Game/script.js"
+  },
+  "pitfalls": [],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (web-dev-playground has no files for sections 19-20)",
+    "gaps_and_ideas": []
+  }
+}

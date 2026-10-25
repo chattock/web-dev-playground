@@ -1,0 +1,25 @@
+{
+  "index": 37,
+  "lecture_id": 12399710,
+  "title": "Join the Student Community",
+  "section": "5. Introduction to CSS",
+  "duration_min": 1,
+  "kind": "admin",
+  "summary": "Admin article inviting learners to join the course's student community. No technical content.",
+  "concepts": [
+    {
+      "heading": "Key takeaway",
+      "points": [
+        "Optional community-join page with a link to meet other students; nothing to code or revise."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson (admin article).",
+    "gaps_and_ideas": []
+  }
+}

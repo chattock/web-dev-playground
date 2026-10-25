@@ -1,0 +1,89 @@
+{
+  "index": 83,
+  "lecture_id": 12371744,
+  "title": "String Lengths and Retrieving the Number of Characters",
+  "section": "14. Introduction to Javascript ES6",
+  "duration_min": 6,
+  "kind": "concept+exercise",
+  "summary": "Covers the .length property of strings, JavaScript comments (// and /* */), and a tweet-character-counter challenge that combines prompt, length, arithmetic and concatenation.",
+  "concepts": [
+    {
+      "heading": "The length property",
+      "points": [
+        "stringVariable.length returns the number of characters in the string. With var name = \"Angela\"; name.length is 6.",
+        "It is a property (no parentheses). It can be used on a variable or directly on a literal.",
+        "Every character counts, including spaces and punctuation.",
+        "In a snippet, evaluating name.length on its own prints 6 in the console."
+      ]
+    },
+    {
+      "heading": "Comments",
+      "points": [
+        "// turns the rest of that line into a comment; the engine ignores it. The next line is code again.",
+        "/* ... */ wraps a multi-line comment of any length.",
+        "Useful for temporarily disabling code and for leaving notes."
+      ]
+    },
+    {
+      "heading": "Tweet counter challenge",
+      "points": [
+        "Goal: let the user paste text, then report how many characters were written and how many remain against a limit (140 historically, 280 now).",
+        "Steps: prompt for the text and store it in a variable (tweet); store tweet.length in tweetCount; build an alert with concatenation: written count, then the limit minus the count.",
+        "The subtraction must be wrapped in parentheses inside the concatenation, so it is calculated as a number before joining. Going over the limit gives a negative remainder (e.g. -47).",
+        "The tweetCount variable is optional; using tweet.length directly in both places works the same. The extra variable only makes the logic clearer."
+      ]
+    },
+    {
+      "heading": "Common error: length of null",
+      "points": [
+        "If the prompt is dismissed (for example by switching browser tabs, which closes the dialog), the variable becomes null, and reading .length raises 'Cannot read property length of null' (newer browsers word it 'Cannot read properties of null (reading length)').",
+        "Always give the prompt a value (or Press OK) before the line using it. Null, undefined and NaN are covered in later lessons."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Tweet counter (reconstructed; reference repo uses 280)",
+      "language": "javascript",
+      "code": "var tweet = prompt(\"Compose your tweet\");\nvar tweetCount = tweet.length;\nalert(\"You have written \" + tweetCount + \" characters, you have \" + (140 - tweetCount) + \" characters remaining.\");"
+    },
+    {
+      "caption": "Reference repo 14.06 (author's version, typos fixed)",
+      "language": "javascript",
+      "code": "var text = prompt(\"Write a text with a max of 280 characters.\");\nvar charactersRemaining = 280 - text.length;\nalert(\"You have written \" + text.length + \" characters, you have \" + charactersRemaining + \" characters left.\");"
+    }
+  ],
+  "task": {
+    "name": "Twitter character counter",
+    "starting_point": "Empty Chrome snippet.",
+    "goal": "Prompt for a long text and alert how many characters were written and how many are left from a 140 (or 280) limit.",
+    "steps": [
+      "Prompt the user for text and save it in a variable.",
+      "Use .length to get the character count.",
+      "Compute limit minus count (parentheses needed if done inside the alert).",
+      "Alert a sentence that joins the pieces with +."
+    ],
+    "expected_result": "For 187 characters with a 140 limit: 'You have written 187 characters, you have -47 characters remaining.'",
+    "solution_code": {
+      "language": "javascript",
+      "code": "var tweet = prompt(\"Compose your tweet\");\nvar tweetCount = tweet.length;\nalert(\"You have written \" + tweetCount + \" characters, you have \" + (140 - tweetCount) + \" characters remaining.\");"
+    },
+    "reference_repo_path": "Section 14 - Introduction to Javascript ES6/14.06 - String Lengths and Retrieving the Number of Characters/script.js"
+  },
+  "pitfalls": [
+    "Writing .length() with parentheses.",
+    "Leaving out the parentheses around 140 - tweetCount: \"...\" + 140 - tweetCount makes a string minus a number (NaN).",
+    "Dismissing the prompt then calling .length on null.",
+    "Reference repo has misspellings of 'characters' in its alert text."
+  ],
+  "playground": {
+    "match": "s14-length (lesson 14.6, data/s14.js)",
+    "coverage": "Strong: same character counter task with 140 limit, notes on property vs method, spaces counting, array length.",
+    "gaps_and_ideas": [
+      "Add a comment-syntax mini lesson (// and /* */) since this lecture introduces it.",
+      "Add the null-prompt error as an explore case (prompt returns null on Cancel, then .length throws).",
+      "Add a task pointing out the need for parentheses around 140 - count in concatenation, and show the bug without them.",
+      "Interactive demo: live character counter textarea with remaining count turning red when negative."
+    ]
+  }
+}

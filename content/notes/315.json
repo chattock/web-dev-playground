@@ -1,0 +1,98 @@
+{
+  "index": 315,
+  "lecture_id": 17039594,
+  "title": "Javascript ES6 Spread Operator Practice",
+  "section": "36. React.js",
+  "duration_min": 12,
+  "kind": "concept+exercise",
+  "summary": "Challenge to build a to-do list in React: track the input text in state, append it to an items array with the spread operator when Add is clicked, render the array as list items with map, and clear the input afterwards. The walkthrough builds it in four stages.",
+  "concepts": [
+    {
+      "heading": "The challenge",
+      "points": [
+        "Final behaviour: type an item such as 'Buy milk', click Add, and it appears as a bullet in a list. Multiple items accumulate.",
+        "Three requirements in the starter's comment: (1) save the input's text in state as it changes, (2) on Add, push the current text into an array, (3) render the array as `li` elements inside the `ul`.",
+        "It combines everything so far: useState, controlled inputs, events, map, and the spread operator from the previous lesson."
+      ]
+    },
+    {
+      "heading": "Stage 1: track the input text",
+      "points": [
+        "Declare `const [inputText, setInputText] = useState(\"\")`. The initial value is an empty string because the field starts blank. Remember to import useState.",
+        "Add `value={inputText}` to the input so it is controlled and always mirrors state.",
+        "Add `onChange={handleChange}`. With only one input there is no need to read `name` or destructure; `const newValue = event.target.value; setInputText(newValue);` is enough.",
+        "The previous state is not needed here because the new value replaces the old one outright (the whole text is simply what the user has typed).",
+        "Check with React DevTools: the state starts as an empty string and updates with each keystroke."
+      ]
+    },
+    {
+      "heading": "Stage 2: items array and rendering",
+      "points": [
+        "Create a second state: `const [items, setItems] = useState([])`, initially an empty array, so no bullets show at first.",
+        "Inside the `ul`, use curly braces to embed a JavaScript expression that maps over items: for each `todoItem` return `<li>{todoItem}</li>`. A singular name for the callback parameter keeps array and element distinct.",
+        "If the map expression is not wrapped in braces inside JSX, the editor shows an 'unexpected token' because it is read as text, not code.",
+        "Because the arrow function returns a single expression, `return` and its braces can be dropped, leaving an implicit-return arrow with parentheses around the JSX."
+      ]
+    },
+    {
+      "heading": "Stage 3: Add button and spread",
+      "points": [
+        "Attach `onClick={addItem}` to the button. An inline arrow would also work, but a named function is better for reuse.",
+        "Inside addItem call `setItems` with a function of the previous items and return a new array: `[...prevItems, inputText]`. The spread copies existing items and the new text goes at the end. State is never mutated with push.",
+        "The explicit return form is kept because it reads better and is short anyway.",
+        "DevTools check: two hooks, a string and an array; after clicking Add the array has the new item at index 0, and the state change re-renders the map output, adding an `li`."
+      ]
+    },
+    {
+      "heading": "Stage 4: clear the input",
+      "points": [
+        "After updating items, call `setInputText(\"\")` in addItem. Since the input is controlled by inputText, this empties the field ready for the next item.",
+        "Next lesson preview: split the app into separate components and pass state between parent and child."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Complete to-do list component (reference repo, trimmed)",
+      "language": "jsx",
+      "code": "import React, { useState } from \"react\";\n\nfunction App() {\n  const [inputText, setInputText] = useState(\"\");\n  const [items, setItems] = useState([]);\n\n  function handleChange(event) {\n    const newValue = event.target.value;\n    setInputText(newValue);\n  }\n\n  function addItem() {\n    setItems((prevItems) => {\n      return [...prevItems, inputText];\n    });\n    setInputText(\"\");\n  }\n\n  return (\n    <div className=\"container\">\n      <div className=\"heading\"><h1>To-Do List</h1></div>\n      <div className=\"form\">\n        <input type=\"text\" onChange={handleChange} value={inputText} />\n        <button onClick={addItem}><span>Add</span></button>\n      </div>\n      <div>\n        <ul>\n          {items.map((todoItem) => (\n            <li>{todoItem}</li>\n          ))}\n        </ul>\n      </div>\n    </div>\n  );\n}\n\nexport default App;"
+    }
+  ],
+  "task": {
+    "name": "To-do list with state and spread",
+    "starting_point": "Starter project (fork) with App.jsx containing the To-Do List markup (input, Add button, empty ul) and comment instructions; styles supplied.",
+    "goal": "Typing and clicking Add appends items to a list that renders as bullets, with the input cleared after each add.",
+    "steps": [
+      "Create `inputText` state with initial empty string and bind it to the input via `value`.",
+      "Add an onChange handler that stores event.target.value in state.",
+      "Create `items` state with initial empty array.",
+      "Map items to `<li>` elements inside the ul.",
+      "Add an onClick handler to the Add button that sets items to a new array of the previous items plus the current inputText.",
+      "Reset inputText to an empty string after adding.",
+      "Inspect both hooks in React DevTools to verify."
+    ],
+    "expected_result": "Each Add click adds one bullet containing the typed text and empties the input.",
+    "solution_code": {
+      "language": "jsx",
+      "code": "function addItem() {\n  setItems((prevItems) => {\n    return [...prevItems, inputText];\n  });\n  setInputText(\"\");\n}\n\n// in JSX\n<ul>\n  {items.map((todoItem) => (\n    <li>{todoItem}</li>\n  ))}\n</ul>"
+    },
+    "reference_repo_path": "Section 36 - React.js/36.39 Javascript ES6 Spread Operator Practice/es6-spread-operator-practice/src/App.jsx"
+  },
+  "pitfalls": [
+    "(Extra) Using items.push and then calling setItems with the same array mutates state; React compares by reference, so it may not re-render. Always return a new array (spread, concat).",
+    "Forgetting braces around the map expression in JSX.",
+    "Forgetting to import useState.",
+    "(Extra) The reference solution omits a `key` prop on each li, which React warns about; use a key (ideally a stable id, index as a last resort).",
+    "(Extra) The reference lets empty strings be added; guard against blank input if desired."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (no React section files in the playground).",
+    "gaps_and_ideas": [
+      "New lesson 'Array state: to-do list': blurb on appending to array state immutably.",
+      "Tasks: (1) controlled input with inputText, (2) items state, (3) map to li, (4) addItem with spread, (5) clear the input and ignore blank text.",
+      "Starter: markup with ul and button but no state.",
+      "Interactive demo: side-by-side raw state view (inputText and items JSON) that updates as the user types and adds items, plus a button that demonstrates mutating with push failing to re-render."
+    ]
+  }
+}

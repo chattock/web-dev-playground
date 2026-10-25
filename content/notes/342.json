@@ -1,0 +1,62 @@
+{
+  "index": 342,
+  "lecture_id": 31673484,
+  "title": "How to Convert ICP into Cycles?",
+  "section": "39. Deploying to the ICP Live Blockchain",
+  "duration_min": 6,
+  "kind": "concept",
+  "summary": "Shows how to top up a cycles wallet when the free allowance is gone: obtain ICP from an exchange, send it to your Network Nervous System account, attach the wallet canister there and convert ICP into cycles.",
+  "concepts": [
+    {
+      "heading": "When and why you need to convert",
+      "points": [
+        "Cycles run out if you create many canisters or store large files. After that you can only continue locally or acquire ICP.",
+        "ICP is normally bought on a crypto exchange with a local currency; at recording time it was listed on exchanges such as Binance, Coinbase and KuCoin.",
+        "(Extra) The lecture is a demonstration. Buying or trading tokens is a financial decision and optional; the course works fully on the local replica."
+      ]
+    },
+    {
+      "heading": "Demonstrated route to ICP",
+      "points": [
+        "On the exchange used in the demo, a learn-and-earn section pays small token rewards for quizzes about other blockchain projects. The reward (a few dollars in another token) was then swapped to ICP with the exchange's convert feature, giving a tiny ICP amount at the current rate.",
+        "(Extra) Availability of such promotions varies; this is an example, not a guaranteed free path."
+      ]
+    },
+    {
+      "heading": "Moving ICP to the NNS app",
+      "points": [
+        "Log in to the Network Nervous System web app (authenticate with the same identity used for the wallet). Its ICP tab shows your account's wallet address, initially with zero balance.",
+        "In the exchange use send/receive, choose ICP, paste that address and send (the amount can be all of it). Refresh the NNS app until the ICP appears."
+      ]
+    },
+    {
+      "heading": "Converting ICP to cycles",
+      "points": [
+        "In the NNS app open the Canisters tab and choose to create or link a canister, then link your existing cycles wallet by its canister id.",
+        "Find the id with dfx identity --network ic get-wallet in the terminal (or copy it from the wallet page), paste it, and press Attach Canister. This can be slow, and a transient 'not the controller' error may appear and then clear.",
+        "Choose to add cycles to that canister, pick the main account as the source and enter an ICP amount. The review screen shows how many trillion cycles it converts to; confirm and send.",
+        "A minimum amount is required (about 2 trillion cycles worth in the demo).",
+        "Reload the cycles wallet page, authenticate again (a 'register device' prompt may show; refreshing normally fixes it) and the new balance appears, e.g. +2T cycles. The ICP balance in the main account falls by the converted amount."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Find the wallet canister id to attach in the NNS app",
+      "language": "bash",
+      "code": "dfx identity --network ic get-wallet"
+    }
+  ],
+  "task": null,
+  "pitfalls": [
+    "Sending ICP to the wrong address; copy the account address from the NNS ICP tab.",
+    "Attach step can be slow and may show a temporary controller error.",
+    "Minimum conversion amount applies.",
+    "Re-authentication or device registration prompts may appear on the wallet page."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": []
+  }
+}

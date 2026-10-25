@@ -1,0 +1,49 @@
+{
+  "index": 191,
+  "lecture_id": 37702170,
+  "title": "Backend Tools and Technologies - Which one to learn?",
+  "section": "22. Backend Web Development",
+  "duration_min": 6,
+  "kind": "theory",
+  "summary": "Compares backend languages and frameworks and explains why the course teaches Node.js.",
+  "concepts": [
+    {
+      "heading": "Frontend is fixed, backend is open",
+      "points": [
+        "Browsers only run HTML, CSS and JavaScript, so frontend languages are fixed. Frameworks such as React, Angular and Vue are JavaScript libraries that manage the display and client-side logic (e.g. validating an email format).",
+        "On the backend almost any language works, because the only requirement is producing HTML, CSS, JS or data to send back. Common choices: Java, Ruby, PHP, C#, Python, JavaScript."
+      ]
+    },
+    {
+      "heading": "Frameworks by language",
+      "points": [
+        "Ruby: Rails. Java: Spring. C#: ASP.NET. PHP: Laravel, CakePHP. Python: Flask, Django. JavaScript: Node.js (with Express).",
+        "(Extra) The reference repo notes list Express, Django, Spring Boot and Rails as typical frameworks."
+      ]
+    },
+    {
+      "heading": "Why Node.js here",
+      "points": [
+        "It reuses the JavaScript already learned for the frontend.",
+        "It tops the Stack Overflow developer survey framework list among professional developers, which means more documentation, community help and job demand.",
+        "Python stays strong for areas like machine learning web apps and C# keeps steady demand, while PHP/Laravel and Ruby/Rails have been declining in popularity.",
+        "The course focuses on one stack rather than surveying all of them."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [
+    "Language choice on the backend does not change what the browser receives, so avoid agonising over it."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "Proposed new lesson 'Choosing a backend stack'. Blurb: browsers only run HTML, CSS and JavaScript, but the server can use any language as long as it sends back HTML, CSS, JS or data; the course uses Node.js so one language covers both sides.",
+      "Tasks: (1) match languages to frameworks (Ruby-Rails, Java-Spring, C#-ASP.NET, PHP-Laravel, Python-Django/Flask, JavaScript-Node/Express); (2) classify React, Vue, Angular, Express and Django as frontend or backend; (3) explain in one sentence why the browser cannot tell which backend language produced a page.",
+      "Starter code idea: a JSON array of {language, framework, side} objects rendered as draggable cards, checked by a small JS function.",
+      "Interactive demo: a 'same response, different kitchens' view that shows equivalent minimal 'Hello' route code in Express, Flask and Rails side by side, all producing the identical HTML shown in a preview pane."
+    ]
+  }
+}

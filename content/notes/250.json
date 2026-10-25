@@ -1,0 +1,82 @@
+{
+  "index": 250,
+  "lecture_id": 40494154,
+  "title": "Understand how to use keys, Postgres types and keywords",
+  "section": "33. PostgreSQL",
+  "duration_min": 11,
+  "kind": "theory",
+  "summary": "Recaps tables, columns and rows, then shows how a table is declared in Postgres: PRIMARY KEY, SERIAL auto-increment, and the common column types VARCHAR, CHAR, TEXT, INT and BOOLEAN, using a friends table as the running example.",
+  "concepts": [
+    {
+      "heading": "Tables, columns and rows",
+      "points": [
+        "A column is a vertical field (name, age, ...) that describes one characteristic of the data. A row is a horizontal record, one entry such as one friend.",
+        "A database is a set of tables linked by relationships and rules for how they behave.",
+        "Compared with spreadsheets, databases stay fast with huge record counts (millions of rows), whereas a spreadsheet gets sluggish after a few thousand."
+      ]
+    },
+    {
+      "heading": "CREATE TABLE in Postgres",
+      "points": [
+        "Syntax: CREATE TABLE table_name ( field_name type constraints, ... ); with the whole definition ending in a semicolon.",
+        "Each field is written as its name, then its data type, then optional keywords. Fields are separated by commas inside the parentheses.",
+        "Postgres has a larger set of types than the basic SQL ones seen earlier."
+      ]
+    },
+    {
+      "heading": "PRIMARY KEY and SERIAL",
+      "points": [
+        "PRIMARY KEY marks the column whose values must be unique and which uniquely identifies each record. Two friends can share a name, so a name is not a safe way to pick out one row; an id is.",
+        "SERIAL is a Postgres type for auto-incrementing integers: when inserting a new row you leave id out and Postgres gives it the next number (previous + 1).",
+        "id SERIAL PRIMARY KEY is therefore the standard first column of a table.",
+        "BIGSERIAL is the same idea with a much larger range, for tables that could reach billions of rows."
+      ]
+    },
+    {
+      "heading": "Character types: VARCHAR, CHAR, TEXT",
+      "points": [
+        "VARCHAR(50) means variable-length text with a maximum of 50 characters. A 4-letter value only uses the space it needs.",
+        "CHAR(50) is fixed-length: it reserves room for 50 characters whatever the actual data length, so it is less efficient for varying text.",
+        "TEXT has no declared maximum and also uses only the space needed.",
+        "Older advice favoured VARCHAR with a limit for efficiency. Modern tests on very large databases show TEXT is only marginally slower or larger, and it avoids failures when a value turns out longer than expected.",
+        "Rule of thumb: use VARCHAR(n) when you truly know the maximum size; use TEXT when you want flexibility. Both are acceptable."
+      ]
+    },
+    {
+      "heading": "Numbers and booleans",
+      "points": [
+        "INT stores whole numbers (age).",
+        "BOOLEAN stores true or false, suited to yes/no fields such as is_cool.",
+        "The Postgres documentation lists many more types (dates, character varying and others) and is worth skimming."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "The friends table as created in Postgres",
+      "language": "sql",
+      "code": "CREATE TABLE friends (\n  id SERIAL PRIMARY KEY,\n  name VARCHAR(50),\n  age INT,\n  is_cool BOOLEAN\n);"
+    },
+    {
+      "caption": "(Extra) Inserting without an id; SERIAL fills it in",
+      "language": "sql",
+      "code": "INSERT INTO friends (name, age, is_cool) VALUES ('Jack', 20, true);"
+    }
+  ],
+  "task": null,
+  "pitfalls": [
+    "Using a non-unique field such as name to identify a row; use the primary key.",
+    "Declaring CHAR(n) when values vary in length (wasted space, and fixed-width padding).",
+    "Setting VARCHAR limits too small and later hitting values that do not fit."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (playground has no section 33 file).",
+    "gaps_and_ideas": [
+      "New lesson 'Postgres column types and keys': blurb on columns/rows, PRIMARY KEY, SERIAL, VARCHAR vs TEXT.",
+      "Tasks: (1) write CREATE TABLE for a books table with id SERIAL PRIMARY KEY, (2) choose the right type for each of 6 sample fields, (3) spot why a duplicate id would fail, (4) rewrite a CHAR(50) column as VARCHAR or TEXT and justify it.",
+      "Starter code: a half-finished CREATE TABLE friends with blank types.",
+      "Interactive demo: a table builder where you add columns and types and watch a sample row grid and the generated SQL update, with a toggle that shows the storage size difference between CHAR(50) and VARCHAR(50)."
+    ]
+  }
+}

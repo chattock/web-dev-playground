@@ -1,0 +1,112 @@
+{
+  "index": 328,
+  "lecture_id": 31673386,
+  "title": "[Windows Users] Installation and Setup for Web3 Development",
+  "section": "37. Web3 Decentralised App (DApp) Development with the Internet Computer",
+  "duration_min": 13,
+  "kind": "setup",
+  "summary": "Windows walkthrough: verify system requirements, install WSL with Ubuntu, VS Code with the Motoko and Remote WSL extensions, then Homebrew, Node 16 and dfx inside Ubuntu, and finally create, deploy and run the Hello project from a WSL VS Code window.",
+  "concepts": [
+    {
+      "heading": "System requirements",
+      "points": [
+        "Windows 10 version 2004 or later (build 19041+) or Windows 11. Check under System Information.",
+        "64-bit Windows only (System type shows x64); 32-bit is unsupported."
+      ]
+    },
+    {
+      "heading": "Install WSL (Windows Subsystem for Linux)",
+      "points": [
+        "Open PowerShell as administrator and run the wsl install command from the guide. It provides a Linux (Ubuntu) environment because the Internet Computer tooling needs bash.",
+        "Restart when told. On the next boot an Ubuntu window asks you to create a username and password; typed passwords are invisible. Pick something you will remember, since it is needed for sudo prompts in the next steps.",
+        "Back in an admin PowerShell, run the guide's verification command; Ubuntu with version 2 listed means WSL 2 is working."
+      ]
+    },
+    {
+      "heading": "VS Code and extensions",
+      "points": [
+        "Install the stable VS Code with defaults, tick the desktop icon option.",
+        "Install the Motoko extension from the DFINITY Foundation (open the marketplace link and press Install so it launches VS Code).",
+        "Install the Remote WSL extension so VS Code can run its terminal and files inside Ubuntu."
+      ]
+    },
+    {
+      "heading": "Tools inside WSL",
+      "points": [
+        "Node must be installed inside Ubuntu even if it already exists on Windows, because dfx runs in WSL.",
+        "Install Homebrew with the guide command (asks for the Ubuntu password and Enter to confirm). Complete the 'Next Steps' it prints: add Homebrew to PATH, and install the listed build dependencies (answer Y). When the prompt returns, brew --version confirms success.",
+        "brew install node@16 installs Node 16, the version that works with the IC tooling then. If brew reports node@16 is keg-only (not symlinked) because another Node exists, run brew link node@16. node --version should start with 16.",
+        "Run the dfx install command in Ubuntu. It prints where dfx was installed; that directory must be added to PATH. The guide gives a stub export line: replace the placeholder with the printed path, keep no space after the colon before the leading slash, paste it into Ubuntu, then use the guide's echo command to confirm the path was added. dfx --version should print 0.9.3."
+      ]
+    },
+    {
+      "heading": "Create and run the project in WSL",
+      "points": [
+        "In VS Code use the green remote icon (bottom left) and choose New WSL Window; the window title/status must say WSL: Ubuntu.",
+        "In Ubuntu: mkdir ic-projects, cd into it, run dfx new hello (builds a sample app named hello; DFINITY logo shows when done). explorer.exe . opens the folder in Windows Explorer.",
+        "In the WSL VS Code window, Open Folder on ic-projects/hello. src contains main.mo (Motoko), plus HTML/JS frontend files. If main.mo has no highlighting, open the Extensions tab and press Install in WSL: Ubuntu on the Motoko extension.",
+        "Terminal > New Terminal: dfx start; once it reports it is listening, split the terminal and run dfx deploy; then npm start and open the printed URL. Entering a name and pressing the button shows a greeting, confirming setup."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Windows PowerShell step",
+      "language": "bash",
+      "code": "# PowerShell (Run as administrator)\nwsl --install            # then restart; set Ubuntu username + password on first launch\nwsl -l -v                # (Extra) typical check; guide's command should show Ubuntu, VERSION 2"
+    },
+    {
+      "caption": "Ubuntu/WSL steps (summary, placeholders for guide-specific commands)",
+      "language": "bash",
+      "code": "# Ubuntu (WSL) terminal\n# 1. Install Homebrew with the command from the guide, then run its 'Next Steps' PATH lines\n#    and install the Homebrew dependencies it lists\nbrew --version\nbrew install node@16\nbrew link node@16        # only if told node@16 is keg-only / not symlinked\nnode --version           # must start with 16\n# 2. Install dfx with the guide's command; note the install path it prints\nexport PATH=\"$PATH:<INSTALL_PATH_FROM_DFX_INSTALLER>\"   # no space after the colon; persist it in your shell profile\ndfx --version            # 0.9.3 in the video\n# 3. Project\nmkdir ic-projects && cd ic-projects\ndfx new hello\nexplorer.exe .           # opens the folder in Windows Explorer\n# in VS Code opened as 'WSL: Ubuntu': terminal 1 -> dfx start ; terminal 2 -> dfx deploy ; npm start"
+    },
+    {
+      "caption": "Reference repo frontend (newer scaffold): React component that calls the backend greet function",
+      "language": "jsx",
+      "code": "import { useState } from 'react';\nimport { hello_backend } from 'declarations/hello_backend';\n\nfunction App() {\n  const [greeting, setGreeting] = useState('');\n\n  function handleSubmit(event) {\n    event.preventDefault();\n    const name = event.target.elements.name.value;\n    hello_backend.greet(name).then(setGreeting);   // call the canister, store its reply\n  }\n\n  return (\n    <main>\n      <form onSubmit={handleSubmit}>\n        <label htmlFor=\"name\">Enter your name: </label>\n        <input id=\"name\" type=\"text\" />\n        <button type=\"submit\">Click Me!</button>\n      </form>\n      <section id=\"greeting\">{greeting}</section>\n    </main>\n  );\n}\nexport default App;"
+    },
+    {
+      "caption": "Reference repo backend (src/hello_backend/main.mo)",
+      "language": "motoko",
+      "code": "persistent actor {\n  public query func greet(name : Text) : async Text {\n    return \"Hello, \" # name # \"!\";   // # concatenates Text\n  };\n};"
+    }
+  ],
+  "task": {
+    "name": "Windows setup: run Hello on the local Internet Computer",
+    "starting_point": "Windows 10 2004+/11, 64-bit, admin rights.",
+    "goal": "A working WSL Ubuntu environment where dfx start, dfx deploy and npm start serve the hello app and greet you.",
+    "steps": [
+      "Check Windows version (19041+) and x64.",
+      "Admin PowerShell: run wsl install, restart, set Ubuntu username/password, verify WSL version 2.",
+      "Install VS Code (desktop icon on), Motoko extension (DFINITY Foundation) and Remote WSL.",
+      "In Ubuntu install Homebrew, finish its Next Steps, check brew --version.",
+      "brew install node@16 (brew link node@16 if keg-only); node --version starts with 16.",
+      "Install dfx, add its printed install path to PATH, dfx --version.",
+      "VS Code: New WSL Window; in Ubuntu mkdir ic-projects, cd, dfx new hello.",
+      "Open ic-projects/hello in VS Code; enable the Motoko extension in WSL if highlighting is missing.",
+      "Terminal 1 dfx start; terminal 2 dfx deploy then npm start; open the URL and test the greeting."
+    ],
+    "expected_result": "Browser page with a name field and button that greets you using the backend canister.",
+    "solution_code": null,
+    "reference_repo_path": "Section 37 - Web3 Decentralised App (DApp) Development with the Internet Computer/37.07 [Windows Users] Installation and Setup for Web3 Development/hello"
+  },
+  "pitfalls": [
+    "Not running PowerShell as administrator for wsl install.",
+    "Forgetting to restart after installing WSL.",
+    "Using Windows-side Node instead of installing inside WSL.",
+    "Space after the colon in the PATH export line, or leaving the placeholder text.",
+    "Working in a non-WSL VS Code window (status bar must say WSL: Ubuntu).",
+    "(Extra) The reference repo hello project was made with a newer dfx scaffold (hello_backend/hello_frontend, Vite, persistent actor) than the 0.9.3-era folder structure in the video; commands and file names may differ from what you see on screen.",
+    "(Extra) Current official guidance may no longer require Node 16 or Homebrew; check the DFINITY docs."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (the playground has no section 37 data file).",
+    "gaps_and_ideas": [
+      "Proposed lesson 'Windows + WSL dev setup' as an OS-aware checklist with the same tail as the Mac lesson.",
+      "Tasks: (1) verify build number and x64; (2) install WSL and confirm version 2; (3) set PATH correctly for dfx; (4) open VS Code in a WSL window; (5) deploy hello.",
+      "Starter idea: checklist state stored in localStorage with copy buttons.",
+      "Interactive demo: a PATH builder where the learner pastes the install path and the page validates the export line (no space after colon)."
+    ]
+  }
+}

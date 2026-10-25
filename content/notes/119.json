@@ -1,0 +1,83 @@
+{
+  "index": 119,
+  "lecture_id": 12383850,
+  "title": "The Separation of Concerns: Structure vs Style vs Behaviour",
+  "section": "16. The Document Object Model (DOM)",
+  "duration_min": 6,
+  "kind": "concept+exercise",
+  "summary": "Explains why styling should live in CSS rather than in element.style assignments from JavaScript, and shows how classList (add, remove, toggle) lets JavaScript switch predefined CSS classes on and off. Ends with a short exercise: build a .huge class and apply it to the h1 with one line of JS.",
+  "concepts": [
+    {
+      "heading": "Separation of concerns",
+      "points": [
+        "Each language has one job: HTML holds the content and structure, CSS holds the presentation, JavaScript holds the behaviour.",
+        "Earlier lessons broke this by writing things like document.querySelector(...).style.color = 'red', which puts styling decisions inside the script.",
+        "Benefit: debugging gets easier because a wrong look sends you to the stylesheet, while wrong behaviour sends you to the JS file.",
+        "The catch is that some styles must change at runtime (e.g. after a click). The alternative to the style property is toggling classes whose rules already exist in the CSS."
+      ]
+    },
+    {
+      "heading": "classList",
+      "points": [
+        "classList is a property available on every DOM element object. Reading it in the console shows the classes currently on the element (for a button written as class=\"btn\" it lists just btn).",
+        "classList.add('name') appends a class to the element's class attribute without removing existing ones. The element then matches any CSS rule for that class.",
+        "classList.remove('name') takes the class off, so the rule stops applying.",
+        "classList.toggle('name') flips state: removes the class if present, adds it if absent. Calling it repeatedly makes the element flicker on and off.",
+        "Typical flow: write .invisible { visibility: hidden; } in the stylesheet, then use add/remove/toggle from JS to hide or show the button. The CSS stays in the stylesheet; JS just flips the switch.",
+        "(Extra) visibility: hidden hides the element but keeps its space in the layout; display: none would also remove the space."
+      ]
+    },
+    {
+      "heading": "Exercise logic: the huge class",
+      "points": [
+        "A single class can bundle several declarations, so one classList.add call replaces several .style assignments (font-size, colour, weight).",
+        "Selecting by id uses querySelector('#title'); the reference page gives the h1 id=\"title\"."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Toggling an existing class from JavaScript",
+      "language": "javascript",
+      "code": "document.querySelector(\"button\").classList.add(\"invisible\");\ndocument.querySelector(\"button\").classList.remove(\"invisible\");\ndocument.querySelector(\"button\").classList.toggle(\"invisible\"); // adds it\ndocument.querySelector(\"button\").classList.toggle(\"invisible\"); // removes it"
+    },
+    {
+      "caption": "Stylesheet with the two classes",
+      "language": "css",
+      "code": ".invisible {\n  visibility: hidden;\n}\n\n.huge {\n  font-size: 10rem;\n  color: red;\n  font-weight: bold;\n}"
+    }
+  ],
+  "task": {
+    "name": "Create a .huge class and apply it with classList",
+    "starting_point": "A page with an h1 (Hello) and a button, linked to style.css and script.js.",
+    "goal": "Make the h1 enormous, red and bold using a CSS class switched on from JavaScript, not the style property.",
+    "steps": [
+      "In the stylesheet create a .huge class.",
+      "Inside it set font-size to 10rem, then optionally colour red and font-weight bold.",
+      "In script.js select the h1 (e.g. querySelector('h1') or '#title').",
+      "Call .classList.add('huge') on it.",
+      "Reload/run and confirm all three styles appear from that one line."
+    ],
+    "expected_result": "The heading renders at 10rem, red and bold.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "document.querySelector(\"#title\").classList.add(\"huge\");"
+    },
+    "reference_repo_path": "Section 16 - The Document Object Model (DOM)/16.05 - The Separation of Concerns - Structure vs Style vs Behaviour"
+  },
+  "pitfalls": [
+    "Putting a dot in the class name passed to classList (use 'huge', not '.huge').",
+    "Expecting add to replace existing classes; it only appends.",
+    "Reference repo has a personal footer in index.html which should be ignored."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (no s16.js data file).",
+    "gaps_and_ideas": [
+      "New lesson: 'Separation of concerns and classList'. Blurb: switch styles with classes instead of the style property.",
+      "Tasks: (1) add an .invisible rule and toggle it from the console, (2) build .huge and add it to the h1, (3) use remove, (4) use toggle twice and observe, (5) explain which file to open when look vs behaviour is wrong.",
+      "Starter: h1 plus button with a stylesheet containing the two classes.",
+      "Interactive demo: buttons for add/remove/toggle that show the live class attribute string next to a sample element."
+    ]
+  }
+}

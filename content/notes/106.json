@@ -1,0 +1,99 @@
+{
+  "index": 106,
+  "lecture_id": 12374030,
+  "title": "Adding Elements and Intermediate Array Techniques",
+  "section": "15. Intermediate Javascript",
+  "duration_min": 16,
+  "kind": "concept+exercise",
+  "summary": "Uses the FizzBuzz interview problem to teach push() and pop(), a counter variable, the modulo operator for divisibility, and why the order of if / else if branches matters. Built incrementally as a function that adds one more item to an array on each call.",
+  "concepts": [
+    {
+      "heading": "The FizzBuzz problem",
+      "points": [
+        "Produce the numbers 1 to 100, but a multiple of 3 becomes \"Fizz\", a multiple of 5 becomes \"Buzz\", and a multiple of both (15, 30...) becomes \"FizzBuzz\".",
+        "It is a common screening question because it quickly shows whether a candidate can break a problem into steps.",
+        "In this lecture it is built one step at a time: one new item per call of fizzBuzz()."
+      ]
+    },
+    {
+      "heading": "push() and pop()",
+      "points": [
+        "Arrays can start empty: var output = [];",
+        "array.push(value) appends value to the END of the array, never the start or middle. It can be called repeatedly to grow the array.",
+        "array.pop() removes the last item from the array (and returns it).",
+        "(Extra) shift() and unshift() do the same jobs at the front of the array."
+      ]
+    },
+    {
+      "heading": "Counter variable",
+      "points": [
+        "Calling output.push(1) repeatedly would keep adding 1. Instead keep a separate variable count (starting at 1), push count, then increase it with count++ (same as count = count + 1).",
+        "Declare output and count outside the function so they persist between calls; if declared inside they would be reset on every call."
+      ]
+    },
+    {
+      "heading": "Modulo for divisibility",
+      "points": [
+        "a % b gives the remainder of a divided by b. 12 % 2 is 0 (divides cleanly); 12 % 5 is 2.",
+        "count % 3 === 0 therefore means count is a multiple of 3; likewise for 5.",
+        "Replace the pushed value with the matching word when the test is true."
+      ]
+    },
+    {
+      "heading": "Order of conditions",
+      "points": [
+        "An if / else if / else chain runs the first branch whose condition is true and skips the rest.",
+        "If the Fizz test comes first, 15 matches it and Buzz is never examined, so 15 shows as Fizz.",
+        "Fix: test the combined case first: if (count % 3 === 0 && count % 5 === 0) push \"FizzBuzz\"; else if divisible by 3 push \"Fizz\"; else if divisible by 5 push \"Buzz\"; else push count.",
+        "General rule: put the most specific condition first."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "push and pop",
+      "language": "javascript",
+      "code": "var output = [];\noutput.push(1);\noutput.push(2);\nconsole.log(output);   // [1, 2]\noutput.pop();\nconsole.log(output);   // [1]"
+    },
+    {
+      "caption": "Final one-step-per-call FizzBuzz",
+      "language": "javascript",
+      "code": "var output = [];\nvar count = 1;\n\nfunction fizzBuzz() {\n  if (count % 3 === 0 && count % 5 === 0) {\n    output.push(\"FizzBuzz\");\n  } else if (count % 3 === 0) {\n    output.push(\"Fizz\");\n  } else if (count % 5 === 0) {\n    output.push(\"Buzz\");\n  } else {\n    output.push(count);\n  }\n  count++;\n  console.log(output);\n}\n\nfizzBuzz();   // [1]\nfizzBuzz();   // [1, 2]\nfizzBuzz();   // [1, 2, \"Fizz\"]"
+    }
+  ],
+  "task": {
+    "name": "FizzBuzz one step at a time",
+    "starting_point": "Empty output array and a fizzBuzz function that only logs output.",
+    "goal": "Every call appends the next FizzBuzz item to output and prints the array.",
+    "steps": [
+      "Create count = 1 beside the output array.",
+      "In fizzBuzz push count, increment it with count++, then log output.",
+      "Add if (count % 3 === 0) to push \"Fizz\" instead of the number.",
+      "Add else if (count % 5 === 0) to push \"Buzz\".",
+      "Notice 15 gives Fizz only; move the combined (&&) check to the top to produce \"FizzBuzz\".",
+      "Call the function repeatedly (15+ times) and verify the output."
+    ],
+    "expected_result": "After 15 calls: [1, 2, \"Fizz\", 4, \"Buzz\", \"Fizz\", 7, 8, \"Fizz\", \"Buzz\", 11, \"Fizz\", 13, 14, \"FizzBuzz\"].",
+    "solution_code": {
+      "language": "javascript",
+      "code": "var output = [];\nvar count = 1;\n\nfunction fizzBuzz() {\n  if (count % 3 === 0 && count % 5 === 0) {\n    output.push(\"FizzBuzz\");\n  } else if (count % 3 === 0) {\n    output.push(\"Fizz\");\n  } else if (count % 5 === 0) {\n    output.push(\"Buzz\");\n  } else {\n    output.push(count);\n  }\n  count++;\n  console.log(output);\n}"
+    },
+    "reference_repo_path": "Section 15 - Intermediate Javascript/15.08 - Adding Elements and Intermediate Array Techniques/script.js"
+  },
+  "pitfalls": [
+    "Forgetting count++, so the same number is pushed forever.",
+    "Putting the 3 check before the combined 3-and-5 check.",
+    "Declaring output or count inside the function so they reset.",
+    "Writing = instead of === in the modulo test.",
+    "The reference repo's version derives the number from output.length and pops and re-pushes; it works but differs from the counter-based approach in the lecture."
+  ],
+  "playground": {
+    "match": "s15-array-methods (lesson 15.8, data/s15.js)",
+    "coverage": "Covers push, pop, shift, unshift, join and split. FizzBuzz is not part of this lesson (it appears in the 99 bottles/while content).",
+    "gaps_and_ideas": [
+      "Add a FizzBuzz one-call-at-a-time task using count, push and modulo.",
+      "Add an order-of-conditions demo showing 15 with the Fizz check first versus last.",
+      "Demo idea: a 'Call fizzBuzz()' button that appends to a visible array."
+    ]
+  }
+}

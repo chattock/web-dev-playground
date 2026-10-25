@@ -1,0 +1,121 @@
+{
+  "index": 41,
+  "lecture_id": 37350454,
+  "title": "The CSS Box Model - Margin, Padding and Border",
+  "section": "6. CSS Properties",
+  "duration_min": 21,
+  "kind": "concept+exercise",
+  "summary": "Explains the box model: every element is a rectangular box with content (width/height), padding, border and margin. Covers border shorthand, one-to-four value syntax, the div container and the Pesticide extension, then an exercise placing three boxes corner to corner.",
+  "concepts": [
+    {
+      "heading": "Every element is a box",
+      "points": [
+        "Each HTML element is laid out as an invisible rectangle. height and width set the size of its content area; making a box taller pushes later elements further down the page.",
+        "width and height accept px or percentages. A width of 100% fills the parent's width.",
+        "From the inside out the layers are: content (width x height), padding, border, margin."
+      ]
+    },
+    {
+      "heading": "border",
+      "points": [
+        "Shorthand takes three values separated by spaces: thickness, style, colour. Example: border: 10px solid black.",
+        "Style can be solid, dashed and others; colour is any named or hex colour.",
+        "In this model the border sits outside the declared width/height. A bigger border does not shrink the content box; it adds to the element's overall size.",
+        "Fine-tune afterwards with border-width. It must come after the shorthand line, since later declarations override earlier ones. Example: border: 30px solid black; then border-top-width: 0 removes just the top.",
+        "border-width accepts one to four values (see multi-value syntax below)."
+      ]
+    },
+    {
+      "heading": "padding versus margin",
+      "points": [
+        "padding is the gap between the content and the border, inside the border. The element's background colour covers the padding. Adding padding pushes the border outwards; the declared width/height stays the same.",
+        "margin is the gap outside the border, separating the element from its neighbours. Margin is transparent.",
+        "Two adjacent boxes each with margin 10px appear 20px apart in the lecture's example (10 from each side).",
+        "Padding adds space inside the visual box; margin adds space between boxes.",
+        "(Extra) Vertical margins between stacked block elements can collapse to the larger of the two instead of adding, so the 20px figure applies to the horizontal case."
+      ]
+    },
+    {
+      "heading": "One to four values (padding, margin, border-width)",
+      "points": [
+        "Four values go clockwise from the top: top, right, bottom, left.",
+        "Two values: first is top and bottom, second is left and right (e.g. 0 20px sets vertical 0, horizontal 20px).",
+        "One value applies to all four sides.",
+        "(Extra) Three values: top, left and right, bottom.",
+        "Single-side properties also exist: margin-left, padding-top, border-top-width and so on."
+      ]
+    },
+    {
+      "heading": "Inspecting the box model",
+      "points": [
+        "DevTools shows a nested diagram (margin, border, padding, content) with colours for each layer and the numbers editable.",
+        "Practice site: appbrewery.github.io/box-model/. Select an image, then in the Styles tab's box diagram type a margin of 100px to see gaps appear above/below, or padding of 100px to see space inside the border. Adding a 10px solid black border shows how padding sits inside it."
+      ]
+    },
+    {
+      "heading": "The div element and Pesticide",
+      "points": [
+        "div (content division) is a generic invisible container. Put any number of elements between its tags to group them so they can be styled or positioned together, e.g. an image with its caption.",
+        "A div has no look of its own, which is why it is taught only now that you can style boxes. It also adds structure to the HTML.",
+        "Pesticide is a free Chrome extension that outlines every element and div, making box model problems visible. Hold Ctrl and hover over a box to see its tag, classes and id in the bottom bar."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Border shorthand then override",
+      "language": "css",
+      "code": "p {\n  border: 30px solid black;  /* width style colour, all sides */\n  border-top-width: 0;       /* must come after the shorthand */\n}"
+    },
+    {
+      "caption": "Multi-value syntax",
+      "language": "css",
+      "code": ".a { margin: 10px; }                 /* all sides */\n.b { margin: 10px 40px; }            /* top+bottom | left+right */\n.c { margin: 0 10px 20px 30px; }     /* top | right | bottom | left */"
+    },
+    {
+      "caption": "A div grouping a caption and an image",
+      "language": "html",
+      "code": "<div>\n  <p>Morning view</p>\n  <img src=\"morning.jpg\" alt=\"Earth by day\" />\n</div>"
+    }
+  ],
+  "task": {
+    "name": "6.3 Box model: three boxes corner to corner",
+    "starting_point": "index.html contains a list of TODO comments for you to follow like client instructions; goal.png shows the result, annotated with 20px padding, a 20px top/bottom and 10px left/right border on one box, and boxes touching corner to corner. The ref repo's index already holds the finished solution.",
+    "goal": "Build three divs (ids first, second, third) of the same size, each with different padding, border and margin, so they touch diagonally at their corners.",
+    "steps": [
+      "Add three divs to the body with ids first, second and third; put a paragraph of text in the first so padding is visible.",
+      "Give all divs height: 200px and width: 200px.",
+      "first: cadetblue background, padding 20px, border 10px solid black.",
+      "Reset the paragraph's margin to 0. Browsers give p a default margin of 1em top and bottom, which would push it off the div's edge.",
+      "second: gold background, solid black border with border-width of 20px top/bottom and 10px left/right (two-value form).",
+      "Work out the margin so second touches the bottom-right corner of first: first's outer width = 200 + 20 + 20 padding + 10 + 10 border = 260px, so margin-left: 260px.",
+      "third: indianred background, border 10px solid black, margin-left so its top-right corner meets second's bottom-left corner (second's left edge is at 260px and the box is 220px wide, giving 40px).",
+      "Check against the goal image; trial and error with DevTools works too."
+    ],
+    "expected_result": "A staircase of three coloured boxes, each touching the next exactly at a corner with no gaps or overlap.",
+    "solution_code": {
+      "language": "css",
+      "code": "div {\n  height: 200px;\n  width: 200px;\n}\n\n#first {\n  background-color: cadetblue;\n  padding: 20px;\n  border: 10px solid black;\n}\n\n#second {\n  background-color: gold;\n  border: solid black;\n  border-width: 20px 10px;\n  margin-left: 260px;\n}\n\n#third {\n  background-color: indianred;\n  border: 10px solid black;\n  margin-left: 40px;\n}\n\np {\n  margin: 0;\n}"
+    },
+    "reference_repo_path": "Section 06 - CSS Properties/06.03 - CSS Box Model/index.html"
+  },
+  "pitfalls": [
+    "Forgetting the browser's default margin on p, which shifts text away from the div's padding.",
+    "Placing border-width before the border shorthand, which then overwrites it.",
+    "Forgetting that padding and border add to the rendered size when computing offsets (260px, not 200px).",
+    "Mixing up the order of four values: it is clockwise from top, not alphabetical.",
+    "Reference repo has an author footer element that is not in the exercise."
+  ],
+  "playground": {
+    "match": "s06-box-model (lesson 6.3, data/s06.js)",
+    "coverage": "Tasks and solution match the exercise (200px divs, three styled ids, margin-left 260 and 40). Two explore demos: a box-model dissector with sliders and box-sizing toggle, and a shorthand-values selector. Notes cover the four layers and margin 0 auto.",
+    "gaps_and_ideas": [
+      "Starter already includes p { margin: 0 }; leave it out and add a task explaining why the paragraph looks off by default.",
+      "Add a task to write the three divs yourself, and one about wrapping an image plus caption in a div (the lecture's div section).",
+      "Add the arithmetic hint: 200 + 2x20 padding + 2x10 border = 260, to explain the margin values.",
+      "Add the order-matters demo: border then border-top-width, and swapped.",
+      "Add a Pesticide-style outline toggle in an explore demo (outline * { outline: 1px solid red }) to reveal invisible divs.",
+      "The box-sizing toggle is not in the lecture; label it as an extra."
+    ]
+  }
+}

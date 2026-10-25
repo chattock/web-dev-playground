@@ -1,0 +1,76 @@
+{
+  "index": 105,
+  "lecture_id": 12374004,
+  "title": "Collections: Working with Javascript Arrays",
+  "section": "15. Intermediate Javascript",
+  "duration_min": 9,
+  "kind": "concept+exercise",
+  "summary": "Introduces arrays as a way to keep many related values in one variable, covering literal syntax, zero-based indexing, length and includes(). Exercise: a birthday-party guest list checker.",
+  "concepts": [
+    {
+      "heading": "Why arrays",
+      "points": [
+        "A variable so far held one value. Checking a name against many names with a long chain of if/else if would be unmanageable.",
+        "An array is an ordered collection of related items stored in one variable (an egg box compared with a single egg)."
+      ]
+    },
+    {
+      "heading": "Syntax and indexing",
+      "points": [
+        "Create with square brackets and comma-separated items: var eggs = [item0, item1, ...].",
+        "Read an item with name[position]. Square brackets both create and access arrays, a hint that you are dealing with a collection.",
+        "Positions start at 0, so eggs[1] is the second item and guestList[0] the first.",
+        "array.length returns the number of items. Logging the whole array in the console also shows its size.",
+        "Strings in the array need quotes."
+      ]
+    },
+    {
+      "heading": "includes()",
+      "points": [
+        "array.includes(value) searches the array and returns true if any element matches, otherwise false.",
+        "The boolean result is directly usable as an if condition.",
+        "(Extra) Matching is strict and case-sensitive: \"angela\" does not match \"Angela\"."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Array basics",
+      "language": "javascript",
+      "code": "var guestList = [\"Wesley\", \"Maria\", \"Michele\", \"Eveline\", \"Levi\", \"Everaldo\"];\nconsole.log(guestList);         // whole array\nconsole.log(guestList.length);  // 6\nconsole.log(guestList[0]);      // \"Wesley\"\nconsole.log(guestList.includes(\"Maria\"));   // true"
+    }
+  ],
+  "task": {
+    "name": "Birthday party guest list",
+    "starting_point": "Empty script with an array of guest names.",
+    "goal": "Ask for the visitor's name and check the guest list.",
+    "steps": [
+      "Create the guestList array of strings.",
+      "Store the answer of prompt(\"What is your name?\") in a variable such as guestName.",
+      "Use guestList.includes(guestName) as the if condition.",
+      "Alert a welcome message when true; alert a polite refusal in the else branch.",
+      "Test with a listed name and a random one."
+    ],
+    "expected_result": "Names on the list get a welcome alert; any other input gets the refusal alert.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "alert(\"Welcome to my birthday party\");\nvar name = prompt(\"Enter your first name so I can see if you are on the guest list\");\n\nvar guestList = [\"Wesley\", \"Maria\", \"Michele\", \"Eveline\", \"Levi\", \"Everaldo\"];\n\nif (guestList.includes(name)) {\n  alert(\"You are on the list, welcome\");\n} else {\n  alert(\"You are not on the list\");\n}"
+    },
+    "reference_repo_path": "Section 15 - Intermediate Javascript/15.07 -  Collections - Working with Javascript Arrays/script.js"
+  },
+  "pitfalls": [
+    "Counting from 1 instead of 0.",
+    "Forgetting commas or quotes in the array literal.",
+    "Case or whitespace differences making includes() return false.",
+    "Reference repo includes an author footer in index.html that should be ignored."
+  ],
+  "playground": {
+    "match": "s15-arrays (lesson 15.7, data/s15.js)",
+    "coverage": "Covers array creation, indexing, last item, length, includes, indexOf and the doorman prompt example, plus const behaviour.",
+    "gaps_and_ideas": [
+      "Add a note on square brackets signalling a collection.",
+      "Add a case-sensitivity exercise (compare with toLowerCase).",
+      "Demo idea: visual egg-box with index labels where clicking a slot shows array[i]."
+    ]
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "index": 306,
+  "lecture_id": 17039466,
+  "title": "useState Hook Practice",
+  "section": "36. React.js",
+  "duration_min": 7,
+  "kind": "concept+exercise",
+  "summary": "Practice with useState: show the current time in an h1 and refresh it when a Get Time button is clicked, then extend it so the clock ticks every second using setInterval. The walkthrough keeps the time in state and updates it through the setter from a handler.",
+  "concepts": [
+    {
+      "heading": "The challenge",
+      "points": [
+        "Part 1: an h1 initially holds placeholder text and a Get Time button sits below. The time string comes from new Date().toLocaleTimeString(). The h1 must show the time at load, and a click must refresh it to the current time.",
+        "Part 2 (bonus): make the h1 update every second without any click, using setInterval.",
+        "setInterval(fn, ms) calls fn repeatedly every ms milliseconds. Pass the function first and the delay second; leaving out the delay makes it fire as fast as possible and can freeze the sandbox. If that happens, close and reopen the tab; the code is saved.",
+        "(Extra) toLocaleTimeString() formats the time using the browser's locale (e.g. 2:05:09 PM in en-US, 14:05:09 in en-GB); it returns a string, which is what gets stored in state."
+      ]
+    },
+    {
+      "heading": "Part 1 walkthrough",
+      "points": [
+        "Inside App, compute const now = new Date().toLocaleTimeString(); and log it once to see the format (e.g. 14:05:09, depending on locale). The starter's demo console.log can then be removed.",
+        "Create state for it: const [time, setTime] = useState(now). The initial value is the time when the component first renders. Editors usually auto-import useState from react.",
+        "Use {time} in the h1 in place of the placeholder.",
+        "Write function updateTime() and set it as the button's onClick: <button onClick={updateTime}>.",
+        "Inside updateTime build a fresh value (const newTime = new Date().toLocaleTimeString()) and call setTime(newTime). Names are free; their position in the destructured array is what matters (first = value, second = updater).",
+        "Each click changes the state and React re-renders the h1 with the new time."
+      ]
+    },
+    {
+      "heading": "Part 2 walkthrough",
+      "points": [
+        "Call setInterval(updateTime, 1000) so the same update function runs every second. The state changes each tick, so the h1 refreshes continuously.",
+        "(Extra) Calling setInterval directly in the component body registers a new timer on every render; each tick sets state, which re-renders and adds yet another timer, so the number of timers keeps growing (the reference repo does the same). The idiomatic approach is useEffect(() => { const id = setInterval(updateTime, 1000); return () => clearInterval(id); }, []), which starts one timer after the first render and clears it when the component unmounts.",
+        "(Extra) Pass a function reference, not updateTime(), to setInterval or onClick."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Solution for both parts (lecture approach; setInterval in the component body accumulates timers, see the Extra note)",
+      "language": "jsx",
+      "code": "import { useState } from \"react\";\n\nfunction App() {\n  const now = new Date().toLocaleTimeString();\n  const [time, setTime] = useState(now);\n\n  function updateTime() {\n    const newTime = new Date().toLocaleTimeString();\n    setTime(newTime);\n  }\n\n  setInterval(updateTime, 1000);\n\n  return (\n    <div className=\"container\">\n      <h1>{time}</h1>\n      <button onClick={updateTime}>Get Time</button>\n    </div>\n  );\n}\n\nexport default App;"
+    },
+    {
+      "caption": "(Extra) Same ticking clock with useEffect and cleanup",
+      "language": "jsx",
+      "code": "import { useState, useEffect } from \"react\";\n\nfunction App() {\n  const [time, setTime] = useState(new Date().toLocaleTimeString());\n\n  useEffect(() => {\n    const id = setInterval(() => setTime(new Date().toLocaleTimeString()), 1000);\n    return () => clearInterval(id);\n  }, []);\n\n  return <h1>{time}</h1>;\n}"
+    }
+  ],
+  "task": {
+    "name": "Clock with Get Time button and live ticking",
+    "starting_point": "Sandbox whose App renders an h1 with placeholder text and a Get Time button; comments describe the two-part challenge and include a commented-out sayHi() example that logs every second via setInterval(sayHi, 1000).",
+    "goal": "Show the current time, refresh it on button click, then make it tick every second.",
+    "steps": [
+      "Inside App, get the time string with const now = new Date().toLocaleTimeString();.",
+      "Import useState from react and create const [time, setTime] = useState(now); then render {time} in the h1 instead of the placeholder.",
+      "Write function updateTime() { const newTime = new Date().toLocaleTimeString(); setTime(newTime); } inside App.",
+      "Attach it to the button: <button onClick={updateTime}>Get Time</button>. Click and check the h1 jumps to the current time.",
+      "Optional: uncomment the sayHi example to see setInterval(fn, 1000) log once per second, then remove it.",
+      "Bonus: add setInterval(updateTime, 1000); so the h1 refreshes every second without clicking (always pass the delay as the second argument)."
+    ],
+    "expected_result": "The h1 shows the time on load, changes when the button is pressed, and with part 2 changes every second.",
+    "solution_code": {
+      "language": "jsx",
+      "code": "import { useState } from \"react\";\n\nfunction App() {\n  const now = new Date().toLocaleTimeString();\n  const [time, setTime] = useState(now);\n\n  function updateTime() {\n    const newTime = new Date().toLocaleTimeString();\n    setTime(newTime);\n  }\n\n  setInterval(updateTime, 1000); // part 2 (lecture approach)\n\n  return (\n    <div className=\"container\">\n      <h1>{time}</h1>\n      <button onClick={updateTime}>Get Time</button>\n    </div>\n  );\n}\n\nexport default App;"
+    },
+    "reference_repo_path": "Section 36 - React.js/36.30 useState Hook Practice/usestate-hook-practice/src/App.jsx"
+  },
+  "pitfalls": [
+    "Omitting the interval delay (or mixing the argument order) in setInterval.",
+    "Calling setInterval in the render body creates a new timer on every render, so timers pile up and the number of state updates grows each second; in real apps start the timer once with useEffect and clear it with clearInterval.",
+    "Using the stale const now as the update value instead of computing a fresh time.",
+    "The reference solution keeps two separate state variables (time for the button, currtime for the ticking clock) with two handlers and two h1s, unlike the lecture's single shared state and update function."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (playground data only covers sections 1-11, 14, 15).",
+    "gaps_and_ideas": [
+      "Add as the practice section of the proposed 'useState: your first hook' lesson. Blurb: store a value that changes over time (the current time) in state and update it from a click and from a timer.",
+      "Tasks: (1) show new Date().toLocaleTimeString() in an h1 via useState; (2) refresh it with a Get Time button; (3) make it tick with setInterval(updateTime, 1000); (4) pass options such as { hour: '2-digit', minute: '2-digit' } to toLocaleTimeString to drop seconds; (5) add a Stop button that calls clearInterval with the stored timer id.",
+      "Starter code: App.jsx with <h1>TIME</h1>, a Get Time button and a commented setInterval(sayHi, 1000) example.",
+      "Interactive demo: two clocks side by side, one with setInterval in the render body and one using useEffect with cleanup, each showing a live 'active timers' counter so the accumulation is visible."
+    ]
+  }
+}

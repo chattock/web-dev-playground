@@ -1,0 +1,27 @@
+{
+  "index": 241,
+  "lecture_id": 17967524,
+  "title": "Tip from Angela - When Life Gives You Lemons",
+  "section": "31. Databases",
+  "duration_min": 6,
+  "kind": "tip",
+  "summary": "Motivational, non-technical talk about handling unfair setbacks by focusing on what you can control.",
+  "concepts": [
+    {
+      "heading": "Key takeaway",
+      "points": [
+        "The instructor recounts a school disappointment and the advice she received afterwards: some things are outside your control (other people's decisions), while your interpretation of events and your response are yours to set.",
+        "Applied to learning to code: unfair obstacles will happen, so keep working and building. Steady effort is presented as the best answer to setbacks.",
+        "No technical content in this lecture."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": []
+  }
+}

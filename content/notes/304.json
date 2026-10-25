@@ -1,0 +1,80 @@
+{
+  "index": 304,
+  "lecture_id": 17039392,
+  "title": "State in React - Declarative vs. Imperative Programming",
+  "section": "36. React.js",
+  "duration_min": 10,
+  "kind": "concept",
+  "summary": "Introduces state as the thing a React UI is derived from, and contrasts declarative (describe the UI per state) with imperative (DOM-manipulating) code using a strike-through to-do example. Ends by showing that a plain variable change does not re-render, which leads to hooks.",
+  "concepts": [
+    {
+      "heading": "UI as a function of state",
+      "points": [
+        "Core React idea: UI = f(state). The component describes what to show for each value of some data, and the screen follows when that data changes.",
+        "Analogy kept short: ice and water are the same thing shown differently depending on a temperature value.",
+        "Example app: a to-do item whose text is struck through once done. The state is a boolean isDone, false initially, switched to true when the user clicks the item."
+      ]
+    },
+    {
+      "heading": "Declarative version in React",
+      "points": [
+        "Start with a component rendering <p>Buy milk</p>.",
+        "Add inline styling through the style attribute, which takes a JavaScript object: style={{ textDecoration: \"line-through\" }} (outer braces = JSX expression, inner braces = object literal).",
+        "Extract the object into a constant, e.g. const strikeThrough = { textDecoration: \"line-through\" }, so the JSX stays readable.",
+        "Make it conditional with a ternary: style={isDone ? strikeThrough : null}. Null means no style applied.",
+        "Setting isDone to true in the source shows the struck text, false shows plain text. The code declares how the UI looks under each condition; this is declarative programming."
+      ]
+    },
+    {
+      "heading": "Imperative version in plain JavaScript",
+      "points": [
+        "The approach used earlier in the course: fetch the element with document.getElementById and assign to its style.textDecoration property directly.",
+        "Add a button with an onClick handler calling a function (strike) that applies line-through, and a second button/function (unStrike) that resets the property.",
+        "This is imperative: you explicitly grab an element and tell it what to do at each change. It achieves the same visual result but you must manage every transition by hand."
+      ]
+    },
+    {
+      "heading": "Why changing a plain variable is not enough",
+      "points": [
+        "In the declarative component, wiring buttons to functions that set isDone = true / false looks like it should work, but the page does not update.",
+        "A component's output is produced when it renders; changing a normal variable afterwards does not trigger React to render again, so the displayed elements stay as they were.",
+        "React needs to be told about the change through its own mechanism. Hooks are functions that let a component tie into React state (read it and change it); the next lecture covers the most common one, useState.",
+        "(Extra) The entry file renders App once with root.render(<App />). After that React only calls App again (re-renders) when that component's state, its props or a parent changes; a module-level var is none of those, so the click handlers run but the JSX is never re-evaluated.",
+        "(Extra) Even if App did re-run, a plain variable declared inside the component would be re-created with its initial value on every render, so it cannot remember anything between renders. State solves both problems."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Declarative styling driven by a variable (still static, no hook yet)",
+      "language": "jsx",
+      "code": "const strikeThrough = { textDecoration: \"line-through\" };\nvar isDone = false;\n\nfunction App() {\n  return <p style={isDone ? strikeThrough : null}>Buy milk</p>;\n}\n\nexport default App;"
+    },
+    {
+      "caption": "Imperative equivalent: grab the element and set its style directly",
+      "language": "javascript",
+      "code": "// <button onclick=\"strike()\">Strike</button>  <button onclick=\"unStrike()\">Undo</button>\nfunction strike() {\n  document.getElementById(\"root\").style.textDecoration = \"line-through\";\n}\n\nfunction unStrike() {\n  document.getElementById(\"root\").style.textDecoration = null; // clears the inline style\n}"
+    },
+    {
+      "caption": "Reference repo state of this lesson: variable-based buttons that do NOT update the UI",
+      "language": "jsx",
+      "code": "var isDone = false;\nfunction strike() { isDone = true; }\nfunction unStrike() { isDone = false; }\n\nfunction App() {\n  return (\n    <div>\n      <p style={isDone ? { textDecoration: \"line-through\" } : null}>Buy milk</p>\n      <button onClick={strike}>Change to strike through</button>\n      <button onClick={unStrike}>Change back</button>\n    </div>\n  );\n}"
+    }
+  ],
+  "task": null,
+  "pitfalls": [
+    "Expecting a normal variable assignment to refresh the screen; it will not re-render.",
+    "Mixing up the two brace pairs in style={{ ... }}.",
+    "(Extra) Writing CSS property names with hyphens inside the style object: React expects camelCase (textDecoration, backgroundColor)."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (playground data only covers sections 1-11, 14, 15).",
+    "gaps_and_ideas": [
+      "New lesson 'Thinking in state' placed before useState. Blurb: in React the UI is derived from data (UI = f(state)); describe how each state looks instead of issuing DOM commands.",
+      "Tasks: (1) render 'Buy milk' with style={isDone ? strikeThrough : null} and flip isDone in code to see both looks; (2) write the imperative version with document.getElementById(...).style.textDecoration and two buttons; (3) wire React buttons to functions that set isDone = true/false, add a console.log, and note that the log runs but the paragraph never changes; (4) explain in one sentence why (no re-render is triggered).",
+      "Starter code: App.jsx with a <p>Buy milk</p>, a const strikeThrough style object and two empty button handlers; plus a plain index.html with the same paragraph for the imperative part.",
+      "Interactive demo: side-by-side panels, imperative (each click appends the DOM command it ran to a log) and declarative (a single isDone value shown next to the rendered output), with a third panel where the button changes a plain variable and a 'render count' stays at 1."
+    ]
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "index": 277,
+  "lecture_id": 17038306,
+  "title": "What is React?",
+  "section": "36. React.js",
+  "duration_min": 7,
+  "kind": "theory",
+  "summary": "Overview of what React is, why it is worth learning and the core ideas behind it: reusable components, a component tree, mixing markup/style/logic per component, and efficient re-rendering through diffing.",
+  "concepts": [
+    {
+      "heading": "What React is",
+      "points": [
+        "React describes itself as a JavaScript library for building user interfaces; in practice it is treated as a front-end framework.",
+        "Goal: build UIs faster and with less repeated code, e.g. listing grids like Airbnb's where every tile shows the same kinds of fields (rating, badge, price) with different data.",
+        "Popularity is cited via Stack Overflow surveys (most loved/wanted), Google Trends overtaking Angular and Vue, and job listings that commonly ask for React plus Node. Used by companies such as Airbnb, Uber, Facebook and Netflix."
+      ]
+    },
+    {
+      "heading": "Components and the component tree",
+      "points": [
+        "A component is a reusable, customisable piece of UI. Write it once, then render it many times with different data.",
+        "A whole app is modelled as a tree: App contains NavBar and ToDoList; ToDoList contains many ListItem components; each ListItem contains Checkbox and ItemText.",
+        "Components are used like custom HTML elements, so page structure reads as a clean nested layout instead of long Bootstrap-style HTML blocks.",
+        "Benefits: less code, modular and scalable structure, easier to debug since each piece is isolated."
+      ]
+    },
+    {
+      "heading": "Mixing HTML, CSS and JS per component",
+      "points": [
+        "Earlier modules kept HTML, CSS and JS in separate files. React instead bundles a small amount of each into every component: its own markup, its own styling and its own behaviour.",
+        "Because each component manages itself, one part of a page can update independently (an infinite-scroll feed loading more posts, a post receiving a new comment) without the rest of the page refreshing."
+      ]
+    },
+    {
+      "heading": "Efficient re-rendering (diffing)",
+      "points": [
+        "When data or user input changes, React compares the new desired DOM tree with the current one, finds the differences, and updates only the affected parts (for example one checkbox going from unchecked to checked).",
+        "This is why React apps feel fast and interactive.",
+        "(Extra) This comparison mechanism is commonly called the virtual DOM and reconciliation."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (no data file exists for section 36)",
+    "gaps_and_ideas": [
+      "New lesson 'What is React?': blurb on components and the component tree.",
+      "Tasks: 1) sketch a component tree for a todo app on paper; 2) list the repeated parts of a product-card grid; 3) spot which part of a given page would re-render when one item changes.",
+      "Interactive demo idea: a clickable tree of components (App > NavBar, ToDoList > ListItem > Checkbox/ItemText) that highlights only the changed node when a checkbox is toggled, to illustrate diffing."
+    ]
+  }
+}

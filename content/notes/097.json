@@ -1,0 +1,95 @@
+{
+  "index": 97,
+  "lecture_id": 12373890,
+  "title": "Challenge: BMI Calculator Solution",
+  "section": "14. Introduction to Javascript ES6",
+  "duration_min": 6,
+  "kind": "solution",
+  "summary": "Walkthrough of the BMI calculator function: first verify the formula by hand, then build bmiCalculator(weight, height), then refine it with Math.pow and Math.round.",
+  "concepts": [
+    {
+      "heading": "Plan the maths before the code",
+      "points": [
+        "BMI = weight in kg divided by height in metres squared. Work an example on a calculator first (65 kg, 1.8 m: 1.8 x 1.8 = 3.24, 65 / 3.24 is about 20.06) so you know what the function should output.",
+        "The challenge's starter code (variables plus a console.log call) is pasted into a DevTools Snippet, and the function is written beneath it."
+      ]
+    },
+    {
+      "heading": "Building the function",
+      "points": [
+        "Start with the function keyword, then the exact name required by the tests (bmiCalculator), then parentheses holding the inputs in the required order: weight first, height second.",
+        "Inside the curly braces compute bmi = weight / (height * height). The brackets force the multiplication to be evaluated first; without them division would happen first and the result would be wrong.",
+        "Use the return keyword to hand the value back to the caller. Without return the function gives back undefined.",
+        "Paste into the exercise's test runner and press Check solution to confirm it passes."
+      ]
+    },
+    {
+      "heading": "Refinement 1: Math.pow",
+      "points": [
+        "Math.pow(base, exponent) raises a number to a power, so Math.pow(height, 2) replaces height * height. Same result, slightly tidier.",
+        "The method was found by searching the web ('raise a number to a power javascript') and reading the MDN page. Looking things up like this is a normal part of programming."
+      ]
+    },
+    {
+      "heading": "Refinement 2: Math.round",
+      "points": [
+        "Raw output has many decimal places (about 20.0672839...). BMI is normally shown as a whole number.",
+        "Math.round(x) returns the nearest integer: 2.5 and above rounds up to 3, 2.4 rounds to 2. Math.floor always rounds down, so round is the more accurate choice here.",
+        "Change the return line to return Math.round(bmi). With 65 and 1.8 the output is 20, and the test suite still passes.",
+        "(Extra) Math.ceil rounds up and toFixed(n) returns a string with n decimals; neither is needed here."
+      ]
+    },
+    {
+      "heading": "What comes next",
+      "points": [
+        "The following section covers control flow, which is how this BMI function will later be extended to interpret the number."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Final solution",
+      "language": "javascript",
+      "code": "function bmiCalculator(weight, height) {\n  var bmi = weight / Math.pow(height, 2);\n  return Math.round(bmi);\n}\n\nvar bmi = bmiCalculator(65, 1.8);\nconsole.log(\"Your bmi is \" + bmi);   // Your bmi is 20"
+    },
+    {
+      "caption": "First version using multiplication",
+      "language": "javascript",
+      "code": "function bmiCalculator(weight, height) {\n  var bmi = weight / (height * height);\n  return bmi;\n}"
+    }
+  ],
+  "task": {
+    "name": "BMI calculator function (solution)",
+    "starting_point": "Starter code declaring weight and height variables and logging the result of bmiCalculator, with the function left to write.",
+    "goal": "Define bmiCalculator(weight, height) that returns the BMI as a whole number.",
+    "steps": [
+      "Work an example by hand to know the expected value.",
+      "Write function bmiCalculator(weight, height) { ... } with inputs in that order.",
+      "Compute bmi = weight / (height * height), keeping the brackets.",
+      "Return bmi, then check against the tests.",
+      "Optionally swap in Math.pow(height, 2).",
+      "Return Math.round(bmi) to get a whole number."
+    ],
+    "expected_result": "bmiCalculator(65, 1.8) returns 20 and the check passes.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "var weight = 60;\nvar height = 1.7;\n\nfunction bmiCalculator(weight, height) {\n  var bmi = weight / Math.pow(height, 2);\n  return Math.round(bmi);\n}\nvar bmi = bmiCalculator(weight, height);\n\nconsole.log(\"Your bmi is \" + bmi);"
+    },
+    "reference_repo_path": "Section 14 - Introduction to Javascript ES6/14.15 - Challenge - Create a BMI Calculator/script.js"
+  },
+  "pitfalls": [
+    "Writing weight / height * height: it evaluates left to right and cancels out.",
+    "Forgetting return, so the function yields undefined.",
+    "Putting parameters in the wrong order (height, weight).",
+    "Using Math.floor when nearest rounding is wanted."
+  ],
+  "playground": {
+    "match": "s14-bmi (lesson 14.15, data/s14.js)",
+    "coverage": "Covers the task, brackets pitfall, Math.round vs floor/ceil/toFixed and a ** variant.",
+    "gaps_and_ideas": [
+      "Add a Math.pow(height, 2) variant since the lecture shows it.",
+      "Add a 'work it out on paper first' step with the 65 / 1.8 example.",
+      "Interactive demo idea: sliders for weight and height showing the unrounded and rounded BMI."
+    ]
+  }
+}

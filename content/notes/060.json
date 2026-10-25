@@ -1,0 +1,90 @@
+{
+  "index": 60,
+  "lecture_id": 37368434,
+  "title": "Display: Grid",
+  "section": "10. Grid",
+  "duration_min": 15,
+  "kind": "concept+exercise",
+  "summary": "Introduces CSS Grid as the two-dimensional layout tool, how it differs from flexbox, and how the two combine. Shows the minimum grid syntax (display: grid, grid-template-columns/rows, gap) and ends with an exercise that builds an 8x8 chessboard.",
+  "concepts": [
+    {
+      "heading": "Why Grid exists",
+      "points": [
+        "Layouts with blocks in both directions (a header, side nav, content areas, footer) are hard to build with a one-dimensional row of flex items, floats or tables. Grid is designed for these.",
+        "Real sites such as dashboards and weather pages are built from grid areas and stay proportional when resized."
+      ]
+    },
+    {
+      "heading": "Grid versus flexbox",
+      "points": [
+        "Flexbox: aligns content along one line (a row or a column). Grid: places content on two axes, rows and columns, like a table structure.",
+        "Grid items snap to shared column and row lines, so gaps and edges line up. Flex items adapt and squash to fit content, so items in different rows rarely align perfectly. Choose by whether you want strict boxes or flowing content.",
+        "A 1D grid is possible, and 2D arrangements are possible with wrapping flex, but each tool behaves differently when resized.",
+        "They are complementary and commonly nested: a flex column inside a grid cell, or a grid inside a flex item. Most designs combine both, plus other tools or frameworks.",
+        "The lecture points to a side-by-side demo site (appbrewery.github.io/grid-vs-flexbox) to watch each behave while resizing."
+      ]
+    },
+    {
+      "heading": "Minimum grid syntax",
+      "points": [
+        "Container: the parent gets display: grid. Its direct children become grid items. Same pattern as display: flex.",
+        "grid-template-columns defines the number and width of columns; grid-template-rows defines the rows. Values here are fr (fractional) units.",
+        "grid-template-columns: 1fr 2fr makes two columns where the second is twice the width of the first; grid-template-rows: 1fr 1fr makes two equal rows.",
+        "gap: 10px sets the spacing between both rows and columns, replacing margins and padding on the items.",
+        "(Extra) fr divides the free space of the container after fixed sizes are taken out; it is explained properly in the next lesson."
+      ]
+    },
+    {
+      "heading": "Default grid container behaviour",
+      "points": [
+        "A grid container is block-level so it tries to span the full width of its parent; its height only grows to fit the content (rows).",
+        "Items stretch to fill their cell unless width/height are set on them.",
+        "If columns are defined but rows are not, extra rows are created automatically (implicit rows) and sized to their content. This is why the chessboard already looks right with only columns defined; adding rows makes the intent explicit.",
+        "Setting a fixed width on the container (800px) stops the tracks from spreading out when the screen is wider."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Smallest useful grid: 2 columns in ratio 1:2, 2 equal rows, 10px gaps",
+      "language": "css",
+      "code": ".container {\n  display: grid;\n  grid-template-columns: 1fr 2fr;\n  grid-template-rows: 1fr 1fr;\n  gap: 10px;\n}"
+    }
+  ],
+  "task": {
+    "name": "10.1 Display Grid: chessboard",
+    "starting_point": "index.html has a .container holding 64 divs, each with class white or black, alternating so that colours flip each row. No CSS sizes or colours yet (the divs are empty and invisible). goal.png shows the board.",
+    "goal": "Make an 8x8 chessboard where every square is 100px by 100px, using display: grid and grid-template-columns/rows. Colours are optional (the reference uses #f0d9b5 and #b58863).",
+    "steps": [
+      "Give .white a height and width of 100px and a background colour.",
+      "Do the same for .black with a different colour. At this point the squares appear stacked vertically because divs are block elements.",
+      "Set .container to display: grid.",
+      "Add grid-template-columns with eight 1fr tracks.",
+      "Add grid-template-rows with eight 1fr tracks for clarity.",
+      "Give .container a width of 800px so the board stays compact on wide screens."
+    ],
+    "expected_result": "A compact 800 x 800 board of alternating light and dark squares.",
+    "solution_code": {
+      "language": "css",
+      "code": ".container {\n  width: 800px;\n  display: grid;\n  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;\n  grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;\n}\n.white {\n  height: 100px;\n  width: 100px;\n  background-color: #f0d9b5;\n}\n.black {\n  height: 100px;\n  width: 100px;\n  background-color: #b58863;\n}"
+    },
+    "reference_repo_path": "Section 10 - Grid/10.01 - Display Grid/solution.html"
+  },
+  "pitfalls": [
+    "Forgetting the container width: tracks spread across a wide screen and show gaps between squares.",
+    "Defining sizes on the items but not display: grid on the parent, which leaves squares stacked.",
+    "Counting the wrong number of tracks; 8 columns are needed for 8 squares per row.",
+    "(Extra) Repeating 1fr eight times works but repeat(8, 1fr) is shorter; repeat() comes in the next lesson."
+  ],
+  "playground": {
+    "match": "s10-display-grid (lesson 10.1, data/s10.js)",
+    "coverage": "Has a blurb on grid as 2D sibling of flexbox, tasks (display: grid, 8 equal columns/rows with 1fr, shorten with repeat), a chessboard starter, and an explore panel with a flexbox-vs-grid table and vocabulary (track, cell, line, area).",
+    "gaps_and_ideas": [
+      "Add a resizable-window demo that renders the same items in flex-wrap and grid so learners see grid snapping versus flex squashing.",
+      "Add the 1fr 2fr / 1fr 1fr mini-example with live gap slider before the chessboard.",
+      "Mention implicit rows (columns only still produces a board) and the full-width/auto-height defaults of a grid container.",
+      "Add a nested example: flex column inside a grid cell.",
+      "Pitfall to add: fixed container width vs spread tracks."
+    ]
+  }
+}

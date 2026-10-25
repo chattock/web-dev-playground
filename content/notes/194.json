@@ -1,0 +1,45 @@
+{
+  "index": 194,
+  "lecture_id": 12400782,
+  "title": "Install Node.js on Windows",
+  "section": "23. Node.js",
+  "duration_min": 0,
+  "kind": "setup",
+  "summary": "Short article with the steps to install the LTS release of Node.js on Windows, including the required restart, and to confirm the install in Hyper.",
+  "concepts": [
+    {
+      "heading": "Install steps (Windows)",
+      "points": [
+        "Get the Windows installer from nodejs.org and choose the LTS build (left-hand option on the download page).",
+        "Run the downloaded .msi installer.",
+        "Accept the licence, click Next through the screens and keep the default settings.",
+        "Restart the PC afterwards. Node commands will not work in the terminal until after a reboot.",
+        "Open Hyper and run node --version to confirm; the installed version number should appear."
+      ]
+    },
+    {
+      "heading": "(Extra) Useful checks",
+      "points": [
+        "(Extra) Keep the installer's default option that adds Node to PATH; without it the node command is not recognised.",
+        "(Extra) npm comes bundled with Node; npm --version confirms it is ready for the NPM lessons later in the section."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Confirm the install (in Hyper / Git Bash)",
+      "language": "bash",
+      "code": "node --version   # e.g. v20.x.x\nnpm --version    # (Extra)"
+    }
+  ],
+  "task": null,
+  "pitfalls": [
+    "Skipping the restart, then getting 'node is not recognized' in the terminal.",
+    "Picking the Current release instead of LTS."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": []
+  }
+}

@@ -1,0 +1,20 @@
+{
+ "index": 92,
+ "lecture_id": 12400112,
+ "title": "A Quick Note About the Next Lesson",
+ "section": "14. Introduction to Javascript ES6",
+ "duration_min": 0,
+ "kind": "admin",
+ "summary": "Short admin note placed before the lesson on function parameters. The article content sits behind an Open button and could not be read, so no detail is recorded.",
+ "concepts": [],
+ "code_examples": [],
+ "task": null,
+ "pitfalls": [
+  "Content not captured; likely a heads-up about the next lesson (function parameters and the Life in Weeks exercise)."
+ ],
+ "playground": {
+  "match": null,
+  "coverage": "Not applicable",
+  "gaps_and_ideas": []
+ }
+}

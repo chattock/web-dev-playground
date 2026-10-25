@@ -1,0 +1,116 @@
+{
+  "index": 65,
+  "lecture_id": 37388840,
+  "title": "Bootstrap Layout",
+  "section": "11. Bootstrap",
+  "duration_min": 21,
+  "kind": "concept+exercise",
+  "summary": "Explains Bootstrap's container / row / col structure, the 12-column sizing classes, the responsive breakpoints and how to combine several breakpoint classes on one element. Three online exercises (appbrewery.github.io/bootstrap-layout) ask the learner to match a demo's behaviour at each breakpoint by adding col classes; the solution is walked through with trial and error.",
+  "concepts": [
+    {
+      "heading": "Container, row, column",
+      "points": [
+        "Three nested pieces: a div.container as the starting point, a div.row inside it, and one or more column divs inside the row.",
+        "A bare class=\"col\" on several children makes Bootstrap share the row width equally: six cols get a sixth each, three get a third each.",
+        "The container is responsive: its max width changes with the viewport width (roughly 540px on phones, 720 or 960px on tablets, about 1000px+ on desktops, bigger still on wide screens).",
+        "container-{breakpoint} (container-sm, container-md, container-lg, container-xl, container-xxl) is 100% wide below that breakpoint and behaves like a normal container at and above it. Plain container is the same idea as container-sm.",
+        "container-fluid is 100% wide at every size, edge to edge. In practice container and container-fluid are the two used most: container for margins at the sides, fluid for edge-to-edge.",
+        "All these widths refer to the viewport width only."
+      ]
+    },
+    {
+      "heading": "Sized columns (12-column system)",
+      "points": [
+        "Think of each row as 12 equal slots. col-2, col-4, col-6 etc. say how many slots an element occupies, from col-1 to col-12. Bootstrap turns that into a percentage: col-6 is 50%, col-2 is one sixth.",
+        "Example: three divs with col-2, col-4, col-6 fill a full row (2 + 4 + 6 = 12) with no custom CSS.",
+        "Typical use: a navigation column of 2/12 beside main content of 10/12.",
+        "Totals above 12 push the extra column onto the next row. Totals under 12 leave empty space.",
+        "Mixing is allowed: two sized columns (col-2, col-4) plus a plain col means the plain col takes whatever remains."
+      ]
+    },
+    {
+      "heading": "Breakpoints",
+      "points": [
+        "Predefined widths based on common devices: sm (576px and up), md (768px and up), lg (992px and up), xl (1200px and up), xxl (1400px and up). Below 576px is the extra-small range, which has no infix in class names. Rough device mapping: sm phones, md tablets, lg laptops, xl desktops, xxl very large screens.",
+        "Infix classes are min-width based: col-sm-4 applies from the small breakpoint upward. Each class keeps applying at all larger sizes until another class overrides it. Layouts therefore go small first and are tweaked upward.",
+        "Below the smallest breakpoint class used, columns default to full width (stacked), as for col.",
+        "Using col-sm-4 on three elements means three per row from 576px, and stacked on narrower screens.",
+        "Bootstrap's breakpoints reduce the need to write media queries by hand.",
+        "One element can carry several breakpoint classes: for example col-lg-4 col-md-8 col-sm-12 gives 4/12 on large screens, 8/12 on medium and full width on small. Narrower screens usually get larger elements for readability.",
+        "(Extra) Bootstrap 5 writes this as col-12 col-md-8 col-lg-4; the unprefixed col-12 covers the smallest range, so col-sm-12 is only needed if you want a distinct step at sm.",
+        "Layout docs: the Layout section of the Bootstrap docs covers breakpoints, containers, columns and the grid system."
+      ]
+    },
+    {
+      "heading": "Solutions to the three online exercises",
+      "points": [
+        "The practice site shows a demo at the top and an editable HTML block below; after editing, press apply changes and resize the window to compare with the demo at each breakpoint.",
+        "Exercise 1: 50% on desktop, 100% on mobile. Add col-xl-6 to both divs (6/12 = 50% at 1200px and up). Below that the default is full width, so adding col-sm-12 is optional.",
+        "Exercise 2 (columns that change at lg and sm): at lg and above, 6/3/3 gives col-lg-6, col-lg-3, col-lg-3. Between sm and lg, first column full width and the other two half each, so the first column has no sm class and the others get col-sm-6. At the smallest size, each column takes 10 of 12 (found by trying 8, seeing it was too narrow, then 10). So a plain col-10 on each.",
+        "Exercise 3 (two columns, five widths): xxl 1 and 11 (col-xxl-1, col-xxl-11); xl 2 and 10; lg 4 and 8; md 6 and 6; below md both full width (an sm class would be redundant).",
+        "Each pair of numbers adds up to 12 so both columns stay on one row.",
+        "Method: start at the largest breakpoint, estimate proportions by eye (or with a ruler), apply, then step down. Trial and error is fine.",
+        "Finding breakpoint widths: in Chrome DevTools toggle the device toolbar, choose Responsive and drag the width bar while watching the pixel number, e.g. a jump at 1200px indicates xl."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Container, row and sized columns (2 + 4 + 6 = 12)",
+      "language": "html",
+      "code": "<div class=\"container\">\n  <div class=\"row\">\n    <div class=\"col-2\">2 of 12</div>\n    <div class=\"col-4\">4 of 12</div>\n    <div class=\"col-6\">6 of 12</div>\n  </div>\n</div>"
+    },
+    {
+      "caption": "Equal columns with a bare col, and mixing sized with remainder",
+      "language": "html",
+      "code": "<div class=\"row\">\n  <div class=\"col\">equal</div>\n  <div class=\"col\">equal</div>\n  <div class=\"col\">equal</div>\n</div>\n\n<div class=\"row\">\n  <div class=\"col-2\">fixed 2</div>\n  <div class=\"col-4\">fixed 4</div>\n  <div class=\"col\">takes the remaining 6</div>\n</div>"
+    },
+    {
+      "caption": "Several breakpoint classes on one element",
+      "language": "html",
+      "code": "<div class=\"col-lg-4 col-md-8 col-sm-12\">4/12 on lg+, 8/12 on md, full width on sm</div>"
+    },
+    {
+      "caption": "Exercise solutions (reconstructed from the walkthrough)",
+      "language": "html",
+      "code": "<!-- Exercise 1: 50% on desktop, 100% below -->\n<div class=\"row\">\n  <div class=\"col-xl-6\">A</div>\n  <div class=\"col-xl-6\">B</div>\n</div>\n\n<!-- Exercise 2 -->\n<div class=\"row\">\n  <div class=\"col-10 col-lg-6\">1</div>\n  <div class=\"col-10 col-sm-6 col-lg-3\">2</div>\n  <div class=\"col-10 col-sm-6 col-lg-3\">3</div>\n</div>\n\n<!-- Exercise 3 -->\n<div class=\"row\">\n  <div class=\"col-md-6 col-lg-4 col-xl-2 col-xxl-1\">1</div>\n  <div class=\"col-md-6 col-lg-8 col-xl-10 col-xxl-11\">2</div>\n</div>"
+    }
+  ],
+  "task": {
+    "name": "Bootstrap layout practice site (appbrewery.github.io/bootstrap-layout)",
+    "starting_point": "Online page with three exercises, each showing a demo area on top and an editable HTML snippet for your area underneath.",
+    "goal": "Add Bootstrap grid classes so your area reacts to window width exactly like the demo at every breakpoint.",
+    "steps": [
+      "Open the practice site and read the description of exercise 1: 50% width on desktop, 100% on mobile.",
+      "Edit the HTML using col-{breakpoint}-{n} classes; press apply changes.",
+      "Resize the window and compare with the demo at each breakpoint; use DevTools responsive mode to see the pixel width.",
+      "Repeat for exercise 2 (columns that change at lg and sm, and a narrow-screen width) and exercise 3 (two columns, proportions changing at xxl, xl, lg, md).",
+      "Check the Layout section of the Bootstrap docs if stuck."
+    ],
+    "expected_result": "Your area is indistinguishable from the demo as the window shrinks through each breakpoint.",
+    "solution_code": {
+      "language": "html",
+      "code": "<!-- Ex1 -->  col-xl-6 on both\n<!-- Ex2 -->  [col-10 col-lg-6] [col-10 col-sm-6 col-lg-3] [col-10 col-sm-6 col-lg-3]\n<!-- Ex3 -->  [col-md-6 col-lg-4 col-xl-2 col-xxl-1] [col-md-6 col-lg-8 col-xl-10 col-xxl-11]"
+    },
+    "reference_repo_path": null
+  },
+  "pitfalls": [
+    "Forgetting that breakpoint classes mean that size and above, not just that size.",
+    "Column numbers that do not add to 12 wrapping to a new row unexpectedly.",
+    "Missing the row wrapper: cols must sit in a row, which sits in a container.",
+    "Giving up on trial and error; matching a target by eye and adjusting is a normal workflow.",
+    "(Extra) The exercise solutions above for 2 and 3 are reconstructed from the spoken walkthrough, so verify against the practice site. No reference repo folder exists for this lecture."
+  ],
+  "playground": {
+    "match": "s11-intro (lesson 11.1, data/s11.js) - explore demos 'The 12-column system' and 'Breakpoint infixes'",
+    "coverage": "The two explore widgets already cover the 12-unit sizing (with wrap past 12) and the sm/md/lg/xl infix thresholds with a resizable frame. Tasks cover container, row, col-md-4.",
+    "gaps_and_ideas": [
+      "Add the container variants (container-sm...xxl, container-fluid) with a width readout in the breakpoint demo.",
+      "Add xxl (1400px) to the breakpoint list.",
+      "Add an explicit mix demo: fixed columns plus a plain col taking the remainder.",
+      "Add three tasks mirroring the practice-site exercises (50/100, 6-3-3 with sm stacking, five-step two-column ratios) with a target preview and a pass/fail check.",
+      "Explain min-width semantics (infix applies upward) and the mobile-first default of full width.",
+      "Show how to find breakpoints using DevTools responsive mode."
+    ]
+  }
+}

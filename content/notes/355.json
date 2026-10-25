@@ -1,0 +1,115 @@
+{
+  "index": 355,
+  "lecture_id": 31673694,
+  "title": "Persisting Non-Stable Types Using the Pre- and Postupgrade Methods",
+  "section": "41. Create Your Own Crypto Token",
+  "duration_min": 16,
+  "kind": "concept+exercise",
+  "summary": "Shows that redeploying with code changes wipes the in-memory HashMap ledger, then fixes it by copying the map into a stable array in preupgrade and rebuilding it in postupgrade. Also moves the initial owner balance into guarded initialisation and tightens visibility.",
+  "concepts": [
+    {
+      "heading": "The problem: state resets on upgrade",
+      "points": [
+        "Demo: fund the canister with 500,000,000 tokens, claim from the faucet (balance drops), then add a harmless Debug.print to main.mo and run dfx deploy again. The canister's balance is back to 0.",
+        "The code change must be real; a comment does not trigger an upgrade, but a print statement does.",
+        "Canister lifecycle: created if missing, code installed, and upgraded when the source changes. On upgrade, every non-stable variable is re-initialised from its initial expression, so balances goes back to a fresh map holding only the owner's supply.",
+        "Side note: owner and totalSupply never change, so they can be let constants rather than var."
+      ]
+    },
+    {
+      "heading": "Why a HashMap cannot simply be stable",
+      "points": [
+        "Adding the stable keyword to balances produces a compile error: HashMap is not a stable type (it contains mutable internal state and functions).",
+        "Stable types include arrays of stable elements, tuples, Nat, Text, Principal, etc.",
+        "Idea: use a stable array of (Principal, Nat) tuples as a temporary carrier. Declare private stable var balanceEntries : [(Principal, Nat)] = [] with the tuple element types mirroring the map's key and value.",
+        "Why not use the array permanently: lookups and updates (balances.get/put) would require a linear scan of the array, which is slow and, on the Internet Computer, costs cycles. The map gives fast key lookups, so convert only around upgrades."
+      ]
+    },
+    {
+      "heading": "System functions preupgrade and postupgrade",
+      "points": [
+        "system func preupgrade() and system func postupgrade() are special hooks the runtime calls just before the old code is replaced and just after the new code starts. They must be spelled exactly and need the system keyword in front of func; copy-paste to avoid typos. Each declaration needs a trailing semicolon inside the actor.",
+        "preupgrade: balanceEntries := Iter.toArray(balances.entries()). Use := to reassign. HashMap.entries() returns an iterator of (key, value) pairs; Iter.toArray (import mo:base/Iter) collects an iterator into an array. The map itself is not iterable, hence entries().",
+        "After preupgrade finishes, the upgrade resets balances to an empty map, but stable balanceEntries survives.",
+        "postupgrade: balances := HashMap.fromIter<Principal, Nat>(balanceEntries.vals(), 1, Principal.equal, Principal.hash). fromIter takes an iterator (arrays expose one via .vals()), the initial capacity, the key-equality function and the hash function, the same last three arguments used when creating the map. Type parameters give the key and value types.",
+        "balances therefore must be declared with var (reassignable), not as an immutable value."
+      ]
+    },
+    {
+      "heading": "Initial owner balance",
+      "points": [
+        "The line balances.put(owner, totalSupply) at actor top level runs on every upgrade, which would keep resetting the ledger to the owner holding everything.",
+        "Fix: wrap it in if (balances.size() < 1) { balances.put(owner, totalSupply) } and place it inside postupgrade, so it only seeds the ledger when the restored map is empty.",
+        "Also keep the same guarded block at top level after balances is declared, because a fresh project that is deployed for the first time never goes through postupgrade; this way the owner still starts with the supply.",
+        "Result: only transfer (used by payOut and users) changes balances afterwards."
+      ]
+    },
+    {
+      "heading": "Encapsulation",
+      "points": [
+        "Mark balances and balanceEntries as private. Only code inside the actor can touch them; balances is changed only by transfer, and balanceEntries only by the upgrade hooks.",
+        "(Extra) Actor members that are not public are private by default; the explicit keyword documents intent."
+      ]
+    },
+    {
+      "heading": "Verification",
+      "points": [
+        "Repeat the experiment: fund canister, claim from faucet (down 10,000), add a Debug.print, deploy again, refresh the site, check the same canister ID. The balance is preserved.",
+        "If you lose the canister ID, rerun dfx canister id token.",
+        "(Extra) The reference repo is written for newer Motoko where the actor is declared persistent actor and the rebuilt map is marked transient var; lecture code uses a plain actor with stable var. In the persistent form, any non-transient var is persisted automatically, but the HashMap still has to be transient and rebuilt, so the same pre/postupgrade approach applies.",
+        "(Extra) Upgrade hooks can trap if the data is large; for big ledgers newer approaches (stable data structures) avoid copying everything."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Pattern as built in the lecture (plain actor)",
+      "language": "motoko",
+      "code": "import Iter \"mo:base/Iter\";\nimport HashMap \"mo:base/HashMap\";\n\nactor Token {\n  let owner : Principal = Principal.fromText(\"<owner principal>\");\n  let totalSupply : Nat = 1000000000;\n\n  private stable var balanceEntries : [(Principal, Nat)] = [];\n  private var balances = HashMap.HashMap<Principal, Nat>(1, Principal.equal, Principal.hash);\n\n  if (balances.size() < 1) {\n    balances.put(owner, totalSupply);   // first-ever deploy, no upgrade happens\n  };\n\n  // ... balanceOf, getSymbol, payOut, transfer ...\n\n  system func preupgrade() {\n    balanceEntries := Iter.toArray(balances.entries());\n  };\n\n  system func postupgrade() {\n    balances := HashMap.fromIter<Principal, Nat>(balanceEntries.vals(), 1, Principal.equal, Principal.hash);\n    if (balances.size() < 1) {\n      balances.put(owner, totalSupply);\n    };\n  };\n};"
+    },
+    {
+      "caption": "Newer syntax used in the reference repo",
+      "language": "motoko",
+      "code": "persistent actor Token {\n  let owner : Principal = Principal.fromText(\"...\");\n  let totalSupply : Nat = 1000000000;\n  let symbol : Text = \"DANG\";\n  private stable var balanceEntries : [(Principal, Nat)] = [];\n  private transient var balances = HashMap.HashMap<Principal, Nat>(1, Principal.equal, Principal.hash);\n  // pre/postupgrade identical to above\n}"
+    }
+  ],
+  "task": {
+    "name": "Make the token ledger survive upgrades",
+    "starting_point": "Project from the previous lesson, where a redeploy zeros the balances.",
+    "goal": "Balances and the funded canister stay intact after dfx deploy with code changes.",
+    "steps": [
+      "Reproduce the bug: fund the canister, claim, add a Debug.print, redeploy, see 0.",
+      "Import Iter from mo:base/Iter.",
+      "Add private stable var balanceEntries : [(Principal, Nat)] = [].",
+      "Make balances a private var HashMap.",
+      "Write preupgrade to store Iter.toArray(balances.entries()) in balanceEntries.",
+      "Write postupgrade to rebuild balances with HashMap.fromIter and balanceEntries.vals().",
+      "Move the owner seeding into an if (balances.size() < 1) block inside postupgrade and also keep one after the map declaration.",
+      "Change owner/totalSupply/symbol to let.",
+      "Redeploy twice and confirm balances are retained."
+    ],
+    "expected_result": "Balances persist across upgrades; fresh installs still give the owner the full supply.",
+    "solution_code": {
+      "language": "motoko",
+      "code": "import Iter \"mo:base/Iter\";\nimport HashMap \"mo:base/HashMap\";\n\nactor Token {\n  let owner : Principal = Principal.fromText(\"<owner principal>\");\n  let totalSupply : Nat = 1000000000;\n\n  private stable var balanceEntries : [(Principal, Nat)] = [];\n  private var balances = HashMap.HashMap<Principal, Nat>(1, Principal.equal, Principal.hash);\n\n  if (balances.size() < 1) {\n    balances.put(owner, totalSupply);   // first-ever deploy, no upgrade happens\n  };\n\n  // ... balanceOf, getSymbol, payOut, transfer ...\n\n  system func preupgrade() {\n    balanceEntries := Iter.toArray(balances.entries());\n  };\n\n  system func postupgrade() {\n    balances := HashMap.fromIter<Principal, Nat>(balanceEntries.vals(), 1, Principal.equal, Principal.hash);\n    if (balances.size() < 1) {\n      balances.put(owner, totalSupply);\n    };\n  };\n};"
+    },
+    "reference_repo_path": "Section 41 - Create Your Own Crypto Token/41.08 Persisting Non-Stable Types Using the Pre- and Postupgrade Methods/DANG/src/DANG_backend/main.mo"
+  },
+  "pitfalls": [
+    "Testing with a comment-only change, which does not trigger an upgrade.",
+    "Misspelling preupgrade/postupgrade or omitting system.",
+    "Declaring balances with let so it cannot be reassigned in postupgrade.",
+    "Trying to mark the HashMap stable.",
+    "Leaving the unconditional balances.put(owner, totalSupply) so upgrades reset the owner.",
+    "Forgetting that dfx deploy --mode reinstall (or a fresh start) still wipes stable data."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet.",
+    "gaps_and_ideas": [
+      "Lesson idea 'Persisting data across upgrades': compare stable and non-stable state.",
+      "Tasks: spot the reset, build the array copy, rebuild the map, guard the seed, mark things private.",
+      "Interactive demo: a simulated 'upgrade' button that resets an in-memory Map unless the 'save to stable array before, restore after' toggle is on."
+    ]
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "index": 149,
+  "lecture_id": 12384172,
+  "title": "What is jQuery?",
+  "section": "19. jQuery",
+  "duration_min": 4,
+  "kind": "theory",
+  "summary": "Introduces jQuery as the most widely used JavaScript library and shows why it exists: it collapses verbose DOM code into short expressions such as $(\"h1\"). It also notes that a library is simply someone else's code you pull into your project, like Bootstrap.",
+  "concepts": [
+    {
+      "heading": "What a library is",
+      "points": [
+        "A library is a bundle of code written by someone else that you include in your project to save effort. Bootstrap, used earlier for CSS/JS components, is the same idea.",
+        "jQuery was created by John Resig because plain DOM scripting felt long-winded for simple jobs. It became the most downloaded JavaScript library.",
+        "Later sections of the course meet other libraries too, so this is the first example of a pattern: add a library, then call its functions."
+      ]
+    },
+    {
+      "heading": "The problem jQuery solves",
+      "points": [
+        "The comparison example is a drum-kit style snippet: query all buttons, loop over them with a for loop, attach a click listener to each, and inside the callback query the h1 and set its style.color to red.",
+        "In plain JavaScript each step needs its own call (querySelectorAll, loop, addEventListener, querySelector, .style.color), so a trivial behaviour takes many lines.",
+        "jQuery condenses the selecting, looping over matches and event wiring into a few short calls, so code is quicker to write, easier to read and easier to debug."
+      ]
+    },
+    {
+      "heading": "The jQuery function and the $ shorthand",
+      "points": [
+        "jQuery(\"h1\") looks up elements by a CSS selector, much as document.querySelector(\"h1\") does.",
+        "$ is a shorthand alias for jQuery, so $(\"h1\") and jQuery(\"h1\") are identical.",
+        "(Extra) Unlike querySelector, the jQuery selection can hold many elements and methods called on it apply to all of them, which is why the explicit for loop disappears."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Plain JavaScript version: listener on every button, turns the h1 red",
+      "language": "javascript",
+      "code": "var buttons = document.querySelectorAll(\"button\");\nfor (var i = 0; i < buttons.length; i++) {\n  buttons[i].addEventListener(\"click\", function () {\n    document.querySelector(\"h1\").style.color = \"red\";\n  });\n}"
+    },
+    {
+      "caption": "Selecting an element: vanilla vs jQuery",
+      "language": "javascript",
+      "code": "document.querySelector(\"h1\");   // vanilla\njQuery(\"h1\");                   // full name\n$(\"h1\");                        // shorthand, same thing"
+    },
+    {
+      "caption": "(Extra) The same behaviour with jQuery",
+      "language": "javascript",
+      "code": "$(\"button\").click(function () {\n  $(\"h1\").css(\"color\", \"red\");\n});"
+    }
+  ],
+  "task": null,
+  "pitfalls": [
+    "jQuery code only works once the library has been loaded into the page; otherwise $ is undefined (covered in the next lecture)."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "New lesson 'jQuery: less code for the same DOM job'. Blurb: compare vanilla DOM scripting with jQuery. Tasks: (1) write the vanilla loop-plus-listener that colours the h1; (2) rewrite it with $(...); (3) count the lines and characters of each; (4) note which version is easier to read. Starter code: three buttons and an h1. Interactive demo: side-by-side panes running both versions on the same buttons."
+    ]
+  }
+}

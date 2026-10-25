@@ -1,0 +1,75 @@
+{
+  "index": 99,
+  "lecture_id": 12373892,
+  "title": "Random Number Generation in Javascript: Building a Love Calculator",
+  "section": "15. Intermediate Javascript",
+  "duration_min": 11,
+  "kind": "concept+exercise",
+  "summary": "Explains Math.random() and the scale-floor-shift recipe for producing whole numbers in a range, notes that the numbers are pseudo-random, then has the learner build a love calculator that shows a random 1-100 score.",
+  "concepts": [
+    {
+      "heading": "Math.random()",
+      "points": [
+        "Math.random() is a built-in function taking no inputs; the parentheses are still required to call it.",
+        "It returns a floating-point number from 0 up to but not including 1 (up to about 16 decimal places such as 0.9999...). 0 can occur; 1 never does.",
+        "A new value is produced on every call, which makes it useful for games, dice and similar features.",
+        "The MDN page for Math.random describes it as pseudo-random with the range [0, 1) and says to scale it to the range you need."
+      ]
+    },
+    {
+      "heading": "Scale, floor, shift recipe",
+      "points": [
+        "Multiply by the number of outcomes wanted: n * 6 gives 0 to 5.999...",
+        "Wrap in Math.floor() to drop the decimals, giving whole numbers 0 to 5. The result can never be 6.",
+        "Add 1 to move the range to 1 through 6. In general: Math.floor(Math.random() * count) + lowest.",
+        "Whole numbers are almost always what you want, so floor is nearly always applied."
+      ]
+    },
+    {
+      "heading": "Pseudo-random numbers",
+      "points": [
+        "Computers are deterministic, so they produce numbers with algorithms that merely look statistically random; hence pseudo-random.",
+        "The lecture points to an extra-reading video in the resources and treats it as optional."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Dice roll, 1 to 6",
+      "language": "javascript",
+      "code": "var n = Math.random();      // 0 <= n < 1\nn = n * 6;                  // 0 <= n < 6\nn = Math.floor(n);          // 0..5\nn = n + 1;                  // 1..6\nconsole.log(n);"
+    }
+  ],
+  "task": {
+    "name": "Love Calculator",
+    "starting_point": "An empty script file (or browser DevTools snippet).",
+    "goal": "Ask for two names, ignore them, and alert a random love score between 1 and 100.",
+    "steps": [
+      "Call prompt() twice, once for each person's name. The answers are not stored because they are never used.",
+      "Create a variable loveScore from Math.random().",
+      "Multiply it by 100, then wrap in Math.floor() to get whole numbers 0 to 99.",
+      "Add 1 so the range becomes 1 to 100.",
+      "Show the result with alert(\"Your love score is \" + loveScore + \"%\")."
+    ],
+    "expected_result": "Two prompt boxes appear, then an alert with a different whole-number percentage between 1 and 100 on each run.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "alert(\"Welcome to the love calculator\");\nprompt(\"Enter your name\");\nprompt(\"Enter your crush's name\");\nvar loveCalculator = Math.random();\nloveCalculator = loveCalculator * 100;\nloveCalculator = Math.floor(loveCalculator) + 1;\nalert(\"The chance of you staying together is \" + loveCalculator + \"%\");"
+    },
+    "reference_repo_path": "Section 15 - Intermediate Javascript/15.01 - Random Number Generation in Javascript - Building a Love Calculator/script.js"
+  },
+  "pitfalls": [
+    "Forgetting the parentheses on Math.random, which gives the function rather than a number.",
+    "Forgetting + 1, so the range is 0-99 and can never reach 100.",
+    "Using Math.round instead of floor, which skews the ends of the range.",
+    "Expecting the maximum value to equal the multiplier."
+  ],
+  "playground": {
+    "match": "s15-random (lesson 15.1, data/s15.js)",
+    "coverage": "Covers raw random, the 1-100 love score with alert, dice, coin flip and random list item, plus the formula and pseudo-random note.",
+    "gaps_and_ideas": [
+      "Add the two prompt() calls from the challenge to the task list.",
+      "Add a histogram demo that rolls a die 1000 times to show the distribution and that 0 and 7 never appear."
+    ]
+  }
+}

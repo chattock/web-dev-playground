@@ -1,0 +1,138 @@
+{
+  "index": 302,
+  "lecture_id": 17039262,
+  "title": "React Conditional Rendering with the Ternary Operator & AND Operator",
+  "section": "36. React.js",
+  "duration_min": 19,
+  "kind": "concept+exercise",
+  "summary": "Builds a login screen that shows either a greeting or a login form depending on an isLoggedIn flag. Starts with an if/else helper function, refactors the form into reusable Login and Input components, then replaces the function with an inline ternary and finally the && short-circuit pattern.",
+  "concepts": [
+    {
+      "heading": "The goal: show different components for different state",
+      "points": [
+        "Typical use: a logged-out visitor sees a login form, a logged-in user sees a greeting or dashboard. The same App decides which one to render from a single boolean.",
+        "Start from the provided CodeSandbox (fork it). It has one App component with a heading and a hard-coded form. A module-level variable isLoggedIn (false at first) stands in for the result of authentication.",
+        "Rule of thumb: check one value, render one of several components."
+      ]
+    },
+    {
+      "heading": "First approach: a helper function with if/else",
+      "points": [
+        "Write a function (e.g. renderConditionally) that tests isLoggedIn. If true it returns the h1 greeting element, otherwise it returns the form markup.",
+        "Call it inside the JSX with curly braces and parentheses: {renderConditionally()}. The braces switch from JSX to JavaScript, and the parentheses actually invoke the function.",
+        "Comparing with === true is redundant because isLoggedIn is already a boolean; writing if (isLoggedIn) is enough. Flip the variable between true and false and the page updates to show the other branch.",
+        "It works but is verbose for something done constantly in React, which motivates the shorter forms below."
+      ]
+    },
+    {
+      "heading": "Single responsibility: extract Login and Input components",
+      "points": [
+        "Each component should do one job (single responsibility principle). The inline form markup is moved out of App.",
+        "Challenge in the lecture: create a Login component holding the whole form, and an Input component for each field, configured with props so it can be reused.",
+        "Login.jsx: import React, define function Login returning the form, export default Login. In App, import Login from './Login' and render <Login />.",
+        "Input.jsx: returns a single <input>. Because the two inputs differ in type and placeholder, those become props: <Input type=\"text\" placeholder=\"Username\" /> and <Input type=\"password\" placeholder=\"Password\" />.",
+        "Inside Input, read props.type and props.placeholder in curly braces: <input type={props.type} placeholder={props.placeholder} />.",
+        "The page looks identical afterwards, but responsibilities are split: Input = one field, Login = whole form, App = which one is shown."
+      ]
+    },
+    {
+      "heading": "Why an if statement cannot go inside JSX braces",
+      "points": [
+        "Curly braces in JSX accept only expressions (anything that resolves to a single value). An if/else, a loop or a switch is a statement and causes a syntax error if pasted in.",
+        "So the conditional logic needs to be rewritten as an expression to live inline where the output is rendered."
+      ]
+    },
+    {
+      "heading": "Ternary operator",
+      "points": [
+        "Syntax: condition ? valueIfTrue : valueIfFalse. The ? and : separate three expressions; because all three are expressions, the whole thing is one expression and legal inside JSX.",
+        "Applied here: {isLoggedIn ? <h1>Hello</h1> : <Login />}. Read it as 'is isLoggedIn true? then the h1, else the Login component'.",
+        "The condition can be the boolean itself; no need for == true.",
+        "Toggling the variable swaps which component appears, with no helper function needed."
+      ]
+    },
+    {
+      "heading": "Rendering nothing: null in the false branch",
+      "points": [
+        "Sometimes you only want something when a condition holds. Demo: const currentTime = new Date().getHours(), which returns the hour 0-23.",
+        "{currentTime > 12 ? <h1>Why are you still working?</h1> : null} shows the heading after noon and nothing before. React renders nothing for null.",
+        "Testing trick: temporarily construct a Date for a fixed time (e.g. new Date(2019, 11, 1, 9)) to try morning and evening cases."
+      ]
+    },
+    {
+      "heading": "The && (AND) short-circuit pattern",
+      "points": [
+        "In JavaScript, a && b only evaluates b when a is truthy. If a is falsy, evaluation stops and the result is a. This is called short-circuit evaluation.",
+        "In JSX: {currentTime > 12 && <h1>Why are you still working?</h1>}. When the left side is true the right side (the element) is evaluated and rendered; when false it is skipped and React renders nothing for false.",
+        "It is equivalent to the ternary with null in the else branch, just shorter. Using it is optional; you will see it very often in real-world React code.",
+        "When reading such code, the intent is not to test that both sides are true, but to render the right side only if the left side is true.",
+        "(Extra) currentTime > 12 is false during the 12:00-12:59 hour (getHours() returns 12), so the message actually appears from 13:00; use >= 12 if noon itself should count.",
+        "(Extra) The element on the right of && or inside a ternary branch can span several lines; wrap it in parentheses, e.g. {cond && ( <div>...</div> )}, so the JSX parses cleanly."
+      ]
+    },
+    {
+      "heading": "Extra notes",
+      "points": [
+        "(Extra) Beware of numbers on the left: {count && <p/>} renders a literal 0 when count is 0, because 0 is a valid renderable value. Use count > 0 && ... instead.",
+        "(Extra) true, false, null and undefined are all ignored by React when rendering, which is why both null and a false && result show nothing."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Approach 1: helper function with if/else (after the form has been extracted into Login)",
+      "language": "jsx",
+      "code": "import Login from \"./Login\";\n\nvar isLoggedIn = false;\n\nfunction renderConditionally() {\n  if (isLoggedIn) {\n    return <h1>Hello</h1>;\n  } else {\n    return <Login />;\n  }\n}\n\nfunction App() {\n  return <div className=\"container\">{renderConditionally()}</div>;\n}\n\nexport default App;"
+    },
+    {
+      "caption": "Input.jsx and Login.jsx: reusable Input driven by props, used twice inside Login",
+      "language": "jsx",
+      "code": "// Input.jsx\nfunction Input(props) {\n  return <input type={props.type} placeholder={props.placeholder} />;\n}\nexport default Input;\n\n// Login.jsx\nimport Input from \"./Input\";\n\nfunction Login() {\n  return (\n    <form className=\"form\">\n      <Input type=\"text\" placeholder=\"Username\" />\n      <Input type=\"password\" placeholder=\"Password\" />\n      <button type=\"submit\">Login</button>\n    </form>\n  );\n}\nexport default Login;"
+    },
+    {
+      "caption": "Approach 2: inline ternary",
+      "language": "jsx",
+      "code": "import Login from \"./Login\";\n\nvar isLoggedIn = false;\n\nfunction App() {\n  return (\n    <div className=\"container\">\n      {isLoggedIn ? <h1>Hello</h1> : <Login />}\n    </div>\n  );\n}\n\nexport default App;"
+    },
+    {
+      "caption": "Ternary with null vs && short-circuit",
+      "language": "jsx",
+      "code": "const currentTime = new Date().getHours(); // 0-23\n\nfunction App() {\n  return (\n    <div className=\"container\">\n      {/* ternary, nothing in the false branch */}\n      {currentTime > 12 ? <h1>Why are you still working?</h1> : null}\n\n      {/* same result with && */}\n      {currentTime > 12 && <h1>Why are you still working?</h1>}\n    </div>\n  );\n}"
+    }
+  ],
+  "task": {
+    "name": "Refactor the login flow into components and inline conditionals",
+    "starting_point": "Forked CodeSandbox with a single App file containing an h1 greeting and a hard-coded login form, plus an isLoggedIn variable.",
+    "goal": "Show the greeting when isLoggedIn is true and the login form when false, using reusable components and inline conditional expressions.",
+    "steps": [
+      "Add var isLoggedIn = false; at the top of App.jsx (outside the component) to stand in for an authentication result.",
+      "Write renderConditionally(): if (isLoggedIn) return the <h1>Hello</h1>, else return the form markup. Call it inside the container div as {renderConditionally()} (braces to enter JavaScript, parentheses to call it). Flip the variable to true/false to check both branches.",
+      "Create Login.jsx: a function Login that returns the whole <form className=\"form\"> with the two inputs and the submit button; export default Login. In App.jsx import Login from \"./Login\" and return <Login /> from the else branch.",
+      "Create Input.jsx: a function Input(props) returning <input type={props.type} placeholder={props.placeholder} />; export it. In Login, import it and replace the two raw inputs with <Input type=\"text\" placeholder=\"Username\" /> and <Input type=\"password\" placeholder=\"Password\" />. The page should look exactly as before.",
+      "Delete renderConditionally and put the ternary straight into the JSX: {isLoggedIn ? <h1>Hello</h1> : <Login />}. Toggle isLoggedIn again to confirm.",
+      "Add const currentTime = new Date().getHours(); and render <h1>Why are you still working?</h1> only when currentTime > 12, first with a ternary whose false branch is null, then with the && form."
+    ],
+    "expected_result": "Greeting when isLoggedIn is true, Username/Password form when false; the after-noon message appears only when the hour is greater than 12.",
+    "solution_code": {
+      "language": "jsx",
+      "code": "// App.jsx (final ternary version)\nimport Login from \"./Login\";\n\nvar isLoggedIn = false;\n\nfunction App() {\n  return (\n    <div className=\"container\">\n      {isLoggedIn ? <h1>Hello</h1> : <Login />}\n    </div>\n  );\n}\nexport default App;\n\n// Login.jsx\nimport Input from \"./Input\";\n\nfunction Login() {\n  return (\n    <form className=\"form\">\n      <Input type=\"text\" placeholder=\"Username\" />\n      <Input type=\"password\" placeholder=\"Password\" />\n      <button type=\"submit\">Login</button>\n    </form>\n  );\n}\nexport default Login;\n\n// Input.jsx\nfunction Input(props) {\n  return <input type={props.type} placeholder={props.placeholder} />;\n}\nexport default Input;"
+    },
+    "reference_repo_path": "Section 36 - React.js/36.26 React Conditional Rendering with the Ternary Operator & AND Operator/conditional-rendering/src"
+  },
+  "pitfalls": [
+    "Pasting an if/else into JSX braces gives a syntax error because it is a statement.",
+    "Forgetting the parentheses when calling the helper function: {renderConditionally} passes the function itself instead of its result.",
+    "Confusing && in JSX with a 'both must be true' check; it is a render-if guard.",
+    "The reference repo names the form component LoginForm and adds a small Button component (type and text props), differing from the lecture's Login/Input split; it also writes isLoggedIn == true in the ternary (redundant) and leaves the old helper function commented out (with a misspelt name). The notes' solution uses the lecture naming."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (playground data only covers sections 1-11, 14, 15).",
+    "gaps_and_ideas": [
+      "New lesson 'Conditional rendering' (s36). Blurb: JSX braces only accept expressions, so choose what to render with a ternary (either/or) or && (this-or-nothing) instead of if/else.",
+      "Tasks: (1) render <h1>Hello</h1> or a login form from an isLoggedIn flag with a helper function using if/else; (2) replace the helper with an inline ternary; (3) extract an Input component taking type and placeholder props and use it twice in a Login component; (4) show 'Why are you still working?' only after 12:00 using a ternary with null, then rewrite it with &&; (5) predict what {0 && <p>Items</p>} renders, then fix it with count > 0 &&.",
+      "Starter code: App.jsx with var isLoggedIn = false, an h1 and the form written inline; empty Login.jsx and Input.jsx files.",
+      "Interactive demo: a toggle switch for isLoggedIn and an hour slider (0-23) that drive a live preview, with the if/else, ternary and && versions of the code shown side by side and the active branch highlighted."
+    ]
+  }
+}

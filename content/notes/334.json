@@ -1,0 +1,83 @@
+{
+  "index": 334,
+  "lecture_id": 31673324,
+  "title": "Orthogonal Persistance",
+  "section": "38. Build Your First Defi (Decentralised Finance) DApp - DBANK",
+  "duration_min": 8,
+  "kind": "concept+exercise",
+  "summary": "Introduces orthogonal persistence: a canister can keep its variable state across redeploys without a database. A variable marked stable survives upgrades; a plain variable is reset. Demonstrated by redeploying with and without the stable keyword.",
+  "concepts": [
+    {
+      "heading": "What persistence means here",
+      "points": [
+        "Normally, restarting or redeploying a program resets variables to their initial values; the earlier increments are lost. A JS demo makes this obvious: add 5 to a variable, remove that line, reload, and the value is back to the start.",
+        "To keep data across runs in ordinary software you need explicit persistence: a database, with code to write and read it.",
+        "On the Internet Computer a canister can retain its whole state (variables, collections, objects) automatically. It is called orthogonal because the developer does not have to write any storage code for it; it comes from the platform design."
+      ]
+    },
+    {
+      "heading": "stable vs flexible variables",
+      "points": [
+        "A normal `var` is a flexible variable and is reset on upgrade. Flexible is the default, matching other languages.",
+        "Prefix with `stable` to opt in: `stable var currentValue : Nat = 300;` Now the value survives redeploys and restarts, even downtime.",
+        "A stable declaration still has an initial value, used only the first time the canister is installed.",
+        "(Extra) The reference repo notes that in newer Motoko with `persistent actor`, variables are stable implicitly, so the explicit keyword triggers a redundant-stable warning (M0218). Type annotation `: Nat` is added in that code."
+      ]
+    },
+    {
+      "heading": "Why the reassignment line must go",
+      "points": [
+        "A statement like `currentValue := 100;` in the actor body runs every time the actor code is initialised (each deploy), overwriting whatever was restored.",
+        "To see persistence working, comment out that line. The declaration's initial value applies once; the replace operator would clobber it every time."
+      ]
+    },
+    {
+      "heading": "Experiment to run",
+      "points": [
+        "Without stable: deploy, query (300), topUp 100, query (400); change any line (e.g. add a Debug.print) and redeploy; query shows 300 again.",
+        "With stable: repeat the same steps; after redeploy the query still reports 400.",
+        "Use checkBalance (query) to read the value, and Candid UI to call topUp."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Stable variable (reference repo version, reassignment commented out)",
+      "language": "motoko",
+      "code": "persistent actor DBank {\n  stable var currentValue : Nat = 300;\n  // currentValue := 100;   // would overwrite the persisted value on every deploy\n\n  public func topUP(amount : Nat) {\n    currentValue += amount;\n  };\n\n  public query func checkBalance() : async Nat {\n    return currentValue;\n  };\n};"
+    }
+  ],
+  "task": {
+    "name": "Observe orthogonal persistence",
+    "starting_point": "DBank with topUp and checkBalance, currentValue starting at 300.",
+    "goal": "See the balance reset on redeploy without stable, and survive with stable.",
+    "steps": [
+      "Comment out the `currentValue := 100;` line.",
+      "Deploy, use Candid UI to topUp 100 and query: 400.",
+      "Make a trivial edit, redeploy, query again: back to 300.",
+      "Add the stable keyword to the variable declaration, deploy, topUp 100 (400).",
+      "Make another trivial edit, redeploy and query: still 400."
+    ],
+    "expected_result": "Without stable the balance resets to 300; with stable it stays at 400 after redeploys.",
+    "solution_code": {
+      "language": "motoko",
+      "code": "stable var currentValue : Nat = 300;"
+    },
+    "reference_repo_path": "Section 38 - Build Your First Defi (Decentralised Finance) DApp - DBANK/38.06 Orthogonal Persistance/DBANK/src/DBANK/main.mo"
+  },
+  "pitfalls": [
+    "Leaving the := reassignment in place, which resets the value on each run and hides the effect of stable.",
+    "Expecting non-stable vars to survive redeploys.",
+    "Forgetting that an initial value is only used on first install for stable variables.",
+    "(Extra) Changing a stable variable's type between deployments can need migration code; keep types compatible while experimenting."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (no section 38 file).",
+    "gaps_and_ideas": [
+      "New lesson 'Orthogonal persistence': stable vs flexible variables.",
+      "Tasks: (1) predict the value after redeploy for each kind; (2) add stable; (3) explain why := must be commented out; (4) write a table of what survives redeploys; (5) compare to saving state in localStorage.",
+      "Interactive demo idea: a mock canister with a Redeploy button; toggle stable on/off for a counter and watch whether it resets, with the reassignment line toggle as a second switch."
+    ]
+  }
+}

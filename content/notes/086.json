@@ -1,0 +1,86 @@
+{
+ "index": 86,
+ "lecture_id": 12371812,
+ "title": "Challenge: Changing String Casing Solution",
+ "section": "14. Introduction to Javascript ES6",
+ "duration_min": 9,
+ "kind": "solution",
+ "summary": "Walks through the capitalise-the-first-letter challenge by decomposing it into small steps, checking each variable in the console, then adding one more step so odd input like angELA still comes out correctly.",
+ "concepts": [
+  {
+   "heading": "Problem decomposition",
+   "points": [
+    "The main goal is a skill rather than the code: split a large problem into pieces, and split any piece that still feels hard.",
+    "Top-level plan: (1) store the prompted name, (2) capitalise its first letter, (3) greet the user in an alert.",
+    "Step 2 turned out to be too big and was split into: isolate first character, uppercase it, isolate the remainder, join them.",
+    "(Extra) Simpler one-liners exist on Stack Overflow, but the exercise deliberately restricts you to the module's tools."
+   ]
+  },
+  {
+   "heading": "Verifying each step in the console",
+   "points": [
+    "Run each line in the browser console as it is written and then type the variable name to confirm its value (for example the first character is a lowercase a).",
+    "This incremental checking catches mistakes early instead of debugging a finished block."
+   ]
+  },
+  {
+   "heading": "Slicing the first character and the rest",
+   "points": [
+    "name.slice(0, 1) starts at position 0 and stops before position 1, giving just the first character.",
+    "name.slice(1, name.length) starts after the first character and runs to the end.",
+    "Hard-coding an end index (such as 6 for Angela) only works for names of that exact length, so use the length property, which adapts to whatever the user enters.",
+    "Uppercase the isolated first character with .toUpperCase() (parentheses required) and join with + concatenation."
+   ]
+  },
+  {
+   "heading": "Edge case: capital letters later in the name",
+   "points": [
+    "Input like a lowercase start with capitals near the end (e.g. angELA) leaves the tail in capitals with the first version of the solution.",
+    "Fix by adding a step that reassigns the remainder: restOfName = restOfName.toLowerCase();",
+    "Lesson: test with unusual input, because real users will supply it."
+   ]
+  }
+ ],
+ "code_examples": [
+  {
+   "caption": "Step-by-step solution with the edge case handled",
+   "language": "javascript",
+   "code": "var name = prompt(\"What is your first name?\");\n\n// a) isolate the first character\nvar firstChar = name.slice(0, 1);\n// b) upper-case it\nvar upperCaseFirstChar = firstChar.toUpperCase();\n// c) isolate everything after it\nvar restOfName = name.slice(1, name.length);\n// d) lower-case the remainder (guards against input like \"angELA\")\nrestOfName = restOfName.toLowerCase();\n// e) join the pieces\nvar capitalisedName = upperCaseFirstChar + restOfName;\n\nalert(\"Hello, \" + capitalisedName);"
+  }
+ ],
+ "task": {
+  "name": "Solution walkthrough: capitalised greeting",
+  "starting_point": "Empty script; the challenge from the previous lecture.",
+  "goal": "Greet the user with a name whose first letter is uppercase and whose other letters are lowercase.",
+  "steps": [
+   "Create name from prompt().",
+   "Create firstChar with name.slice(0, 1).",
+   "Create upperCaseFirstChar with firstChar.toUpperCase().",
+   "Create restOfName with name.slice(1, name.length).",
+   "Reassign restOfName to its toLowerCase() version.",
+   "Concatenate upperCaseFirstChar + restOfName and use it in alert(\"Hello, \" + ...)."
+  ],
+  "expected_result": "Typing angELA (or any casing) produces an alert saying Hello, Angela.",
+  "solution_code": {
+   "language": "javascript",
+   "code": "var name = prompt(\"What is your first name?\");\n\n// a) isolate the first character\nvar firstChar = name.slice(0, 1);\n// b) upper-case it\nvar upperCaseFirstChar = firstChar.toUpperCase();\n// c) isolate everything after it\nvar restOfName = name.slice(1, name.length);\n// d) lower-case the remainder (guards against input like \"angELA\")\nrestOfName = restOfName.toLowerCase();\n// e) join the pieces\nvar capitalisedName = upperCaseFirstChar + restOfName;\n\nalert(\"Hello, \" + capitalisedName);"
+  },
+  "reference_repo_path": "Section 14 - Introduction to Javascript ES6/14.08 - Challenge - Changing Casing in Text"
+ },
+ "pitfalls": [
+  "Hard-coding the slice end index instead of using name.length.",
+  "Not lowercasing the remainder, so mixed-case input keeps stray capitals.",
+  "Forgetting the empty parentheses on the case methods.",
+  "(Extra) Cancelling the prompt returns null, and null.slice throws an error; the lecture does not handle this."
+ ],
+ "playground": {
+  "match": "s14-casing (lesson 14.8, data/s14.js)",
+  "coverage": "Solution block uses slice(0,1) and slice(1) with both case methods, plus a chained one-liner and a capitalise-every-word bonus.",
+  "gaps_and_ideas": [
+   "The playground solution uses slice(1) and skips the name.length reasoning; add a note on why the second argument is optional and how length was the lecture's approach.",
+   "Add the decomposition lesson explicitly: list the a to e sub-steps as a checklist in the tasks.",
+   "Add an edge-case task: test with angELA and with an empty string.",
+   "Explore demo idea: a stepper that shows the value of each intermediate variable as the learner types."
+  ]
+ }
+}

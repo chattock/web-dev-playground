@@ -1,0 +1,100 @@
+{
+  "index": 259,
+  "lecture_id": 40494262,
+  "title": "One to Many Relationships",
+  "section": "33. PostgreSQL",
+  "duration_min": 13,
+  "kind": "concept+exercise",
+  "summary": "Covers the one to many (equivalently many to one) relationship using student and homework_submission tables, where the 'many' table carries a foreign key to the 'one' table. Shows joining the two and narrowing the selected columns.",
+  "concepts": [
+    {
+      "heading": "One to many vs many to one",
+      "points": [
+        "One row on one side relates to many rows on the other: one student has many homework submissions; one customer has many orders.",
+        "The direction depends on the starting table: from student it is one to many; from homework_submission it is many to one. It is the same relationship.",
+        "Each submission belongs to exactly one student (no group work in this example).",
+        "In crow's-foot diagrams the 'many' end has the three-pronged foot touching the foreign key field, the 'one' end attaches to the primary key."
+      ]
+    },
+    {
+      "heading": "Where the keys live",
+      "points": [
+        "The many-side table gets its own primary key (id SERIAL PRIMARY KEY) because every submission must be uniquely identifiable.",
+        "It also gets a foreign key column (student_id) storing the id of the owning student. No UNIQUE here, so the same student id can repeat, which is what makes it one to many.",
+        "Compared with one to one: the only structural difference is dropping UNIQUE and giving the child table its own id."
+      ]
+    },
+    {
+      "heading": "Creating the table",
+      "points": [
+        "homework_submission has three fields: id SERIAL PRIMARY KEY, mark INTEGER, student_id INTEGER REFERENCES student(id).",
+        "student_id is INTEGER so it matches the type of student.id; REFERENCES student(id) names the table and column it points to and makes it a foreign key.",
+        "Real schemas would add more columns (date, class, teacher); this one is kept minimal."
+      ]
+    },
+    {
+      "heading": "Naming convention",
+      "points": [
+        "Singular (student) or plural (students) table names are both acceptable. Follow the team's rule and stay consistent, never mix them."
+      ]
+    },
+    {
+      "heading": "Inserting data",
+      "points": [
+        "Only mark and student_id are supplied; id is auto-generated 1, 2, 3 by SERIAL.",
+        "One INSERT can add several rows by listing multiple value tuples separated by commas: (98, 1), (87, 1), (88, 1). All three belong to student 1.",
+        "Viewing homework_submission alone shows only numeric student ids, which are hard to read, hence the join."
+      ]
+    },
+    {
+      "heading": "Joining",
+      "points": [
+        "SELECT * FROM student JOIN homework_submission ON student.id = homework_submission.student_id returns one row per submission with the student's details repeated on each.",
+        "Qualifying the column (table.column) is clearer; unqualified student_id works only because the name exists in just one table.",
+        "Narrow the output by listing columns instead of *: SELECT student.id, first_name, last_name, mark. id must be qualified because both tables have it; the other names are unique so need no prefix.",
+        "Table order after FROM does not change the matched set for an inner join."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Many-to-one table, data and joins",
+      "language": "sql",
+      "code": "CREATE TABLE homework_submission (\n  id SERIAL PRIMARY KEY,\n  mark INTEGER,\n  student_id INTEGER REFERENCES student(id)\n);\n\nINSERT INTO homework_submission (mark, student_id)\nVALUES (98, 1), (87, 1), (88, 1);\n\nSELECT *\nFROM student\nJOIN homework_submission\nON student.id = homework_submission.student_id;\n\nSELECT student.id, first_name, last_name, mark\nFROM student\nJOIN homework_submission\nON student.id = student_id;"
+    }
+  ],
+  "task": {
+    "name": "Add homework_submission and write the join yourself",
+    "starting_point": "school database from the previous lesson with student and contact_detail; queries.sql from the resources.",
+    "goal": "Create the many-side table, insert three submissions for student 1, then write the join before looking at the answer.",
+    "steps": [
+      "Run CREATE TABLE homework_submission and refresh to see it.",
+      "Run the INSERT with three (mark, student_id) tuples.",
+      "View the table to see the raw ids.",
+      "Write a query joining student to homework_submission on the matching id, without peeking at queries.sql.",
+      "Narrow it to student.id, first_name, last_name and mark."
+    ],
+    "expected_result": "Three rows, one per submission, each showing Angela Yu with marks 98, 87 and 88.",
+    "solution_code": {
+      "language": "sql",
+      "code": "SELECT student.id, first_name, last_name, mark\nFROM student\nJOIN homework_submission\nON student.id = student_id"
+    },
+    "reference_repo_path": "Section 33 - PostgreSQL/33.12 - One to Many Relationships/queries.sql"
+  },
+  "pitfalls": [
+    "Adding UNIQUE to the foreign key turns it into one to one.",
+    "Selecting id without a table prefix gives an ambiguous column error.",
+    "Inventing a student_id that does not exist in student causes a foreign key violation.",
+    "Mixing singular and plural table names."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (section 33 has no playground data file).",
+    "gaps_and_ideas": [
+      "New lesson 'SQL relationships: one to many': blurb on foreign keys in the many table.",
+      "Tasks: create the child table; insert several rows in one INSERT; join all columns; join with a narrowed column list; try inserting a bad student_id and read the error.",
+      "Starter: student table pre-filled with two students, empty homework_submission.",
+      "Interactive demo: click a student to highlight all linked submission rows and draw crow's-foot lines."
+    ]
+  }
+}

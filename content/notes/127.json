@@ -1,0 +1,56 @@
+{
+  "index": 127,
+  "lecture_id": 12400574,
+  "title": "Dicee Challenge Step 3 - Create a Random Number",
+  "section": "17. Boss Level Challenge 1 - The Dicee Game",
+  "duration_min": 1,
+  "kind": "article-task",
+  "summary": "Step 3: in the script, create randomNumber1 holding a random whole number from 1 to 6 and verify it in the console.",
+  "concepts": [
+    {
+      "heading": "Random integer from 1 to 6",
+      "points": [
+        "Math.random() returns a decimal from 0 up to but not including 1.",
+        "Multiply by 6 to get 0 up to (not including) 6.",
+        "Math.floor rounds down to a whole number, giving 0-5.",
+        "Add 1 to shift the range to 1-6.",
+        "Store the result in a variable named randomNumber1 and run it repeatedly to check the range."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Dice roll formula",
+      "language": "javascript",
+      "code": "var randomNumber1 = Math.floor(Math.random() * 6) + 1; // 1, 2, 3, 4, 5 or 6"
+    }
+  ],
+  "task": {
+    "name": "Step 3: random number",
+    "starting_point": "Empty script linked to the page.",
+    "goal": "A variable with a random value 1-6.",
+    "steps": [
+      "Declare randomNumber1.",
+      "Assign Math.floor(Math.random() * 6) + 1.",
+      "Log it and refresh several times to see values vary."
+    ],
+    "expected_result": "Console shows different integers between 1 and 6.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "var randomNumber1 = Math.floor(Math.random() * 6) + 1;\nconsole.log(randomNumber1);"
+    },
+    "reference_repo_path": "Section 17 - Boss Level Challenge 1 - The Dicee Game"
+  },
+  "pitfalls": [
+    "Forgetting + 1, which produces 0-5.",
+    "Using Math.round, which skews the odds of 1 and 6.",
+    "Writing Math.random() * 6 + 1 without floor, giving decimals."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (no s17.js data file); covered by the proposed Dicee project lesson.",
+    "gaps_and_ideas": [
+      "Demo: a roll counter or histogram to see the distribution."
+    ]
+  }
+}

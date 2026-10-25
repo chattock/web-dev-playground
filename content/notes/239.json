@@ -1,0 +1,28 @@
+{
+  "index": 239,
+  "lecture_id": 18113037,
+  "title": "Tip from Angela - How to Get a Job as Programmer",
+  "section": "30. Build Your Own API",
+  "duration_min": 2,
+  "kind": "tip",
+  "summary": "Short career tip for learners aiming at a developer job: demonstrated skills and collaboration matter more than formal credentials.",
+  "concepts": [
+    {
+      "heading": "Key takeaways",
+      "points": [
+        "Most employers weigh what a candidate can do above where they studied. A minority have hard degree filters, but they are the exception.",
+        "Build a portfolio. Browse job listings on sites like Indeed or LinkedIn, note the skills requested, and create projects that show those skills.",
+        "Show teamwork as well: answer questions on Stack Overflow or in the course Q&A, and take part in code reviews with more senior developers.",
+        "Good team members work with people both above them (to learn from) and below them (to teach). Building a visible record of both helps convince recruiters."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": []
+  }
+}

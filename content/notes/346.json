@@ -1,0 +1,106 @@
+{
+  "index": 346,
+  "lecture_id": 31673590,
+  "title": "Retrieving Data from a Canister",
+  "section": "40. Building DApps on ICP with a React Frontend",
+  "duration_min": 12,
+  "kind": "concept+exercise",
+  "summary": "Adds the Read step of CRUD. A query function readNotes converts the stored List to an array and returns it; in App.jsx a useEffect with an empty dependency array calls an async fetchData on first load and puts the result in state. Also fixes the display order by prepending new notes in the frontend to match the backend.",
+  "concepts": [
+    {
+      "heading": "State of play",
+      "points": [
+        "Notes created in the UI already reach the canister's notes list (visible in the debug output), but nothing reads them back, so the UI loses them on refresh."
+      ]
+    },
+    {
+      "heading": "The readNotes query function",
+      "points": [
+        "Declare it as public query func readNotes() : async [Note]. It takes no input.",
+        "The query keyword marks a function that only reads state. Query calls skip consensus and respond much faster than update calls, so use them for any read-only method.",
+        "Return type is an array of Note, written [Note], not a List. Arrays map closely to JavaScript arrays, so the data arrives on the frontend as a plain array of objects with title and content.",
+        "The backend still stores a List because pushing and later removing items is cheaper than on an array (arrays are serialised and expensive to rebuild on chain). Convert only when returning.",
+        "List.toArray(notes) takes one argument, the list, and returns an array. Motoko's base library has fewer utility functions than JS or Python, so finding the right one means reading the module docs.",
+        "After editing main.mo, run dfx deploy so the generated declarations include readNotes."
+      ]
+    },
+    {
+      "heading": "Loading data on first render with useEffect",
+      "points": [
+        "useState re-renders the component on updates, but a hook is needed to run code when the page first loads. useEffect runs after a component renders, including the first render.",
+        "First argument: a function to run (arrow function, no inputs). A console.log inside is a quick way to confirm when it fires.",
+        "The function passed to useEffect cannot itself be async, so define a separate async function fetchData and call it from inside the effect.",
+        "fetchData: const notesArray = await dkeeper_backend.readNotes(); then setNotes(notesArray). The await is needed because canister calls return promises.",
+        "Trap: setNotes changes state, which re-renders App, which triggers useEffect again, which fetches again, endlessly. The console shows the log repeating.",
+        "Fix: pass a second argument, a dependency array. useEffect re-runs only when a listed value changes; an empty array [] means run once, after the first render.",
+        "Result: add notes, refresh, and they stay, because they are read from the canister each load."
+      ]
+    },
+    {
+      "heading": "Fixing the order",
+      "points": [
+        "Backend push prepends, so after a refresh the newest note appears first, but the frontend's addNote appended new notes to the end, so the order flipped on reload.",
+        "Newest-first matches how note apps normally behave and keeps new items visible at the top of a long list.",
+        "Change addNote's returned array from [...prevNotes, newNote] to [newNote, ...prevNotes]. Now the UI order matches the canister order before and after refresh."
+      ]
+    },
+    {
+      "heading": "Remaining gap",
+      "points": [
+        "Delete only changes frontend state, so a refreshed page re-fetches the deleted note from the canister. Handled in the next lesson."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Motoko: the new query function (added below createNote)",
+      "language": "motoko",
+      "code": "public query func readNotes() : async [Note] {\n  return List.toArray(notes);\n};"
+    },
+    {
+      "caption": "App.jsx after this lesson (reference repo)",
+      "language": "jsx",
+      "code": "import { useEffect, useState } from \"react\";\nimport { dkeeper_backend } from \"../../declarations/dkeeper_backend\";\n\nfunction App() {\n  const [notes, setNotes] = useState([]);\n\n  function addNote(newNote) {\n    setNotes((prevNotes) => {\n      dkeeper_backend.createNote(newNote.title, newNote.content);\n      return [newNote, ...prevNotes];\n    });\n  }\n\n  useEffect(() => {\n    fetchData();\n  }, []);\n\n  async function fetchData() {\n    const notesArray = await dkeeper_backend.readNotes();\n    setNotes(notesArray);\n  }\n  // deleteNote and JSX unchanged\n}"
+    }
+  ],
+  "task": {
+    "name": "Read notes back from the canister",
+    "starting_point": "Project from the previous lesson where createNote stores notes in a List but the UI never loads them.",
+    "goal": "Notes persist across page refreshes and appear newest first.",
+    "steps": [
+      "Add public query func readNotes() : async [Note] returning List.toArray(notes).",
+      "Run dfx deploy.",
+      "In App.jsx import useEffect.",
+      "Add useEffect(() => { fetchData(); }, []).",
+      "Write async function fetchData that awaits dkeeper_backend.readNotes() and calls setNotes.",
+      "Observe (optionally) the infinite loop by removing the [] and then restore it.",
+      "Change addNote to return [newNote, ...prevNotes].",
+      "Add notes, refresh and confirm they persist in the same order."
+    ],
+    "expected_result": "Refreshing keeps all notes, with the latest at the top before and after reload.",
+    "solution_code": {
+      "language": "jsx",
+      "code": "useEffect(() => {\n  fetchData();\n}, []);\n\nasync function fetchData() {\n  const notesArray = await dkeeper_backend.readNotes();\n  setNotes(notesArray);\n}"
+    },
+    "reference_repo_path": "Section 40 - Building DApps on ICP with a React Frontend/40.03 Retrieving Data from a Canister/dkeeper/src/dkeeper_frontend/src/App.jsx"
+  },
+  "pitfalls": [
+    "Omitting the [] dependency array, which creates an endless fetch/render loop.",
+    "Making the useEffect callback itself async.",
+    "Forgetting await on the canister call, so a Promise is stored in state.",
+    "Returning the List directly instead of converting to an array.",
+    "Not redeploying after editing main.mo.",
+    "Appending on the frontend while the backend prepends, flipping the order on refresh.",
+    "(Extra) In React StrictMode dev builds effects run twice on mount; that is not the infinite loop."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (site data has files only for sections 1-11, 14, 15).",
+    "gaps_and_ideas": [
+      "New lesson 'Read: load saved notes with useEffect'. Blurb: query calls, async fetch and the dependency array.",
+      "Tasks: (1) add readNotes with query and toArray; (2) write fetchData with await; (3) add [] and explain the effect of removing it; (4) fix ordering by changing spread order; (5) predict what happens on refresh after a delete.",
+      "Starter code: App.jsx with a mock async backend object (setTimeout returning an array) so it can run in the browser sandbox without ICP.",
+      "Interactive demo idea: a render counter showing how many times useEffect fires with no dependency array, with [] and with [notes]."
+    ]
+  }
+}

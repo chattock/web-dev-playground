@@ -1,0 +1,28 @@
+{
+  "index": 134,
+  "lecture_id": 12383928,
+  "title": "What We'll Make: Drum Kit",
+  "section": "18. Advanced Javascript and DOM Manipulation",
+  "duration_min": 1,
+  "kind": "setup",
+  "summary": "Short preview of the Drum Kit project built across this section. It frames the section goal: reacting to both button clicks and keyboard presses through DOM event listeners.",
+  "concepts": [
+    {
+      "heading": "What the Drum Kit does",
+      "points": [
+        "The page shows a row of keys, each standing for one drum in a drum set.",
+        "Clicking a key plays the matching drum sound.",
+        "Pressing the corresponding key on the keyboard plays the same sound, so both input routes share one behaviour.",
+        "The project is the vehicle for intermediate DOM topics: attaching event listeners to buttons and to the keyboard, and responding to what the user did."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (section 18 has no playground file).",
+    "gaps_and_ideas": []
+  }
+}

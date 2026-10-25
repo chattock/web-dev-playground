@@ -1,0 +1,52 @@
+{
+  "index": 356,
+  "lecture_id": 31673702,
+  "title": "What is the Internet Identity?",
+  "section": "41. Create Your Own Crypto Token",
+  "duration_min": 6,
+  "kind": "theory",
+  "summary": "Explains why the token app needs real user authentication and introduces Internet Identity, the Internet Computer's anonymous, passwordless login system based on WebAuthn and device-held keys.",
+  "concepts": [
+    {
+      "heading": "The problem in the current app",
+      "points": [
+        "Without login, every visitor reaches the backend as the anonymous principal, so everyone shares one identity: claims and transfers are not tied to a real user.",
+        "The same login flow is familiar from signing in to the NNS dapp or claiming free cycles: it prompts for an Internet Identity and a device check such as a security key or laptop biometrics."
+      ]
+    },
+    {
+      "heading": "What Internet Identity is",
+      "points": [
+        "An authentication framework for the Internet Computer that plays the role 'Sign in with Google/Facebook' plays elsewhere, but without a third party learning who you are.",
+        "Rationale: storing credentials safely is hard and breaches are common, so delegating it is attractive. OAuth with big providers does that but exposes your activity to them. Internet Identity delegates it while staying anonymous.",
+        "You can create any number of identity 'anchors'. Each acts as a pseudonym for logging into dapps. No username, password, email, seed phrase, one-time code or authenticator app is requested.",
+        "Result: services cannot link a person across apps; each app sees a different application-specific principal derived from the identity."
+      ]
+    },
+    {
+      "heading": "How it works",
+      "points": [
+        "Built on the Web Authentication API (WebAuthn), a W3C and FIDO specification supported by major browsers and operating systems.",
+        "Secured with the Internet Computer's chain-key cryptography; devices with fingerprint, face unlock or hardware keys act as authenticators.",
+        "Adding a device to an anchor generates a key pair. The public key is stored on the blockchain; the private key stays inside the device, protected by its biometric or PIN.",
+        "Logging in to a dapp needs both parts to authorise a session, and the result is a pseudonymous, per-application identity (principal) delivered to the app.",
+        "Users avoid remembering credentials, removing the weakest link in typical account security.",
+        "(Extra) Dapps do not receive the anchor number, only the derived principal; the frontend gets it via the @dfinity/auth-client library, covered next."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [
+    "Treating the anonymous principal as a real user (all visitors share it).",
+    "Confusing the anchor number with the principal a dapp sees."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet.",
+    "gaps_and_ideas": [
+      "Optional explainer card in a future Internet Computer lesson: public key on-chain, private key on device, per-app principal.",
+      "Interactive demo: pick two fake apps, click 'log in' with one anchor, and show that each app receives a different principal."
+    ]
+  }
+}

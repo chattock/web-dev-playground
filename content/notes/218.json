@@ -1,0 +1,76 @@
+{
+  "index": 218,
+  "lecture_id": 12386668,
+  "title": "GitHub and Remote Repositories",
+  "section": "27. Git, Github and Version Control",
+  "duration_min": 10,
+  "kind": "concept",
+  "summary": "Shows how to publish a local Git repository to GitHub: create an empty repository in the browser, link it with git remote add origin, upload the history with git push -u origin main, and view commits on GitHub. Recaps the local pipeline (working directory, staging, local repo) and where the remote fits.",
+  "concepts": [
+    {
+      "heading": "Remote repositories and GitHub",
+      "points": [
+        "A remote repository is a copy of the project hosted on another machine; GitHub is the hosting service used in the course. It is free; create an account at github.com and confirm the email address.",
+        "Create a repo in the browser: use the + menu at the top right, choose New repository, give it a name (the demo reuses the local folder name, Story) and an optional description.",
+        "Visibility: Public means anyone can see every committed file; Private restricts access. Public repos are useful for learning from others' code and for contributing to open-source projects.",
+        "Leave 'initialize with a README' unticked when pushing an existing local repo, so the remote starts empty and there are no conflicting commits.",
+        "After creation, GitHub shows setup instructions. The command-line route (push an existing repository) is the one used in the lesson; the GitHub Desktop client is an alternative the instructor does not use."
+      ]
+    },
+    {
+      "heading": "Connecting local to remote",
+      "points": [
+        "Run commands from inside the local project folder (the working directory). git log first confirms which commits exist, two in the demo.",
+        "git remote add origin <URL>: registers a remote called origin pointing at the GitHub repository URL copied from the page. The name is arbitrary, but origin is the standard convention and recommended so others recognise it.",
+        "git push -u origin main: uploads the commits of the local main branch to the remote named origin. The -u flag (upstream) links the local branch to the remote one so later you can simply run git push or git pull.",
+        "main is the default branch: the linear chain of save points. Branches are covered in a later lesson.",
+        "Success is signalled by the prompt returning and a message that the local main now tracks the remote main from origin. Upload time depends on repository size.",
+        "(Extra) Older Git setups may create the first branch as master; git branch -M main renames the current branch so it matches GitHub's default. GitHub's setup page lists this command too."
+      ]
+    },
+    {
+      "heading": "Viewing the result on GitHub",
+      "points": [
+        "Refreshing the repo page shows all the files with their latest commit messages.",
+        "The Commits list shows each save point and its time; opening one shows exactly which lines changed in that commit.",
+        "Insights then Network (the graph view) draws the main branch with one node per commit; hovering shows each message.",
+        "Hosting history on GitHub also helps for non-code projects, such as writing, since any earlier version can be seen or restored."
+      ]
+    },
+    {
+      "heading": "Mental model",
+      "points": [
+        "Local flow: working directory, git add into the staging area, git commit into the local repository, building a main branch timeline.",
+        "Remote: a parallel repository on GitHub. Local and remote can differ; git push sends local commits to the remote, which is what syncs them.",
+        "In the demo the local repo is the .git folder in Story and the remote is the GitHub project that stores all the commits."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Push an existing local repo to a new empty GitHub repo",
+      "language": "bash",
+      "code": "cd ~/Desktop/Story\ngit log                                            # confirm the local commits\ngit remote add origin https://github.com/<user>/Story.git\ngit branch -M main                                 # only if your branch is not already called main\ngit push -u origin main                            # upload commits and link the branches"
+    },
+    {
+      "caption": "(Extra) Useful follow-up commands",
+      "language": "bash",
+      "code": "git remote -v      # list configured remotes and their URLs\ngit push           # later pushes need no arguments after -u\ngit pull           # fetch and merge new commits from origin"
+    }
+  ],
+  "task": null,
+  "pitfalls": [
+    "Ticking 'add a README' on GitHub before pushing an existing project, which leads to a rejected push because the histories differ.",
+    "Pasting the wrong URL or running the commands outside the project folder.",
+    "Anything committed to a public repository is public, including secrets; the next lesson (.gitignore) addresses this.",
+    "(Extra) Authentication: pushing over HTTPS requires a personal access token or a credential helper rather than the account password."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "Extend the proposed Git playground lesson with a 'remote' step: a visual of two repositories (local and GitHub) where git remote add and git push -u animate commits moving across.",
+      "Task idea: given a list of commands in the wrong order, put the push-existing-repo sequence in the correct order."
+    ]
+  }
+}

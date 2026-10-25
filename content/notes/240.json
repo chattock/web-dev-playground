@@ -1,0 +1,70 @@
+{
+  "index": 240,
+  "lecture_id": 40494138,
+  "title": "Databases Explained: SQL vs. NoSQL",
+  "section": "31. Databases",
+  "duration_min": 16,
+  "kind": "theory",
+  "summary": "Opens the databases module. Explains why in-memory variables lose data on restart, what a database is, how SQL (relational, table-based) and NoSQL (flexible, document or key/value) databases differ, and why the course teaches PostgreSQL.",
+  "concepts": [
+    {
+      "heading": "Why a database: data persistence",
+      "points": [
+        "The blog API from the previous section kept posts in a JavaScript array. Variables live in volatile memory, so a server restart returns the data to its initial state.",
+        "Persistence needs storage that survives restarts. Physically this is still bits kept in a durable medium (the lecture illustrates it with an old magnetic memory device, where polarity changes encode bits). A database is the software layer that organises and serves that stored data."
+      ]
+    },
+    {
+      "heading": "SQL databases (relational)",
+      "points": [
+        "SQL means Structured Query Language: the language used to query and change data in a structured database.",
+        "Data lives in tables. You define the columns up front (for a users table: name, email, password), which fixes the structure. Each row is then one record, added as new users sign up.",
+        "Relationships are the main strength, which is why they are called relational databases. A posts table can reference a row in the users table, so one user can have many posts and a query can fetch all posts by a given user.",
+        "Examples: Oracle (commercial, expensive, common in big enterprises), Microsoft SQL Server (closed source), and open-source options PostgreSQL, MySQL and SQLite."
+      ]
+    },
+    {
+      "heading": "NoSQL databases",
+      "points": [
+        "Main selling point is flexibility. Records are stored as JSON-like documents or key/value pairs, so one record can carry an extra field (such as a favourite-food field on a single user) without altering the others or the whole database.",
+        "They were motivated by SQL's pain points: a language to learn, a rigid schema that must be planned ahead, and scaling. Scaling is described in two directions: more records, and more fields per record.",
+        "Examples: MongoDB, Redis (open source), DynamoDB (operated by Amazon). Again there is a mix of open-source and company-run products and of free and paid options."
+      ]
+    },
+    {
+      "heading": "The debate and where the industry has landed",
+      "points": [
+        "Roughly 2010-2018 NoSQL was seen as the modern choice and SQL as the old-fashioned one. Since then, teams running large systems reported problems with scalability and consistency in NoSQL.",
+        "SQL's strengths: joining tables, efficient queries, and a predictable structure planned in advance, so queries return what you expect. That consistency supports code quality.",
+        "Stack Overflow developer surveys show PostgreSQL as the most used database overall and among professional developers. Among people learning to code, MySQL and SQLite rank higher (simpler), and MongoDB is the top NoSQL entry.",
+        "The course used MongoDB in its earlier edition and has switched to PostgreSQL: free and open source, used professionally, highly scalable and reliable."
+      ]
+    },
+    {
+      "heading": "What comes next",
+      "points": [
+        "Next module: learn the SQL language itself, CRUD operations in SQL, and basic table relationships."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "(Extra) Same user in each model",
+      "language": "text",
+      "code": "SQL table users            NoSQL document\n id | name   | email      { \"name\": \"Ava\",\n  1 | Ava    | a@x.com      \"email\": \"a@x.com\",\n  2 | Ben    | b@x.com      \"favoriteFood\": \"noodles\" }   <- extra field allowed\n\nSQL table posts: id | title | author_id (references users.id)"
+    }
+  ],
+  "task": null,
+  "pitfalls": [
+    "Assuming 'NoSQL' means newer and therefore better; the lecture's point is that SQL's structure and joins are valuable for consistency.",
+    "Forgetting that a plain array or variable is not storage: it disappears on restart."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "New theory lesson 'SQL vs NoSQL': blurb on persistence. Tasks: (1) restart a toy server and watch an array reset, (2) classify five scenarios as better for SQL or NoSQL, (3) sketch a users/posts table pair with a foreign key, (4) write the same record as a JSON document.",
+      "Interactive demo idea: side-by-side editor where adding a field to one user shows a table needing a new column (with NULLs for others) versus a document simply gaining a key."
+    ]
+  }
+}

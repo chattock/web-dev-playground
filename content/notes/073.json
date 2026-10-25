@@ -1,0 +1,93 @@
+{
+  "index": 73,
+  "lecture_id": 19655710,
+  "title": "Web Design in Practice - Let's apply what we've learnt!",
+  "section": "12. Web Design School - Create a Website that People Love",
+  "duration_min": 18,
+  "kind": "concept+exercise",
+  "summary": "A screen-recorded demo of designing a three-screen hotel website in Canva (no code), applying colour, typography, UI and UX principles. Ends by asking the learner to design their own, differently themed hotel site and share the link.",
+  "concepts": [
+    {
+      "heading": "Where to practise",
+      "points": [
+        "Daily UI gives a free design prompt each day for 100 days (sign-up screens, flight sites, hotel booking and so on). Collect UI gathers other designers' attempts at the same prompts as inspiration.",
+        "Repetition is what builds design skill; study sites you admire and analyse why they work."
+      ]
+    },
+    {
+      "heading": "Canva setup",
+      "points": [
+        "Sign up for a free canva.com account and create a design with custom dimensions of 1400 px by 800 px. Each such canvas page represents one screen of the site; three pages are used (title, features, contact).",
+        "Canva shows snapping alignment guides when dragging elements; use them to line things up to a shared edge or centre."
+      ]
+    },
+    {
+      "heading": "Page 1: title screen",
+      "points": [
+        "Start from a template for a texture/pattern, then replace the plain background with a full-bleed beach photo, resized to touch all edges.",
+        "Add geometric shapes (circle, a white square/frame lined up to the circle's centre) and a gradient to create a modern look and a restrained palette of greens, turquoise, blue and white.",
+        "Hotel name in a serif font (Cardo) in white, very large (around 120-144 pt before trimming), all caps, with increased letter spacing. Serif gives an established, authoritative feel.",
+        "Tagline below in a sans-serif (Glacial Indifference), white, to contrast with the serif title. Both lines left-aligned and snapped to the same left edge.",
+        "Principles used: colour mood, serif/sans contrast, alignment, hierarchy (name biggest)."
+      ]
+    },
+    {
+      "heading": "Page 2: features screen",
+      "points": [
+        "Three photos (bedroom, breakfast, pool), cropped and resized to the same size, then spaced evenly using the grid guides: left, middle, right.",
+        "Frame each image with a circle shape behind or around it and a background colour; build one then copy it to the others for consistency.",
+        "Subheading under each image (beautiful rooms, food, pool), left-aligned to the image edge, in the same sans-serif as the title page, letter spacing around 18.",
+        "Short placeholder body text (Lorem Ipsum), trimmed so it is not overwhelming, left-aligned, same font, a muted dark-grey colour so it does not compete with headings. Copy the styled block to all three columns.",
+        "Resulting hierarchy: hotel name, then subheadings, then images, then body text. Short text blocks and pictures keep the layout interesting."
+      ]
+    },
+    {
+      "heading": "Page 3: contact screen",
+      "points": [
+        "A photo (a pineapple) positioned so only the lower part shows, giving a fashionable, tropical feel.",
+        "A heading ('Stay') copied from earlier pages to keep style, palette and typography consistent; shrink it to fit.",
+        "Reuse the geometric shape language: a hexagon in white, resized to contain the contact details.",
+        "Address, email and phone number right-aligned and aligned with the heading. Expect to nudge sizes and spacing; rules are guidelines that need flexibility."
+      ]
+    },
+    {
+      "heading": "Publishing",
+      "points": [
+        "Canva's Publish option, then Website with the Standard style, turns the pages into one scrolling web page with navigation.",
+        "Limitations: no mobile optimisation and no JavaScript or real functionality. It is useful for quickly visualising and sharing a design for feedback."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": {
+    "name": "Design your own hotel website in Canva",
+    "starting_point": "A free Canva account and the four design pillars from the module. No code or starter files.",
+    "goal": "Produce a three-screen hotel website design in a different style from the demo, for example a traditional, decadent historic hotel, and share the Canva link.",
+    "steps": [
+      "Create a Canva design at 1400 x 800 px.",
+      "Page 1: choose a background photo, a palette that fits the hotel's mood, a serif name with a sans-serif tagline, both aligned to one left edge.",
+      "Page 2: add three equally sized, evenly spaced feature images with consistent frames, subheadings and short muted body text, all aligned.",
+      "Page 3: add a contact screen reusing the same shapes, fonts and colours, with address, email and phone aligned to the heading.",
+      "Check each principle: colour mood, two fonts with contrast, hierarchy, alignment, white space, audience.",
+      "Optionally publish as a Website (Standard) to preview, then share the design link in the course comments."
+    ],
+    "expected_result": "A cohesive three-screen design with consistent palette, typography and shapes, strong hierarchy and clean alignment, with a visibly different style from the demo.",
+    "solution_code": null,
+    "reference_repo_path": null
+  },
+  "pitfalls": [
+    "Mixing fonts or colours between screens instead of reusing the same ones.",
+    "Leaving elements slightly off-grid; use Canva's snapping guides.",
+    "Overlong body text that makes the layout heavy.",
+    "Expecting the Canva site to be responsive or interactive."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (section 12 has no playground file).",
+    "gaps_and_ideas": [
+      "New lesson 'Build the hotel page in code': blurb turning the Canva design into HTML/CSS. Tasks: 1) hero section with background-image, serif h1 and sans tagline; 2) three-column features row with circular framed images (border-radius: 50%); 3) contact section with right-aligned details; 4) define palette and fonts as CSS variables; 5) make it stack on mobile with a media query.",
+      "Starter code idea: unstyled semantic HTML with sections for hero, features and contact plus placeholder images.",
+      "Interactive demo idea: a palette/font switcher that re-themes the page between a modern beach hotel and a traditional decadent hotel."
+    ]
+  }
+}

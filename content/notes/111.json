@@ -1,0 +1,90 @@
+{
+  "index": 111,
+  "lecture_id": 18143224,
+  "title": "Introducing the Fibonacci Code Challenge",
+  "section": "15. Intermediate Javascript",
+  "duration_min": 7,
+  "kind": "challenge-intro",
+  "summary": "Briefs the Fibonacci coding challenge: write fibonacciGenerator(n) that returns an array of the first n Fibonacci numbers. Lays out the checker's constraints and sketches the flowchart logic as a hint.",
+  "concepts": [
+    {
+      "heading": "The sequence",
+      "points": [
+        "Begin with 0 and 1; every later term is the sum of the two terms before it (1+2=3, 2+3=5, 13+21=34 style).",
+        "This course's version always starts 0, 1 (other versions start at 1), so the first two entries are fixed."
+      ]
+    },
+    {
+      "heading": "Function contract",
+      "points": [
+        "Call shape: fibonacciGenerator(n), where n is how many items to produce.",
+        "The result is returned (not alerted, no prompt) as an array: fibonacciGenerator(3) gives [0, 1, 1]; fibonacciGenerator(5) gives five items [0, 1, 1, 2, 3].",
+        "It must also work for n = 1 ([0]), n = 2 ([0, 1]) and large n such as 245.",
+        "A variable (output) holds the returned array for testing: pass a number, run, inspect the array."
+      ]
+    },
+    {
+      "heading": "Checker constraints in the exercise",
+      "points": [
+        "Do not edit the existing scaffold code; the checker looks for the function name and calls it with a number.",
+        "Return a real array with square brackets and comma-separated numbers.",
+        "If using a for loop, declare the counter inside the header with var (for (var i = 0; ...)), not an undeclared i = 0, because the checker's JavaScript version demands it.",
+        "A while loop or any other approach is allowed.",
+        "An online sandbox is linked from the lesson for trying the code."
+      ]
+    },
+    {
+      "heading": "Planning with a flowchart",
+      "points": [
+        "The hard part is the logic, not the syntax. Draw it first (a tool such as draw.io works) and then turn it into code.",
+        "Flow: if n is 1, return [0]. If n is 2, return [0, 1]. These are the predefined starting values.",
+        "Otherwise start from the first values and add the last two items to get the next one, push it on the array.",
+        "After each addition compare the array length to n; if smaller, repeat; if equal, return the array.",
+        "Worked example n = 5: [0,1] then add 0+1 -> 3 items, add 1+1 -> 4 items, add 1+2 -> 5 items, stop."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Expected behaviour of the target function",
+      "language": "javascript",
+      "code": "fibonacciGenerator(1); // [0]\nfibonacciGenerator(2); // [0, 1]\nfibonacciGenerator(3); // [0, 1, 1]\nfibonacciGenerator(5); // [0, 1, 1, 2, 3]"
+    }
+  ],
+  "task": {
+    "name": "Coding Exercise 7: Fibonacci",
+    "starting_point": "A scaffold with a fibonacciGenerator(n) function stub and a variable that stores its output; do not alter these.",
+    "goal": "Return an array containing the first n Fibonacci numbers.",
+    "steps": [
+      "Handle n = 1 by returning [0].",
+      "Handle n = 2 by returning [0, 1].",
+      "For larger n, begin with [0, 1].",
+      "Loop, adding the last two entries and pushing the result, until the array has n items.",
+      "Return the array."
+    ],
+    "expected_result": "fibonacciGenerator(5) returns [0, 1, 1, 2, 3]; works for n = 1, 2 and 245.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "function fibonacciGenerator(n) {\n    var sequenceOfNumbers = [];\n    for (var i = 0; i < n; i++) {\n        if (i === 0) {\n            sequenceOfNumbers.push(0);\n        } else if (i === 1) {\n            sequenceOfNumbers.push(1);\n        } else {\n            sequenceOfNumbers.push(sequenceOfNumbers[i - 1] + sequenceOfNumbers[i - 2]);\n        }\n    }\n    return sequenceOfNumbers;\n}"
+    },
+    "reference_repo_path": "Section 15 - Intermediate Javascript/15.13 - Introducing the Fibonacci Code Challenge/script.js"
+  },
+  "pitfalls": [
+    "Editing the scaffold, which breaks the checker.",
+    "Using alert/console.log instead of return.",
+    "Starting the sequence at 1.",
+    "Writing i = 0 without var in the for header.",
+    "(Extra) n = 0 is not covered by the lecture; return [] for it.",
+    "Reference repo diverges: it has a hard-coded 'var number = 1' and console.log call outside the function."
+  ],
+  "playground": {
+    "match": "s15-fibonacci (lesson 15.13, data/s15.js)",
+    "coverage": "Tasks, starter stub and a solution; notes stress edge cases and why the loop starts at 2.",
+    "gaps_and_ideas": [
+      "Add the course's checker rules as tasks (return an array, do not alter the function name).",
+      "Add the flowchart idea: draw the decision for n = 1, n = 2, then loop, before coding.",
+      "Add n = 245 as a scale test and a note that numbers get large.",
+      "Explore idea: a step visualiser showing the array growing and the length-vs-n check at each step."
+    ]
+  }
+}

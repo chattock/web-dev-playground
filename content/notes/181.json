@@ -1,0 +1,75 @@
+{
+  "index": 181,
+  "lecture_id": 12664182,
+  "title": "Step 10 - Restart the Game",
+  "section": "20. Boss Level Challenge 2 - The Simon Game",
+  "duration_min": 0,
+  "kind": "article-task",
+  "summary": "Final step of the Simon build: write a startOver() function that puts the game's state variables back to their starting values, and call it when the player presses a wrong button so a key press can begin a fresh game.",
+  "concepts": [
+    {
+      "heading": "Game state that must be reset",
+      "points": [
+        "Three global variables control a run of the game: level (the current round number), gamePattern (the array of colours the computer has chosen so far) and started (a boolean flag that says whether a game is in progress).",
+        "Resetting means assigning each one its initial value again: level = 0, gamePattern = [], started = false.",
+        "userClickedPattern does not need resetting here because nextSequence() already empties it at the start of every round."
+      ]
+    },
+    {
+      "heading": "Why these three values restart the game (Extra)",
+      "points": [
+        "(Extra) The keydown handler only starts a game when started is false (if (!started) {...}). While started stays true after a loss, key presses are ignored, so the game cannot restart. Setting it back to false re-arms that handler.",
+        "(Extra) level must go back to 0 because nextSequence() increments it before displaying it; starting from 0 makes the first round of the new game show 'Level 1'.",
+        "(Extra) gamePattern must be a new empty array; otherwise the new game would continue appending to the old sequence and the player would have to repeat the previous game's colours.",
+        "(Extra) Putting the reset in its own named function keeps checkAnswer() readable: the else branch handles the game-over feedback (sound, red flash, title text) and then hands off to startOver()."
+      ]
+    },
+    {
+      "heading": "Where to call it",
+      "points": [
+        "Call startOver() inside the else branch of checkAnswer(), i.e. the branch that runs when the colour just clicked does not match gamePattern at the same index.",
+        "(Extra) Call it after the game-over feedback code from Step 9, so the title change to 'Game Over, Press Any Key to Restart' is already set when the state is wiped."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "The reset function and where it is called",
+      "language": "javascript",
+      "code": "function startOver() {\n  level = 0;\n  gamePattern = [];\n  started = false;\n}\n\n// inside checkAnswer(currentLevel)\n} else {\n  // ...Step 9 game-over feedback...\n  startOver();\n}"
+    }
+  ],
+  "task": {
+    "name": "Simon Step 10: restart the game",
+    "starting_point": "game.js from Step 9: the game detects a wrong answer, plays wrong.mp3, flashes the body with the game-over class and changes the h1 to 'Game Over, Press Any Key to Restart', but pressing a key does nothing because the state is never reset.",
+    "goal": "After a game over, pressing any key starts a brand-new game at Level 1 with a fresh random sequence.",
+    "steps": [
+      "Declare a new function named startOver() in game.js.",
+      "In its body, set level back to 0, set gamePattern to an empty array, and set started back to false.",
+      "Inside checkAnswer(), in the else branch that handles a wrong click, add a call to startOver() after the game-over code.",
+      "Test: play until you make a mistake, see the game-over message, press a key and confirm the title shows Level 1 and only one button flashes."
+    ],
+    "expected_result": "The game loops indefinitely: lose, press any key, and a new game begins from Level 1 with no leftover colours from the previous sequence.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "// game.js - wrong-answer branch of checkAnswer() (from Step 9) now ends with startOver()\nfunction checkAnswer(currentLevel) {\n  if (gamePattern[currentLevel] === userClickedPattern[currentLevel]) {\n    if (userClickedPattern.length === gamePattern.length) {\n      setTimeout(function () {\n        nextSequence();\n      }, 1000);\n    }\n  } else {\n    playSound(\"wrong\");\n    $(\"body\").addClass(\"game-over\");\n    setTimeout(function () {\n      $(\"body\").removeClass(\"game-over\");\n    }, 200);\n    $(\"#level-title\").text(\"Game Over, Press Any Key to Restart\");\n    startOver();\n  }\n}\n\n// Step 10: put the three state variables back to their initial values\nfunction startOver() {\n  level = 0;        // nextSequence() adds 1, so the new game shows Level 1\n  gamePattern = []; // discard the old computer sequence\n  started = false;  // lets the keydown/keypress handler start a new game\n}"
+    },
+    "reference_repo_path": "Section 20 - Boss Level Challenge 2 - The Simon Game/script.js"
+  },
+  "pitfalls": [
+    "Forgetting to reset started: the keydown listener's if (!started) guard then blocks every restart attempt.",
+    "Resetting level to 1 instead of 0, which makes the restarted game open on Level 2 because nextSequence() adds one first.",
+    "Defining startOver() but never calling it from the wrong-answer branch.",
+    "Declaring level, gamePattern or started with var inside startOver(); that creates new local variables and leaves the globals unchanged."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "Blurb for a new lesson 'Simon step 10: reset state': a game is just a few variables; restarting means putting them back the way they started.",
+      "Task 1: write startOver() that resets level, gamePattern and started. Task 2: call it in the wrong-answer branch. Task 3: predict what happens if started is left true, then try it. Task 4: explain why level resets to 0 and not 1.",
+      "Starter code: a stripped-down Simon with the four coloured divs, keydown starter, nextSequence() and checkAnswer() already written, with a TODO where startOver() goes.",
+      "Interactive demo: a live 'state panel' beside the board showing level, gamePattern, userClickedPattern and started updating on every click and key press, so learners watch the reset happen."
+    ]
+  }
+}

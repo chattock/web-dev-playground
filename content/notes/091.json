@@ -1,0 +1,51 @@
+{
+ "index": 91,
+ "lecture_id": 12400088,
+ "title": "The Karel Chess Board Solution",
+ "section": "14. Introduction to Javascript ES6",
+ "duration_min": 0,
+ "kind": "article-task",
+ "summary": "A resource lecture that supplies the model solution for the optional Karel chessboard challenge. The article body is only reachable via an Open button and could not be read, so this note records the challenge and an own-words approach.",
+ "concepts": [
+  {
+   "heading": "Chessboard challenge approach",
+   "points": [
+    "(Extra) Goal from the previous lecture: fill a 5 x 5 world so beepers sit on alternating squares like a chessboard.",
+    "(Extra) Break the problem into reusable functions: one for a row that starts with a beeper, one for a row that starts empty, and a helper to return to the left edge and move up a row.",
+    "(Extra) Define turnRight() as three turnLeft() calls, since the basic command set only turns left.",
+    "(Extra) Alternating rows start with opposite parity, so call the two row functions in turn."
+   ]
+  }
+ ],
+ "code_examples": [
+  {
+   "caption": "(Extra) Building blocks for a chessboard (own illustrative code, not the lesson's)",
+   "language": "javascript",
+   "code": "function turnRight() {\n    turnLeft();\n    turnLeft();\n    turnLeft();\n}\n\n// (Extra) one possible approach: lay a row of alternating beepers, then\n// reposition to the next row and shift the starting offset by one.\nfunction beeperRowStartingWithBeeper() {\n    putBeeper();\n    move();\n    move();\n    putBeeper();\n    move();\n    move();\n    putBeeper();\n}\n\nfunction beeperRowStartingEmpty() {\n    move();\n    putBeeper();\n    move();\n    move();\n    putBeeper();\n}"
+  }
+ ],
+ "task": {
+  "name": "Karel chessboard (optional)",
+  "starting_point": "Karel 5 x 5 world with main() emptied.",
+  "goal": "Produce a chessboard pattern of alternating beeper squares using functions.",
+  "steps": [
+   "Write a function that lays one row with beepers on alternate squares.",
+   "Write a variant that starts one square later.",
+   "Write helpers to return to the left edge and move up one row.",
+   "Call row functions alternately for five rows."
+  ],
+  "expected_result": "Alternating beepers across all five rows.",
+  "solution_code": null,
+  "reference_repo_path": null
+ },
+ "pitfalls": [
+  "Article body not read; verify against the lesson's own solution before relying on this."
+ ],
+ "playground": {
+  "match": null,
+  "coverage": "No playground lesson for this resource.",
+  "gaps_and_ideas": [
+   "If a Karel widget is built for lesson 14.11, include this chessboard as the stretch challenge with a check that compares the board to the expected pattern."
+  ]
+ }
+}

@@ -1,0 +1,108 @@
+{
+  "index": 300,
+  "lecture_id": 17039196,
+  "title": "Javascript ES6 Arrow functions",
+  "section": "36. React.js",
+  "duration_min": 10,
+  "kind": "concept+exercise",
+  "summary": "Introduces ES6 arrow functions as shorter syntax for function expressions, with the rules for dropping parentheses, braces and return. The exercise converts the map/filter/reduce/find/findIndex callbacks and the React Entry-mapping callback to arrow form.",
+  "concepts": [
+    {
+      "heading": "From function declaration to arrow function, step by step",
+      "points": [
+        "Start: a normal function, e.g. function square(x) { return x * x; }. Passed inline to map it can be anonymous (name removed) because the surrounding call already explains its purpose.",
+        "Arrow step 1: delete the function keyword and put => between the parameter list and the body: (x) => { return x * x; }.",
+        "The arrow token is the two characters = and > written together with nothing between them. Splitting them with a space, or writing a different symbol, is a syntax error.",
+        "Arrow step 2: with exactly one parameter the parentheses around it are optional (x => ...). With zero or two-plus parameters, parentheses are required, e.g. (x, y) => x * y.",
+        "Arrow step 3: when the body is a single expression whose value is returned, drop the curly braces and the return keyword (implicit return): x => x * x. The semicolon inside the braces goes as well.",
+        "If the body needs several statements, keep the braces and an explicit return.",
+        "An arrow function can also be stored in a variable: const square = x => x * x; then called as square(4) like any other function.",
+        "(Extra) To implicitly return an object literal, wrap it in parentheses: id => ({ id: id }). Without them the braces are read as a function body and the result is undefined."
+      ]
+    },
+    {
+      "heading": "When to use them",
+      "points": [
+        "Arrow functions are purely a shorter notation here; the result is identical to the longer form.",
+        "Very compact code can be harder for beginners or junior teammates to read, so adopt the style according to project and team comfort.",
+        "They are very common in React because map, filter and reduce are used constantly, so you need to be able to read them even if you prefer the long form.",
+        "(Extra) Arrow functions are not identical to regular functions in every respect: they have no own this or arguments and cannot be used with new. That does not matter for these callbacks, but it does matter for object methods and class code later."
+      ]
+    },
+    {
+      "heading": "Converting the array-method callbacks",
+      "points": [
+        "map: numbers.map(x => x * 2) (one parameter, single expression).",
+        "filter: numbers.filter(num => num < 10).",
+        "reduce: has two parameters, so the parentheses stay: (accumulator, currentNumber) => accumulator + currentNumber.",
+        "find and findIndex follow the same one-parameter pattern: num => num > 10."
+      ]
+    },
+    {
+      "heading": "Converting the React mapping callback",
+      "points": [
+        "In App.jsx the named helper createEntry(emojiTerm) returned an Entry element with key, emoji, name and description props taken from the emoji object (description comes from the meaning field).",
+        "Move that function body inline into emojipedia.map(...), remove the function keyword and name, add =>, and strip the parentheses around the single emojiTerm parameter.",
+        "The return statement and braces can go because the body is one JSX expression, even though the props are spread across several lines for readability.",
+        "(Extra) Keep a pair of parentheses around the multi-line JSX when dropping return: emojiTerm => (<Entry ... />). Without them a line break after => can break parsing; wrapping is the usual React convention.",
+        "The key prop must still be present on each mapped element; use the item's unique id."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Progressive shortening of a squaring callback",
+      "language": "javascript",
+      "code": "var numbers = [3, 56, 2, 48, 5];\n\n// 0. named function declaration\nfunction square(x) {\n  return x * x;\n}\n\n// 1. anonymous function passed to map\nnumbers.map(function (x) { return x * x; });\n\n// 2. arrow with braces and explicit return\nnumbers.map((x) => { return x * x; });\n\n// 3. single parameter, implicit return\nnumbers.map(x => x * x); // [9, 3136, 4, 2304, 25]\n\n// arrow stored in a variable\nconst squareArrow = x => x * x;\n\n// two parameters need parentheses\nconst product = (x, y) => x * y;"
+    },
+    {
+      "caption": "Arrow versions of the array methods",
+      "language": "javascript",
+      "code": "const doubled = numbers.map(x => x * 2);\nconst small = numbers.filter(num => num < 10);\nconst total = numbers.reduce((accumulator, currentNumber) => accumulator + currentNumber);\nconst firstBig = numbers.find(num => num > 10);\nconst firstBigIndex = numbers.findIndex(num => num > 10);"
+    },
+    {
+      "caption": "App.jsx with an inline arrow callback (Vite layout from the reference repo: App.jsx in src; in the sandbox, where App.jsx is in src/components, import from \"./Entry\" and \"../emojipedia\")",
+      "language": "jsx",
+      "code": "import Entry from \"./components/Entry\";\nimport emojipedia from \"./emojipedia\";\n\nfunction App() {\n  return (\n    <div>\n      <h1><span>emojipedia</span></h1>\n      <dl className=\"dictionary\">\n        {emojipedia.map(emojiTerm => (\n          <Entry\n            key={emojiTerm.id}\n            emoji={emojiTerm.emoji}\n            name={emojiTerm.name}\n            description={emojiTerm.meaning}\n          />\n        ))}\n      </dl>\n    </div>\n  );\n}\n\nexport default App;"
+    }
+  ],
+  "task": {
+    "name": "Convert callbacks to arrow functions",
+    "starting_point": "Forked CodeSandbox with the commented numbers demos (map, filter, reduce, find, findIndex using anonymous functions) and an App.jsx that maps emojipedia through a createEntry function into Entry components.",
+    "goal": "Rewrite every callback as the shortest valid arrow function, in both the plain JS demos and the React code.",
+    "steps": [
+      "Comment out the earlier squaring example but keep it as reference.",
+      "Uncomment the map, filter, reduce, find and findIndex demos one at a time.",
+      "For each: delete the function keyword, add =>, drop return and braces when the body is one expression, and drop the parameter parentheses when there is exactly one parameter (reduce keeps them).",
+      "In App.jsx, move the createEntry body into the emojipedia.map call as an arrow function returning the Entry element.",
+      "Check the page still renders every emoji entry."
+    ],
+    "expected_result": "Same console output and same rendered emoji list as before, with much shorter callbacks.",
+    "solution_code": {
+      "language": "jsx",
+      "code": "{emojipedia.map(emojiTerm => (\n  <Entry\n    key={emojiTerm.id}\n    emoji={emojiTerm.emoji}\n    name={emojiTerm.name}\n    description={emojiTerm.meaning}\n  />\n))}"
+    },
+    "reference_repo_path": "Section 36 - React.js/36.24 Javascript ES6 Arrow functions/es6-arrow-functions/src/App.jsx"
+  },
+  "pitfalls": [
+    "Writing the arrow token with a space (= >) or reversed (=<); it must be = and > joined as =>.",
+    "Removing parentheses on a callback with two parameters such as reduce.",
+    "Dropping return while keeping the braces: the function then returns undefined.",
+    "Returning a multi-line JSX element without wrapping parentheses.",
+    "Cutting readability for teammates by shortening everything."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "New lesson 'Arrow functions' (s36). Blurb: rewrite function expressions with =>, learn when parentheses, braces and return can be dropped, and read the arrow callbacks that fill React code.",
+      "Task 1: rewrite function square(x) { return x * x; } as const square = (x) => { return x * x; };",
+      "Task 2: shorten it to x => x * x and confirm square(4) is still 16.",
+      "Task 3: convert the map, filter, reduce, find and findIndex callbacks on [3, 56, 2, 48, 5] to arrows; reduce must keep (accumulator, currentNumber).",
+      "Task 4: write an arrow that returns an object, id => ({ id }), and see what happens without the parentheses.",
+      "Task 5: inline the createEntry helper as emojipedia.map(emojiTerm => (<Entry ... />)).",
+      "Starter code: the five long-form array-method callbacks with their expected outputs as comments, plus the emojipedia App.jsx using a named createEntry function.",
+      "Interactive demo: a 'shrink the function' stepper with buttons that remove the function keyword, the braces and return, and the parameter parentheses one at a time, highlighting each removed token and re-running the code to prove the output is unchanged; an error message appears if the learner removes parentheses on a two-parameter function."
+    ]
+  }
+}

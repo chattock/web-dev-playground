@@ -1,0 +1,47 @@
+{
+  "index": 160,
+  "lecture_id": 12384246,
+  "title": "What You'll Make: The Simon Game",
+  "section": "20. Boss Level Challenge 2 - The Simon Game",
+  "duration_min": 1,
+  "kind": "challenge-intro",
+  "summary": "Introduces the boss-level project: a browser version of the Simon memory game built with jQuery plus earlier-module skills.",
+  "concepts": [
+    {
+      "heading": "How the game behaves",
+      "points": [
+        "Press any key to start; the game flashes one coloured tile and the player must click it.",
+        "Each level adds one more tile to the sequence, so the player has to remember and repeat a longer pattern every round.",
+        "A wrong click ends the game with a failure message, and pressing any key restarts from level one.",
+        "The challenge tests jQuery from the previous section plus JavaScript from earlier modules (arrays, functions, conditionals, timing)."
+      ]
+    },
+    {
+      "heading": "What comes next",
+      "points": [
+        "The following lessons supply instructions and starter files, then walk through the challenge in numbered steps, each with an answer lecture."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": {
+    "name": "Simon Game (overview)",
+    "starting_point": "Starter files are provided in the next lessons (index.html, styles.css, sounds folder).",
+    "goal": "Build a working Simon game: keypress to start, growing random sequence shown with animation and sound, user clicks checked against it, game over and restart.",
+    "steps": [
+      "Download the starter files (Step 0).",
+      "Work through Steps 1-9 in order, checking each answer lecture afterwards."
+    ],
+    "expected_result": "A playable Simon game that increases in level each round and resets on a wrong click.",
+    "solution_code": null,
+    "reference_repo_path": "Section 20 - Boss Level Challenge 2 - The Simon Game"
+  },
+  "pitfalls": [],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "Add a capstone 'Simon Game' lesson after a jQuery section: starter HTML/CSS with four coloured divs, 9 staged tasks mirroring this section, plus a play-through demo."
+    ]
+  }
+}

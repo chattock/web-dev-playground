@@ -1,0 +1,80 @@
+{
+  "index": 340,
+  "lecture_id": 31678498,
+  "title": "How to Claim Free Cycles from Dfinity",
+  "section": "39. Deploying to the ICP Live Blockchain",
+  "duration_min": 3,
+  "kind": "article-task",
+  "summary": "A step-by-step article for getting free cycles from the Dfinity faucet via Discord, redeeming the coupon into a cycles wallet with dfx, and pointing the project at that wallet. Using cycles is optional for the course: everything can also be run locally.",
+  "concepts": [
+    {
+      "heading": "Overview",
+      "points": [
+        "The faucet (updated for 2024 in the course) grants about 10T cycles for free, after some sign-ups. Cycles are only needed to host on the live network; all tutorials work locally without them.",
+        "Flow: faucet website -> Discord bot -> coupon code -> redeem with dfx into a cycles wallet canister -> set that wallet as the project's cycles source.",
+        "(Extra) The faucet process and limits change over time; verify against the current Dfinity faucet page. The lecture page only shows an Open button, so these steps come from the course's reference repo copy of the article."
+      ]
+    },
+    {
+      "heading": "Getting the coupon",
+      "points": [
+        "Open the official Dfinity cycles faucet site, choose to request cycles, then accept the invite to the ICP Developer Community Discord server. If the invite fails, log in to Discord first (a free account is needed).",
+        "In Discord go to the #cycles-faucet channel and press the Complete button to accept the rules.",
+        "Type the slash command /request to start the faucet bot, then answer its dropdown survey (Motoko is a fine answer for the language; answers do not change the outcome).",
+        "A popup form (Cycles Faucet Survey) asks for a GitHub account. Submit it; the bot then sends a private message with the coupon code, so Discord DMs must be allowed. Retry or ask in the channel if the form errors."
+      ]
+    },
+    {
+      "heading": "Redeeming the coupon with dfx",
+      "points": [
+        "Back on the faucet page press Next and paste the coupon.",
+        "Check dfx is at least version 0.12.0 with dfx --version; upgrade with sudo dfx upgrade if older.",
+        "Run the redeem command shown by the faucet: dfx wallet --network ic redeem-faucet-coupon followed by the coupon. It creates a cycles wallet canister on the ic network. Write down the wallet id, because it is needed immediately.",
+        "The faucet page offers a verification command to confirm the cycles arrived."
+      ]
+    },
+    {
+      "heading": "Pointing the project at the wallet and registering your device",
+      "points": [
+        "cd into the DBANK project, then run dfx identity --network ic set-wallet --force with the wallet id. This makes the wallet the source of cycles when deploying to the ic network.",
+        "To view the wallet and cycles in the browser UI, authorise your device: get your principal with dfx identity get-principal, then call the wallet canister's authorize method with that principal (dfx canister --network ic call <wallet id> authorize '(principal \"<principal id>\")')."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Command sequence for claiming and wiring up the free cycles",
+      "language": "bash",
+      "code": "dfx --version                      # need >= 0.12.0\nsudo dfx upgrade                   # only if older\ndfx wallet --network ic redeem-faucet-coupon <COUPON_CODE>\n# note the wallet id printed here\ncd path/to/DBANK\ndfx identity --network ic set-wallet --force <WALLET_ID>\ndfx identity get-principal\ndfx canister --network ic call \"<WALLET_ID>\" authorize '(principal \"<PRINCIPAL_ID>\")'"
+    }
+  ],
+  "task": {
+    "name": "Claim free cycles and attach the wallet to DBANK",
+    "starting_point": "A working DBANK project, a Discord account, a GitHub account, and dfx installed.",
+    "goal": "Have a funded cycles wallet set as the cycles source for the ic network.",
+    "steps": [
+      "Open the Dfinity faucet page and request cycles; join the ICP Developer Community on Discord.",
+      "In #cycles-faucet press Complete, then use /request and fill the survey and form.",
+      "Receive the coupon by DM and paste it on the faucet page.",
+      "Verify dfx version (0.12.0 or newer).",
+      "Run dfx wallet --network ic redeem-faucet-coupon with the coupon and record the wallet id.",
+      "Optionally verify the balance with the faucet's check command.",
+      "In the DBANK folder run dfx identity --network ic set-wallet --force with the wallet id.",
+      "Optionally authorise your principal on the wallet to view it online."
+    ],
+    "expected_result": "The wallet shows a cycles balance and dfx uses it for deployments to the ic network.",
+    "solution_code": null,
+    "reference_repo_path": "Section 39 - Deploying to the ICP Live Blockchain/39.02 How to Claim Free Cycles from Dfinity/README.md"
+  },
+  "pitfalls": [
+    "Losing the wallet id printed after redeeming.",
+    "Discord DMs disabled, so the coupon never arrives.",
+    "Old dfx version below 0.12.0.",
+    "Running the set-wallet command outside the project or without --network ic."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": []
+  }
+}

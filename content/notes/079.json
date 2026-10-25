@@ -1,0 +1,53 @@
+{
+  "index": 79,
+  "lecture_id": 18126317,
+  "title": "Javascript Variables Exercise Start",
+  "section": "14. Introduction to Javascript ES6",
+  "duration_min": 3,
+  "kind": "challenge-intro",
+  "summary": "Introduces the next lesson's coding exercise: swap the values held by two variables under three constraints. The solution is explained in the following lecture.",
+  "concepts": [
+    {
+      "heading": "How the exercise is presented",
+      "points": [
+        "The next lesson is an in-browser coding exercise with instructions on top and an editable code file below, plus a linked online sandbox (Repl.it) for experimenting. Check Solution validates the answer; Continue moves on to the walkthrough.",
+        "Starting code declares a as 3 and b as 8 and logs them. Running it unchanged prints a is 3 and b is 8.",
+        "A mental model: two buckets, one with sand and one with water; how do you exchange the contents?"
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "(Extra) Starting situation, reconstructed",
+      "language": "javascript",
+      "code": "var a = 3;\nvar b = 8;\n\n// your three lines go here\n\nconsole.log(\"a is \" + a);\nconsole.log(\"b is \" + b);"
+    }
+  ],
+  "task": {
+    "name": "Swap two variables",
+    "starting_point": "Two variables: a holds 3, b holds 8. Three blank lines (7 to 9) sit between the declarations and the logging.",
+    "goal": "After your code, a must hold 8 and b must hold 3.",
+    "steps": [
+      "Do not modify any existing line; add code only in the three free lines.",
+      "Do not type any numeric literals (so no a = 8 or b = 3).",
+      "Do not redeclare a or b with var/let/const.",
+      "Use the online sandbox to test, then enter the answer and press Check Solution."
+    ],
+    "expected_result": "Console output reads a is 8 and b is 3.",
+    "solution_code": null,
+    "reference_repo_path": null
+  },
+  "pitfalls": [
+    "Assigning a = b then b = a loses the original value of a, so both end up 8. A third holder is needed (see the solution lecture)."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet. Closest is s14-variables (14.3) which only covers declaring and reassigning.",
+    "gaps_and_ideas": [
+      "Add a lesson 'Swap two variables' after Variables: blurb about reassigning without losing data.",
+      "Tasks: (1) make a=3,b=8 print swapped, (2) do it without typing numbers, (3) predict what a = b; b = a; produces, (4) optional: swap with destructuring [a, b] = [b, a].",
+      "Starter: let a = 3; let b = 8; with TODO lines and a check that asserts a === 8 and b === 3.",
+      "Interactive demo: two animated buckets showing each assignment step."
+    ]
+  }
+}

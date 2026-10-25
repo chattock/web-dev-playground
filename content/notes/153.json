@@ -1,0 +1,56 @@
+{
+  "index": 153,
+  "lecture_id": 12384196,
+  "title": "Manipulating Styles with jQuery",
+  "section": "19. jQuery",
+  "duration_min": 5,
+  "kind": "concept",
+  "summary": "Covers the jQuery .css() getter/setter and the class methods addClass, removeClass and hasClass, arguing that toggling classes is cleaner than setting inline styles because it keeps behaviour and appearance separate.",
+  "concepts": [
+    {
+      "heading": ".css() as setter and getter",
+      "points": [
+        "$(\"h1\").css(\"color\", \"green\") sets a CSS property: first argument is the property name, second the value, both as strings.",
+        "With only one argument, $(\"h1\").css(\"color\") reads the current value instead. For colour, the result is an rgb(...) string (black appears as rgb(0, 0, 0)).",
+        "Reading \"font-size\" returns the computed size in pixels (32px for a default h1 in the demo).",
+        "Rule of thumb: one argument gets, two arguments set."
+      ]
+    },
+    {
+      "heading": "Keep concerns separate: use classes",
+      "points": [
+        "Setting styles from JavaScript mixes appearance into behaviour code. Preferred split: HTML for content, CSS for appearance, JS for behaviour.",
+        "Define a class in the stylesheet (demo: .big-title with a large font-size, yellow colour and cursive font-family) and let jQuery attach it.",
+        "$(\"h1\").addClass(\"big-title\") adds the class; $(\"h1\").removeClass(\"big-title\") takes it away and the rule's styles disappear.",
+        "To add or remove several classes in one call, put them in a single string separated by spaces: addClass(\"big-title margin-50\").",
+        "$(\"h1\").hasClass(\"margin-50\") returns true or false depending on whether the element carries that class.",
+        "(Extra) toggleClass(\"name\") adds the class if absent and removes it if present; handy with event handlers."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "style.css",
+      "language": "css",
+      "code": ".big-title {\n  font-size: 5rem;\n  color: yellow;\n  font-family: cursive;\n}\n\n.margin-50 {\n  margin: 50px;\n}"
+    },
+    {
+      "caption": "script.js: css(), addClass, removeClass, hasClass",
+      "language": "javascript",
+      "code": "$(\"h1\").css(\"color\", \"green\");        // set\nconsole.log($(\"h1\").css(\"color\"));    // get -> rgb(...)\nconsole.log($(\"h1\").css(\"font-size\")); // get -> e.g. 32px\n\n$(\"h1\").addClass(\"big-title margin-50\");\n$(\"h1\").removeClass(\"big-title\");\nconsole.log($(\"h1\").hasClass(\"margin-50\")); // true"
+    }
+  ],
+  "task": null,
+  "pitfalls": [
+    "Separate multiple class names with a space inside ONE string, not as separate arguments or with dots.",
+    "Do not put a dot before the class name in addClass/removeClass/hasClass (use \"big-title\", not \".big-title\").",
+    "The reference repo calls removeClass before the class has been added; harmless but not what the lecture sequence shows."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "Lesson 'jQuery styles and classes'. Tasks: set h1 colour with css(); read two properties; create a .big-title class and add it; add two classes at once; log hasClass before and after removal. Demo: buttons that call addClass/removeClass/toggleClass on a preview heading and print hasClass results."
+    ]
+  }
+}

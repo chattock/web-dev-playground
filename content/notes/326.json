@@ -1,0 +1,29 @@
+{
+  "index": 326,
+  "lecture_id": 31678552,
+  "title": "Read Me!",
+  "section": "37. Web3 Decentralised App (DApp) Development with the Internet Computer",
+  "duration_min": 1,
+  "kind": "admin",
+  "summary": "Short prerequisite notice: the Web3 modules are advanced and assume the earlier course content has been completed.",
+  "concepts": [
+    {
+      "heading": "Prerequisites",
+      "points": [
+        "The Web3 material sits at the end of the course because it is harder than the earlier sections.",
+        "Assumed knowledge: React, vanilla JavaScript, and building both front ends and back ends.",
+        "Learners who jumped straight to this section without web development experience should expect difficulty and go back to the earlier parts when confused."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [
+    "Starting section 37 without React and JavaScript fundamentals."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (no section 37 data file); admin lecture.",
+    "gaps_and_ideas": []
+  }
+}

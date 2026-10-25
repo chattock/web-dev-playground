@@ -1,0 +1,59 @@
+{
+  "index": 116,
+  "lecture_id": 12400324,
+  "title": "Solution to the DOM Challenge",
+  "section": "16. The Document Object Model (DOM)",
+  "duration_min": 0,
+  "kind": "solution",
+  "summary": "Article giving the one-line console solution to the previous challenge: reach body from document, find the ul, take its last child and set its innerHTML.",
+  "concepts": [
+    {
+      "heading": "How the solution works",
+      "points": [
+        "document.firstElementChild is the html element.",
+        ".lastElementChild on html is body (head is the first child).",
+        ".querySelector(\"ul\") searches inside body only, returning the first ul. querySelector can be called on any element, not just document, and searches that element's descendants.",
+        ".lastElementChild of the ul is the third li (child elements only, text nodes ignored).",
+        "Assigning to .innerHTML replaces the li's content with the new text.",
+        "Why querySelector instead of another lastElementChild: the last child of body is the script element, so a pure child chain needs the ul to be picked out by selector or by index (children[3])."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Challenge solution (run in the console)",
+      "language": "javascript",
+      "code": "document.firstElementChild.lastElementChild.querySelector(\"ul\").lastElementChild.innerHTML = \"Angela\";"
+    }
+  ],
+  "task": {
+    "name": "Solution: change the third list item",
+    "starting_point": "The DOM intro lesson page.",
+    "goal": "Replace 'Third' with a name using only the console.",
+    "steps": [
+      "Start at document.firstElementChild (html).",
+      "Move to lastElementChild (body).",
+      "querySelector('ul') to get the list.",
+      "lastElementChild to get the third li.",
+      "Set innerHTML to a new string."
+    ],
+    "expected_result": "Third list item displays the new name.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "document.firstElementChild.lastElementChild.querySelector(\"ul\").lastElementChild.innerHTML = \"Angela\";"
+    },
+    "reference_repo_path": "Section 16 - The Document Object Model (DOM)/16.02 - Introduction to the Document Object Model (DOM)/script.js"
+  },
+  "pitfalls": [
+    "Taking body.lastElementChild as the ul; it is the script tag.",
+    "Mixing up firstChild (may be a text node) and firstElementChild.",
+    "(Extra) Edits made in the console vanish on reload."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (section 16 has none).",
+    "gaps_and_ideas": [
+      "Fold into the proposed 'Meet the DOM' lesson as its final task, with the chain-walk and querySelector solutions side by side, plus children[2] and :last-child variants."
+    ]
+  }
+}

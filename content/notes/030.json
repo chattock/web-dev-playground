@@ -1,0 +1,34 @@
+{
+  "index": 30,
+  "lecture_id": 37350282,
+  "title": "Introduction to Capstone Projects",
+  "section": "4. Multi-Page Websites",
+  "duration_min": 5,
+  "kind": "admin",
+  "summary": "Explains what the course's capstone projects are and how they differ from the guided projects: you get a client-style spec and an example site, but no starter files, walkthrough or solution, and the result should be original enough to go in a portfolio.",
+  "concepts": [
+    {
+      "heading": "Key takeaways",
+      "points": [
+        "Employers judge developers mainly on what they have built, so a portfolio of real projects matters more than a list of courses.",
+        "GitHub is where the portfolio starts: you can pin chosen repositories on your profile, and the contribution graph shows how regularly you push code.",
+        "Each capstone is scoped to the skills taught so far, but expect to get stuck and to look things up in docs or online. That struggle is intended.",
+        "Capstones work like a client brief: a written specification plus an example site showing the target. No starter code, no solution files, no walkthrough video.",
+        "Do not clone the example site. Projects that are obviously copied from a popular tutorial are easy for reviewers to spot; build your own version with your own content and design choices.",
+        "The aim is to break out of relying on tutorials and to see your own progress from the first capstone to the later ones.",
+        "Capstones are optional if you are not aiming for a developer job. Share finished work in the Q&A."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [
+    "Copying the example capstone site or tutorial code into a portfolio.",
+    "Skipping the struggle by searching for a finished solution instead of working from the spec and documentation."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": []
+  }
+}

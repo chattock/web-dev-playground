@@ -1,0 +1,95 @@
+{
+  "index": 158,
+  "lecture_id": 12384236,
+  "title": "Website Animations with jQuery",
+  "section": "19. jQuery",
+  "duration_min": 8,
+  "kind": "concept",
+  "summary": "Tours jQuery's built-in effect methods (hide/show/toggle, fade, slide) and the custom animate() method, then shows how chaining queues effects on the same element. Closes by encouraging use of documentation rather than memorisation and leads into the Simon Game challenge.",
+  "concepts": [
+    {
+      "heading": "Setup used in the demo",
+      "points": [
+        "The page has an h1 and several buttons; a click listener attached to all buttons runs an effect on the h1. The earlier css() colour change inside the handler is swapped for an effect method each time.",
+        "Pattern: $(\"button\").on(\"click\", function () { $(\"h1\").<effect>(); });"
+      ]
+    },
+    {
+      "heading": "Hide, show, toggle",
+      "points": [
+        "hide() makes the selected element disappear instantly and removes it from layout flow, so following content moves up.",
+        "show() brings a hidden element back, equally abruptly.",
+        "toggle() flips between the two on each call, so any button click alternates the h1 between hidden and visible."
+      ]
+    },
+    {
+      "heading": "Fade effects",
+      "points": [
+        "fadeOut() gradually lowers opacity, then hides the element; fadeIn() is the reverse, revealing the element while raising opacity to full.",
+        "fadeToggle() alternates between the two.",
+        "(Extra) Each effect accepts an optional duration (milliseconds or 'slow'/'fast') and a callback that runs on completion; the default duration is 400 ms."
+      ]
+    },
+    {
+      "heading": "Slide effects",
+      "points": [
+        "slideUp() collapses the element upward by animating its height down to zero; slideDown() expands it again; slideToggle() alternates.",
+        "Useful for things like drop-down menus or collapsible panels."
+      ]
+    },
+    {
+      "heading": "Custom animation with animate()",
+      "points": [
+        "animate({ ... }) takes an object of CSS properties and gradually transitions the element to those target values, e.g. { opacity: 0.5 } fades it to half opacity.",
+        "Only numeric CSS properties can be animated. Trying to animate to a colour such as red fails (the keyword is treated as an undefined variable, giving a ReferenceError in the console, since it was written unquoted).",
+        "Numeric lengths work: { margin: 20 } in pixels, or a percentage supplied as a string such as \"20%\" (the reference uses animate({ margin: \"10%\" })).",
+        "(Extra) Animating colours needs the jQuery UI or jQuery Color plugin; plain CSS transitions are the modern alternative."
+      ]
+    },
+    {
+      "heading": "Chaining effects",
+      "points": [
+        "jQuery methods return the jQuery object, so calls can be linked on one selection: $(\"h1\").slideUp().slideDown().animate({ opacity: 0.5 });",
+        "Effects on the same element are queued and run one after another, not simultaneously: here the h1 slides up, then slides down, then fades to 50% opacity.",
+        "Chaining also lets you select once and apply several actions."
+      ]
+    },
+    {
+      "heading": "Don't memorise, look things up",
+      "points": [
+        "Guideline given: understand roughly what exists, then search the docs when needed. A web search such as 'jquery slide animation' brings up the official API docs with the full Effects list (animate, delay, fadeIn, fadeOut, fadeTo, slideDown, etc.).",
+        "jQuery is thoroughly documented on jquery.com, and Stack Overflow, W3Schools and MDN fill in the gaps.",
+        "The lecture ends by announcing the next section: a game built with jQuery as a boss-level challenge to consolidate the module."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "All effect methods, one active at a time (reference script keeps the others commented out)",
+      "language": "javascript",
+      "code": "$(\"button\").on(\"click\", function () {\n  $(\"h1\").hide();          // or show(), toggle()\n  // $(\"h1\").fadeOut();    // fadeIn(), fadeToggle()\n  // $(\"h1\").slideUp();    // slideDown(), slideToggle()\n  // $(\"h1\").animate({ margin: \"10%\" });\n});"
+    },
+    {
+      "caption": "Chained effects run in sequence on the same element",
+      "language": "javascript",
+      "code": "$(\"button\").on(\"click\", function () {\n  $(\"h1\").slideUp().slideDown().animate({ opacity: 0.5 });\n});"
+    }
+  ],
+  "task": null,
+  "pitfalls": [
+    "animate() only handles numeric properties; colour values will not animate (and an unquoted word like red throws a ReferenceError).",
+    "Percentages and other units must be passed as strings, e.g. \"20%\".",
+    "hide() removes the element from layout, shifting other content; fade effects end up hidden too, so layout still jumps at the end.",
+    "Reference index.html includes a personal footer credit that is not part of the course."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (the playground has no jQuery section)",
+    "gaps_and_ideas": [
+      "Proposed lesson 'jQuery effects and animate'. Blurb: hide, fade, slide and custom animations, plus chaining.",
+      "Tasks: 1) make a button toggle an h1 with toggle(); 2) swap to fadeToggle then slideToggle and compare; 3) animate() margin and opacity; 4) chain slideUp().slideDown().animate(); 5) try animating a colour and read the console error, then fix with a CSS transition.",
+      "Starter: h1 plus a row of buttons and a jQuery script tag.",
+      "Interactive demo: a panel with buttons for each effect and a live box showing the effect, with a timeline strip showing the chained queue order."
+    ]
+  }
+}

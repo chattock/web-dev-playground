@@ -1,0 +1,73 @@
+{
+  "index": 341,
+  "lecture_id": 31673470,
+  "title": "How to Deploy to the ICP Network",
+  "section": "39. Deploying to the ICP Live Blockchain",
+  "duration_min": 3,
+  "kind": "concept+exercise",
+  "summary": "Deploys the DBank project to the live Internet Computer with dfx deploy --network ic, finds the frontend canister's id to build its public URL, and shows why first deployments cost many cycles while later upgrades are cheap.",
+  "concepts": [
+    {
+      "heading": "Deploying to the live network",
+      "points": [
+        "Prerequisite: the cycles wallet is funded and linked to the project (previous lecture).",
+        "From inside the project folder run npm install first so the frontend packages are present; if already installed it only takes seconds.",
+        "Run dfx deploy --network ic. The --network flag selects the ic (Internet Computer mainnet) instead of the default local replica. It can take a few minutes.",
+        "The command creates the canisters on the network (paid from the wallet's cycles) and uploads the built frontend assets into the assets canister. It ends by listing the deployed canisters."
+      ]
+    },
+    {
+      "heading": "Finding and opening the live site",
+      "points": [
+        "Get the frontend canister's id with dfx canister --network ic id <assets canister name> (dbank_assets in the lecture; dbank_frontend in the newer template/reference repo).",
+        "Open https://<canister-id>.ic0.app in a browser. This is a normal public URL that anyone with internet access can use.",
+        "Test it by topping up; the calls now run on the real network (the backend query and update calls behave as they did locally, just with real latency).",
+        "(Extra) Newer docs also serve canisters on .icp0.io, and a canister id domain works the same way."
+      ]
+    },
+    {
+      "heading": "Cycle costs: creating vs upgrading",
+      "points": [
+        "Re-open the cycles wallet page (you may need to log in again): the balance drops noticeably after the first deployment (example: from 14 trillion downwards), because creating a canister is the costliest operation.",
+        "Redeploying after editing code (e.g. commenting out two lines in main.mo) prints that all canisters already exist and only upgrades the code. That is far cheaper.",
+        "Practical rule: avoid creating new canisters unnecessarily; update existing ones."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Deploy to the live Internet Computer and get the site address",
+      "language": "bash",
+      "code": "npm install\ndfx deploy --network ic\ndfx canister --network ic id dbank_frontend   # prints the frontend canister id\n# open https://<canister-id>.ic0.app"
+    }
+  ],
+  "task": {
+    "name": "Deploy DBANK to the ICP network",
+    "starting_point": "DBANK project with working local frontend and a funded cycles wallet set via dfx identity --network ic set-wallet.",
+    "goal": "Have the DBank app reachable at a public canister URL.",
+    "steps": [
+      "cd into the project and run npm install.",
+      "Run dfx deploy --network ic and wait for the deployed canisters message.",
+      "Run dfx canister --network ic id with the frontend (assets) canister name to get its id.",
+      "Visit https://<id>.ic0.app and try a top-up.",
+      "Check the wallet balance to see the cost of creating the canisters.",
+      "Make a small edit and redeploy to see the cheaper upgrade path."
+    ],
+    "expected_result": "The live site works like the local one; the first deploy visibly lowers the cycles balance, and the second deploy reports canisters already created.",
+    "solution_code": null,
+    "reference_repo_path": null
+  },
+  "pitfalls": [
+    "Omitting --network ic deploys only to the local replica.",
+    "Deploying fresh canisters repeatedly burns the free cycles.",
+    "Wallet page may require logging in again before showing the balance.",
+    "(Extra) Use your own project's frontend canister name when asking for the id."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "Could be folded into a 'Deploying a dapp' concept lesson with a command checklist task (match each command to what it does: npm install, dfx start, dfx deploy, dfx deploy --network ic, dfx canister id) and a flowchart demo of local vs ic deployment."
+    ]
+  }
+}

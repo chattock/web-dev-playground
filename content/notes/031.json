@@ -1,0 +1,80 @@
+{
+  "index": 31,
+  "lecture_id": 37330378,
+  "title": "Instructions for Capstone Project 1 - Online Resume",
+  "section": "4. Multi-Page Websites",
+  "duration_min": 2,
+  "kind": "article-task",
+  "summary": "Written brief for Capstone Project 1: build a plain-HTML online resume as a multi-page site, then publish it on GitHub Pages. There is no solution code or walkthrough; the work is meant to be the learner's own.",
+  "concepts": [
+    {
+      "heading": "Required page structure",
+      "points": [
+        "Single entry file named index.html, starting with the <!DOCTYPE html> declaration.",
+        "A head containing a title element whose text is 'My Resume'.",
+        "The body holds the resume sections: summary or objective, education (degrees, schools, dates), work experience (titles, employers, dates, responsibilities), skills, and awards or certifications.",
+        "Section headings use heading elements; collections of items use ul or ol lists.",
+        "Include a profile photo with an image element.",
+        "Anchor tags link to additional pages (for example Hobbies and Contact), which makes the resume a multi-page site.",
+        "Finish with a footer element carrying the owner's name and any copyright or disclaimer text. The brief points to the MDN footer reference for details."
+      ]
+    },
+    {
+      "heading": "Constraints and expectations",
+      "points": [
+        "HTML only: no CSS or JavaScript, even if the learner already knows them. This keeps the project within scope.",
+        "Treat it like professional work: look up unfamiliar elements in MDN or search rather than expecting every answer in the course.",
+        "Open index.html in a browser to confirm it renders correctly.",
+        "Push the project to GitHub, publish via GitHub Pages, share the link in the course Q&A, and leave feedback on other students' sites."
+      ]
+    },
+    {
+      "heading": "FAQ takeaways",
+      "points": [
+        "Capstones can go in a portfolio or be shown in interviews, because they have no official solution, so the result is original work. Course projects with published solutions are easier to recognise as course material.",
+        "Getting stuck is the point: gaps found while building show which earlier lessons or docs to revisit, since watching videos alone rarely cements a skill."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Minimal skeleton matching the brief (own illustrative code)",
+      "language": "html",
+      "code": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <title>My Resume</title>\n  </head>\n  <body>\n    <h1>Your Name</h1>\n    <img src=\"images/me.jpg\" alt=\"Profile photo\" width=\"200\">\n    <h2>Summary</h2>\n    <p>...</p>\n    <h2>Education</h2>\n    <ul><li>...</li></ul>\n    <h2>Work Experience</h2>\n    <ul><li>...</li></ul>\n    <h2>Skills</h2>\n    <ul><li>...</li></ul>\n    <h2>Awards</h2>\n    <ul><li>...</li></ul>\n    <nav>\n      <a href=\"hobbies.html\">Hobbies</a>\n      <a href=\"contact.html\">Contact</a>\n    </nav>\n    <footer>&copy; Your Name</footer>\n  </body>\n</html>"
+    }
+  ],
+  "task": {
+    "name": "Capstone 1: Online Resume",
+    "starting_point": "Empty project; the learner creates index.html from scratch (no starter files, no goal image beyond a linked example site).",
+    "goal": "A multi-page, HTML-only online resume published on GitHub Pages.",
+    "steps": [
+      "Create index.html with the doctype and a head whose title is 'My Resume'.",
+      "Write the body sections: summary, education, work experience, skills, awards/certifications.",
+      "Use headings for section titles and ul/ol for lists.",
+      "Add a profile photo with an img element.",
+      "Create extra pages (e.g. hobbies.html, contact.html) and link them with anchor tags.",
+      "Add a footer with name and copyright text.",
+      "Open in a browser to check it.",
+      "Push to GitHub and enable GitHub Pages.",
+      "Post the link in the Q&A and comment on others' projects."
+    ],
+    "expected_result": "A working HTML-only resume site, reachable via a GitHub Pages URL, with links between pages.",
+    "solution_code": null,
+    "reference_repo_path": null
+  },
+  "pitfalls": [
+    "Using CSS or JS, which the brief excludes.",
+    "(Extra) Broken relative links or image paths when pages sit in different folders; revisit the file paths lesson.",
+    "(Extra) GitHub Pages expects the entry file to be named index.html in lowercase."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson for the capstone; s04-portfolio (4.3) is the closest project but is a guided one.",
+    "gaps_and_ideas": [
+      "Add a 'Capstone 1: Online Resume' project lesson with a checklist of the required elements (doctype, title, headings, lists, img, anchors, footer).",
+      "Tasks: build index.html; add hobbies.html and contact.html with working links; add a footer; validate the page.",
+      "Starter idea: an empty folder with a requirements checklist the learner ticks off.",
+      "Interactive demo idea: a checklist that scans pasted HTML and ticks off which required elements are present."
+    ]
+  }
+}

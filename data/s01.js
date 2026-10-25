@@ -4,7 +4,7 @@
    plus your first page to actually type into. */
 
 PG.add({
-  id:'s01-how-the-web-works', section:'s01', slug:'how-the-web-works', lesson:'1.1',
+  id:'s01-how-the-web-works', index:6, udemyId:12286990, minutes:8, section:'s01', slug:'how-the-web-works', lesson:'1.1',
   title:'How the Web Works',
   blurb:'Before the syntax: a website is just files on someone else\'s computer. Your browser asks for them, gets them back, and draws them. <b>HTML</b> is the structure, <b>CSS</b> is the styling, <b>JavaScript</b> is the behaviour.',
   tasks:[
@@ -178,4 +178,19 @@ html:`<!DOCTYPE html>
       <li><b>Break things deliberately.</b> Delete a closing tag and see what happens — that is how you learn to read errors.</li>
       <li><b>Build something nobody asked for.</b> The projects you invent stick far better than the ones you follow.</li>
     </ul>`
+});
+
+
+PG.add({
+  id:'l005', index:5, udemyId:12286980, minutes:5, section:'s01', slug:'how-the-internet-works', kind:'read',
+  title:'How Does the Internet Actually Work?',
+  blurb:'The internet is wires, not a cloud: a request leaves your browser, your ISP asks a DNS server to turn the domain name into an IP address, and the browser then talks to that server directly.',
+  links:[
+    { title:'Submarine Cable Map', url:'https://www.submarinecablemap.com/', note:'the undersea cables the lecture shows' },
+  ],
+  quiz:[
+    { q:'What does a DNS server do?', options:['Stores the files of a website','Turns a domain name into an IP address','Connects your house to the internet','Encrypts your traffic'], answer:1, why:'DNS is the phone book of the internet: it looks up the domain name and returns the IP address of the machine hosting the site.' },
+    { q:'Which of these is the <b>client</b>?', options:['The computer serving the website','Your laptop or phone running the browser','The ISP','The DNS server'], answer:1, why:'The client is whatever a person uses to request pages. The server is the always-on machine that answers.' },
+    { q:'After the browser has the IP address, who does it send the page request to?', options:['The ISP, which fetches the page','The DNS server','The server at that IP address, directly','Google'], answer:2, why:'Once the address is known, the request goes straight to the server, which replies with the site\'s files.' },
+  ],
 });

@@ -1,0 +1,115 @@
+{
+  "index": 252,
+  "lecture_id": 40494164,
+  "title": "Use pgAdmin to CREATE a TABLE",
+  "section": "33. PostgreSQL",
+  "duration_min": 17,
+  "kind": "concept+exercise",
+  "summary": "Walks through pgAdmin: logging in to the server, creating a database named world, writing CREATE TABLE in the Query Tool, and importing a CSV into the new table. The exercise repeats the process for a flags table with emoji data.",
+  "concepts": [
+    {
+      "heading": "Reading the CSV before designing the table",
+      "points": [
+        "CSV (comma separated values) holds one record per line with fields split by commas. The first line is a header naming the fields.",
+        "capitals.csv has the fields id, country, capital for every country. flags.csv has id, name, flag.",
+        "Choose column types by inspecting the data: id is unique so it becomes the primary key; country and capital are text with every value under 45 characters, so VARCHAR(45) fits.",
+        "Flags are emoji, which are UTF-8 text. They can be stored as VARCHAR, but TEXT is recommended here for UTF-8 handling and for practice with another type."
+      ]
+    },
+    {
+      "heading": "pgAdmin set-up flow",
+      "points": [
+        "First launch may ask for a pgAdmin master password. This protects pgAdmin itself and is separate from the Postgres password, so record both.",
+        "Expand Servers and double-click the PostgreSQL server. Enter the password chosen at install time (user is postgres).",
+        "Under Databases there is a default postgres database. Create your own instead: right-click Databases, Create Database, name it world, keep owner postgres, Save.",
+        "Expand world, Schemas, Tables to confirm it has no tables yet.",
+        "With world selected, open the Query Tool; this is where SQL is written and run with the Run button."
+      ]
+    },
+    {
+      "heading": "Writing CREATE TABLE",
+      "points": [
+        "Keywords are syntax highlighted, which helps spot typos such as a misspelled TABLE.",
+        "End every SQL statement with a semicolon; SQL, unlike JavaScript, needs it.",
+        "id SERIAL PRIMARY KEY: use SERIAL for primary keys as habit, even when importing existing ids, so later inserts get the next id automatically.",
+        "PRIMARY KEY promises each value in the column is unique per record. Other constraints (UNIQUE, NOT NULL) come in later lessons.",
+        "Separate fields with commas but leave no comma after the last field, or Postgres reports a syntax error.",
+        "A green 'Query returned successfully' message means the table exists. Right-click Tables and Refresh to see it in the tree."
+      ]
+    },
+    {
+      "heading": "Viewing data and the SQL pgAdmin generates",
+      "points": [
+        "Right-click the table, View/Edit Data, All Rows: pgAdmin writes a SELECT * FROM public.capitals ORDER BY id ASC query for you in the Query Tool.",
+        "The First 100 Rows option adds LIMIT 100 to the same query. Seeing this generated SQL is a quick way to learn syntax.",
+        "pgAdmin's GUI is recommended over using Postgres in the terminal."
+      ]
+    },
+    {
+      "heading": "Importing a CSV",
+      "points": [
+        "Right-click the table, Import/Export Data. The dialog often defaults to Export, so switch it to Import.",
+        "Pick the file with the folder icon and leave format as CSV.",
+        "In Options turn Header on, so the first line is treated as column names and not as a record.",
+        "On the Columns tab the header names should appear and must match the table's column names exactly (including case). If they differ, rename the table columns (table Properties, Columns tab, Save) or edit the CSV, then import again.",
+        "Click OK; green notifications with 'process completed' mean success. Refresh and View All Rows to check the data.",
+        "Check the file path shows the right CSV when importing a second file; the wrong file shape causes an error.",
+        "(Extra) Table creation via right-click Tables, Create, Table also works, but typing SQL is quicker and better practice."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Capitals table (created in the demo)",
+      "language": "sql",
+      "code": "CREATE TABLE capitals (\n  id SERIAL PRIMARY KEY,\n  country VARCHAR(45),\n  capital VARCHAR(45)\n);"
+    },
+    {
+      "caption": "Flags table (the exercise solution)",
+      "language": "sql",
+      "code": "CREATE TABLE flags (\n  id SERIAL PRIMARY KEY,\n  name VARCHAR(45),\n  flag TEXT\n);"
+    },
+    {
+      "caption": "SQL pgAdmin writes when viewing all rows",
+      "language": "sql",
+      "code": "SELECT * FROM public.capitals\nORDER BY id ASC;"
+    }
+  ],
+  "task": {
+    "name": "Create and import the flags table",
+    "starting_point": "The world database and capitals table already exist with data. Download flags.csv (250 rows, columns id, name, flag; flag holds emoji).",
+    "goal": "Have a flags table in world populated with every country and its flag emoji.",
+    "steps": [
+      "Open flags.csv in VS Code and note the header and which types each column needs.",
+      "In pgAdmin select the world database and open the Query Tool.",
+      "Write CREATE TABLE flags with id SERIAL PRIMARY KEY, name VARCHAR(45), flag TEXT, ending in a semicolon with no trailing comma.",
+      "Run it, then refresh Tables to see flags.",
+      "Right-click flags, Import/Export Data, set Import, choose flags.csv, keep CSV format and enable Header.",
+      "Check the Columns tab lists id, name and flag, then click OK.",
+      "View All Rows and confirm the data and flag emoji."
+    ],
+    "expected_result": "A flags table with 250 rows; flags show as emoji (as country letters on Windows, which is a font limitation).",
+    "solution_code": {
+      "language": "sql",
+      "code": "CREATE TABLE flags (\n  id SERIAL PRIMARY KEY,\n  name VARCHAR(45),\n  flag TEXT\n);"
+    },
+    "reference_repo_path": "Section 33 - PostgreSQL/33.05 - Use pgAdmin to CREATE a TABLE/ (README.md, capitals.csv, flags.csv)"
+  },
+  "pitfalls": [
+    "Trailing comma after the last column definition, or a missing semicolon.",
+    "Leaving Import/Export on Export, or forgetting to tick Header (the header line then fails or becomes a data row).",
+    "CSV header names not matching table column names.",
+    "Mixing up the pgAdmin master password and the Postgres user password.",
+    "Importing the wrong CSV into a table because the old path is still set."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (no section 33 playground file).",
+    "gaps_and_ideas": [
+      "New lesson 'Create a table and import a CSV': blurb covering pgAdmin, CREATE TABLE and CSV import.",
+      "Tasks: (1) pick types for a small CSV's columns, (2) write CREATE TABLE for it, (3) fix a statement that has a trailing comma, (4) match CSV header to column names, (5) write the table for flags.csv.",
+      "Starter code: a CSV snippet plus a CREATE TABLE with deliberate errors for the learner to fix.",
+      "Interactive demo: paste CSV text, see inferred column types and generated CREATE TABLE, with a toggle to break header/column name matching and show the import error."
+    ]
+  }
+}

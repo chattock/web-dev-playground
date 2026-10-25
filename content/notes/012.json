@@ -1,0 +1,52 @@
+{
+  "index": 12,
+  "lecture_id": 37348782,
+  "title": "How to Download the Course Resources",
+  "section": "2. Introduction to HTML",
+  "duration_min": 3,
+  "kind": "setup",
+  "summary": "Shows where each lesson's downloadable starter files live on Udemy and how to unzip them on Mac and Windows before opening them in VS Code.",
+  "concepts": [
+    {
+      "heading": "Getting the files",
+      "points": [
+        "Lessons with starter material have a Resources dropdown (folder icon) in the Udemy player. Open it and click the link; most downloads are a single .zip archive.",
+        "A .zip is a compressed archive. Its contents (code files plus assets such as images and sounds) cannot be used until they are extracted."
+      ]
+    },
+    {
+      "heading": "Extracting the archive",
+      "points": [
+        "Mac: double-click the .zip in Downloads; Finder creates a normal folder next to it with the contents.",
+        "Windows: select the .zip in File Explorer and use the 'Extract all' button in the toolbar, or right-click the archive and choose 'Extract all'. Note the destination folder it extracts to."
+      ]
+    },
+    {
+      "heading": "Opening in VS Code",
+      "points": [
+        "Drag the extracted folder (not the .zip) onto the VS Code window. VS Code opens it as a workspace with every file listed in the Explorer.",
+        "Dragging the compressed archive in may seem to work, especially on Windows where files can sometimes be previewed, but editing and saving will misbehave later.",
+        "Rule of thumb: any download ending in .zip gets extracted first, every time."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "(Extra) Command-line alternative for extracting and opening a lesson folder (macOS/Linux; needs the VS Code 'code' shell command installed)",
+      "language": "bash",
+      "code": "cd ~/Downloads\nunzip \"2.1+Heading+Element.zip\" -d \"$HOME/Web Development Projects\"\ncode \"$HOME/Web Development Projects\""
+    }
+  ],
+  "task": null,
+  "pitfalls": [
+    "Opening the still-compressed .zip in VS Code: files may show but cannot be worked on reliably.",
+    "Forgetting where Windows extracted the folder and then editing a different copy."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet. The playground runs starter code in the browser, so no download/unzip step exists there.",
+    "gaps_and_ideas": [
+      "Optional: add a 'Download starter files' button on each lesson that zips the files object, for learners who also want to practise in VS Code alongside the course."
+    ]
+  }
+}

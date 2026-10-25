@@ -1,0 +1,99 @@
+{
+  "index": 253,
+  "lecture_id": 40494176,
+  "title": "READ data from a Postgres database",
+  "section": "33. PostgreSQL",
+  "duration_min": 23,
+  "kind": "concept+exercise",
+  "summary": "Connects a Node/Express app to the Postgres world database with the pg package and reads rows with SELECT * so a capitals quiz uses real data instead of a hard-coded array. The exercise repeats it for a flag quiz using the flags table.",
+  "concepts": [
+    {
+      "heading": "The project: capitals quiz",
+      "points": [
+        "The app shows a country, the player types its capital, and the answer is compared with the database value. A correct answer raises the score; the first wrong answer ends the game with an alert showing the final score.",
+        "Comparison is normalised: the input is trimmed (leading/trailing spaces would break equality) and both strings are lower-cased before ===.",
+        "Starter code (from the download) already holds the Express, EJS and body-parser logic. Its quiz variable is a hard-coded array of three objects (France, US, UK) with country and capital keys, so refreshing repeats the same questions. The only new work is replacing that array with database rows."
+      ]
+    },
+    {
+      "heading": "Existing app logic to understand first",
+      "points": [
+        "express.static('public') serves main.css and the background image; body-parser's urlencoded middleware parses the form body into req.body.",
+        "index.ejs shows the score, prints question.country in the h1, and has a text input named answer. autofocus selects the field on load and autocomplete='off' stops past-entry suggestions.",
+        "The form posts to /submit. The route reads req.body.answer, trims it, compares to currentQuestion.capital, bumps totalCorrect when equal, calls nextQuestion(), then renders index.ejs with question, wasCorrect and totalScore.",
+        "nextQuestion() picks a random element: quiz[Math.floor(Math.random() * quiz.length)].",
+        "GET / resets totalCorrect to 0 and picks a first question. The EJS page uses a small inline script: if wasCorrect is the string 'false' it fires the game-over alert and swaps the page for a restart link."
+      ]
+    },
+    {
+      "heading": "Connecting to Postgres with pg",
+      "points": [
+        "Install with npm i pg in the project folder, then import pg from 'pg' (the project is ES modules, so package.json has type: module).",
+        "Create a client: new pg.Client({ user, host, database, password, port }). user defaults to postgres, host is localhost for a local DB, database is world, password is the one set at install, and port is 5432 by default.",
+        "Password matters little locally but is essential once a database is on the internet.",
+        "db.connect() opens the connection once at startup.",
+        "db.query('SELECT * FROM capitals', callback) runs the SQL. The callback gets (err, res); on error log err.stack, otherwise store res.rows (an array of objects keyed by column name) in quiz.",
+        "db.end() inside the callback closes the connection after the data is loaded. Closing is good practice so the session cannot do anything else by accident.",
+        "Because the quiz is fetched once at server start, the rest of the code is unchanged: it already works on a quiz array."
+      ]
+    },
+    {
+      "heading": "Gotchas for the READ lesson",
+      "points": [
+        "Row objects use the column names from the table, so the capitals rows have id, country, capital and the flags rows have id, name, flag. The flags quiz must use currentQuestion.name for the answer and question.flag for display.",
+        "(Extra) The query result is only populated after the callback runs; routes that fire before that would see an empty quiz. This works in practice because loading is quick.",
+        "(Extra) Calling db.end() means the client cannot be reused for later queries; lessons after this one keep the connection open instead."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Core pg wiring added to index.js",
+      "language": "javascript",
+      "code": "import pg from \"pg\";\n\nconst db = new pg.Client({\n  user: \"postgres\",\n  host: \"localhost\",\n  database: \"world\",\n  password: \"YOUR_PASSWORD\",\n  port: 5432,\n});\ndb.connect();\n\nlet quiz = [];\ndb.query(\"SELECT * FROM capitals\", (err, res) => {\n  if (err) {\n    console.error(\"Error executing query\", err.stack);\n  } else {\n    quiz = res.rows; // [{ id: 1, country: 'Afghanistan', capital: 'Kabul' }, ...]\n  }\n  db.end();\n});"
+    },
+    {
+      "caption": "Random question and answer check (unchanged from the starter)",
+      "language": "javascript",
+      "code": "async function nextQuestion() {\n  const randomCountry = quiz[Math.floor(Math.random() * quiz.length)];\n  currentQuestion = randomCountry;\n}\n\napp.post(\"/submit\", (req, res) => {\n  let answer = req.body.answer.trim();\n  let isCorrect = false;\n  if (currentQuestion.capital.toLowerCase() === answer.toLowerCase()) {\n    totalCorrect++;\n    isCorrect = true;\n  }\n  nextQuestion();\n  res.render(\"index.ejs\", { question: currentQuestion, wasCorrect: isCorrect, totalScore: totalCorrect });\n});"
+    }
+  ],
+  "task": {
+    "name": "Postgres READ: flag quiz",
+    "starting_point": "Download 'Postgres READ' project. It is a flag quiz with an Express server, EJS page and CSS, but no database connection. Run npm install first. A working solution.js is included to try the finished game (nodemon solution.js).",
+    "goal": "Use the pg package and the flags table in the world database so index.js powers a quiz that shows a flag emoji and asks for the country name.",
+    "steps": [
+      "cd into the project folder and run npm install, then npm i pg if it is not already in package.json.",
+      "Run nodemon solution.js and play it at localhost:3000 to see the target behaviour.",
+      "Open index.js and look at the data: columns are id, name, flag (name, not country).",
+      "import pg from 'pg' and create a new pg.Client with user postgres, host localhost, database world, your password and port 5432.",
+      "Call db.connect().",
+      "Run db.query('SELECT * FROM flags', callback); on error log it, otherwise set quiz = res.rows; then call db.end().",
+      "Make sure answer checking uses currentQuestion.name and the EJS shows question.flag.",
+      "Run index.js with nodemon and check a new flag appears on refresh."
+    ],
+    "expected_result": "A flag quiz that picks a random flag from all 250 rows each round, accepts a country name (case and spaces ignored) and ends on the first wrong answer.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "import pg from \"pg\";\n\nconst db = new pg.Client({\n  user: \"postgres\",\n  host: \"localhost\",\n  database: \"world\",\n  password: \"YOUR_PASSWORD\",\n  port: 5432,\n});\ndb.connect();\n\nlet quiz = [];\ndb.query(\"SELECT * FROM flags\", (err, res) => {\n  if (err) {\n    console.error(\"Error executing query\", err.stack);\n  } else {\n    quiz = res.rows;\n  }\n  db.end();\n});\n\n// in the POST /submit route:\nif (currentQuestion.name.toLowerCase() === answer.toLowerCase()) { /* score++ */ }"
+    },
+    "reference_repo_path": "Section 33 - PostgreSQL/33.06 - READ data from a Postgres database/Postgres READ/ (index.js, solution.js) and World Capital Quiz/ (solution.js). Note: in this student repo index.js already equals solution.js, so it is not the unfinished starter. The repo also hard-codes a sample password, replaced here with a placeholder."
+  },
+  "pitfalls": [
+    "Using the wrong column names (country/capital versus name/flag) for the flags table.",
+    "Database name or password not matching what was created in pgAdmin.",
+    "Forgetting npm install pg, or running as CommonJS when the project uses ES module imports.",
+    "Committing real passwords to Git (the reference repo does this).",
+    "On Windows, flags show as letters in the editor; view the quiz in Firefox."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (no section 33 playground file).",
+    "gaps_and_ideas": [
+      "New lesson 'Reading rows from Postgres with pg': blurb on client config, connect, query, res.rows, end.",
+      "Tasks: (1) fill in the pg.Client config, (2) write the SELECT * query and store res.rows, (3) add console.log(res.rows) and describe the shape, (4) switch the quiz to the flags table fields, (5) add a SELECT ... LIMIT 5 preview.",
+      "Starter code: the quiz app with the hard-coded 3-item array and a TODO where the query should go.",
+      "Interactive demo: a mock table next to a mock res.rows array; editing the SQL string updates the returned rows, showing the table-to-array mapping and why field names matter."
+    ]
+  }
+}

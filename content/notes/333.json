@@ -1,0 +1,84 @@
+{
+  "index": 333,
+  "lecture_id": 31673322,
+  "title": "Query vs. Update Methods",
+  "section": "38. Build Your First Defi (Decentralised Finance) DApp - DBANK",
+  "duration_min": 8,
+  "kind": "concept+exercise",
+  "summary": "Explains why calls that change canister state take seconds (update calls go through consensus) while read-only query calls return in milliseconds. Adds a public query function checkBalance with an async return type.",
+  "concepts": [
+    {
+      "heading": "Update vs query calls",
+      "points": [
+        "topUp and withdraw modify a variable, so they are update methods: the change must be written to the blockchain and agreed by the network, which takes around 2-3 seconds in the demo (2.14 s measured).",
+        "A query method only reads state and changes nothing, so it skips consensus and answers in milliseconds (0.014 s measured in Candid UI).",
+        "Rule of thumb: if the function does not change state, make it a query; reserve update calls for real writes. Important for responsive apps and games.",
+        "By default a public func is an update method; the query modifier opts into the fast read path."
+      ]
+    },
+    {
+      "heading": "Declaring a query function",
+      "points": [
+        "Syntax: `public query func checkBalance() : async Nat { ... };` The query keyword goes between public and func.",
+        "Return type is declared after a colon following the parameter list.",
+        "Shared (public) functions that return a value must have an async return type, so the type is written `async Nat` rather than plain Nat; otherwise the compiler complains that a shared query function needs an async syntactic return type.",
+        "Inside the body use `return currentValue;`.",
+        "Declarations inside an actor are separated by semicolons. A missing semicolon after the previous function causes an error. The final one can technically omit it, but adding it everywhere keeps things consistent."
+      ]
+    },
+    {
+      "heading": "Sync vs async (concept)",
+      "points": [
+        "Synchronous work runs one step at a time, each step blocking the next, like a single track; asynchronous work lets tasks proceed independently and finish in any order.",
+        "Web analogy: a modern page fires many requests at once and renders resources as they arrive, so slow ones don't block fast ones or user interaction.",
+        "Canister results come back asynchronously, which is why the async keyword shows up in return types."
+      ]
+    },
+    {
+      "heading": "Seeing it in Candid UI",
+      "points": [
+        "After redeploy and refreshing Candid UI, checkBalance shows a Query button (update functions show Call). Clicking it returns the balance immediately with a timing readout.",
+        "Comparing this with clicking Call on topUp or withdraw shows the latency gap directly."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Read-only query method",
+      "language": "motoko",
+      "code": "public query func checkBalance() : async Nat {\n  return currentValue;\n};"
+    }
+  ],
+  "task": {
+    "name": "Add checkBalance and compare latency",
+    "starting_point": "DBank with public topUP and withdraw update functions.",
+    "goal": "Expose a fast read-only balance getter and observe the speed difference.",
+    "steps": [
+      "Add `public query func checkBalance() : async Nat` returning currentValue.",
+      "Make sure the previous function ends with a semicolon.",
+      "Run dfx deploy, refresh Candid UI, press Query on checkBalance and note the time.",
+      "Press Call on topUp or withdraw and compare."
+    ],
+    "expected_result": "Query returns in a few hundredths of a second; update calls take roughly 2-3 seconds.",
+    "solution_code": {
+      "language": "motoko",
+      "code": "public query func checkBalance() : async Nat {\n  return currentValue;\n};"
+    },
+    "reference_repo_path": "Section 38 - Build Your First Defi (Decentralised Finance) DApp - DBANK/38.05 Query vs. Update Methods/DBANK/src/DBANK/main.mo"
+  },
+  "pitfalls": [
+    "Omitting async in the return type of a public function.",
+    "Missing semicolon between function declarations.",
+    "Using a query method to change state (changes are not persisted).",
+    "(Extra) Local replica timings are far shorter than a mainnet round trip would be for updates; treat figures as illustrative."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (no section 38 file).",
+    "gaps_and_ideas": [
+      "New lesson 'Query vs update methods': explain consensus cost and the query modifier.",
+      "Tasks: (1) classify topUp, withdraw, checkBalance as query or update; (2) write checkBalance; (3) explain why the return type is async Nat; (4) estimate speed difference; (5) think of an app feature that should be a query.",
+      "Interactive demo idea: two buttons, Update call (artificial 2s delay with progress) and Query call (instant), with timing readout, mimicking Candid UI."
+    ]
+  }
+}

@@ -1,0 +1,93 @@
+{
+  "index": 58,
+  "lecture_id": 37368412,
+  "title": "[Project] Pricing Table",
+  "section": "9. Flexbox",
+  "duration_min": 10,
+  "kind": "project",
+  "summary": "Section project: build a three-tier pricing table with flexbox so the cards share the width on large screens and stack vertically on small ones. The lecture sets the brief, then walks through the solution CSS block by block.",
+  "concepts": [
+    {
+      "heading": "Project brief",
+      "points": [
+        "Starting files: index.html with all the HTML content already written, plus goal-large and goal-small images. The only CSS supplied is the Google font Sono on the body.",
+        "Required: cards live in a flex container, adapt to the available width, and stack one above another on narrow screens. Colours, radius, borders and other visual choices are free.",
+        "Hint given: combine a media query with flexbox to get the stacking behaviour."
+      ]
+    },
+    {
+      "heading": "Solution: the container",
+      "points": [
+        "display: flex turns the three cards into flex items; gap puts space between them (2rem in the solution).",
+        "justify-content: center and align-items: center plus height: 100vh centres the cards horizontally and vertically in the viewport. This is a quick way to centre content in both directions, which is awkward without flexbox or grid."
+      ]
+    },
+    {
+      "heading": "Solution: the cards",
+      "points": [
+        "flex: 1 gives each card an equal share that can grow and shrink.",
+        "max-width: 400px stops cards from stretching across the whole wide screen, which would defeat the centring.",
+        "Supporting styles: padding 20px, light grey background, border-radius 5px, text-align: center."
+      ]
+    },
+    {
+      "heading": "Solution: text, list and button styling",
+      "points": [
+        ".plan-title: larger font-size (24px), bold, small margin-bottom.",
+        ".plan-price: much larger (48px), bold, margin-bottom so it stands out.",
+        ".plan-features: list-style: none removes bullets from the ul; padding: 0 and margin: 0 remove default indentation; each li gets a margin-bottom to space rows and push the button down.",
+        ".plan-button: orange background, white text, padding, rounded corners, border: none to drop the default grey border."
+      ]
+    },
+    {
+      "heading": "Solution: responsive stacking with a media query",
+      "points": [
+        "@media (max-width: 1250px) targets the container and switches flex-direction from row to column, so cards stack.",
+        "Height is changed to 100% in the same block. A fixed 100vh would cut off the extra content once cards are stacked and the content becomes taller than the viewport; 100% lets the container grow with its content."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Core flexbox and responsive rules (from the reference repo, shortened)",
+      "language": "css",
+      "code": ".pricing-container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  height: 100vh;\n  gap: 2rem;\n}\n\n.pricing-plan {\n  flex: 1;\n  max-width: 400px;\n  padding: 20px;\n  background-color: #f2f2f2;\n  border-radius: 5px;\n  text-align: center;\n}\n\n.plan-features {\n  list-style: none;\n  padding: 0;\n  margin: 0;\n}\n\n.plan-button {\n  background-color: #ff6600;\n  color: white;\n  padding: 10px;\n  border: none;\n  border-radius: 5px;\n}\n\n@media (max-width: 1250px) {\n  .pricing-container {\n    flex-direction: column;\n    height: 100%;\n  }\n}"
+    }
+  ],
+  "task": {
+    "name": "Flexbox Pricing Table project",
+    "starting_point": "index.html with HTML for three plans (.pricing-plan cards with .plan-title, .plan-price, .plan-features list and .plan-button) and only the Sono font applied. goal-large.png and goal-small.png show targets.",
+    "goal": "Style the page so three cards sit in a flex container, share width evenly, are centred, and stack vertically below a width breakpoint.",
+    "steps": [
+      "Make .pricing-container a flex container with a gap.",
+      "Centre the cards with justify-content and align-items, and give the container a viewport-height height.",
+      "Give .pricing-plan flex: 1 and a max-width.",
+      "Style the card (padding, background, radius, centred text), the title and price, the feature list and the button.",
+      "Add a media query that switches the container to flex-direction: column and releases the fixed height.",
+      "Resize the window to confirm both layouts and compare with the goal images."
+    ],
+    "expected_result": "Three equal cards in a centred row on wide screens, a single stacked column on narrow screens, no clipped content when scrolling.",
+    "solution_code": {
+      "language": "css",
+      "code": ".pricing-container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  height: 100vh;\n  gap: 2rem;\n}\n.pricing-plan {\n  flex: 1;\n  max-width: 400px;\n  padding: 20px;\n  background-color: #f2f2f2;\n  border-radius: 5px;\n  text-align: center;\n}\n@media (max-width: 1250px) {\n  .pricing-container {\n    flex-direction: column;\n    height: 100%;\n  }\n}"
+    },
+    "reference_repo_path": "Section 09 - Flexbox/09.03 - Flexbox Pricing Table Project/solution.html"
+  },
+  "pitfalls": [
+    "Keeping height: 100vh in the stacked layout, which clips content.",
+    "Omitting max-width so cards span the entire wide screen.",
+    "Forgetting border: none on the button, leaving the default border.",
+    "(Extra) The repo solution.html contains an author footer ('Made with ...') that should be ignored; solution.html and index.html in the repo also differ only in property order and values like prices.",
+    "(Extra) Media queries with max-width apply at and below the width given; 1250px is a choice, not a rule."
+  ],
+  "playground": {
+    "match": "s09-pricing (lesson 9.3, data/s09.js)",
+    "coverage": "Matches closely: tasks cover flex + centring both ways, 100vh, flex:1 and max-width; starter HTML/CSS and a solution exist.",
+    "gaps_and_ideas": [
+      "Add a task for the responsive part: a media query switching to flex-direction: column and height: 100% (not in the current task list).",
+      "Add a pitfall note on why 100vh clips stacked content.",
+      "Explore-demo idea: a width slider with a breakpoint marker that flips the layout and a toggle to show the clipped result with height: 100vh.",
+      "Add list-style/padding reset and button border: none as a styling checklist."
+    ]
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "index": 192,
+  "lecture_id": 12384268,
+  "title": "What is Node.js?",
+  "section": "23. Node.js",
+  "duration_min": 11,
+  "kind": "theory",
+  "summary": "Explains what a web framework is, why Node.js is a JavaScript runtime rather than a framework, what 'asynchronous and event-driven' means, and why the course picks Node for the backend.",
+  "concepts": [
+    {
+      "heading": "Framework vs runtime",
+      "points": [
+        "A web framework is a set of ready-made components and structures for building an app, so common plumbing doesn't have to be hand-written every time (illustrated with store-bought vs home-made mayonnaise).",
+        "Node.js is not itself a framework. Its own docs describe it as an asynchronous, event-driven JavaScript runtime for building scalable network applications.",
+        "A runtime environment is what lets code execute somewhere. JavaScript was originally created only to run inside browsers, so on its own it could not be used for non-website programs.",
+        "Node takes Google's V8 engine (from Chromium, written in C/C++, the engine that powers Chrome) and runs it outside the browser, so JavaScript can run directly on any machine: a laptop or a server.",
+        "Result: JavaScript can now do the jobs of server-side languages such as Python, Ruby, PHP or C#, including desktop and server-side applications."
+      ]
+    },
+    {
+      "heading": "Synchronous vs asynchronous, event-driven",
+      "points": [
+        "Synchronous code (all the scripts written so far) runs top to bottom; each step waits for the previous one to finish, holding resources until it does.",
+        "Analogy: ordering a parcel online and being unable to do anything until it arrives would be the synchronous version.",
+        "Asynchronous code starts a slow task (file read, network call, database query) and moves on instead of waiting. The follow-up code is packaged as a handler for an event and runs only when that event fires (the 'parcel arrives').",
+        "This non-blocking model is why Node is fast and efficient for servers that handle many requests at once.",
+        "(Extra) In code this shows up as callback functions, Promises and async/await, which appear in the next lessons (e.g. fs.writeFile's callback)."
+      ]
+    },
+    {
+      "heading": "Where Node fits in the backend",
+      "points": [
+        "The backend is server + application + database. The server is just a computer with no browser, so something has to run the application code: Node does that for JavaScript.",
+        "Node lets you build the application part of the backend in JavaScript on that server."
+      ]
+    },
+    {
+      "heading": "Why the course chooses Node",
+      "points": [
+        "One language across the whole stack: HTML/CSS/JS on the frontend and JS on the backend. Easier for frontend devs to move to backend, and code can be shared between client and server.",
+        "Scales well for large professional projects.",
+        "Fast and non-blocking thanks to the async, event-driven design.",
+        "Huge ecosystem: thousands of open-source packages on NPM, plus plenty of docs, tutorials and Stack Overflow answers.",
+        "Used in production by companies such as LinkedIn, Twitter, Netflix and NASA.",
+        "Node is a key skill employers look for. Python backends (Flask) are a good fit for ML/AI work; PHP and Ruby on Rails are presented as outdated choices for a new bootcamp curriculum. GitHub language stats show JavaScript still at the top."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "(Extra) Synchronous vs asynchronous in Node: the callback runs later, when the file read finishes",
+      "language": "javascript",
+      "code": "const fs = require(\"fs\");\n\nconsole.log(\"1. start\");\n\nfs.readFile(\"message.txt\", \"utf8\", (err, data) => {\n  // runs only when the 'file has been read' event fires\n  console.log(\"3. file says:\", data);\n});\n\nconsole.log(\"2. this line does not wait for the file\");"
+    }
+  ],
+  "task": null,
+  "pitfalls": [
+    "Calling Node a framework or a language: it is a runtime that executes JavaScript outside the browser (Express, covered later, is the framework).",
+    "Assuming code always runs in the order written: with async APIs, the callback runs after the lines that follow it."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "New lesson 's23-what-is-node' (blurb: Node runs JavaScript outside the browser using Chrome's V8 engine, and handles slow work asynchronously).",
+      "Task 1: sort a list of statements into 'runs in the browser only', 'runs in Node only', 'both' (e.g. document.querySelector, require('fs'), console.log, Math.random).",
+      "Task 2: predict the output order of a snippet mixing console.log with setTimeout(..., 0) and a fake readFile callback, then run it in the sandbox to check.",
+      "Task 3: label the three parts of a backend (server, application, database) and mark which one Node runs.",
+      "Interactive demo idea: a 'synchronous vs asynchronous kitchen' timeline where the learner clicks to start three slow tasks; in sync mode they stack end to end, in async mode they overlap and their callbacks fire as each finishes."
+    ]
+  }
+}

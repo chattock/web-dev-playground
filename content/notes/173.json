@@ -1,0 +1,53 @@
+{
+  "index": 173,
+  "lecture_id": 12653170,
+  "title": "Step 6 - Add Animations to User Clicks",
+  "section": "20. Boss Level Challenge 2 - The Simon Game",
+  "duration_min": 1,
+  "kind": "article-task",
+  "summary": "Add a pressed visual effect for 100 ms on clicked buttons.",
+  "concepts": [
+    {
+      "heading": "animatePress(currentColour)",
+      "points": [
+        "Takes the colour name and selects $(\"#\" + currentColour).",
+        "The .pressed class in styles.css adds a white box-shadow and grey background.",
+        "addClass(\"pressed\") applies it; setTimeout with 100 ms later calls removeClass(\"pressed\").",
+        "Call animatePress(userChosenColour) from the click handler."
+      ]
+    },
+    {
+      "heading": "Delay",
+      "points": [
+        "setTimeout(fn, ms) runs fn once after the delay; search 'how to add delay javascript' finds it."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "animatePress",
+      "language": "javascript",
+      "code": "function animatePress(currentColour) {\n  $(\"#\" + currentColour).addClass(\"pressed\");\n  setTimeout(function () {\n    $(\"#\" + currentColour).removeClass(\"pressed\");\n  }, 100);\n}"
+    }
+  ],
+  "task": {
+    "name": "Press animation",
+    "starting_point": "Click handler exists",
+    "goal": "Clicked button briefly looks pressed",
+    "steps": [
+      "Create animatePress(currentColour)",
+      "Add class pressed",
+      "Remove it after 100ms with setTimeout",
+      "Call from handler"
+    ],
+    "expected_result": "Buttons flash grey with glow on click.",
+    "solution_code": null,
+    "reference_repo_path": "Section 20 - Boss Level Challenge 2 - The Simon Game/script.js"
+  },
+  "pitfalls": [],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (web-dev-playground has no files for sections 19-20)",
+    "gaps_and_ideas": []
+  }
+}

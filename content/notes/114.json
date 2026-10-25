@@ -1,0 +1,90 @@
+{
+  "index": 114,
+  "lecture_id": 12374106,
+  "title": "Adding Javascript to Websites",
+  "section": "16. The Document Object Model (DOM)",
+  "duration_min": 11,
+  "kind": "concept",
+  "summary": "Shows the three ways to attach JavaScript to an HTML page (inline attribute, internal script element, external file) mirroring the three CSS approaches, and why script placement matters: scripts that touch elements should come after those elements, ideally just before the closing body tag.",
+  "concepts": [
+    {
+      "heading": "Setup",
+      "points": [
+        "New project folder (named DOM) with index.html containing boilerplate, a title, a link to a blank styles.css and a single h1 reading Hello.",
+        "Until now JavaScript ran in the browser console; this lesson wires it into a real page.",
+        "The three-way split matches the CSS lessons: inline, internal, external."
+      ]
+    },
+    {
+      "heading": "1. Inline JavaScript",
+      "points": [
+        "Put code in an event-handler attribute on a tag, e.g. onload on the body element. The code inside the quotes runs when the body has loaded.",
+        "Quoting trap: the attribute value is already in double quotes, so any string inside must use single quotes (alert('Hello')); otherwise the browser ends the attribute early. Editor colouring shows which parts it reads as a string.",
+        "End the statement with a semicolon.",
+        "Drawbacks, same as inline CSS: not modular, hard to debug, poor practice. Avoid it."
+      ]
+    },
+    {
+      "heading": "2. Internal JavaScript",
+      "points": [
+        "Use a script element and write code between its tags. No attribute-level quoting is needed, so normal double-quoted strings work.",
+        "The browser reads the page top to bottom; on reaching the script element it runs the code immediately.",
+        "The lecture also writes type=\"javascript\"-style attribute; (Extra) the type attribute is unnecessary in modern HTML, JavaScript is the default."
+      ]
+    },
+    {
+      "heading": "3. External JavaScript",
+      "points": [
+        "Create a .js file (index.js) and reference it with a script element using the src attribute pointing at the path; the element has no content of its own.",
+        "The page then holds no JavaScript, yet behaves identically. This is the preferred approach, like external CSS."
+      ]
+    },
+    {
+      "heading": "Where to put the script element",
+      "points": [
+        "CSS: put the link in the head so styles load before content; at the bottom, the browser first paints an unstyled h1, then restyles it later (shown by pausing on an alert).",
+        "JavaScript is the opposite: code that looks up and changes elements fails if the elements do not exist yet.",
+        "Demo: index.js selects the h1 with document.querySelector('h1') and sets innerHTML to a new string (Good Bye). With the script after the h1, this works.",
+        "The same script in the head runs before the h1 exists; the selector returns null and the console reports it cannot set innerHTML of null.",
+        "Best practice: place the script just before the closing body tag. Extra benefit: the visible content renders first, so the page feels faster than if the browser stalls on heavy JavaScript in the head.",
+        "(Extra) Alternatives: defer attribute on a head script, or a DOMContentLoaded listener, also wait for the DOM."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "All three methods on one page (reference repo, footer credit removed)",
+      "language": "html",
+      "code": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\" />\n  <title>Adding Javascript to Websites</title>\n</head>\n<body onload=\"document.querySelector('h3').innerHTML = 'Inline JavaScript';\">\n  <h1>External</h1>\n  <h2>Internal</h2>\n  <h3>Inline</h3>\n\n  <script>\n    document.querySelector(\"h2\").innerHTML = \"Internal Javascript\";\n  </script>\n  <script src=\"./script.js\"></script>\n</body>\n</html>"
+    },
+    {
+      "caption": "External file script.js",
+      "language": "javascript",
+      "code": "document.querySelector(\"h1\").innerHTML = \"External JavaScript\";"
+    },
+    {
+      "caption": "Inline alert with nested quotes",
+      "language": "html",
+      "code": "<body onload=\"alert('Hello');\">"
+    }
+  ],
+  "task": null,
+  "pitfalls": [
+    "Double quotes inside a double-quoted inline attribute break the code.",
+    "Script in the head that touches page elements gives 'Cannot set property innerHTML of null'.",
+    "Putting the stylesheet link at the bottom (flash of unstyled content).",
+    "Overusing inline JavaScript.",
+    "Reference repo diverges: its page changes headings with all three methods instead of alert, and has a student footer (omitted here)."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (section 16 has no playground file).",
+    "gaps_and_ideas": [
+      "New lesson 'Adding JavaScript to a page': blurb on inline vs internal vs external and script placement.",
+      "Tasks: (1) fire an alert with inline onload; (2) move to a script element; (3) move to an external file; (4) move the script into the head and read the console error; (5) fix with the end-of-body position.",
+      "Starter: HTML with an h1 and h2 plus an empty script tag.",
+      "Interactive demo: three tabs showing the same page three ways, with a toggle that moves the script element between head and end-of-body and shows the resulting console message (null error vs success).",
+      "Mention defer as a follow-up concept."
+    ]
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "index": 348,
+  "lecture_id": 31673602,
+  "title": "Tokens and Coins: What are they and how are they used?",
+  "section": "41. Create Your Own Crypto Token",
+  "duration_min": 9,
+  "kind": "theory",
+  "summary": "Explains the difference between a coin (own blockchain) and a token (built on an existing chain), why tokens are far cheaper to launch, and what tokens are used for. Sets up the section project: a custom token called DANG (a play on the instructor's name) on the Internet Computer.",
+  "concepts": [
+    {
+      "heading": "Coin vs token",
+      "points": [
+        "A coin runs on its own blockchain. Creating one means standing up a chain (often by forking an existing one) and then convincing enough miners/validators to secure it.",
+        "A token is deployed onto a chain that already exists (Ethereum, the Internet Computer). No new chain, no miners to recruit; the token is just code on the host chain.",
+        "Examples given: Dogecoin is a coin (its own chain, a fork lineage that goes back to Bitcoin via Litecoin-style forks). Shiba Inu is a token because it lives on Ethereum.",
+        "In everyday speech the word token is used for both, including for ICP, even though ICP technically has its own chain."
+      ]
+    },
+    {
+      "heading": "Cost and effort of each route",
+      "points": [
+        "Coin: copying the chain code is easy, but securing it needs many miners, which consumes energy and requires people who believe the coin has a future.",
+        "Token: the only work is writing the ledger (who owns how many units) and the rules for transferring units and recording the change.",
+        "A token can plug into the host chain's existing user base and exchanges (the Shiba example used Ethereum DEXs such as Uniswap), so trading can start immediately instead of waiting to build an exchange ecosystem.",
+        "Any token holder can be sent tokens as long as their public wallet address is known; this is how token creators can seed large amounts to well-known wallets."
+      ]
+    },
+    {
+      "heading": "What tokens are used for",
+      "points": [
+        "Payment: swap one token for another, or pay for a product or service.",
+        "Equity/governance: holders vote on the direction of a decentralised app. On the Internet Computer, ICP can be staked to vote on proposals and earns rewards in return, loosely like shares in a company.",
+        "Utility: a token gives access to a function inside an app or chain. The cycles obtained from the cycles faucet earlier in the course are a utility token that pays for canister computation.",
+        "Representing real-world assets: for example an energy token that small providers trade directly.",
+        "Gaming rewards: in-game tokens earned by playing that can be spent, staked or used to vote on governance."
+      ]
+    },
+    {
+      "heading": "Burning tokens",
+      "points": [
+        "Burning means destroying tokens or sending them to an address nobody can access, which removes them from circulation."
+      ]
+    },
+    {
+      "heading": "What the section builds",
+      "points": [
+        "A custom token named DANG (short for 'Decentralized Angela'), written in Motoko on the Internet Computer, with a ledger, a faucet and transfers.",
+        "Learners are free to pick their own token name and symbol."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [
+    "Calling every crypto asset a coin: the distinction depends on whether the asset has its own blockchain.",
+    "(Extra) Treating the market-cap anecdotes as investment guidance; they are context only."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "Proposed lesson 'Coins vs tokens': blurb on own-chain vs shared-chain assets; 3 tasks: (1) classify a list of assets (BTC, DOGE, SHIB, ICP, USDT) as coin or token, (2) sort use cases into payment/governance/utility, (3) name your own token and symbol for the section project.",
+      "Interactive demo idea: a small drag-and-sort card game that places assets into 'own blockchain' vs 'runs on host chain' buckets and shows the extra work each requires (miners vs ledger code)."
+    ]
+  }
+}

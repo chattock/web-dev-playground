@@ -1,0 +1,108 @@
+{
+  "index": 115,
+  "lecture_id": 12374120,
+  "title": "Introduction to the Document Object Model (DOM)",
+  "section": "16. The Document Object Model (DOM)",
+  "duration_min": 12,
+  "kind": "concept+exercise",
+  "summary": "Explains what the DOM is (the browser's tree of objects built from the HTML), how to walk it from the console with firstElementChild / lastElementChild, and how objects have properties (get/set) and methods (called with parentheses). Ends with a challenge to change the third list item's text from the console.",
+  "concepts": [
+    {
+      "heading": "Why the DOM exists",
+      "points": [
+        "Pages written only in HTML and CSS are static: changes need an edit and a reload by the developer.",
+        "Interactivity (reacting to a click, say) must happen live in the visitor's browser, so the page's elements need to be available to code as things to select and change.",
+        "The DOM is the browser's catalogue of the page as individual objects. The browser builds it when it loads the HTML, turning each element and its data into a tree of objects."
+      ]
+    },
+    {
+      "heading": "The tree structure",
+      "points": [
+        "Everything lives inside a top-level object called document. Under it is the html object, whose children are head and body.",
+        "Terminology like a family or org chart: head is a descendant of html; head and body are siblings, not descendants of each other.",
+        "Demo page: h1, a checkbox input, a button (Click Me), an unordered list with three li items (the first contains a Google link) and the script element. A tree-visualiser browser extension can draw the DOM for any page.",
+        "Body therefore has five element children: h1, input, button, ul, script."
+      ]
+    },
+    {
+      "heading": "Walking the tree in the console",
+      "points": [
+        "Typing document in the console prints the whole parsed page and can be expanded.",
+        "document.firstElementChild is the html element; document.firstElementChild.firstElementChild is head; .lastElementChild instead gives body.",
+        "Going one level deeper from body with firstElementChild reaches the h1. Chain these properties to dig down.",
+        "Store the element in a variable (var heading = ...) to reuse it."
+      ]
+    },
+    {
+      "heading": "Manipulating a selected element",
+      "points": [
+        "heading.innerHTML = 'Good Bye' replaces the content between the tags, and the page updates immediately.",
+        "heading.style.color = 'red' sets an inline style property.",
+        "document.querySelector('input') finds the first element matching a CSS selector; calling .click() on the checkbox simulates a click and ticks it."
+      ]
+    },
+    {
+      "heading": "Properties vs methods (objects)",
+      "points": [
+        "Objects have properties (describe the object) and methods (things it can do). Car analogy: colour/seats/doors vs drive()/brake()/park().",
+        "Dot notation reaches both. car.color reads a property (a getter). car.numberOfDoors = 0 assigns (a setter): the difference is only the equals sign.",
+        "car.drive() calls a method; methods always carry parentheses, which may take arguments. That is how you tell them apart from properties.",
+        "A method is a function that belongs to an object; a plain function is not attached to one.",
+        "DOM element properties mentioned: innerHTML, style, firstChild. Methods mentioned: click(), appendChild() to add a child, setAttribute() to change e.g. href.",
+        "The concepts are revisited later, so partial understanding is fine for now."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Console exploration",
+      "language": "javascript",
+      "code": "document;                                  // whole parsed page\ndocument.firstElementChild;                // <html>\ndocument.firstElementChild.firstElementChild; // <head>\ndocument.firstElementChild.lastElementChild;  // <body>\n\nvar heading = document.firstElementChild.lastElementChild.firstElementChild; // the h1\nheading.innerHTML = \"Good Bye\";\nheading.style.color = \"red\";\n\ndocument.querySelector(\"input\").click();   // ticks the checkbox"
+    },
+    {
+      "caption": "Properties and methods on a made-up car object",
+      "language": "javascript",
+      "code": "car.color;              // get a property\ncar.numberOfDoors = 0;  // set a property\ncar.drive();            // call a method"
+    },
+    {
+      "caption": "Reference-repo script for this lesson",
+      "language": "javascript",
+      "code": "document.querySelector(\"input\").click();\ndocument.querySelector(\"ul\").lastElementChild.innerHTML = \"I changed the text with javascript\";"
+    }
+  ],
+  "task": {
+    "name": "Change the third list item from the console",
+    "starting_point": "Downloaded lesson files (index.html, index.js, styles.css) with a ul of three li items; third reads 'Third'.",
+    "goal": "Replace the third li's text with your own name using only the browser console; do not edit the HTML file.",
+    "steps": [
+      "Open the page in Chrome and open DevTools console.",
+      "Navigate or select to the third li (walk the tree from document, or use querySelector('ul')).",
+      "Take the last child element of the ul.",
+      "Set its innerHTML to a new string.",
+      "Check the page updates and the HTML file is unchanged."
+    ],
+    "expected_result": "The page's last list item shows the new text after pressing Enter in the console.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "document.querySelector(\"ul\").lastElementChild.innerHTML = \"Your name\";\n// or walking from the top:\n// document.firstElementChild.lastElementChild.children[3].lastElementChild.innerHTML = \"Your name\";"
+    },
+    "reference_repo_path": "Section 16 - The Document Object Model (DOM)/16.02 - Introduction to the Document Object Model (DOM)/script.js"
+  },
+  "pitfalls": [
+    "Forgetting that script is also a child of body, so body.lastElementChild is the script, not the ul.",
+    "Writing a method without parentheses (nothing is called) or a property with parentheses (not a function).",
+    "Using == assignment vs reading: forgetting = turns a setter into a getter.",
+    "The console changes are lost on refresh; they do not alter the files.",
+    "Reference repo adds a student footer (ignore) and its script is a solution to the challenge, run on page load rather than in the console."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (section 16 has no playground file).",
+    "gaps_and_ideas": [
+      "New lesson 'Meet the DOM': blurb about HTML becoming a live tree of objects.",
+      "Tasks: walk from document to the h1 with firstElementChild/lastElementChild; change its innerHTML and style.color; click() a checkbox; change the third li.",
+      "Starter: the demo page (h1, checkbox, button, ul of three li).",
+      "Interactive demo: a live DOM-tree view beside the page that highlights the node whose property you edit; also a getter/setter/method cheat card."
+    ]
+  }
+}

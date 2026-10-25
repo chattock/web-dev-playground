@@ -1,0 +1,104 @@
+{
+  "index": 330,
+  "lecture_id": 31673308,
+  "title": "Introduction to the Motoko Language",
+  "section": "38. Build Your First Defi (Decentralised Finance) DApp - DBANK",
+  "duration_min": 13,
+  "kind": "concept+exercise",
+  "summary": "Creates the DBANK project with the dfx SDK, then builds a first Motoko actor from scratch: a mutable balance variable, reassignment with :=, an immutable let constant, importing the Debug module, and printing values with debug_show. Ends with a small challenge to print the constant.",
+  "concepts": [
+    {
+      "heading": "Creating the project",
+      "points": [
+        "Work from the folder set up earlier for IC projects (cd into it), then run `dfx new dbank`. The SDK scaffolds the whole project; it takes roughly 2-5 minutes depending on the machine.",
+        "Open the new folder in the code editor. Notable items: README, a git repo, node_modules/config files (ignore these), and src, where all code goes.",
+        "The backend file is a main.mo (Motoko) with starter code. Delete the contents so everything is written from scratch.",
+        "(Extra) The reference repo was generated with a newer dfx template, so the backend folder is src/DBANK_backend/main.mo and a frontend canister sits beside it; dfx.json lists both canisters."
+      ]
+    },
+    {
+      "heading": "The actor (canister) skeleton",
+      "points": [
+        "In Motoko, the unit that becomes a canister is an `actor`. Write the actor keyword, a name (here DBank), and a block in braces. That alone defines a canister.",
+        "Inside the actor most ordinary programming ideas apply, and every statement ends with a semicolon.",
+        "(Extra) The reference code writes `persistent actor DBank { ... }`; newer Motoko versions use the persistent keyword so state survives upgrades by default."
+      ]
+    },
+    {
+      "heading": "Variables, naming and reassignment",
+      "points": [
+        "`var currentValue = 300;` declares a mutable variable holding the bank balance, starting at 300.",
+        "Naming convention from the Motoko style guide: lowerCamelCase for variables, constants and anything dynamic; UpperCamelCase for actors, modules and types. The guide also recommends two-space indentation. These are style conventions and don't change how the code runs.",
+        "Reassignment uses `:=`, not `=`. `currentValue := 100;` replaces the stored value, so after that line the variable holds 100. A single `=` is only for the initial declaration."
+      ]
+    },
+    {
+      "heading": "Debugging output with Debug.print",
+      "points": [
+        "The Debug module lives in the Motoko base library. Import with `import Debug \"mo:base/Debug\";` where `mo:` marks a Motoko package, `base` is the base library, then the module name.",
+        "`Debug.print(\"Hello\")` writes text to the terminal that runs the local replica, similar to console.log.",
+        "print only accepts Text. Passing the number variable gives a type mismatch error because currentValue is a Nat (natural number: whole, non-negative).",
+        "Wrap non-text values in `debug_show(...)` to convert them to text for printing: `Debug.print(debug_show(currentValue))`. Large numbers print with underscore thousands separators."
+      ]
+    },
+    {
+      "heading": "Running it locally",
+      "points": [
+        "Terminal 1: `dfx start` launches the local Internet Computer simulation (served on localhost, port 8000 in the lecture) and must stay running.",
+        "Terminal 2, inside the project folder: `dfx deploy` creates and installs the canister. Prints from the actor appear in terminal 1 at deploy time.",
+        "Edit, save, run `dfx deploy` again to see updated output."
+      ]
+    },
+    {
+      "heading": "let for constants",
+      "points": [
+        "`let id = 3244896453846;` declares an immutable binding, like const in JavaScript. Use it for data that must never change.",
+        "Trying `id := ...` fails at compile time because it is immutable."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Project setup commands",
+      "language": "bash",
+      "code": "cd ic-projects\ndfx new dbank\ncd dbank\n\n# terminal 1\ndfx start\n# terminal 2 (inside the project)\ndfx deploy"
+    },
+    {
+      "caption": "First DBank actor (matches the reference repo)",
+      "language": "motoko",
+      "code": "import Debug \"mo:base/Debug\";\n\npersistent actor DBank {\n  var currentValue = 300;\n  currentValue := 100;\n\n  let id = 3244896453846;\n\n  Debug.print(\"Hello\");\n  Debug.print(debug_show(currentValue));\n  Debug.print(debug_show(id));\n}"
+    }
+  ],
+  "task": {
+    "name": "Print the constant id",
+    "starting_point": "The actor from this lesson with currentValue, the let id constant and a Debug.print(\"Hello\") line, deployed locally.",
+    "goal": "Make the id constant show up in the terminal output.",
+    "steps": [
+      "Pause and make sure the lesson code is written locally.",
+      "Call Debug.print with debug_show(id) as the argument (plain id would be a type error).",
+      "Save and run dfx deploy in the second terminal; check the first terminal for the number."
+    ],
+    "expected_result": "The terminal prints the large id number with underscore separators.",
+    "solution_code": {
+      "language": "motoko",
+      "code": "Debug.print(debug_show(id));"
+    },
+    "reference_repo_path": "Section 38 - Build Your First Defi (Decentralised Finance) DApp - DBANK/38.02 Introduction to the Motoko Language/DBANK/src/DBANK_backend/main.mo"
+  },
+  "pitfalls": [
+    "Passing a Nat directly to Debug.print causes a type mismatch; use debug_show.",
+    "Using = instead of := when reassigning.",
+    "Trying to reassign a let constant.",
+    "Running dfx deploy in the same terminal as dfx start (stops the replica); use a second terminal.",
+    "Forgetting the semicolon at the end of statements."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (no section 38 file).",
+    "gaps_and_ideas": [
+      "New lesson 'Your first Motoko actor': blurb on actors/canisters, var vs let, := and debug_show.",
+      "Tasks: (1) declare var balance = 300 and reassign with :=; (2) add a let id and predict the error when reassigning; (3) fix the print type error with debug_show; (4) rename identifiers to follow the camel-case convention; (5) print id.",
+      "Starter code: a short actor with the type-error line pre-written. Interactive demo idea: a mock terminal pane that shows the output for each Debug.print line, and flags compile errors when the user edits to := vs = or reassigns a let."
+    ]
+  }
+}

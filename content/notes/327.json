@@ -1,0 +1,78 @@
+{
+  "index": 327,
+  "lecture_id": 31673380,
+  "title": "[Mac Users] Installation and Setup for Web3 Development",
+  "section": "37. Web3 Decentralised App (DApp) Development with the Internet Computer",
+  "duration_min": 7,
+  "kind": "setup",
+  "summary": "Mac walkthrough for installing Node LTS, the dfx SDK, VS Code with the Motoko extension, then creating, starting, deploying and running a Hello World Internet Computer project locally.",
+  "concepts": [
+    {
+      "heading": "Prerequisites and tools",
+      "points": [
+        "The lesson links a published document with every command; the installer command must be copied whole, because dropping the trailing quote breaks it.",
+        "Node.js: use the LTS release, not the newest feature release, because the Internet Computer tooling targets LTS. Check with node --version; the lecture asks for version 16 or above.",
+        "dfx: the DFINITY command-line SDK used to run a local Internet Computer, build and deploy canisters, and execute code. Installed by pasting a one-line install command into Terminal (open via Spotlight). Verify with dfx --version (0.9.3 in the video). (Extra) The current installer and version numbers differ now; always use the up-to-date command from the DFINITY docs.",
+        "VS Code plus the extension named Motoko published by the DFINITY Foundation (several similarly named extensions exist). It gives syntax support for the Motoko language."
+      ]
+    },
+    {
+      "heading": "Project folder and scaffolding",
+      "points": [
+        "Create a single parent folder (ic-projects) in the home directory to hold all Internet Computer projects.",
+        "In Terminal, cd into it (typing cd then dragging the folder in fills the path), then run the dfx new command with a project name. This generates a sample app: Motoko backend code, HTML/JavaScript frontend, and config. The DFINITY logo printed in the terminal signals completion.",
+        "Open the generated folder in VS Code via Open to browse the Motoko, HTML and JS files."
+      ]
+    },
+    {
+      "heading": "Run and deploy locally",
+      "points": [
+        "Terminal 1: dfx start launches the local replica (the local Internet Computer network). Wait for the server-listening info message and leave it running.",
+        "Terminal 2 (split terminal button in VS Code): dfx deploy builds the project and installs its canisters on the local network. It takes a while the first time.",
+        "Then npm start serves the frontend; the printed URL opens the app.",
+        "The sample page has a name input and button that calls the backend greet function and shows a greeting. Seeing it work proves the toolchain is set up."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Mac setup sequence (summary of lesson steps)",
+      "language": "bash",
+      "code": "node --version          # want 16+ (use the LTS release)\n# install dfx using the one-line installer command from the lesson's Google doc (copy it whole, including closing quotes)\ndfx --version           # lecture shows 0.9.3\nmkdir ~/ic-projects && cd ~/ic-projects\ndfx new hello_world     # scaffolds the sample project (sample Motoko + frontend)\ncd hello_world\n# terminal 1\ndfx start               # starts the local Internet Computer replica; wait for the 'listening' info line\n# terminal 2\ndfx deploy              # builds and installs canisters on the local network\nnpm start               # dev server; open the URL it prints"
+    }
+  ],
+  "task": {
+    "name": "Install tools and run the Hello World canister app",
+    "starting_point": "A Mac with Terminal; VS Code optional until step 4.",
+    "goal": "Have a local Internet Computer replica running and the sample DApp greeting you in the browser.",
+    "steps": [
+      "Check node --version is 16+ (install the LTS build if not).",
+      "Run the dfx installer command from the lesson document, then confirm with dfx --version.",
+      "Install VS Code and the Motoko extension from the DFINITY Foundation.",
+      "Create ic-projects in your home folder, cd into it, run dfx new with a project name.",
+      "Open the project folder in VS Code.",
+      "In one terminal run dfx start and wait for the listening message; in a second run dfx deploy, then npm start.",
+      "Open the printed URL, enter your name, press the button and confirm the greeting."
+    ],
+    "expected_result": "The browser page shows a name box and a button; submitting returns a greeting with your name.",
+    "solution_code": null,
+    "reference_repo_path": "Section 37 - Web3 Decentralised App (DApp) Development with the Internet Computer/37.06 [Mac Users] Installation and Setup for Web3 Development/README.md (instructions only; PDF alongside)"
+  },
+  "pitfalls": [
+    "Installing Node's current release instead of LTS.",
+    "Truncating the pasted installer command (missing closing quote).",
+    "Closing the dfx start terminal before deploying; it must keep running.",
+    "(Extra) Newer dfx versions scaffold a different layout (hello_backend / hello_frontend with Vite) and may use dfx start --background and different install commands; follow current docs.",
+    "Windows users skip this lesson."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (the playground has no section 37 data file).",
+    "gaps_and_ideas": [
+      "Proposed lesson 'Setup checklist for the Internet Computer': blurb listing toolchain and commands.",
+      "Tasks: (1) confirm node and dfx versions; (2) create a project; (3) run dfx start and dfx deploy; (4) open the greeting page; (5) note what each command does.",
+      "Starter idea: an interactive checklist with copyable commands.",
+      "Interactive demo: a simulated terminal that accepts the commands in order and shows the expected output, flagging wrong order (deploy before start)."
+    ]
+  }
+}

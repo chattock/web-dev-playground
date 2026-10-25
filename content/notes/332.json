@@ -1,0 +1,83 @@
+{
+  "index": 332,
+  "lecture_id": 31673318,
+  "title": "Motoko Conditionals and Type Annotations",
+  "section": "38. Build Your First Defi (Decentralised Finance) DApp - DBANK",
+  "duration_min": 6,
+  "kind": "concept+exercise",
+  "summary": "Fixes the Nat underflow bug in withdraw using an if/else, and explains why an explicit Int type annotation on the subtraction result is needed. Shows that Motoko control flow looks like JavaScript.",
+  "concepts": [
+    {
+      "heading": "The bug being fixed",
+      "points": [
+        "currentValue is a Nat, so it cannot go below zero. Withdrawing 999 from a balance of 100 raises a 'Natural subtraction underflow' error and the call fails.",
+        "The fix is a guard: only subtract when the result would stay at or above zero."
+      ]
+    },
+    {
+      "heading": "if / else syntax",
+      "points": [
+        "Conditionals resemble JavaScript: `if (condition) { ... } else { ... }`. Comparison operators such as >= work as expected.",
+        "Inside the if branch: subtract the amount from currentValue and print the new balance.",
+        "The else branch prints a message for the developer instead of changing anything. Because that message is plain Text, it needs no debug_show.",
+        "Statement blocks end with semicolons, including after the closing brace of the whole if/else."
+      ]
+    },
+    {
+      "heading": "Why a type annotation is needed",
+      "points": [
+        "Writing `(currentValue - amount) >= 0` directly produces a yellow warning that the operator may trap or that the inferred type is Nat. A subtraction of two Nats can't be negative in the type system, so the comparison to 0 is not meaningful as typed.",
+        "Fix: state the type of the result. It can be done in a separate constant: `let tempValue : Int = currentValue - amount;` where Int is any whole number, positive or negative. Then compare tempValue >= 0.",
+        "The syntax for an annotation is `name : Type`, the same style as function parameters (amount : Nat).",
+        "The reference solution also shows the inline form: `((currentValue - amount) : Int >= 0)`, annotating inside the condition without a temp constant.",
+        "Types so far: amount is Nat, currentValue is Nat (inferred from a positive literal, though it can be spelled out), tempValue is Int. A positive integer literal defaults to Nat."
+      ]
+    },
+    {
+      "heading": "Result",
+      "points": [
+        "A large withdrawal no longer crashes: the call succeeds, the balance is untouched, and the else message prints.",
+        "A reasonable withdrawal (e.g. 10 from 100) subtracts normally.",
+        "Takeaway: most language features carry over from other languages; the type system and canister interactions are what differ."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "withdraw with an if/else guard and Int annotation (reference-style)",
+      "language": "motoko",
+      "code": "import Debug \"mo:base/Debug\";\nimport Int \"mo:base/Int\";\n\npublic func withdraw(amount : Nat) {\n  let tempValue : Int = currentValue - amount;   // explicit type for the result\n\n  if (tempValue >= 0) {\n    currentValue -= amount;\n    Debug.print(debug_show (currentValue));\n  } else {\n    Debug.print(\"Amount too large, current value less than zero.\");\n  };\n};"
+    }
+  ],
+  "task": {
+    "name": "Add an else branch for oversized withdrawals",
+    "starting_point": "withdraw subtracts the amount with a guard on tempValue but has no else branch.",
+    "goal": "Print a helpful message when the requested amount exceeds the balance.",
+    "steps": [
+      "Add an else block to the if statement.",
+      "Inside it call Debug.print with a text message (no debug_show needed for text).",
+      "Redeploy, call withdraw with a large number in Candid UI, and confirm the message appears and the balance is unchanged."
+    ],
+    "expected_result": "Large withdrawal: message printed, no error. Normal withdrawal: balance reduced.",
+    "solution_code": {
+      "language": "motoko",
+      "code": "} else {\n  Debug.print(\"Amount too large, current value less than zero.\");\n};"
+    },
+    "reference_repo_path": "Section 38 - Build Your First Defi (Decentralised Finance) DApp - DBANK/38.04 Motoko Conditionals and Type Annotations/DBANK/src/DBANK/main.mo"
+  },
+  "pitfalls": [
+    "Comparing a Nat subtraction to 0 without annotating the result type.",
+    "Using debug_show on plain text (unneeded) or forgetting it on numbers.",
+    "Missing semicolon after the if/else block.",
+    "(Extra) The reference repo's message contains a typo ('currnet'); fix when copying."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (no section 38 file).",
+    "gaps_and_ideas": [
+      "New lesson 'Conditionals and types in Motoko': compare Nat vs Int and guard against underflow.",
+      "Tasks: (1) predict what 5 - 8 gives for Nat vs Int; (2) add an annotation to tempValue; (3) write the else branch; (4) test with amounts 10 and 999; (5) rewrite using the inline annotation.",
+      "Interactive demo idea: a withdraw simulator with a Nat/Int toggle that shows underflow trap versus a negative number."
+    ]
+  }
+}

@@ -1,0 +1,112 @@
+{
+  "index": 235,
+  "lecture_id": 39461828,
+  "title": "Creating GET Routes",
+  "section": "30. Build Your Own API",
+  "duration_min": 21,
+  "kind": "concept+exercise",
+  "summary": "Sets up the Postman collection and starter project for the joke API, then builds the three GET endpoints: a random joke, a joke by id (path parameter) and jokes filtered by type (query parameter). Each is a challenge with a walkthrough of the solution.",
+  "concepts": [
+    {
+      "heading": "Setup: Postman collection, docs and starter project",
+      "points": [
+        "Download the lesson's postman_collection.json from the course resources, open Postman, go to Workspaces > My Workspace > Collections > Import and drop the file in. It creates a JokeAPI collection with one request for each endpoint planned for the section: GET random, GET by id, GET filtered by type, POST, PUT, PATCH, DELETE one, DELETE all.",
+        "Postman can publish auto-generated documentation for a collection (the three-dots menu > View documentation). The docs list each request, an example cURL command (Axios and other snippets are also offered) and an example response. Saving requests into a collection is all that is needed to generate them.",
+        "The response shape for every joke is a JSON object with id, jokeText and jokeType.",
+        "Starter files are in the lesson zip (the DIY API folder). index.js contains the Express/body-parser setup, empty route stubs commented as numbered challenges, and a 100-item jokes array at the bottom of the file. solution.js is the finished server.",
+        "To run the finished version: cd into the folder, run npm i to install the dependencies from package.json, then start it with nodemon solution.js. It listens on port 3000 and every collection request can be sent against it to see the expected behaviour. Run your own index.js the same way while working through the challenges.",
+        "The API is public, so the documented endpoint paths and parameter names (for example the query key type) form a contract that clients rely on and that must be spelled exactly."
+      ]
+    },
+    {
+      "heading": "Challenge 1: GET /random",
+      "points": [
+        "app.get(route, callback) registers a handler for GET requests. First argument is the route string, second is a (req, res) callback.",
+        "Pick a random index: Math.random() gives a decimal from 0 up to (but not including) 1; multiply by jokes.length to scale it to the array size; Math.floor() rounds down to a valid integer index from 0 to length-1.",
+        "Return the chosen element with res.json(...), which serialises the JavaScript object to JSON text and sends it with a JSON content type.",
+        "Each Send in Postman gives a different joke from the array."
+      ]
+    },
+    {
+      "heading": "Challenge 2: GET /jokes/:id (path parameter)",
+      "points": [
+        "A colon in a route (/jokes/:id) declares a path parameter. Whatever sits in that URL position is available as req.params.id. In Postman it is filled in through the Params tab > Path Variables, producing a URL like localhost:3000/jokes/2.",
+        "req.params holds values from the path itself; req.query holds values after the question mark (?id=2). This route uses params, so req.query is not involved.",
+        "Path parameters always arrive as strings, but the id fields in the jokes array are numbers. Strict equality (===) compares type as well as value, so '2' === 2 is false.",
+        "Two fixes: use loose equality (==), which converts types, or convert the string with parseInt() and keep ===. The instructor prefers the second because nothing is left implicit.",
+        "Array.prototype.find(callback) loops over the array, passes each element to the callback and returns the first element for which the callback returns true (or undefined if none match). Here the condition is joke.id === id.",
+        "Any loop (for, forEach) would work; find is just short.",
+        "Send the found object back with res.json."
+      ]
+    },
+    {
+      "heading": "Challenge 3: GET /filter?type=... (query parameter)",
+      "points": [
+        "The client supplies the category as a query parameter, so the handler reads req.query.type. In Postman, add it under Params > Query Parameters and it is appended to the URL automatically; several can be added.",
+        "Array.prototype.filter(callback) works like find but returns a new array containing every element that passes the test, so the response is an array of all jokes whose jokeType matches. Joke types in the data include Science, Puns, Wordplay, Math, Food, Sports and Movies.",
+        "Return the array with res.json. If nothing matches the result is an empty array."
+      ]
+    },
+    {
+      "heading": "Working method the instructor stresses",
+      "points": [
+        "Each challenge can be attempted solo (pause, try it) or followed via the walkthrough; either way, write the code yourself afterwards in the matching numbered slot in index.js.",
+        "Copying from docs or Q&A sites is fine in real work, provided you understand every part before using it; look up unfamiliar methods on MDN.",
+        "Finish by running index.js with nodemon and re-sending all three GET requests, checking for 200 responses and the expected data."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Starter setup (reference repo index.js / solution.js)",
+      "language": "javascript",
+      "code": "import express from \"express\";\nimport bodyParser from \"body-parser\";\n\nconst app = express();\nconst port = 3000;\n\napp.use(bodyParser.urlencoded({ extended: true }));\n\napp.listen(port, () => {\n  console.log(`Successfully started server on port ${port}.`);\n});"
+    },
+    {
+      "caption": "The three GET routes (from the reference solution)",
+      "language": "javascript",
+      "code": "// 1. GET a random joke\napp.get(\"/random\", (req, res) => {\n  const randomIndex = Math.floor(Math.random() * jokes.length);\n  res.json(jokes[randomIndex]);\n});\n\n// 2. GET a specific joke by id (path parameter)\napp.get(\"/jokes/:id\", (req, res) => {\n  const id = parseInt(req.params.id);\n  const foundJoke = jokes.find((joke) => joke.id === id);\n  res.json(foundJoke);\n});\n\n// 3. GET jokes filtered by type (query parameter)\napp.get(\"/filter\", (req, res) => {\n  const type = req.query.type;\n  const filteredJokes = jokes.filter((joke) => joke.jokeType === type);\n  res.json(filteredJokes);\n});"
+    },
+    {
+      "caption": "Shape of a joke object in the data array",
+      "language": "javascript",
+      "code": "{\n  id: 1,\n  jokeText: \"Why don't scientists trust atoms? Because they make up everything.\",\n  jokeType: \"Science\",\n}"
+    }
+  ],
+  "task": {
+    "name": "DIY API: the three GET endpoints",
+    "starting_point": "Lesson zip with index.js (server boilerplate, numbered challenge comments, a 100-joke array at the bottom), solution.js, package.json, plus the imported JokeAPI Postman collection.",
+    "goal": "Implement GET /random, GET /jokes/:id and GET /filter?type= so that the matching requests in the Postman collection return the same results as solution.js.",
+    "steps": [
+      "Import postman_collection.json into Postman and read the generated docs for the three GET requests.",
+      "Run npm i in the project folder, then run nodemon solution.js and send each GET request to see the target behaviour; stop it afterwards.",
+      "Open index.js and write app.get('/random', ...) under challenge 1: compute a random index with Math.floor(Math.random() * jokes.length) and respond with res.json(jokes[index]).",
+      "Under challenge 2 write app.get('/jokes/:id', ...): read req.params.id, convert it with parseInt, find the joke whose id matches, and respond with res.json.",
+      "Under challenge 3 write app.get('/filter', ...): read req.query.type, use filter to keep jokes whose jokeType equals it, and respond with the resulting array.",
+      "Run nodemon index.js and send all three requests from Postman, confirming 200 status codes and correct bodies."
+    ],
+    "expected_result": "/random returns a different single joke object on repeated sends; /jokes/2 returns the joke with id 2; /filter?type=Puns returns an array of only Puns jokes.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "app.get(\"/random\", (req, res) => {\n  const randomIndex = Math.floor(Math.random() * jokes.length);\n  res.json(jokes[randomIndex]);\n});\n\napp.get(\"/jokes/:id\", (req, res) => {\n  const id = parseInt(req.params.id);\n  const foundJoke = jokes.find((joke) => joke.id === id);\n  res.json(foundJoke);\n});\n\napp.get(\"/filter\", (req, res) => {\n  const type = req.query.type;\n  const filteredJokes = jokes.filter((joke) => joke.jokeType === type);\n  res.json(filteredJokes);\n});"
+    },
+    "reference_repo_path": "Section 30 - Build Your Own API/30.02 DIY API/solution.js"
+  },
+  "pitfalls": [
+    "Comparing the string from req.params.id with a numeric id using ===, which never matches; convert with parseInt first.",
+    "Misspelling the query key (type) so req.query.type is undefined and the filter returns an empty array.",
+    "Confusing req.params (path) with req.query (after the ?).",
+    "(Extra) /jokes/:id with an unknown id makes find return undefined and the client receives an empty reply with no error status; the lecture does not handle this case.",
+    "Copy-pasting a solution without understanding each method."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "New lesson 'Your first API: GET routes' covering app.get, res.json, req.params and req.query.",
+      "Tasks: (1) return a random item from an array, (2) fetch one item by :id using parseInt and find, (3) filter by a query parameter, (4) (Extra) return a 404 JSON error when the id does not exist, (5) (Extra) make the filter case-insensitive.",
+      "Starter code idea: an Express app with a small jokes array and the three route comments left empty.",
+      "Interactive demo idea: a mock request panel where the learner types a URL such as /jokes/3 or /filter?type=Food and sees how it is split into req.params and req.query and what JSON comes back."
+    ]
+  }
+}

@@ -1,0 +1,89 @@
+{
+  "index": 195,
+  "lecture_id": 38126452,
+  "title": "Using Node.js",
+  "section": "23. Node.js",
+  "duration_min": 8,
+  "kind": "concept+exercise",
+  "summary": "Checks the installed Node version from the VS Code terminal, introduces the Node REPL (enter, try JS, exit), and then runs a whole JavaScript file with the node command from the correct folder.",
+  "concepts": [
+    {
+      "heading": "Version check in the VS Code terminal",
+      "points": [
+        "Open a new VS Code window, then View > Terminal (or drag the panel up from the bottom edge of the window).",
+        "node -v (same as node --version) prints the installed version, starting with a 'v'. The course needs version 18 or later.",
+        "If your number differs: a higher one is fine (newer release); a lower one usually means an older install is still on the machine. The previous install lesson's notes/FAQ explain the fix."
+      ]
+    },
+    {
+      "heading": "The Node REPL",
+      "points": [
+        "REPL = Read, Eval, Print, Loop: an interactive prompt that reads a line of code, evaluates it, prints the result, then waits for the next line. Most languages have one; it is not Node-specific.",
+        "Start it by typing node on its own. A welcome message and a > prompt show you are inside.",
+        ".help lists the REPL's dot-commands, e.g. .break, .clear, .editor, .exit.",
+        ".exit leaves the REPL (the > prompt disappears). Pressing Ctrl+C twice also exits.",
+        "Ctrl+C is the general escape hatch for the command line: if a process is running and you have lost your normal prompt, press it once or twice.",
+        "Any JavaScript works because Node is a JavaScript runtime: 5 + 8 prints 13; let a = 3 then a + 12 prints 15.",
+        "It behaves like the browser's DevTools console, but runs outside the browser."
+      ]
+    },
+    {
+      "heading": "Running a JavaScript file with Node",
+      "points": [
+        "The REPL is handy for quick tests, but real apps are written in files that Node executes.",
+        "Starting files: download the lesson zip '2.1 Using Node' from the lecture resources, extract it and open the folder in VS Code. It holds an empty index.js.",
+        "Write code in index.js and save it.",
+        "In the terminal, cd into the folder that contains the file. Dragging the folder into the terminal after typing cd fills in its path.",
+        "Run node followed by the file name: node index.js. Node loads the file, executes it top to bottom, and console.log output appears in the terminal.",
+        "Tab completion: type the first letters of a file name and press Tab to auto-complete it. If nothing completes, the file isn't in the current directory, which is a quick check that you are in the right folder."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Terminal session: version check and REPL",
+      "language": "bash",
+      "code": "node -v\n# v20.11.0  (any version >= 18)\n\nnode\n# Welcome to Node.js ...\n> 5 + 8\n13\n> let a = 3\nundefined\n> a + 12\n15\n> .help\n> .exit"
+    },
+    {
+      "caption": "index.js and how to run it",
+      "language": "javascript",
+      "code": "// index.js\nconsole.log(\"Hello from Node\");\n\n// in the terminal, from the folder that contains index.js:\n//   cd \"2.1 Using Node\"\n//   node index.js\n//   -> Hello from Node"
+    }
+  ],
+  "task": {
+    "name": "2.1 Using Node: run your first file",
+    "starting_point": "Extracted '2.1 Using Node' folder opened in VS Code, containing a blank index.js.",
+    "goal": "Execute a JavaScript file with the Node runtime from the terminal and see its output.",
+    "steps": [
+      "Add console.log(\"Hello from Node\"); to index.js and save.",
+      "Open the integrated terminal (View > Terminal).",
+      "cd into the '2.1 Using Node' folder (type cd, then drag the folder in, press Enter).",
+      "Type node ind and press Tab so it completes to node index.js; press Enter.",
+      "Extra practice suggested: create a second .js file in the same folder, write some code and run it with node <filename>."
+    ],
+    "expected_result": "The terminal prints Hello from Node and returns to the normal prompt.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "console.log(\"Hello from Node\");"
+    },
+    "reference_repo_path": "Section 23 - Node.js/23.01 - Using Node.js/script.js"
+  },
+  "pitfalls": [
+    "Running node index.js from the wrong directory gives a 'Cannot find module' error; Tab not completing the name is the early warning.",
+    "Getting stuck in the REPL: use .exit or Ctrl+C twice.",
+    "Typing node with no file name opens the REPL instead of running your file.",
+    "An old Node version (<18) left over from a previous install."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "New lesson 's23-using-node' (blurb: use Node from the terminal, both interactively in the REPL and to run whole files). Note the reference repo names the file script.js; the course uses index.js.",
+      "Task 1: 'REPL simulator': a fake terminal where the learner types node, evaluates 3 expressions (5 + 8, let a = 3, a + 12) and exits with .exit; check each prompt/response.",
+      "Task 2: given a fake file tree and a current-directory indicator, choose the right cd command so that node index.js succeeds.",
+      "Task 3: write index.js that logs two lines; the sandbox shows the terminal output as it would appear after node index.js.",
+      "Explore demo: a terminal mock with Tab completion that only completes names present in the current folder, so learners see why Tab failing means the wrong directory."
+    ]
+  }
+}

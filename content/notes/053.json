@@ -1,0 +1,28 @@
+{
+  "index": 53,
+  "lecture_id": 17966600,
+  "title": "Tip from Angela - How to Deal with Procrastination",
+  "section": "8. Advanced CSS",
+  "duration_min": 4,
+  "kind": "tip",
+  "summary": "Short study-habit tip: avoid ritual preparation before working, start immediately, and reward yourself afterwards. Suggests the Pomodoro Technique.",
+  "concepts": [
+    {
+      "heading": "Key takeaways",
+      "points": [
+        "Elaborate setup rituals (tidying the desk, snacks, tea) are themselves a form of delay and reward the avoidance habit.",
+        "Treat procrastination like a habit that strengthens when fed: start the work first, take the treat afterwards.",
+        "Pomodoro Technique: work for 25 minutes with a timer, then take a 5-minute break. Keep small distractions for the break so both work and rest get full attention.",
+        "Share what works for you in the course Q&A."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson (tip video)",
+    "gaps_and_ideas": []
+  }
+}

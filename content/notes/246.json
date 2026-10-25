@@ -1,0 +1,96 @@
+{
+  "index": 246,
+  "lecture_id": 12385724,
+  "title": "Understanding SQL Relationships, Foreign Keys and Inner Joins",
+  "section": "32. SQL",
+  "duration_min": 11,
+  "kind": "concept+exercise",
+  "summary": "Builds a relational design in the SQLite playground: an orders table whose customer_id and product_id are foreign keys to customers and products, then uses INNER JOIN to merge related rows into one result. Includes a challenge to join orders with products.",
+  "concepts": [
+    {
+      "heading": "Restore the pencil row (mini challenge)",
+      "points": [
+        "If the pencil was deleted in the previous lesson, insert it again with the full-values form: INSERT INTO products VALUES (2, 'Pencil', 0.8, 12). The four values follow the column order id, name, price, stock."
+      ]
+    },
+    {
+      "heading": "The orders table and foreign keys",
+      "points": [
+        "Columns: id (INT, NOT NULL, the primary key), order_number (INT), customer_id (INT) and product_id (INT).",
+        "A foreign key is a column holding the primary key value of a row in another table. It links the two tables: customer_id says which customer placed the order, product_id says which product was ordered. This is how a relationship is expressed in SQL, and it avoids copying customer or product details into every order.",
+        "Declare them with FOREIGN KEY (column) REFERENCES other_table (its_primary_key_column), one declaration per foreign key, after the column list and the PRIMARY KEY (id) line. For this lesson: FOREIGN KEY (customer_id) REFERENCES customers (id) and FOREIGN KEY (product_id) REFERENCES products (id).",
+        "Syntax errors show in the editor's output; the lecture's own typo was a curly brace used instead of a round bracket. Fix and re-run.",
+        "Show Schema (right-click the table) lists four fields: the primary key plus the two foreign keys."
+      ]
+    },
+    {
+      "heading": "Inserting a related record",
+      "points": [
+        "First order: INSERT INTO orders VALUES (1, 4362, 2, 1), meaning order id 1, order number 4362, customer id 2 (Angela Yu, 12 Sunset Drive in the sample customers table) and product id 1.",
+        "The numbers are just references; the details live in the customers and products tables and are pulled together by a join."
+      ]
+    },
+    {
+      "heading": "INNER JOIN",
+      "points": [
+        "JOIN combines rows from two tables. Types include LEFT, RIGHT, FULL and INNER; INNER JOIN is the most used and keeps only rows where the matching condition holds in both tables.",
+        "Structure: SELECT the wanted columns, written as table.column to say which table each comes from; FROM the table holding the foreign key; INNER JOIN the second table; ON the matching condition: foreign key = primary key of the other table.",
+        "Example result columns: orders.order_number plus customers.first_name, customers.last_name, customers.address, matched by orders.customer_id = customers.id. One result row then tells you who an order is for and where to send it.",
+        "The joined result is a temporary combined table produced by the query; the stored tables are not changed."
+      ]
+    },
+    {
+      "heading": "Challenge: join orders with products",
+      "points": [
+        "Swap the second table for products and select orders.order_number, products.name, products.price and products.stock.",
+        "The ON condition becomes orders.product_id = products.id. The result shows the order number alongside the product details.",
+        "A prebuilt copy of the full database (customers, products, orders) is linked in the lesson resources for experimenting."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "orders table with two foreign keys",
+      "language": "sql",
+      "code": "CREATE TABLE orders (\n  id INT NOT NULL,\n  order_number INT,\n  customer_id INT,\n  product_id INT,\n  PRIMARY KEY (id),\n  FOREIGN KEY (customer_id) REFERENCES customers (id),\n  FOREIGN KEY (product_id) REFERENCES products (id)\n);\n\nINSERT INTO orders VALUES (1, 4362, 2, 1);"
+    },
+    {
+      "caption": "Inner join with customers",
+      "language": "sql",
+      "code": "SELECT orders.order_number, customers.first_name, customers.last_name, customers.address\nFROM orders\nINNER JOIN customers ON orders.customer_id = customers.id;"
+    }
+  ],
+  "task": {
+    "name": "Join orders with products",
+    "starting_point": "customers, products (with stock column) and orders tables, with one order (4362, customer 2, product 1).",
+    "goal": "Produce a result containing the order number with the product's name, price and stock.",
+    "steps": [
+      "Start from the customers join query.",
+      "Replace the selected columns with orders.order_number, products.name, products.price, products.stock.",
+      "Replace the joined table with products.",
+      "Change the ON condition to orders.product_id = products.id and run."
+    ],
+    "expected_result": "One row: order number 4362 with the name, price and stock of product 1.",
+    "solution_code": {
+      "language": "sql",
+      "code": "SELECT orders.order_number, products.name, products.price, products.stock\nFROM orders\nINNER JOIN products ON orders.product_id = products.id;"
+    },
+    "reference_repo_path": "Section 32 - SQL/32.05 Understanding SQL Relationships, Foreign Keys and Inner Joins/README.md (text only)"
+  },
+  "pitfalls": [
+    "Syntax slips such as the wrong bracket type stop CREATE TABLE from running; read the error message.",
+    "Mismatched ON condition: it must pair the foreign key with the other table's primary key.",
+    "Column names without a table prefix can be ambiguous when both tables share names (such as id).",
+    "(Extra) The lecture says the order is for a pencil, but product id 1 is the Pen; the data and the spoken description disagree, so trust the ids.",
+    "(Extra) SQLite does not enforce foreign keys unless PRAGMA foreign_keys = ON; PostgreSQL does."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "New lesson 'SQL relationships and joins': blurb on splitting data across tables. Tasks: (1) create orders with two foreign keys, (2) insert two orders, (3) INNER JOIN customers, (4) INNER JOIN products, (5) join all three tables in one query.",
+      "Starter code: customers, products and orders pre-created so the learner focuses on joins.",
+      "Demo idea: a visual three-table diagram where hovering an orders row draws arrows to the matching customers and products rows and shows the joined output row."
+    ]
+  }
+}

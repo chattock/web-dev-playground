@@ -1,0 +1,85 @@
+{
+  "index": 207,
+  "lecture_id": 38911668,
+  "title": "Secrets Access Project",
+  "section": "24. Express.js with Node.js",
+  "duration_min": 8,
+  "kind": "project",
+  "summary": "Final project of the Express section: build a password-gated page. A form posts a password to /check; the correct one reveals secret.html, a wrong one returns the user to the home page. A walkthrough shows a middleware-based solution.",
+  "concepts": [
+    {
+      "heading": "Project structure",
+      "points": [
+        "Starter folder: an empty index.js (all code goes here) and a public folder with two pre-built pages: index.html (h1 plus a password form) and secret.html (the protected content).",
+        "Dependencies are body-parser and express. Running node solution.js without having run npm i gives ERR_MODULE_NOT_FOUND.",
+        "Inspect the form first: its action is /check, method POST, and the password input's name attribute is password. That name is the key to read from req.body.",
+        "The solution's password is ILoveProgramming (case-sensitive)."
+      ]
+    },
+    {
+      "heading": "How the solution works",
+      "points": [
+        "Imports express, body-parser, dirname and fileURLToPath, then rebuilds __dirname exactly as in earlier lessons. These lines can be copied from earlier projects; the point is to understand them, not memorise them.",
+        "A flag variable userIsAuthorised starts as false.",
+        "app.use(bodyParser.urlencoded({ extended: true })) comes first so req.body exists.",
+        "passwordCheck(req, res, next) is a custom middleware: it reads req.body['password'], compares it to the secret, sets the flag to true on a match, and always calls next(). Putting the check in middleware is a design choice, treating it as authorisation before the handler; doing it inside the route handler is equally valid.",
+        "GET / sends public/index.html using res.sendFile(__dirname + ...).",
+        "POST /check sends public/secret.html if authorised; otherwise it sends the home page again or calls res.redirect('/').",
+        "res.redirect(url) tells the browser to go to another URL, giving a shorter way to return the user to the home page.",
+        "Express now bundles the urlencoded parser, so app.use(express.urlencoded({ extended: true })) replaces body-parser with no extra package. The instructor keeps body-parser because it is what most online code uses and it names what is happening."
+      ]
+    },
+    {
+      "heading": "Learning advice given",
+      "points": [
+        "Try the project before looking at the solution; struggling is how the skill sticks.",
+        "Programming is about knowing where to look things up, not memorising syntax."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Password gate with custom middleware (solution)",
+      "language": "javascript",
+      "code": "import express from \"express\";\nimport bodyParser from \"body-parser\";\nimport { dirname } from \"path\";\nimport { fileURLToPath } from \"url\";\n\nconst __dirname = dirname(fileURLToPath(import.meta.url));\nconst app = express();\nconst port = 3000;\nvar userIsAuthorised = false;\n\napp.use(bodyParser.urlencoded({ extended: true }));\n\nfunction passwordCheck(req, res, next) {\n  const password = req.body[\"password\"];\n  if (password === \"ILoveProgramming\") {\n    userIsAuthorised = true;\n  }\n  next();\n}\napp.use(passwordCheck);\n\napp.get(\"/\", (req, res) => {\n  res.sendFile(__dirname + \"/public/index.html\");\n});\n\napp.post(\"/check\", (req, res) => {\n  if (userIsAuthorised) {\n    res.sendFile(__dirname + \"/public/secret.html\");\n  } else {\n    res.redirect(\"/\"); // or res.sendFile(index.html)\n  }\n});\n\napp.listen(port, () => {\n  console.log(`Listening on port ${port}`);\n});"
+    }
+  ],
+  "task": {
+    "name": "Secrets Access Project",
+    "starting_point": "Extracted Secrets Project zip: blank index.js, public/index.html (password form posting to /check), public/secret.html.",
+    "goal": "Home page shows the form. Submitting the correct password shows secret.html; a wrong password sends the user back to the home page.",
+    "steps": [
+      "cd into the project and run npm i (express and body-parser).",
+      "Read index.html and note the form action (/check), method (POST) and input name (password).",
+      "In index.js import express, body-parser and the path/url helpers; set up __dirname, app and port 3000.",
+      "Add the urlencoded body parser middleware.",
+      "Write a middleware (or inline check) that compares req.body.password to your chosen secret and records the result; end with next().",
+      "Add GET / serving public/index.html.",
+      "Add POST /check that sends secret.html when authorised, otherwise redirects or re-sends index.html.",
+      "Add app.listen, run with node index.js or nodemon, and test right and wrong passwords at localhost:3000."
+    ],
+    "expected_result": "Correct password: the secrets list page. Wrong password: back at the Secrets home page with the form.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "import express from \"express\";\nimport bodyParser from \"body-parser\";\nimport { dirname } from \"path\";\nimport { fileURLToPath } from \"url\";\n\nconst __dirname = dirname(fileURLToPath(import.meta.url));\nconst app = express();\nconst port = 3000;\nvar userIsAuthorised = false;\n\napp.use(bodyParser.urlencoded({ extended: true }));\n\nfunction passwordCheck(req, res, next) {\n  const password = req.body[\"password\"];\n  if (password === \"ILoveProgramming\") {\n    userIsAuthorised = true;\n  }\n  next();\n}\napp.use(passwordCheck);\n\napp.get(\"/\", (req, res) => {\n  res.sendFile(__dirname + \"/public/index.html\");\n});\n\napp.post(\"/check\", (req, res) => {\n  if (userIsAuthorised) {\n    res.sendFile(__dirname + \"/public/secret.html\");\n  } else {\n    res.redirect(\"/\"); // or res.sendFile(index.html)\n  }\n});\n\napp.listen(port, () => {\n  console.log(`Listening on port ${port}`);\n});"
+    },
+    "reference_repo_path": "Section 24 - Express.js with Node.js/24.05 - Secrets Access Project/solution.js"
+  },
+  "pitfalls": [
+    "Wrong name attribute: req.body key must match the input's name.",
+    "Declaring the body parser after the password middleware, so req.body is undefined.",
+    "Forgetting next() in the middleware.",
+    "(Extra) The solution's userIsAuthorised flag is global and never resets, so after one correct login every later request, from any user, counts as authorised. A per-request check avoids this.",
+    "(Extra) Sending a password in plain text with a text input is fine for a demo only; real apps use type=password, HTTPS and hashing.",
+    "Reference repo note: its index.js is a student's variant (password constant checked inside the route, repeated app.use lines at the end, no app.listen); solution.js is the one matching the lecture. Ignore the author footers in the HTML."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (data/s24.js does not exist).",
+    "gaps_and_ideas": [
+      "New lesson 'Secrets project' with tasks: serve the form, parse the body, check the password, show secret page or redirect, then refactor the check into middleware.",
+      "Starter code: server skeleton with TODOs and a ready public folder.",
+      "Interactive demo idea: a simulated server where the learner types a password and watches a request trace pass through the parser, passwordCheck and the /check handler, with a toggle between res.sendFile and res.redirect."
+    ]
+  }
+}

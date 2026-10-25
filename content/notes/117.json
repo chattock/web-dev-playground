@@ -1,0 +1,106 @@
+{
+  "index": 117,
+  "lecture_id": 12383788,
+  "title": "Selecting HTML Elements with Javascript",
+  "section": "16. The Document Object Model (DOM)",
+  "duration_min": 14,
+  "kind": "concept+exercise",
+  "summary": "Covers the five DOM selection methods: getElementsByTagName, getElementsByClassName, getElementById, querySelector and querySelectorAll. Explains single-element vs collection return values, CSS-selector syntax inside querySelector, and finishes with a challenge to colour a nested link red.",
+  "concepts": [
+    {
+      "heading": "getElementsByTagName",
+      "points": [
+        "Takes a tag name string such as \"li\" and returns every matching element on the page, as an array-like collection. Plural 'Elements' in the name signals a collection.",
+        "Each item is a full element object with properties to read or set.",
+        "You cannot set style on the collection itself: document.getElementsByTagName('li').style.color fails with a misleading 'cannot set property of undefined' style error, because a collection has no style. Pick one element with square brackets first, e.g. [2] for the third item (indexes start at 0).",
+        "Because it is array-like, .length gives the number of matches (3 li items on the demo page)."
+      ]
+    },
+    {
+      "heading": "getElementsByClassName",
+      "points": [
+        "Takes a class name (no dot) and also returns a collection, even if only one element has the class. The button with class btn still needs [0].",
+        "Use the index before setting properties, e.g. getElementsByClassName('btn')[0].style.color = 'red'."
+      ]
+    },
+    {
+      "heading": "getElementById",
+      "points": [
+        "Singular 'Element': returns one element, not a collection, because an id should be unique per page. Takes the id with no # sign.",
+        "Direct property use works: document.getElementById('title').innerHTML = 'Good Bye' changes the h1's text."
+      ]
+    },
+    {
+      "heading": "querySelector",
+      "points": [
+        "Accepts any CSS selector string and returns a single element: the first match in document order.",
+        "Selector syntax is identical to CSS: bare name for tag, dot prefix for class, # prefix for id.",
+        "Descendant selector uses a space: 'li a' picks the anchor inside a li, not a free-standing a elsewhere. Plain 'a' would return the first anchor in the document.",
+        "Compound selector without a space: 'li.item' is an li that also has class item (same element). '#list a' is an anchor anywhere under the element with id list.",
+        "If several elements match (e.g. '#list .item' matches three li), only the first is returned."
+      ]
+    },
+    {
+      "heading": "querySelectorAll",
+      "points": [
+        "Same selector argument, but returns all matches as a collection (a NodeList). Pick elements with an index, e.g. [2].",
+        "(Extra) NodeList also has forEach and length, but it is not a real array; getElementsBy... returns a live HTMLCollection."
+      ]
+    },
+    {
+      "heading": "Which to use",
+      "points": [
+        "querySelector / querySelectorAll are more flexible: any combination of tag, class, id and nesting can be expressed, so they are the ones commonly seen in real code.",
+        "The getElement... methods are more limited and make it harder to target one specific element without editing the HTML.",
+        "Try all of them to see which fits best."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Demo markup (reference repo, footer removed)",
+      "language": "html",
+      "code": "<h1 id=\"title\">Hello</h1>\n<a href=\"https://www.google.com\">Google</a>\n<button class=\"btn\">Click Me</button>\n<ul id=\"list\">\n  <li class=\"item\"><a href=\"https://www.google.com\">Google</a></li>\n  <li class=\"item\">Second</li>\n  <li class=\"item\">Third</li>\n</ul>"
+    },
+    {
+      "caption": "Selection methods side by side (based on reference repo)",
+      "language": "javascript",
+      "code": "// by tag name -> collection of ALL matches\ndocument.getElementsByTagName(\"li\");                 // 3 items\ndocument.getElementsByTagName(\"li\")[2].style.color = \"purple\";\ndocument.getElementsByTagName(\"li\").length;          // 3\n\n// by class name -> collection, even for a single match\ndocument.getElementsByClassName(\"btn\")[0].style.color = \"red\";\n\n// by id -> ONE element\ndocument.getElementById(\"title\").innerHTML = \"Text Changed With Javascript\";\n\n// querySelector -> first match of a CSS selector\ndocument.querySelector(\"h1\");\ndocument.querySelector(\"#title\");\ndocument.querySelector(\".btn\");\ndocument.querySelector(\"li a\");        // descendant (space)\ndocument.querySelector(\"li.item\");     // same element (no space)\ndocument.querySelector(\"#list a\");\n\n// querySelectorAll -> all matches\ndocument.querySelectorAll(\"#list .item\")[2].style.color = \"blue\";"
+    }
+  ],
+  "task": {
+    "name": "Colour the nested Google link red",
+    "starting_point": "The demo page, which has one free-standing link and another inside the first li.",
+    "goal": "Turn the text of the link that is inside the list item red, not the other link.",
+    "steps": [
+      "Open the console on the page.",
+      "Inspect the DOM tree: the link is an anchor inside an li.",
+      "Select it with a descendant selector, e.g. querySelector('li a').",
+      "Confirm the highlighted element is the right one.",
+      "Set its style.color to 'red'."
+    ],
+    "expected_result": "The Google link inside the list is red; the free-standing link is unchanged.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "document.querySelector(\"li a\").style.color = \"red\";\n// equivalent: document.querySelector(\".item a\").style.color = \"red\";"
+    },
+    "reference_repo_path": "Section 16 - The Document Object Model (DOM)/16.03 - Selecting HTML Elements with Javascript/script.js"
+  },
+  "pitfalls": [
+    "Forgetting the index on a collection, then trying to set .style on it.",
+    "Using # or . inside getElementById / getElementsByClassName (they take bare names).",
+    "Selecting the li instead of the nested a: colouring the li only changes the bullet marker because the link is a separate element with its own colour.",
+    "Expecting querySelector to return every match.",
+    "Space vs no space in selectors: 'li a' (descendant) and 'li.item' (same element) mean different things."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (section 16 has none).",
+    "gaps_and_ideas": [
+      "New lesson 'Selecting elements': blurb comparing the five methods and single vs collection results.",
+      "Tasks: select the third li by tag name; the button by class; the h1 by id; the nested link with a descendant selector; colour all items with querySelectorAll.",
+      "Starter: the demo markup with h1#title, a, button.btn, ul#list with li.item x3.",
+      "Interactive demo: a selector input that highlights matching elements live in a preview and prints what the call returns (element vs collection, count)."
+    ]
+  }
+}

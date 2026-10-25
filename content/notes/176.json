@@ -1,0 +1,32 @@
+{
+  "index": 176,
+  "lecture_id": 12664304,
+  "title": "Step 7 - Answer",
+  "section": "20. Boss Level Challenge 2 - The Simon Game",
+  "duration_min": 1,
+  "kind": "solution",
+  "summary": "Solution for step 7: started flag, level, keydown.",
+  "concepts": [
+    {
+      "heading": "Walkthrough",
+      "points": [
+        "Pointer lecture: the full code for steps up to 7 is a downloadable project under Course Resources. The notes below restate the step's solution from the reference repo.",
+        "started prevents a second start; level++ occurs inside nextSequence()."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Reference nextSequence excerpt",
+      "language": "javascript",
+      "code": "level++;\n$(\"#level-title\").text(\"Level \" + level);"
+    }
+  ],
+  "task": null,
+  "pitfalls": [],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (web-dev-playground has no files for sections 19-20)",
+    "gaps_and_ideas": []
+  }
+}

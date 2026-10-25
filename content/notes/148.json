@@ -1,0 +1,28 @@
+{
+  "index": 148,
+  "lecture_id": 17967012,
+  "title": "Tip from Angela - Dealing with Lack of Progress",
+  "section": "18. Advanced Javascript and DOM Manipulation",
+  "duration_min": 3,
+  "kind": "tip",
+  "summary": "A motivational tip for learners who feel they are not progressing despite weeks of study.",
+  "concepts": [
+    {
+      "heading": "Key takeaways",
+      "points": [
+        "Feeling that you know little is normal at any stage; nobody knows everything in even one technology, so learn what your goals need after the fundamentals.",
+        "Perceived difficulty stays roughly constant because the topics keep getting harder as you improve, which hides real progress.",
+        "To measure progress, revisit the Q&A from early sections and try answering beginners' questions. Being able to answer them shows how far you have come.",
+        "Answering those questions also reinforces your own knowledge."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [],
+  "playground": {
+    "match": null,
+    "coverage": "Not applicable (tip).",
+    "gaps_and_ideas": []
+  }
+}

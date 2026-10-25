@@ -1,0 +1,88 @@
+{
+  "index": 314,
+  "lecture_id": 17039574,
+  "title": "Javascript ES6 Spread Operator",
+  "section": "36. React.js",
+  "duration_min": 11,
+  "kind": "concept",
+  "summary": "Introduces the ES6 spread operator (...) for arrays and objects, then uses it together with computed property names to collapse the long if/else state updater from the previous challenge into a few lines.",
+  "concepts": [
+    {
+      "heading": "Spread with arrays",
+      "points": [
+        "`...arr` written inside an array literal expands the array into its individual elements at that position. It replaces looping and pushing each item.",
+        "Position matters: `[...citrus, \"Apple\"]` puts the citrus items first, `[\"Apple\", ...citrus, \"Banana\"]` inserts them between Apple and Banana, and putting it last appends them.",
+        "The spread creates a new array; the source array is not modified.",
+        "Demo: citrus = Lime, Lemon, Orange spread into a fruits array of Apple, Banana, Coconut; logging fruits shows a single flat array."
+      ]
+    },
+    {
+      "heading": "Spread with objects",
+      "points": [
+        "`...obj` inside an object literal copies all of that object's key-value pairs into the new object, alongside any other properties written next to it.",
+        "Example: spreading a fullName object (fName, lName) into a user object with id and username yields one flat object with four keys.",
+        "Contrast with listing the object by name (`{ fullName, id }`): that nests it under a `fullName` key instead of merging its keys.",
+        "(Extra) If the same key appears twice, the later one wins, so put overrides after the spread. This is why the state updater puts the new field last.",
+        "(Extra) The spread is shallow: nested objects are copied by reference."
+      ]
+    },
+    {
+      "heading": "Applying it to the handleChange updater",
+      "points": [
+        "All the if/else-if branches can be deleted. Return a new object that spreads the previous state and then adds the changed field.",
+        "Everything unchanged is carried over by `...prevValue`; the single trailing key-value pair overwrites just the field that changed.",
+        "First attempt `{ ...prevValue, name: value }` does not work: JavaScript treats `name` as the literal key \"name\", so state gains an unwanted `name` property and the real field never updates. The destructured `name` variable is flagged as unused.",
+        "Using `event.target.name` as the key also fails, since any text before the colon in an object literal is read as a string key, not an expression.",
+        "Fix: wrap the key in square brackets, `[name]: value`. This computed property name syntax evaluates the expression and uses its result as the key. Before ES6 the equivalent was creating an empty object and assigning `obj[key] = value`.",
+        "It is available here because Babel (via React's tooling) handles modern syntax."
+      ]
+    },
+    {
+      "heading": "Going shorter, and why not to",
+      "points": [
+        "With only one returned object the `return` and outer braces can be dropped, but the object literal must be wrapped in parentheses: `(prev) => ({ ...prev, [name]: value })`. Otherwise the braces are parsed as a function body.",
+        "That makes the updater two lines, but the instructor prefers the explicit return version because stacked braces and parentheses are harder to read. Rule: shorten code only while the meaning stays clear.",
+        "Practice recommendation: experiment with it before the next challenge."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Spread in arrays",
+      "language": "javascript",
+      "code": "const citrus = [\"Lime\", \"Lemon\", \"Orange\"];\nconst fruits = [\"Apple\", ...citrus, \"Banana\", \"Coconut\"];\nconsole.log(fruits); // [\"Apple\",\"Lime\",\"Lemon\",\"Orange\",\"Banana\",\"Coconut\"]"
+    },
+    {
+      "caption": "Spread in objects versus nesting",
+      "language": "javascript",
+      "code": "const fullName = { fName: \"James\", lName: \"Bond\" };\nconst merged = { ...fullName, id: 1, username: \"jamesbond007\" }; // flat: fName, lName, id, username\nconst nested = { fullName, id: 1, username: \"jamesbond007\" };    // fullName key holds an object"
+    },
+    {
+      "caption": "Final handleChange using spread and a computed key (reference repo)",
+      "language": "jsx",
+      "code": "function handleChange(event) {\n  const { name, value } = event.target;\n  setContact((prevValue) => {\n    return {\n      ...prevValue,\n      [name]: value,\n    };\n  });\n}"
+    },
+    {
+      "caption": "Terse form (works, less readable)",
+      "language": "javascript",
+      "code": "setContact((prevValue) => ({ ...prevValue, [name]: value }));"
+    }
+  ],
+  "task": null,
+  "pitfalls": [
+    "Writing `name: value` instead of `[name]: value` creates a literal key called name.",
+    "Forgetting parentheses around an object returned from an arrow function with an implicit return.",
+    "Placing the spread after the new field, which makes the old value overwrite the new one.",
+    "(Extra) Spread copies are shallow, so nested objects still share references."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (no React section files in the playground).",
+    "gaps_and_ideas": [
+      "New lesson 'Spread operator': blurb on expanding arrays and objects, and computed keys.",
+      "Tasks: (1) build a combined fruits array with spread at different positions, (2) merge two objects into one flat object, (3) show the nested-versus-flat difference, (4) fix a broken `{...prev, name: value}` updater, (5) rewrite a long if/else updater with spread.",
+      "Starter code: the three-input contact form from the previous lesson with the long if/else handler.",
+      "Interactive demo: editable array/object literals with a live output panel showing the resulting value, including a toggle between `name` and `[name]` keys."
+    ]
+  }
+}

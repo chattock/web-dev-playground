@@ -1,7 +1,7 @@
 /* ===== Section 5 — Introduction to CSS ===== */
 
 PG.add({
-  id:'s05-adding-css', section:'s05', slug:'adding-css', lesson:'5.1',
+  id:'s05-adding-css', index:33, udemyId:37350312, minutes:15, section:'s05', slug:'adding-css', lesson:'5.1',
   title:'Adding CSS',
   blurb:'There are three places CSS can live: <code>style=""</code> straight on the tag (inline), a <code>&lt;style&gt;</code> block in the head (internal), or a separate <code>.css</code> file (external). External wins in real projects — one file styles every page.',
   tasks:[
@@ -115,7 +115,7 @@ css:`body {
 
 
 PG.add({
-  id:'s05-selectors', section:'s05', slug:'selectors', lesson:'5.2',
+  id:'s05-selectors', index:34, udemyId:37350332, minutes:23, section:'s05', slug:'selectors', lesson:'5.2',
   title:'CSS Selectors',
   blurb:'A rule has a <b>selector</b> (what to target) and <b>declarations</b> (what to change). Five ways to target: by tag, by class, by id, by attribute, or everything at once.',
   tasks:[
@@ -250,7 +250,7 @@ li[value="4"] {
 
 
 PG.add({
-  id:'s05-color-vocab', section:'s05', slug:'color-vocab-project', lesson:'5.3', project:true,
+  id:'s05-color-vocab', index:35, udemyId:37350350, minutes:9, section:'s05', slug:'color-vocab-project', lesson:'5.3', project:true,
   title:'Colour Vocab Project',
   blurb:'Putting the selectors to work: style a vocabulary page so each colour name is shown in its own colour.',
   tasks:[

@@ -1,0 +1,72 @@
+{
+  "index": 82,
+  "lecture_id": 12371720,
+  "title": "String Concatenation",
+  "section": "14. Introduction to Javascript ES6",
+  "duration_min": 3,
+  "kind": "concept+exercise",
+  "summary": "Concatenation joins strings (and string variables) into one string using +. Only the text inside quotes is combined, so spaces must be added explicitly. Ends with a greeting challenge using two variables.",
+  "concepts": [
+    {
+      "heading": "Concatenation with +",
+      "points": [
+        "Concatenation means joining strings end to end into a single new string. With strings, + does this rather than arithmetic.",
+        "Only the characters within the quotes are joined: \"a\" + \" \" + \"b\" gives \"a b\".",
+        "alert(\"hello\" + \"world\"); shows helloworld with no gap.",
+        "Add the space either as its own string (\"hello\" + \" \" + \"world\") or inside one of the pieces (\"hello\" + \" world\").",
+        "Variables holding strings can be mixed with literals in the same expression, e.g. message + \" \" + name."
+      ]
+    },
+    {
+      "heading": "Greeting challenge walkthrough",
+      "points": [
+        "Create var message = \"Hello\"; and var name set either to a fixed name or to prompt(\"What is your name?\").",
+        "Write one alert that concatenates message, a space string and name.",
+        "The key detail is the space between the two variables; without it the output reads HelloAngela.",
+        "(Extra) The name for the second variable can clash in browsers: name is already a property of window, which always stores strings. Using a different name such as userName avoids surprises."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Concatenation basics",
+      "language": "javascript",
+      "code": "alert(\"hello\" + \"world\");   // helloworld\nalert(\"hello\" + \" \" + \"world\"); // hello world\nalert(\"hello\" + \" world\");      // hello world"
+    },
+    {
+      "caption": "Challenge solution (reference repo 14.05)",
+      "language": "javascript",
+      "code": "var message = \"Hello\";\nvar name = prompt(\"What is your name?\");\nalert(message + \" \" + name);"
+    }
+  ],
+  "task": {
+    "name": "Greeting with concatenation",
+    "starting_point": "Empty snippet in DevTools Sources > Snippets.",
+    "goal": "Show a greeting built from two variables, not a typed-out string.",
+    "steps": [
+      "Declare message with the value \"Hello\".",
+      "Declare name as your own name or the result of prompt().",
+      "Write a single alert that joins message, a space string and name with +."
+    ],
+    "expected_result": "A pop-up reading Hello followed by the name, separated by a space.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "var message = \"Hello\";\nvar name = prompt(\"What is your name?\");\nalert(message + \" \" + name);"
+    },
+    "reference_repo_path": "Section 14 - Introduction to Javascript ES6/14.05 - String Concatenation/script.js"
+  },
+  "pitfalls": [
+    "Forgetting spaces, so words run together.",
+    "Putting a variable name in quotes, which prints the name instead of the value.",
+    "(Extra) Using + with a number and a string makes a string (\"7\" + 1 is \"71\")."
+  ],
+  "playground": {
+    "match": "s14-concat (lesson 14.5, data/s14.js)",
+    "coverage": "Very good: same challenge with prompt, concatenation vs template literals, note about the missing space, template literal expressions.",
+    "gaps_and_ideas": [
+      "Add the 'hello' + 'world' demo to show no space appears, then fix it two ways (separate space string, or space inside a piece).",
+      "Add a mention that the course only teaches + here and introduces template literals later; the playground may flag template literals as 'preview' to avoid confusion.",
+      "Add a warning about naming a variable name in browser scripts."
+    ]
+  }
+}

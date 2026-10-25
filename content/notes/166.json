@@ -1,0 +1,33 @@
+{
+  "index": 166,
+  "lecture_id": 12640100,
+  "title": "Step 2 - Answer",
+  "section": "20. Boss Level Challenge 2 - The Simon Game",
+  "duration_min": 1,
+  "kind": "solution",
+  "summary": "Solution for step 2: random colour appended to gamePattern.",
+  "concepts": [
+    {
+      "heading": "Walkthrough",
+      "points": [
+        "Pointer lecture: the full code for steps up to 2 is a downloadable project under Course Resources. The notes below restate the step's solution from the reference repo.",
+        "Math.floor(Math.random() * 4) yields 0,1,2 or 3; indexes buttonColours; push stores the result in gamePattern.",
+        "The reference final code keeps the same lines inside nextSequence()."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Reference excerpt",
+      "language": "javascript",
+      "code": "var randomNumber = Math.floor(Math.random() * 4);\nvar randomChosenColour = buttonColours[randomNumber];\ngamePattern.push(randomChosenColour);"
+    }
+  ],
+  "task": null,
+  "pitfalls": [],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (web-dev-playground has no files for sections 19-20)",
+    "gaps_and_ideas": []
+  }
+}

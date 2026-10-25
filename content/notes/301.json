@@ -1,0 +1,118 @@
+{
+  "index": 301,
+  "lecture_id": 17039230,
+  "title": "Keeper App Project - Part 2",
+  "section": "36. React.js",
+  "duration_min": 10,
+  "kind": "project",
+  "summary": "Second stage of the Keeper notes app: replace the single hard-coded Note with one Note per entry in the notes array, using props and map. The walkthrough finishes by shrinking the mapping callback into an arrow function.",
+  "concepts": [
+    {
+      "heading": "Starting project",
+      "points": [
+        "The project continues Keeper part 1: Header renders a yellow bar with the 'Keeper' h1, Footer renders a copyright line with the current year from new Date().getFullYear(), and Note renders a div.note containing an h1 and a p.",
+        "notes.js contains four joke notes (Delegation, Loops, Arrays, Hardware vs. Software), each an object with key, title and content.",
+        "The challenge: render every object in notes.js as its own Note so that adding an object to the array adds a card with no JSX changes.",
+        "(Extra) styles.css gives .note a white background, rounded corners, a shadow, a fixed 240px width and float: left, so the notes line up side by side and wrap."
+      ]
+    },
+    {
+      "heading": "Making Note reusable with props",
+      "points": [
+        "Initially App renders one Note whose heading and paragraph text are written directly inside Note.",
+        "Give the Note element two props in App, title and content. The old hard-coded heading and paragraph text become their values for a first test.",
+        "In Note, the function parameter (props) is an object holding every attribute passed in. Insert values into JSX with curly braces: {props.title} inside the h1 and {props.content} inside the p.",
+        "The prop names used by the parent and child must match exactly. A typo on either side silently produces empty output; React DevTools shows the props received by each Note and helps spot mismatches."
+      ]
+    },
+    {
+      "heading": "Getting the data in",
+      "points": [
+        "notes.js defines an array of note objects, each with key, title and content properties.",
+        "To use it elsewhere it needs a default export (export default notes) and App needs a matching import (import notes from \"./notes\", adjusted for the relative path).",
+        "Logging the imported array is a quick check that the import works."
+      ]
+    },
+    {
+      "heading": "Mapping notes to components",
+      "points": [
+        "Replace the single Note with a JavaScript expression in curly braces: notes.map(callback). The callback receives one note object and returns a Note element built from its fields (title={noteItem.title}, content={noteItem.content}).",
+        "Because it is JavaScript, the map expression must be wrapped in curly braces inside the JSX.",
+        "Every element produced by a list needs a unique key prop. The data already has a key field, so use that as the key; otherwise the console warns about missing keys.",
+        "Adding another object to notes.js makes another Note appear automatically, which is the point of mapping.",
+        "Refactor: move the named callback inside map, drop its name, convert to an arrow function and drop return and braces because the body is a single JSX expression. Behaviour stays the same.",
+        "(Extra) The data field happens to be called key. Reading noteItem.key in App is fine because that is just an object property; what React strips is the key prop, so inside Note props.key would still be undefined."
+      ]
+    },
+    {
+      "heading": "What comes later",
+      "points": [
+        "Upcoming parts add user input, forms, adding and deleting notes, and conditional rendering, which turn the static list into an interactive app."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Note component receiving props",
+      "language": "jsx",
+      "code": "function Note(props) {\n  return (\n    <div className=\"note\">\n      <h1>{props.title}</h1>\n      <p>{props.content}</p>\n    </div>\n  );\n}\n\nexport default Note;"
+    },
+    {
+      "caption": "Intermediate step: a named callback before the arrow-function refactor",
+      "language": "jsx",
+      "code": "function createNote(noteItem) {\n  return (\n    <Note\n      key={noteItem.key}\n      title={noteItem.title}\n      content={noteItem.content}\n    />\n  );\n}\n\n// inside App's JSX\n{notes.map(createNote)}"
+    },
+    {
+      "caption": "Final App.jsx with an inline arrow callback (reference repo layout, App.jsx in src; key added, which the repo leaves out)",
+      "language": "jsx",
+      "code": "import Header from \"./components/Header\";\nimport Footer from \"./components/Footer\";\nimport Note from \"./components/Note\";\nimport notes from \"./notes\";\n\nfunction App() {\n  return (\n    <div>\n      <Header />\n      {notes.map(noteItem => (\n        <Note\n          key={noteItem.key}\n          title={noteItem.title}\n          content={noteItem.content}\n        />\n      ))}\n      <Footer />\n    </div>\n  );\n}\n\nexport default App;"
+    },
+    {
+      "caption": "notes.js shape",
+      "language": "javascript",
+      "code": "const notes = [\n  { key: 1, title: \"Delegation\", content: \"...\" },\n  { key: 2, title: \"Loops\", content: \"...\" }\n];\n\nexport default notes;"
+    }
+  ],
+  "task": {
+    "name": "Keeper app part 2: render every note",
+    "starting_point": "Starter project (fork the CodeSandbox, or download it, run npm install, then npm start for the original Create React App version or npm run dev for the Vite version) with Header, Footer and Note components, a notes.js array of four notes, and an App rendering one Note with hard-coded text.",
+    "goal": "Render each object in the notes array as its own Note component, so editing notes.js changes the page dynamically.",
+    "steps": [
+      "In App, give the single <Note /> two props, title and content, using the old hard-coded heading and paragraph text as their values.",
+      "In Note.jsx, add the props parameter and replace the hard-coded text with {props.title} inside the h1 and {props.content} inside the p.",
+      "Open React DevTools, select Note and check that title and content appear in its props (a typo shows up as a missing or empty prop).",
+      "Add export default notes; at the bottom of notes.js (if not already there).",
+      "Import it in App: import notes from \"../notes\"; when App.jsx is in src/components (sandbox), or \"./notes\" when App.jsx is in src (Vite repo). Optionally console.log(notes) to check.",
+      "Replace the single Note with {notes.map(createNote)}, where createNote(noteItem) returns <Note title={noteItem.title} content={noteItem.content} />.",
+      "Add key={noteItem.key} to the returned Note and check the console warning is gone.",
+      "Refactor: move the callback inline as noteItem => (<Note ... />), dropping the function keyword, the name, return and the braces.",
+      "Add a fifth object (with key: 5) to notes.js and confirm a new card appears."
+    ],
+    "expected_result": "The Keeper page shows the header, one card per note (four with the starter data) and the footer, with each card's title and text coming from notes.js.",
+    "solution_code": {
+      "language": "jsx",
+      "code": "{notes.map(noteItem => (\n  <Note\n    key={noteItem.key}\n    title={noteItem.title}\n    content={noteItem.content}\n  />\n))}"
+    },
+    "reference_repo_path": "Section 36 - React.js/36.25 Keeper App Project - Part 2/keeper-app-part-2-starting/src/App.jsx"
+  },
+  "pitfalls": [
+    "Reference repo diverges: it passes the id as a prop named id and never sets key, so React's missing-key warning appears. Use key={noteItem.key}.",
+    "Prop-name typos between parent and child give blank text rather than an error.",
+    "Forgetting the curly braces around notes.map in JSX renders the code as text or fails.",
+    "(Extra) The key prop is not readable inside Note via props, so pass a separate prop if the child needs the id."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "New lesson 'Keeper app part 2: render a list of notes' (s36). Blurb: turn one hard-coded Note into a list driven by a data array, combining props, map and keys.",
+      "Task 1: give Note title and content props and render them in its h1 and p.",
+      "Task 2: export the notes array and import it into App.",
+      "Task 3: render {notes.map(createNote)} with a named createNote function.",
+      "Task 4: add key={noteItem.key} and make the console warning disappear; then try reading props.key inside Note to see it is undefined.",
+      "Task 5: refactor createNote into an inline arrow function and add a fifth note to prove the list is data-driven.",
+      "Starter code: Header, Footer, Note with hard-coded text, notes.js with the four objects (key, title, content), App rendering one Note, and the Keeper styles.css.",
+      "Interactive demo: an editable notes array (add, edit, delete rows) beside the live Keeper preview, a console panel that shows the missing-key warning when a 'remove keys' toggle is on, and a props inspector for each rendered Note."
+    ]
+  }
+}

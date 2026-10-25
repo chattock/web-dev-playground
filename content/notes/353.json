@@ -1,0 +1,130 @@
+{
+  "index": 353,
+  "lecture_id": 31673658,
+  "title": "Creating the Transfer Functionality",
+  "section": "41. Create Your Own Crypto Token",
+  "duration_min": 21,
+  "kind": "concept+exercise",
+  "summary": "Builds the Motoko transfer function that moves tokens between two principals, after a short demo showing that msg.caller changes to the canister itself when one canister function calls another. Then wires a Transfer React component with controlled inputs, a disabled button while waiting, and a hidden feedback paragraph.",
+  "concepts": [
+    {
+      "heading": "Who is msg.caller when a function calls another function?",
+      "points": [
+        "Demo: temporarily strip transfer down to a Debug.print of the caller plus a call to payOut(), then run dfx deploy and trigger each path to compare the printed principal.",
+        "Calling payOut from the command line (dfx canister call <canister> payOut) prints the principal of the identity controlling the terminal.",
+        "Calling payOut from the frontend button prints the principal of the website user.",
+        "Calling transfer (which internally calls payOut) prints neither of those: it prints the canister's own ID, the same ID shown in the 'Upgrading code for canister ...' line during dfx deploy.",
+        "Takeaway: inside a canister, an internal call to another public function is made by the canister (the whole actor), so msg.caller there is the canister, not the original user.",
+        "Consequence for design: do not call a shared function like payOut from transfer and expect the user identity to carry through. Use the non-shared helper (balanceOf is a plain query that takes the principal as an argument) and pass msg.caller explicitly.",
+        "(Extra) Check the spelling and capitalization of method names on the CLI; the lecture notes the capital O in payOut."
+      ]
+    },
+    {
+      "heading": "Signature of transfer",
+      "points": [
+        "Declared as public shared (msg) func transfer(to : Principal, amount : Nat) : async Text. shared (msg) exposes the caller; the return is a Text status message like payOut.",
+        "There is no 'from' parameter: the sender is always msg.caller, so a user can only spend from their own account. This is what makes the function safe to expose.",
+        "to is a Principal (the long textual ID the user pastes in) and amount is a Nat.",
+        "Until the body is complete, add a placeholder return \"Success\" at the bottom so the type checker stops complaining while you write the logic."
+      ]
+    },
+    {
+      "heading": "Transfer logic step by step",
+      "points": [
+        "Read the sender balance: let fromBalance = await balanceOf(msg.caller). balanceOf is an async query function, so the call must be awaited, otherwise the compiler reports a type error (an async value is not a Nat).",
+        "Guard: only proceed if fromBalance > amount; otherwise return the text 'Insufficient Funds'. (Extra) The reference repo uses strict greater-than, so sending exactly your whole balance is rejected; >= would allow it.",
+        "Compute let newFromBalance : Nat = fromBalance - amount. The explicit Nat annotation is needed because Motoko's subtraction could in principle go below zero and warns otherwise; the guard already guarantees it cannot.",
+        "Write it back with balances.put(msg.caller, newFromBalance), which replaces the existing entry for that key in the HashMap.",
+        "Read the recipient balance with await balanceOf(to). balanceOf already returns 0 for principals not in the map, so brand-new recipients work without extra code.",
+        "Compute newToBalance = toBalance + amount and store it with balances.put(to, newToBalance).",
+        "Return 'Success'. The whole function is just a subtraction, an addition and two ledger updates.",
+        "(Extra) Because there are awaits between the reads and the writes, concurrent calls could interleave; for a production token the balance changes should be done without an await in between."
+      ]
+    },
+    {
+      "heading": "Transfer component state and wiring",
+      "points": [
+        "Two controlled inputs: recipientId/setId and amount/setAmount, both useState(\"\"). Each input has value={...} and onChange={(e) => setX(e.target.value)} so state always holds the current text.",
+        "The same pattern was used for the balance checker; it keeps the latest values available when the button is clicked.",
+        "Import the backend actor from the generated declarations folder (path three levels up, in /declarations, named for the canister) and call await backend.transfer(to, amount). Method names are case sensitive.",
+        "Type conversion is required: input values are strings. Import Principal from @dfinity/principal and use Principal.fromText(recipientId) for the first argument, and Number(amount) for the second.",
+        "Spelling mistakes in state variable names (the instructor hit one with amount) must be fixed in every place it is used."
+      ]
+    },
+    {
+      "heading": "Testing the flow",
+      "points": [
+        "Run dfx deploy first; redeploying resets the in-memory ledger, so balances start at 0.",
+        "Claim from the faucet (10,000 tokens), copy a target principal, transfer 50, then re-check both balances: the sender drops by 50 and the recipient shows 50.",
+        "Check the recipient by pasting their principal into the balance checker."
+      ]
+    },
+    {
+      "heading": "UX touches",
+      "points": [
+        "Disable the button while the call is in flight: isDisable state (initially false) bound to the button's disabled attribute; set true at click start and false after the result arrives.",
+        "Capture the returned text: const result = await transfer(...), store it in a feedback state (initially empty string) and render it in a paragraph.",
+        "Hide the paragraph initially with an isHidden state (initially true) bound to the hidden attribute; set it to true at the start of each click and to false once feedback is set, so stale messages vanish.",
+        "Test both outcomes: 'Success', and transferring more than you hold (e.g. 100,000 with a 10,000 balance) gives 'Insufficient Funds' after a pause."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Demo to reveal msg.caller for internal calls",
+      "language": "motoko",
+      "code": "public shared (msg) func transfer() : async Text {\n  Debug.print(debug_show (msg.caller));  // caller of transfer\n  let r = await payOut();                // payOut prints ITS msg.caller\n  return \"Success\";\n};"
+    },
+    {
+      "caption": "Final transfer function (reference repo)",
+      "language": "motoko",
+      "code": "public shared (msg) func transfer(to : Principal, amount : Nat) : async Text {\n  let fromBalance = await balanceOf(msg.caller);\n  if (fromBalance > amount) {\n    let newFromBalance : Nat = fromBalance - amount;\n    balances.put(msg.caller, newFromBalance);\n\n    let toBalance = await balanceOf(to);\n    let newToBalance : Nat = toBalance + amount;\n    balances.put(to, newToBalance);\n\n    return \"Success\";\n  } else {\n    return \"Insufficient Funds\";\n  };\n};"
+    },
+    {
+      "caption": "Transfer component logic (JSX trimmed to key parts)",
+      "language": "jsx",
+      "code": "function Transfer() {\n  const [recipientId, setId] = useState(\"\");\n  const [amount, setAmount] = useState(\"\");\n  const [isDisable, setDisable] = useState(false);\n  const [feedback, setFeedback] = useState(\"\");\n  const [isHidden, setHidden] = useState(true);\n\n  async function handleClick() {\n    setHidden(true);\n    setDisable(true);\n    const recipient = Principal.fromText(recipientId);\n    const amountToTransfer = Number(amount);\n    const result = await DANG_backend.transfer(recipient, amountToTransfer);\n    setFeedback(result);\n    setHidden(false);\n    setDisable(false);\n  }\n  // inputs: value={recipientId} onChange={(e) => setId(e.target.value)}\n  //         value={amount}      onChange={(e) => setAmount(e.target.value)}\n  // button: onClick={handleClick} disabled={isDisable}\n  // feedback: <p hidden={isHidden}>{feedback}</p>\n}"
+    }
+  ],
+  "task": {
+    "name": "Implement token transfer (backend and UI)",
+    "starting_point": "Project from the previous lesson with balanceOf, getSymbol, payOut and a Transfer component that has inputs but no logic.",
+    "goal": "Let the signed-in user send an amount of tokens to any principal and see the outcome in the page.",
+    "steps": [
+      "Demo (optional): in transfer, Debug.print msg.caller and call payOut; deploy and compare the principal from CLI, frontend and internal call.",
+      "Make transfer public shared (msg) with params to : Principal and amount : Nat returning async Text.",
+      "Fetch fromBalance with await balanceOf(msg.caller).",
+      "If fromBalance > amount, subtract with an explicit Nat type and balances.put for msg.caller.",
+      "Fetch toBalance with await balanceOf(to), add amount, balances.put for to; return \"Success\".",
+      "Else return \"Insufficient Funds\".",
+      "In Transfer.jsx add useState for recipientId and amount and bind to the inputs.",
+      "In handleClick convert with Principal.fromText and Number, then await the backend transfer.",
+      "Add isDisable, feedback and isHidden state to disable the button, show the result and hide it between clicks.",
+      "Run dfx deploy, claim from faucet, transfer 50, verify both balances; then try an oversized amount."
+    ],
+    "expected_result": "Sender balance drops, recipient balance rises, button greys out during the call, and the page shows Success or Insufficient Funds.",
+    "solution_code": {
+      "language": "motoko",
+      "code": "public shared (msg) func transfer(to : Principal, amount : Nat) : async Text {\n  let fromBalance = await balanceOf(msg.caller);\n  if (fromBalance > amount) {\n    let newFromBalance : Nat = fromBalance - amount;\n    balances.put(msg.caller, newFromBalance);\n\n    let toBalance = await balanceOf(to);\n    let newToBalance : Nat = toBalance + amount;\n    balances.put(to, newToBalance);\n\n    return \"Success\";\n  } else {\n    return \"Insufficient Funds\";\n  };\n};"
+    },
+    "reference_repo_path": "Section 41 - Create Your Own Crypto Token/41.06 Creating the Transfer Functionality/DANG/src/DANG_backend/main.mo (and DANG_frontend/src/components/Transfer.jsx)"
+  },
+  "pitfalls": [
+    "Forgetting await on balanceOf, which gives a type error.",
+    "Passing the raw string or the input text instead of Principal.fromText / Number to the backend.",
+    "Assuming msg.caller is the user inside a function reached via an internal call.",
+    "Redeploying resets the HashMap, so balances go back to zero.",
+    "Misspelled state variable or method names (the generated method is case sensitive).",
+    "Using > rather than >= means an exact full-balance transfer fails."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (Motoko/ICP section not in the site data).",
+    "gaps_and_ideas": [
+      "New lesson 'Transfers with async state': blurb on ledger updates and caller identity.",
+      "Tasks: (1) predict who msg.caller is for direct vs internal calls, (2) write the subtract/add logic, (3) convert string inputs to Number, (4) add a disabled-button flag, (5) add hidden feedback text.",
+      "Starter code: transfer skeleton with TODOs and a Map-based fake ledger in plain JS.",
+      "Interactive demo: simulate two users and a canister with a ledger table; clicking transfer shows balances change and a caller log showing the canister ID for internal calls."
+    ]
+  }
+}

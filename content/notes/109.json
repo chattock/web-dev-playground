@@ -1,0 +1,82 @@
+{
+  "index": 109,
+  "lecture_id": 12400140,
+  "title": "Solution to the 99 Bottles Challenge",
+  "section": "15. Intermediate Javascript",
+  "duration_min": 1,
+  "kind": "solution",
+  "summary": "A short written solution to the 99 Bottles of Beer challenge using a while loop that counts down from 99. It ends with an optional stretch goal about correct singular/plural grammar and the 'no more' final line.",
+  "concepts": [
+    {
+      "heading": "Shape of the while-loop solution",
+      "points": [
+        "Store the starting count in a variable (99) and run a while loop for as long as the count is still >= 0 (the posted version includes 0, so a zero-bottle verse is printed too).",
+        "Each pass logs several console.log lines built by string concatenation: the count, a space, a word for 'bottle', then the rest of the verse text.",
+        "The count is reduced with the decrement operator (numberOfBottles--) part-way through the pass, so the last line of each verse shows the already-lowered number. Forgetting the decrement creates an infinite loop.",
+        "The challenge is judged on output, not on matching one exact program: any approach that prints the full song counts as a success. Sharing alternatives in the course Q&A is encouraged."
+      ]
+    },
+    {
+      "heading": "Singular/plural word",
+      "points": [
+        "A variable (bottleWord) holds the noun, and an if statement changes it when the count is exactly 1. Strict equality (===) is used for the check.",
+        "(Extra) The posted code has the two words swapped: it starts with 'bottle' and switches to 'bottles' at 1, so the output is 'bottle' for most verses and 'bottles' at 1. The intended logic is the opposite: default to 'bottles', switch to 'bottle' when the count is 1.",
+        "(Extra) The decrement happens after the first three lines but the same bottleWord is reused on the last line, so the final line's noun can be wrong after the decrement. Recompute the word after decrementing, or use a helper function."
+      ]
+    },
+    {
+      "heading": "Stretch goal",
+      "points": [
+        "Make the grammar correct: print '1 bottle of beer on the wall' at 1.",
+        "At a count of 0, swap the numeral for the words 'No more' in the verse text."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Posted solution (reconstructed; note the swapped words bug)",
+      "language": "javascript",
+      "code": "var numberOfBottles = 99;\nwhile (numberOfBottles >= 0) {\n  var bottleWord = \"bottle\";\n  if (numberOfBottles === 1) {\n    bottleWord = \"bottles\";   // bug: should be the other way round\n  }\n  console.log(numberOfBottles + \" \" + bottleWord + \" of beer on the wall\");\n  console.log(numberOfBottles + \" \" + bottleWord + \" of beer,\");\n  console.log(\"Take one down, pass it around,\");\n  numberOfBottles--;\n  console.log(numberOfBottles + \" \" + bottleWord + \" of beer on the wall.\");\n}"
+    },
+    {
+      "caption": "(Extra) Corrected version with the stretch goal",
+      "language": "javascript",
+      "code": "function bottleText(n) {\n  if (n === 0) return \"No more bottles\";\n  if (n === 1) return \"1 bottle\";\n  return n + \" bottles\";\n}\n\nlet n = 99;\nwhile (n > 0) {\n  console.log(bottleText(n) + \" of beer on the wall,\");\n  console.log(bottleText(n) + \" of beer.\");\n  console.log(\"Take one down, pass it around,\");\n  n--;\n  console.log(bottleText(n) + \" of beer on the wall.\");\n  console.log(\"\");\n}"
+    }
+  ],
+  "task": {
+    "name": "99 Bottles of Beer (solution and stretch goal)",
+    "starting_point": "Empty script.js; the earlier while-loop lecture set the challenge.",
+    "goal": "Print the lyrics of the song from 99 down, then optionally fix grammar for 1 and 0.",
+    "steps": [
+      "Create a counter starting at 99.",
+      "Loop with while while the counter is above the stopping value.",
+      "Log the verse lines, joining the counter and noun with +.",
+      "Decrement the counter inside the loop.",
+      "Stretch: pick 'bottle' vs 'bottles' with an if, and print 'No more' for 0."
+    ],
+    "expected_result": "Console shows verses from 99 downwards ending with 0/no more bottles.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "function beer() {\n    var i = 98;\n    while (i >= 1) {\n        var text = (i + 1) + \" bottles of beer on the wall, \" + (i + 1) + \" bottles of beer. Take one down and pass it around, \" + i + \" bottle of beer on the wall.\";\n        i--;\n        console.log(text);\n    }\n    console.log(\"1 bottle of beer on the wall, 1 bottle of beer. Take one down and pass it around, no more bottles of beer on the wall.\");\n    console.log(\"No more bottles of beer on the wall, no more bottles of beer. Go to the store and buy some more, 99 bottles of beer on the wall.\");\n}\nbeer();"
+    },
+    "reference_repo_path": "Section 15 - Intermediate Javascript/15.11 -  99 Bottles of Beer Challenge/script.js"
+  },
+  "pitfalls": [
+    "Infinite loop if the counter is never decremented.",
+    "Singular/plural logic inverted (as in the posted code).",
+    "Using the stale noun after the decrement.",
+    "Off-by-one: >= 0 vs > 0 changes whether a zero verse prints.",
+    "Reference repo diverges: it hard-codes the 99 and 'bottle' on the final line and ends the song with the 'go to the store' line; it is a student's variant, not the lecture's code."
+  ],
+  "playground": {
+    "match": "s15-bottles (lesson 15.11, data/s15.js)",
+    "coverage": "Starter and tasks cover looping down from the count, the singular at 1, and the final 'no more' line. Solution uses ternaries and a helper function, which already fixes the grammar bug.",
+    "gaps_and_ideas": [
+      "Mention that the course's own posted solution inverts bottle/bottles, so learners comparing outputs know to trust the logic, not the listing.",
+      "Add a task to decrement and then recompute the noun (the stale-variable trap).",
+      "Add a 'predict the output' check for >= 0 vs > 0.",
+      "Explore demo idea: slider for the starting count that renders the last three verses live."
+    ]
+  }
+}

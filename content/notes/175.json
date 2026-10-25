@@ -1,0 +1,60 @@
+{
+  "index": 175,
+  "lecture_id": 12653348,
+  "title": "Step 7 - Start the Game",
+  "section": "20. Boss Level Challenge 2 - The Simon Game",
+  "duration_min": 1,
+  "kind": "article-task",
+  "summary": "Start on the first key press and track and display the level.",
+  "concepts": [
+    {
+      "heading": "State",
+      "points": [
+        "started = false flag so only the first keypress starts the game.",
+        "level = 0 counter."
+      ]
+    },
+    {
+      "heading": "Key detection",
+      "points": [
+        "$(document).keydown(fn) listens for any key.",
+        "If !started: set h1 text to 'Level 0' (via $(\"#level-title\").text(...)), call nextSequence(), set started = true."
+      ]
+    },
+    {
+      "heading": "In nextSequence",
+      "points": [
+        "Increment level by 1 each call and update the h1 text to 'Level ' + level.",
+        "(Extra) The lecture's Level 0 text is immediately replaced by Level 1 in the reference, since nextSequence updates it."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Start logic",
+      "language": "javascript",
+      "code": "var started = false;\nvar level = 0;\n\n$(document).keydown(function () {\n  if (!started) {\n    $(\"#level-title\").text(\"Level \" + level);\n    nextSequence();\n    started = true;\n  }\n});"
+    }
+  ],
+  "task": {
+    "name": "Start on keypress",
+    "starting_point": "Click and pattern code working",
+    "goal": "First key starts game, title shows level",
+    "steps": [
+      "Detect keydown on document",
+      "Track started flag",
+      "Add level variable",
+      "Set h1 text",
+      "In nextSequence, level++ and update h1"
+    ],
+    "expected_result": "Title changes from prompt to Level 1 on first key; further keys do nothing.",
+    "solution_code": null,
+    "reference_repo_path": "Section 20 - Boss Level Challenge 2 - The Simon Game/script.js"
+  },
+  "pitfalls": [],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (web-dev-playground has no files for sections 19-20)",
+    "gaps_and_ideas": []
+  }
+}

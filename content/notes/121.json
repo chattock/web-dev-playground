@@ -1,0 +1,68 @@
+{
+  "index": 121,
+  "lecture_id": 12383884,
+  "title": "Manipulating HTML Element Attributes",
+  "section": "16. The Document Object Model (DOM)",
+  "duration_min": 2,
+  "kind": "concept",
+  "summary": "Shows how to inspect an element's attributes with .attributes, read one with getAttribute and change one with setAttribute, using an anchor's href as the example.",
+  "concepts": [
+    {
+      "heading": "Attributes recap",
+      "points": [
+        "An attribute is anything written inside an opening tag besides the tag name: class on most elements, href on anchors, src on images.",
+        "Attributes are the third thing you can change from JS after styles and text."
+      ]
+    },
+    {
+      "heading": "Reading and changing attributes",
+      "points": [
+        "element.attributes returns a collection of every attribute currently on the element. For a link with only an href, it holds one entry.",
+        "element.getAttribute('name') returns the value of one attribute as a string. The method name is singular and requires the attribute name as its argument, e.g. getAttribute('href').",
+        "element.setAttribute('name', 'value') takes two arguments: which attribute, and the new value. It overwrites the attribute if it exists and creates it otherwise.",
+        "Changing href redirects the click target, but the visible link text is separate (it comes from the content), so a link can still say Google while pointing elsewhere.",
+        "querySelector('a') returns only the first anchor on the page, so that is the one affected.",
+        "(Extra) The same pattern works for src, alt, id, class, disabled, etc. removeAttribute('name') deletes one, and hasAttribute('name') tests for it."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Inspect and change the link target",
+      "language": "javascript",
+      "code": "console.log(document.querySelector(\"a\"));\nconsole.log(document.querySelector(\"a\").attributes);\nconsole.log(document.querySelector(\"a\").getAttribute(\"href\")); // current URL\ndocument.querySelector(\"a\").setAttribute(\"href\", \"https://www.bing.com\");"
+    }
+  ],
+  "task": {
+    "name": "Redirect a link with setAttribute",
+    "starting_point": "A page with a single anchor pointing to Google and a linked script.js.",
+    "goal": "Point the link at a different site using JavaScript.",
+    "steps": [
+      "Select the anchor and log its attributes.",
+      "Read the href with getAttribute.",
+      "Call setAttribute with 'href' and the new URL.",
+      "Click the link to confirm it goes to the new site although the text is unchanged."
+    ],
+    "expected_result": "The link text is unchanged but the click lands on the new URL.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "document.querySelector(\"a\").setAttribute(\"href\", \"https://www.bing.com\");"
+    },
+    "reference_repo_path": "Section 16 - The Document Object Model (DOM)/16.07 - Manipulating HTML Element Attributes"
+  },
+  "pitfalls": [
+    "Using getAttributes (plural) instead of getAttribute.",
+    "Passing only one argument to setAttribute.",
+    "The reference repo has a typo in the URL (four w's) which should be www.",
+    "Forgetting that link text does not update when href changes."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (no s16.js data file).",
+    "gaps_and_ideas": [
+      "Add to a DOM lesson on attributes.",
+      "Tasks: log attributes, get href, set href, change an img src, add an alt with setAttribute.",
+      "Interactive demo: a link and an image with inputs that call setAttribute, and a live view of the element's outerHTML."
+    ]
+  }
+}

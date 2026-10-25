@@ -1,0 +1,65 @@
+{
+  "index": 69,
+  "lecture_id": 19655720,
+  "title": "Understanding Colour Theory",
+  "section": "12. Web Design School - Create a Website that People Love",
+  "duration_min": 9,
+  "kind": "theory",
+  "summary": "Colour choice should be deliberate: each dominant colour carries a mood, and colours are combined using relationships on the colour wheel. Covers analogous, complementary, triadic and square schemes, plus tools (Adobe Color, Color Hunt) for getting hex codes.",
+  "concepts": [
+    {
+      "heading": "Colour sets the mood",
+      "points": [
+        "The predominant colour of a design communicates a message before any text is read. A palette that contradicts the brand (for example earthy brown on something cheerful) feels off, while a palette matching the message feels intentional.",
+        "Red: love, energy, intensity. Common in advertising for cars and anything meant to feel powerful.",
+        "Yellow: joy, intellect, attention. It is extremely attention-grabbing, so it suits logos and headlines but tires the eyes in long reading areas; avoid a full yellow background behind article text.",
+        "Green: freshness, growth, safety. A safe default for food and grocery brands.",
+        "Blue: stability, trust, serenity. Popular with finance and payments companies; a study she mentions found people wearing blue were trusted more by interviewers.",
+        "Purple: royalty, wealth, femininity. Sometimes used by lenders targeting women.",
+        "Pick colours by asking what message the user should receive, not by personal favourites."
+      ]
+    },
+    {
+      "heading": "Combining colours with the colour wheel",
+      "points": [
+        "Real designs normally use two or three colours, so the relationships between them matter. This is the most systematic part of colour theory.",
+        "Analogous palette: colours adjacent on the wheel. Very harmonious; works for navigation bars, page bodies, and a logo against its background. Weakness: little contrast, so nothing stands out.",
+        "Complementary (clashing) palette: colours from opposite sides of the wheel. Creates strong pop and makes each colour look more vivid (example: red meat displayed against green plastic foliage).",
+        "Do not use complementary colours for text on a background. The vibration is hard to read. Reserve them for logos, icons, accents and elements that should stand apart.",
+        "Triadic palette: three colours forming an equilateral triangle on the wheel. Square palette: four colours forming a square.",
+        "(Extra) Common practical rule: one dominant colour, one secondary, and one accent (roughly 60/30/10 usage)."
+      ]
+    },
+    {
+      "heading": "Tools",
+      "points": [
+        "Adobe Color: pick a harmony rule (analogous, complementary, triadic, square) and drag on the wheel until the palette matches the project's mood, then copy the hex codes into your CSS.",
+        "colorhunt.co: curated palettes by designers; browse the popular or trending sections and copy hex codes directly.",
+        "A consistent, brand-appropriate palette makes a site look cohesive and can be playful without feeling chaotic."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "(Extra) Putting a palette into CSS as custom properties",
+      "language": "css",
+      "code": ":root {\n  --primary: #1f4e9c;   /* blue: trust */\n  --secondary: #5aa9e6; /* analogous lighter blue */\n  --accent: #f2a541;    /* complementary orange for buttons/icons */\n  --text: #1b1b1b;\n  --bg: #ffffff;\n}\nbody { background: var(--bg); color: var(--text); }\nbutton { background: var(--accent); color: var(--text); }"
+    }
+  ],
+  "task": null,
+  "pitfalls": [
+    "Choosing colours because they are favourites rather than because they suit the message.",
+    "Using complementary colours for text and its background.",
+    "Large yellow backgrounds behind body copy.",
+    "Using too many unrelated hues instead of a small scheme."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (section 12 has no playground file).",
+    "gaps_and_ideas": [
+      "New lesson 'Colour palettes': blurb on mood and colour wheel relationships. Tasks: 1) define a palette as CSS variables; 2) build an analogous version of a navbar; 3) add a complementary accent button; 4) fix a page that uses complementary text/background; 5) swap hex codes from Color Hunt.",
+      "Starter code idea: a landing page whose colours are all hard-coded and clashing.",
+      "Interactive demo idea: a colour wheel where the user picks a base hue and sees analogous, complementary, triadic and square swatches applied live to a mini page."
+    ]
+  }
+}

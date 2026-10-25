@@ -1,0 +1,30 @@
+{
+  "index": 36,
+  "lecture_id": 17966488,
+  "title": "Tip from Angela - Dealing with Distractions",
+  "section": "5. Introduction to CSS",
+  "duration_min": 2,
+  "kind": "tip",
+  "summary": "A short productivity tip: remove distractions while studying, because even brief interruptions cost a lot of focus time.",
+  "concepts": [
+    {
+      "heading": "Key takeaways",
+      "points": [
+        "Brief interruptions, even a minute long, can take far longer to recover from; the lecture cites research suggesting up to roughly 25 minutes to regain prior focus.",
+        "Practical habit: before a study session, put the phone in airplane mode and out of sight, such as in a drawer.",
+        "Distractions differ per person: they may be people nearby, in which case close a door, or the time of day, in which case study early morning or late evening.",
+        "Experiment with removing them and observe whether focus and output improve."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [
+    "Keeping the phone within reach with notifications on during coding sessions."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson (tip video).",
+    "gaps_and_ideas": []
+  }
+}

@@ -1,0 +1,71 @@
+{
+ "index": 87,
+ "lecture_id": 12371848,
+ "title": "Basic Arithmetic and the Modulo Operator in Javascript",
+ "section": "14. Introduction to Javascript ES6",
+ "duration_min": 6,
+ "kind": "concept+exercise",
+ "summary": "Covers the arithmetic operators (+ - * / %), operator precedence and the habit of adding parentheses for clarity, then applies it in a dog-age-to-human-age converter challenge.",
+ "concepts": [
+  {
+   "heading": "Arithmetic operators",
+   "points": [
+    "+ adds, - subtracts, * multiplies, / divides.",
+    "% is the modulo (remainder) operator. It looks like division but returns what is left over: 9 % 6 is 3 because 6 fits once into 9; 6 % 4 is 2 (whereas 6 / 4 is 1.5); 12 % 8 is 4."
+   ]
+  },
+  {
+   "heading": "Uses for modulo",
+   "points": [
+    "Odd or even test: n % 2 gives 0 for even numbers and a non-zero value for odd ones (45 % 2 is 1, so 45 is odd).",
+    "More uses come later in the course, such as every-nth-item logic in loops.",
+    "(Extra) The test is written n % 2 === 0 in code."
+   ]
+  },
+  {
+   "heading": "Operator precedence",
+   "points": [
+    "Multiplication and division run before addition and subtraction, same as in school maths. 3 + 5 * 2 evaluates to 13, not 16.",
+    "Parentheses force a different order: (3 + 5) * 2 gives 16.",
+    "Good practice: add parentheses even where precedence already gives the right order, so the intended order is obvious to readers."
+   ]
+  }
+ ],
+ "code_examples": [
+  {
+   "caption": "Modulo and precedence",
+   "language": "javascript",
+   "code": "console.log(9 % 6);        // 3\nconsole.log(6 % 4);        // 2\nconsole.log(12 % 8);       // 4\nconsole.log(45 % 2);       // 1 -> odd\nvar cost = 3 + 5 * 2;      // 13 (multiply first)\nvar cost2 = (3 + 5) * 2;   // 16"
+  }
+ ],
+ "task": {
+  "name": "Dog age to human age converter",
+  "starting_point": "Empty script (originally typed in the Chrome DevTools Sources snippet, index.js).",
+  "goal": "Prompt for a dog's age, convert it with the formula (dogAge - 2) * 4 + 21, and alert the human-equivalent age.",
+  "steps": [
+   "Create dogAge from prompt(\"How old is your dog?\").",
+   "Compute humanAge: subtract 2, multiply by 4, add 21, grouping with parentheses so the order is explicit.",
+   "Show the result with alert(), concatenating a sentence around humanAge."
+  ],
+  "expected_result": "Entering 7 gives 41 (that is (7-2)*4+21).",
+  "solution_code": {
+   "language": "javascript",
+   "code": "var dogAge = prompt(\"How old is your dog?\");\nvar humanAge = ((dogAge - 2) * 4) + 21;\nalert(\"If he were human he would be \" + humanAge + \" years old\");"
+  },
+  "reference_repo_path": "Section 14 - Introduction to Javascript ES6/14.09 - Basic Arithmetic and the Modulo Operator in Javascript"
+ },
+ "pitfalls": [
+  "Writing the formula without parentheses so precedence changes the answer.",
+  "(Extra) prompt() returns a string; subtraction, multiplication coerce it to a number so the formula works, but dogAge + 2 would concatenate.",
+  "(Extra) The reference repo's index.html is plain boilerplate; the work is in script.js."
+ ],
+ "playground": {
+  "match": "s14-arithmetic (lesson 14.9, data/s14.js)",
+  "coverage": "Has the dog-age task, modulo logs, even/odd test, precedence examples, an operator table and uses of modulo. Wraps prompt in Number().",
+  "gaps_and_ideas": [
+   "Add the 3 + 5 * 2 versus (3 + 5) * 2 worked example as an explicit task and the advice to parenthesise for readability.",
+   "Add a short task showing why Number() is needed: compare prompt result + 2 with Number(prompt result) + 2.",
+   "Explore demo idea: calculator widget where the learner types two numbers and sees all five operator results with modulo highlighted."
+  ]
+ }
+}

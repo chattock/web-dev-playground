@@ -1,0 +1,45 @@
+{
+  "index": 369,
+  "lecture_id": 12614080,
+  "title": "AAA 1 - How to Soak in Programming Concepts and more...",
+  "section": "43. Optional Module: Ask Angela Anything",
+  "duration_min": 40,
+  "kind": "qa",
+  "summary": "First Ask-Me-Anything session (recorded for an earlier iOS course), answering general learner questions on how to absorb programming knowledge, getting a first dev job, studying, learning new tech, focus and daily routines. Nothing technical to build.",
+  "concepts": [
+    {
+      "heading": "Learning and skill building",
+      "points": [
+        "Learn fundamentals first and surface features last; treat knowledge as a tree so flashy details have something to attach to.",
+        "Build your own small projects. Keep each one a minimal working version, then add features one at a time. Over-ambitious first projects tend to be abandoned.",
+        "Skills transfer between languages (variables, data types, functions), so a new language mostly means new syntax.",
+        "Searching well (Google, Stack Overflow, official docs) is a core professional skill; looking things up is normal.",
+        "When learning something new, map it onto what you already know, and schedule regular time for work outside your comfort zone."
+      ]
+    },
+    {
+      "heading": "Career and study advice",
+      "points": [
+        "Without a portfolio, start on freelance marketplaces (Upwork, Fiverr and similar) to get real clients, real requirements and reviews; pay is low at first but raises as the track record grows.",
+        "At university prefer breadth and connections over chasing perfect grades.",
+        "Bias is not something you control; focus on factors you can change such as preparation, portfolio and work ethic."
+      ]
+    },
+    {
+      "heading": "Focus and routine",
+      "points": [
+        "Protect attention: turn off notifications, and disconnect from the internet when it is not needed.",
+        "Reduce small daily decisions (clothes, breakfast) to save mental energy for work.",
+        "Her routine: short exercise, 20 minutes of meditation, journaling, then skimming tech news. Don't worry about missing days."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": []
+  }
+}

@@ -1,0 +1,130 @@
+{
+  "index": 270,
+  "lecture_id": 41780536,
+  "title": "Level 3 - How to Salt Passwords for Improved Encryption",
+  "section": "35. Authentication and Security",
+  "duration_min": 19,
+  "kind": "concept+exercise",
+  "summary": "Explains salting and bcrypt salt rounds as the defence against hash-table and brute-force attacks on hashed passwords, then upgrades the Express + Postgres secrets app to hash on register with bcrypt.hash and verify on login with bcrypt.compare.",
+  "concepts": [
+    {
+      "heading": "Why plain hashing is not enough",
+      "points": [
+        "Human-chosen passwords are short and often dictionary words, so an attacker can precompute a table mapping common passwords to their hashes and simply look stored hashes up.",
+        "Identical passwords give identical hashes, which is how users sharing a password can be spotted in a leaked table.",
+        "Fast algorithms such as MD5 help the attacker: a GPU can compute billions of MD5 hashes per second, so even a salted MD5 table could be rebuilt quickly."
+      ]
+    },
+    {
+      "heading": "What a salt is",
+      "points": [
+        "A salt is a random string generated per user. It is combined with the password before hashing, so the hash is derived from both.",
+        "Because each user gets a different salt, two users with the same password end up with different hashes, and a precomputed table no longer works.",
+        "The user never sees or remembers the salt. It is stored in the database next to the hash.",
+        "To verify a login: take the typed password, combine it with that user's stored salt, hash it the same way and compare against the stored hash. The plain password is never stored.",
+        "(Extra) With the bcrypt library the salt is embedded inside the hash string itself (the $2b$10$... prefix holds the algorithm version, cost and salt), so there is no separate salt column to manage."
+      ]
+    },
+    {
+      "heading": "Bcrypt: deliberately slow hashing",
+      "points": [
+        "Bcrypt is an industry-standard password hashing algorithm built on the Blowfish cipher. Its value is that it is slow, so large-scale guessing becomes impractical.",
+        "Rough comparison given: top GPUs manage tens of billions of MD5 hashes per second but only around seventeen thousand bcrypt hashes per second. A salted table that takes seconds with MD5 would take months with bcrypt, so attackers move on to easier targets.",
+        "The npm package is called bcrypt; docs are on npm. It must be added to package.json dependencies and installed with npm install."
+      ]
+    },
+    {
+      "heading": "Salt rounds (cost factor)",
+      "points": [
+        "One round: hash(password + salt). Two rounds: feed the first hash plus the same salt through the hash function again. The number of repetitions is the salt rounds.",
+        "Each +1 on the setting roughly doubles the time to compute a hash. As hardware gets faster, raise the number (e.g. 10 now, 12 later) without changing algorithm or other code.",
+        "Pick a value balancing security against login/register latency. The course uses 10, which was fast enough on the machines tried. Too few rounds (e.g. 2) makes brute force much quicker."
+      ]
+    },
+    {
+      "heading": "Registering: bcrypt.hash",
+      "points": [
+        "Import with import bcrypt from \"bcrypt\" (project uses ES modules via \"type\": \"module\") and define const saltRounds = 10 near the top.",
+        "In the POST /register route, after the check that the email does not already exist and just before the INSERT, call bcrypt.hash(password, saltRounds, callback).",
+        "Arguments: the plain text to hash (req.body.password), the salt rounds, and a callback receiving (err, hash).",
+        "The existing INSERT and res.render(\"secrets.ejs\") move inside the callback, because they must wait for the hash. Since the INSERT is awaited there, the callback is declared async.",
+        "Store hash in the password column instead of the plain password. On err, log it (at minimum console.log/console.error) and do not insert.",
+        "Test by registering a new user: the password column now holds a long unreadable string even though 123456 was typed. Delete earlier rows with plain-text passwords, since they no longer fit the scheme and can never log in."
+      ]
+    },
+    {
+      "heading": "Logging in: bcrypt.compare",
+      "points": [
+        "Hashing the login password again and comparing strings would not work, because salting makes each hash differ. Bcrypt provides compare for this.",
+        "Signature: bcrypt.compare(plainLoginPassword, storedHash, callback). Argument order matters: the plain text first, the stored hash second, so it knows which to hash and which to read the salt from.",
+        "The callback gets (err, result) where result is a boolean. true means match: render secrets.ejs. false: send an Incorrect Password message.",
+        "Rename variables for clarity: loginPassword for what the user typed in the form, storedHashedPassword for the database value.",
+        "The old plain equality check (if/else comparing strings) is deleted and replaced by the compare callback. The 'user not found' branch stays as before.",
+        "Test: correct password logs true and shows the secrets page; a wrong one such as qwerty shows the incorrect password message."
+      ]
+    },
+    {
+      "heading": "Where this leaves the app",
+      "points": [
+        "Even if the database leaks, only salted bcrypt hashes are exposed and there is no feasible way to recover the original passwords.",
+        "Next lesson adds cookies and sessions so a logged-in user does not have to sign in again on every visit."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Imports and salt rounds (top of index.js)",
+      "language": "javascript",
+      "code": "import express from \"express\";\nimport bodyParser from \"body-parser\";\nimport pg from \"pg\";\nimport bcrypt from \"bcrypt\";\n\nconst app = express();\nconst port = 3000;\nconst saltRounds = 10;"
+    },
+    {
+      "caption": "Register route: hash before saving",
+      "language": "javascript",
+      "code": "app.post(\"/register\", async (req, res) => {\n  const email = req.body.username;\n  const password = req.body.password;\n\n  try {\n    const checkResult = await db.query(\"SELECT * FROM users WHERE email = $1\", [email]);\n\n    if (checkResult.rows.length > 0) {\n      res.send(\"Email already exists. Try logging in.\");\n    } else {\n      bcrypt.hash(password, saltRounds, async (err, hash) => {\n        if (err) {\n          console.error(\"Error hashing password:\", err);\n        } else {\n          await db.query(\n            \"INSERT INTO users (email, password) VALUES ($1, $2)\",\n            [email, hash]\n          );\n          res.render(\"secrets.ejs\");\n        }\n      });\n    }\n  } catch (err) {\n    console.log(err);\n  }\n});"
+    },
+    {
+      "caption": "Login route: verify with bcrypt.compare",
+      "language": "javascript",
+      "code": "app.post(\"/login\", async (req, res) => {\n  const email = req.body.username;\n  const loginPassword = req.body.password;\n\n  try {\n    const result = await db.query(\"SELECT * FROM users WHERE email = $1\", [email]);\n    if (result.rows.length > 0) {\n      const user = result.rows[0];\n      const storedHashedPassword = user.password;\n\n      bcrypt.compare(loginPassword, storedHashedPassword, (err, result) => {\n        if (err) {\n          console.error(\"Error comparing passwords:\", err);\n        } else if (result) {\n          res.render(\"secrets.ejs\");\n        } else {\n          res.send(\"Incorrect Password\");\n        }\n      });\n    } else {\n      res.send(\"User not found\");\n    }\n  } catch (err) {\n    console.log(err);\n  }\n});"
+    }
+  ],
+  "task": {
+    "name": "Add bcrypt hashing and salting to the secrets app",
+    "starting_point": "Project folder for this lesson (Authentication Lv.2 starter): index.js contains the previous lesson's working email/password app that still stores plain text passwords. package.json already lists bcrypt as a dependency. Postgres database named secrets with a users table (email, password) must be running.",
+    "goal": "Passwords are hashed with bcrypt (10 salt rounds) on registration and verified with bcrypt.compare on login, so no plain text password is ever stored.",
+    "steps": [
+      "Extract the lesson download, open it in VS Code, cd into the project and run npm install.",
+      "Import bcrypt and add const saltRounds = 10.",
+      "In POST /register, after the existing-user check, wrap the INSERT in bcrypt.hash(password, saltRounds, async (err, hash) => {...}); insert hash instead of the plain password; log any err.",
+      "Move res.render(\"secrets.ejs\") into the same callback so it runs after the insert.",
+      "Run node index.js, register a new user and confirm in the database that the password column holds a long hash. Delete any old plain text user rows.",
+      "In POST /login, rename the form value to loginPassword and the database value to storedHashedPassword.",
+      "Replace the string equality if/else with bcrypt.compare(loginPassword, storedHashedPassword, callback); render secrets.ejs when result is true, otherwise send Incorrect Password.",
+      "Test a correct login and a wrong password."
+    ],
+    "expected_result": "New users appear in the database with bcrypt hash strings; login works with the right password and shows an incorrect password message for a wrong one.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "// see code_examples: register route uses bcrypt.hash(password, saltRounds, cb);\n// login route uses bcrypt.compare(loginPassword, storedHashedPassword, cb)"
+    },
+    "reference_repo_path": "Section 35 - Authentication and Security - Handling Credentials & Designing a Secure Login/35.05 Level 3 - How to Salt Passwords for Improved Encryption/solution.js"
+  },
+  "pitfalls": [
+    "Swapping the argument order of bcrypt.compare (plain password first, stored hash second).",
+    "Comparing hash-of-login-password to the stored hash with ===; salting makes this always fail.",
+    "Leaving old plain text rows in the table; they cannot log in under the new scheme.",
+    "Forgetting async on the hash callback when it awaits db.query, or leaving res.render outside the callback so it runs before saving.",
+    "Raising saltRounds too high makes every register and login slow.",
+    "(Extra) The reference solution logs the generated hash to the console; avoid logging credentials-related values in real apps."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (playground has no data file for section 35).",
+    "gaps_and_ideas": [
+      "New lesson 'Salting and bcrypt': blurb explaining plain hash vs salted hash vs bcrypt cost.",
+      "Tasks: (1) call bcrypt.hash twice on the same password and compare the outputs, (2) change saltRounds from 4 to 12 and time it, (3) verify with bcrypt.compare correct and wrong passwords, (4) read the cost and salt out of the $2b$10$ prefix.",
+      "Starter code: small Node script using bcrypt with a hard-coded users array, no Express or database needed.",
+      "Interactive demo: type a password, show two different salted hashes side by side, plus a slider for rounds that shows the measured hashing time."
+    ]
+  }
+}

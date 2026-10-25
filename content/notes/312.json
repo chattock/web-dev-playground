@@ -1,0 +1,106 @@
+{
+  "index": 312,
+  "lecture_id": 17039564,
+  "title": "Changing Complex State",
+  "section": "36. React.js",
+  "duration_min": 20,
+  "kind": "concept+exercise",
+  "summary": "Builds a first-name / last-name greeting form, first with two separate state variables and handlers, then refactors to one object in state. Explains why setting only one key wipes the other, how to fix it with the functional updater form using the previous value, and tidies the handler with destructuring.",
+  "concepts": [
+    {
+      "heading": "Version 1: one state variable per input",
+      "points": [
+        "Create fName and lName with separate useState(\"\") calls (initial empty strings) and show both after Hello in the h1.",
+        "Each input gets value={...} (controlled) and its own onChange handler that reads event.target.value and calls the matching setter.",
+        "It works and is good practice, but needs duplicated functions and consts for data that really belongs together, such as a contact's names."
+      ]
+    },
+    {
+      "heading": "Version 2: an object in state",
+      "points": [
+        "useState can hold an object: const [fullName, setFullName] = useState({ fName: \"\", lName: \"\" }).",
+        "Read values as fullName.fName and fullName.lName in the h1 and in the inputs' value props.",
+        "Both inputs share one handleChange function. To know which input fired, give every input a name attribute (\"fName\", \"lName\") and read event.target.name. The names must match the object keys.",
+        "While debugging it can help to temporarily remove the value props. With value fixed to state that never changes, a controlled input shows nothing typed. Restore them afterwards."
+      ]
+    },
+    {
+      "heading": "The bug: replacing instead of merging",
+      "points": [
+        "Calling setFullName({ fName: newValue }) replaces the whole state object. Typing in the last-name field then drops fName, and vice versa.",
+        "The useState setter does not merge keys, so the complete new object has to be supplied. (Extra) This differs from class components, whose this.setState merges.",
+        "The React DevTools (Components tab, hooks section; works better in a popped-out window than inside CodeSandbox) show the object losing a key on each keystroke."
+      ]
+    },
+    {
+      "heading": "The fix: functional update with previous value",
+      "points": [
+        "Pass a function to the setter instead of a value: setFullName(prevValue => { ... }). React calls it with the latest stored state.",
+        "Return a new object that keeps the other key from prevValue and takes the new one: if name is fName return { fName: value, lName: prevValue.lName }; else if name is lName return { fName: prevValue.fName, lName: value }.",
+        "React remembers state across re-renders, which is what makes prevValue available.",
+        "(Extra) A compact equivalent is return { ...prevValue, [name]: value }, using the spread operator and computed key, which the next lectures cover."
+      ]
+    },
+    {
+      "heading": "Destructure the event, and never read it inside the updater",
+      "points": [
+        "Replace the two consts with const { value, name } = event.target; at the top of handleChange.",
+        "Do not touch event.target inside the updater function. React gives handlers a synthetic event wrapper, and by the time the updater runs the event data may have been released, causing a warning in the console about synthetic events being reused.",
+        "Always extract what you need from the event first, then use those plain variables inside the setter. (Extra) Newer React versions (17+) no longer pool events, but extracting first remains the safest habit.",
+        "After the refactor the handler only needs the two variables name and value; the earlier intermediate consts (newValue, inputName) can be deleted."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Version 1: separate state per input (the approach later replaced)",
+      "language": "jsx",
+      "code": "import React, { useState } from \"react\";\n\nfunction App() {\n  const [fName, setFName] = useState(\"\");\n  const [lName, setLName] = useState(\"\");\n\n  function updateFName(event) {\n    setFName(event.target.value);\n  }\n  function updateLName(event) {\n    setLName(event.target.value);\n  }\n\n  return (\n    <div className=\"container\">\n      <h1>Hello {fName} {lName}</h1>\n      <form>\n        <input onChange={updateFName} value={fName} placeholder=\"First Name\" />\n        <input onChange={updateLName} value={lName} placeholder=\"Last Name\" />\n        <button>Submit</button>\n      </form>\n    </div>\n  );\n}\n\nexport default App;"
+    },
+    {
+      "caption": "Object state with functional update (reference repo)",
+      "language": "jsx",
+      "code": "import React, { useState } from \"react\";\n\nfunction App() {\n  const [fullName, setFullName] = useState({\n    fName: \"\",\n    lName: \"\",\n  });\n\n  function handleChange(event) {\n    const { value, name } = event.target;\n    setFullName((prevValue) => {\n      if (name === \"fName\") {\n        return { fName: value, lName: prevValue.lName };\n      } else if (name === \"lName\") {\n        return { fName: prevValue.fName, lName: value };\n      }\n    });\n  }\n\n  return (\n    <div className=\"container\">\n      <h1>\n        Hello {fullName.fName} {fullName.lName}\n      </h1>\n      <form>\n        <input name=\"fName\" onChange={handleChange} value={fullName.fName} placeholder=\"First Name\" />\n        <input name=\"lName\" onChange={handleChange} value={fullName.lName} placeholder=\"Last Name\" />\n        <button>Submit</button>\n      </form>\n    </div>\n  );\n}\n\nexport default App;"
+    },
+    {
+      "caption": "(Extra) The buggy version that loses the other key",
+      "language": "jsx",
+      "code": "if (name === \"fName\") {\n  setFullName({ fName: value });   // lName is gone now\n} else if (name === \"lName\") {\n  setFullName({ lName: value });   // fName is gone now\n}"
+    }
+  ],
+  "task": {
+    "name": "Live greeting from first and last name",
+    "starting_point": "CodeSandbox starter with an h1 and a form containing two inputs (first name, last name) and a Submit button.",
+    "goal": "Typing a first name shows it in the heading after Hello; typing a last name adds to it without erasing the first name, and vice versa.",
+    "steps": [
+      "Try it first with separate state variables and handlers for each input.",
+      "Refactor to a single fullName object state with fName and lName keys.",
+      "Add name attributes to the inputs matching the keys and point both onChange props at handleChange.",
+      "Make the inputs controlled with value={fullName.fName} / value={fullName.lName}.",
+      "Inside handleChange destructure value and name from event.target.",
+      "Call setFullName with a function that returns a new object using prevValue for the untouched key."
+    ],
+    "expected_result": "The heading updates live for both names and neither field clears the other.",
+    "solution_code": {
+      "language": "jsx",
+      "code": "function handleChange(event) {\n  const { value, name } = event.target;\n  setFullName((prevValue) => {\n    if (name === \"fName\") {\n      return { fName: value, lName: prevValue.lName };\n    } else if (name === \"lName\") {\n      return { fName: prevValue.fName, lName: value };\n    }\n  });\n}"
+    },
+    "reference_repo_path": "Section 36 - React.js/36.36 Changing Complex State/changing-complex-state/src/App.jsx"
+  },
+  "pitfalls": [
+    "Setting only the changed key replaces the entire state object, losing the others.",
+    "Input name attributes that do not exactly match the comparison strings (or object keys) leave the handler returning undefined.",
+    "Reading event.target inside the updater function can trigger the synthetic-event warning; destructure first.",
+    "Controlled inputs with value tied to unchanged state appear frozen while debugging.",
+    "The reference solution keeps the old two-variable version commented out; it is not needed."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (playground data covers only sections 1-11, 14, 15).",
+    "gaps_and_ideas": [
+      "New 'Object state' lesson (blurb: keep related values in one state object, update one key with a functional updater that copies the rest from the previous value, and pull name/value off the event first). Tasks: (1) two-input greeting with separate states, (2) merge into one fullName object with fName/lName keys and name attributes on the inputs, (3) reproduce the key-loss bug by setting only one key and explain it, (4) fix it with setFullName(prevValue => ...), (5) destructure { name, value } from event.target before the setter.",
+      "Starter code idea: App with h1 'Hello', a form with First Name and Last Name inputs (no name attributes yet) and a Submit button.",
+      "Demo idea: a live JSON viewer of the state object next to the two inputs, with a toggle between buggy replace and correct prevValue merge so the lost key visibly disappears."
+    ]
+  }
+}

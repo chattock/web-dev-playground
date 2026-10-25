@@ -1,0 +1,133 @@
+{
+  "index": 20,
+  "lecture_id": 37349818,
+  "title": "Anchor Elements",
+  "section": "3. Intermediate HTML",
+  "duration_min": 11,
+  "kind": "concept+exercise",
+  "summary": "Introduces HTML attributes through the anchor element: <a> only becomes a working hyperlink once it has an href attribute holding the destination URL. Covers attribute syntax, element-specific versus global attributes (draggable as the example), and an exercise that builds an ordered list of five favourite-website links, with a bonus step using the ol start attribute.",
+  "concepts": [
+    {
+      "heading": "What an attribute is and where it goes",
+      "points": [
+        "An attribute adds extra information to an element, for example where a link should point.",
+        "Attributes always go inside the opening tag: after the tag name, before the closing angle bracket >. Never in the closing tag.",
+        "Syntax: tag name, a space, the attribute name, =, then the value in double quotes. Example: <a href=\"https://www.producthunt.com/\">.",
+        "An element can have any number of attributes. Separate them with spaces, all inside the same opening tag: <a href=\"...\" draggable=\"true\">.",
+        "Why the quotes: the value is plain text (a string), and the quotes separate that text from HTML's own reserved words such as a, li or href. A URL is just text, so it is quoted.",
+        "VS Code autocompletion helps: start typing href inside the opening tag, pick it from the suggestions and press Enter. It inserts href=\"\" and places the cursor between the quotes ready for the URL."
+      ]
+    },
+    {
+      "heading": "The anchor element <a>",
+      "points": [
+        "<a> and </a> wrap the clickable content of a hyperlink. The text between the tags is what the user sees and clicks.",
+        "Without an href attribute the element is not an active link: the text displays as ordinary text and nothing happens on click.",
+        "Add href=\"URL\" and the browser immediately styles it as a link (blue and underlined by default) and clicking it navigates to that URL.",
+        "href is the anchor's key attribute. MDN's page for <a> lists all of its element-specific attributes; only a few are used in the course, and some listed there are deprecated and no longer used in HTML5.",
+        "(Extra) Other common anchor attributes: target=\"_blank\" opens the link in a new tab; title=\"...\" shows a tooltip on hover; download suggests saving the linked file. href can also be a relative path (another page of your own site, covered in the next section), #id (jump within the page) or mailto:address."
+      ]
+    },
+    {
+      "heading": "Element-specific vs global attributes",
+      "points": [
+        "Element-specific attributes only make sense on certain elements: href on <a>, start on <ol>, and so on.",
+        "Global attributes are available on every HTML element. MDN keeps a separate list of them.",
+        "Example used: draggable takes true or false and sets whether the element can be dragged. With draggable=\"true\" on the anchor you can click and drag it around; without it, a drag attempt just selects the text.",
+        "Same syntax as any other attribute: name, =, quoted value, inside the opening tag.",
+        "(Extra) Global attributes you will meet constantly: id, class, style, title, lang, hidden. Note that links with an href and images are already draggable by default in most browsers, so draggable shows its effect most clearly on elements like p or div; real drag-and-drop behaviour also needs JavaScript."
+      ]
+    },
+    {
+      "heading": "Nesting links in a list",
+      "points": [
+        "For a list of links the structure is three layers deep: ol > li > a. The anchor sits inside the list item, which sits inside the ordered list.",
+        "The list numbers are not blue because they come from the ol/li, not from the anchor; only the anchor's content is styled as a link.",
+        "Reading MDN for an element (here <ol>) to find extra attributes is a skill the course wants you to practise."
+      ]
+    },
+    {
+      "heading": "The ol start attribute (bonus challenge)",
+      "points": [
+        "MDN's <ol> page lists a start attribute: an integer that sets the number the list counts from.",
+        "Put it in the opening ol tag: <ol start=\"5\">. A five-item list then shows 5 to 9 instead of 1 to 5.",
+        "(Extra) Related ol attributes: reversed (counts down) and type (1, a, A, i, I)."
+      ]
+    },
+    {
+      "heading": "(Extra) Reference repo notes",
+      "points": [
+        "The reference solution links to the repo author's own profiles (GitHub, portfolio, LinkedIn, Instagram); those personal links are replaced with neutral examples in the solution below, and the author footer is dropped.",
+        "It writes the list twice, once plain and once with start=\"5\", to show both the main task and the bonus. One list is enough; add or remove start as needed.",
+        "Long anchors are wrapped over several lines by the formatter; that has no effect on the output."
+      ]
+    },
+    {
+      "heading": "Study habit",
+      "points": [
+        "After each lesson, jot down anything that was new to you; the course deliberately reuses earlier topics (lists, nesting) to reinforce them."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Attribute anatomy: name=\"value\" inside the opening tag",
+      "language": "html",
+      "code": "<!-- tag  attribute name  =  value (quoted)          content        closing tag -->\n<a href=\"https://www.producthunt.com/\">Product Hunt</a>"
+    },
+    {
+      "caption": "No href = not a link; with href = a working link",
+      "language": "html",
+      "code": "<a>Product Hunt</a>                                   <!-- plain text, not clickable -->\n<a href=\"https://www.producthunt.com/\">Product Hunt</a> <!-- blue, underlined, clickable -->"
+    },
+    {
+      "caption": "Two attributes: one element-specific (href), one global (draggable)",
+      "language": "html",
+      "code": "<a href=\"https://www.producthunt.com/\" draggable=\"true\">Product Hunt</a>"
+    },
+    {
+      "caption": "Bonus: start the numbering at 5",
+      "language": "html",
+      "code": "<ol start=\"5\">\n  <li>...</li>  <!-- shows 5. -->\n  <li>...</li>  <!-- shows 6. -->\n</ol>"
+    }
+  ],
+  "task": {
+    "name": "3.3 Anchor Elements: my top 5 favourite websites",
+    "starting_point": "index.html contains only the h1 'My Top 5 Favourite Websites'. goal.png shows an ordered list numbered 1-5 where each entry's text is a blue clickable link.",
+    "goal": "Build an ordered list of five links to your own favourite websites, each opening the right site when clicked. Bonus: make the list count from 5 instead of 1.",
+    "steps": [
+      "Under the h1, add an <ol></ol>.",
+      "Inside it add five <li></li> items.",
+      "Inside each li add an <a></a> and type the site's name between the tags as the link text.",
+      "In each opening a tag add href=\"...\" with the full URL (including https://) of that site.",
+      "Open Live Preview and click each link to check it goes to the right place.",
+      "Bonus: look up <ol> on MDN, find the start attribute, and add start=\"5\" to the opening ol tag so the list reads 5 to 9."
+    ],
+    "expected_result": "A numbered list of five site names; the names are blue and underlined, the numbers are not, and every link navigates to its site. With the bonus, numbering runs 5-9.",
+    "solution_code": {
+      "language": "html",
+      "code": "<h1>My Top 5 Favourite Websites</h1>\n<ol start=\"5\">  <!-- start=\"5\" is the bonus; remove it for 1-5 -->\n  <li><a href=\"https://www.producthunt.com/\">Product Hunt</a></li>\n  <li><a href=\"https://developer.mozilla.org/\">MDN Web Docs</a></li>\n  <li><a href=\"https://www.wikipedia.org/\">Wikipedia</a></li>\n  <li><a href=\"https://codepen.io/\">CodePen</a></li>\n  <li><a href=\"https://stellarium-web.org/\">Stellarium</a></li>\n</ol>"
+    },
+    "reference_repo_path": "Section 03 - Intermediate HTML/03.03 - Anchor Elements/solution.html"
+  },
+  "pitfalls": [
+    "Leaving out href, so the text shows but is not a link.",
+    "Putting the attribute in the closing tag or outside the angle brackets.",
+    "Forgetting the quotes around the value, or mixing quote types (href=\"...').",
+    "Missing https:// so the browser treats the address as a relative path on your own site.",
+    "Putting the a outside the li (directly inside the ol) instead of inside it.",
+    "Putting start on an li or in the closing </ol> instead of the opening ol tag."
+  ],
+  "playground": {
+    "match": "s03-anchors (lesson 3.3, data/s03.js)",
+    "coverage": "Covers <a> with href, link text, an ordered list of five favourite sites (ol > li > a), target=\"_blank\" as an extra, an explore demo that rebuilds the tag as href/text/target/title change (including emptying href), and notes on attribute syntax, kinds of href and meaningful link text.",
+    "gaps_and_ideas": [
+      "Add the course's bonus task: use the ol start attribute so the list counts 5-9, with a pointer to MDN's <ol> attribute list.",
+      "Explain element-specific vs global attributes explicitly. Add a draggable=\"true\" toggle to the explore demo (applied to a p, where the effect is visible) next to href.",
+      "Add a one-line note on why attribute values are quoted (they are text, distinct from reserved words like a, li, href).",
+      "Add a note that the list numbers stay black because they belong to the li, not the anchor.",
+      "target=\"_blank\" is not in this lecture; label it as an extra and mention that modern browsers apply rel=\"noopener\" to it automatically.",
+      "Add a 'spot the bug' task: an anchor with the href in the closing tag, one with missing quotes, and one missing https://."
+    ]
+  }
+}

@@ -1,0 +1,153 @@
+{
+  "index": 293,
+  "lecture_id": 17038904,
+  "title": "Keeper App Part 1 Solution",
+  "section": "36. React.js",
+  "duration_min": 14,
+  "kind": "solution",
+  "summary": "Builds Keeper App Part 1 step by step: an App root component in a components folder, then Header, Footer (with a computed year) and Note components. The main lessons are that the provided CSS only applies when JSX uses the exact elements it targets, and that attributes such as className must go on HTML elements inside a component, not on the custom component tag.",
+  "concepts": [
+    {
+      "heading": "Start small and verify",
+      "points": [
+        "Begin with index.js rendering a plain <h1> into #root to prove the setup works before adding components.",
+        "Then swap that h1 for <App /> once App exists; seeing App's own placeholder text (e.g. 'Hello App') confirms the import and render are wired correctly."
+      ]
+    },
+    {
+      "heading": ".jsx vs .js file extensions",
+      "points": [
+        "The challenge names files with .jsx. The Airbnb React style guide recommends .jsx so tools like Bitbucket or Atlassian products can recognise and highlight JSX syntax.",
+        "Functionally React does not care: components work fine in .js files. This is a style choice, and the lecture notes that many developers (including the instructor) now drop the x.",
+        "Rule: choose one convention for a project and use it consistently.",
+        "(Extra) Vite-based projects (like the reference repo) do care: Vite expects JSX to live in .jsx files by default, so keep the x there."
+      ]
+    },
+    {
+      "heading": "Component file boilerplate",
+      "points": [
+        "Keep components in a src/components folder. In this lecture App.jsx also lives there, so index.js imports it with import App from \"./components/App\" (extension omitted).",
+        "Every component file follows the same three steps: import React from \"react\"; define a function named in PascalCase that returns JSX; export default that function.",
+        "Use a default export because each file contains just one component.",
+        "Inside App, sibling component files are imported with a relative path from the same folder, e.g. import Header from \"./Header\".",
+        "(Extra) The import path's casing should match the file name exactly (./Header for Header.jsx). Some file systems are case-insensitive and let a mismatch slide locally, but Linux build servers will fail."
+      ]
+    },
+    {
+      "heading": "Lowercase HTML elements vs PascalCase components",
+      "points": [
+        "In JSX, lowercase tags (<header>, <footer>, <div>) are native HTML elements; capitalised tags (<Header />, <Footer />) are your own components.",
+        "That capitalisation is how React tells the two apart, so a component named header would be treated as an HTML tag.",
+        "Custom components with no children are written as self-closing tags: <Header />.",
+        "(Extra) The App in the reference repo returns a fragment (<>...</>) instead of a wrapping <div>. A fragment groups siblings without adding an extra DOM node; either satisfies JSX's single-root rule."
+      ]
+    },
+    {
+      "heading": "Why the styling appears (or doesn't)",
+      "points": [
+        "styles.css in the public folder uses element selectors: header gets the yellow background (#f5ba13), negative side margin, padding and a box-shadow; header h1 gets white text in the McLaren font.",
+        "So the Header looks right immediately only because it returns a real <header> containing an <h1>. If the styles don't show, the JSX isn't using the elements the CSS targets.",
+        "footer has position: absolute, bottom: 0, width: 100% and text-align: center; footer p sets the light grey colour. Returning just a <p> from Footer leaves the text unstyled at the top. It must be wrapped in a <footer> element.",
+        "The note card uses a class selector (.note) plus descendant rules .note h1 and .note p, so the card only gets its white background, border-radius, box-shadow, padding, fixed 240px width and float: left once the wrapping div has that class."
+      ]
+    },
+    {
+      "heading": "A dynamic copyright year",
+      "points": [
+        "Avoid hard-coding a year that goes stale; some developers campaign against static footer years (the site updateyourfooter.com collects snippets for many languages).",
+        "new Date() creates a Date for the current moment; .getFullYear() returns the four-digit year as a number.",
+        "Either store it first (const currentYear = new Date().getFullYear();) and insert {currentYear}, or put the whole expression inline inside JSX curly braces.",
+        "The © symbol can be pasted in directly (copy it from a search result).",
+        "(Extra) Defining the year inside the component (as in the lecture) recalculates it on every render; defining it at module level (as in the reference repo) calculates it once when the file loads. Both give the right year for a normal page visit."
+      ]
+    },
+    {
+      "heading": "HTML attributes belong on HTML elements",
+      "points": [
+        "Writing <Note className=\"note\" /> in App does nothing visible: the class never reaches the DOM.",
+        "Attributes like className, style or onClick only take effect on native elements. Put className=\"note\" on the <div> that Note returns.",
+        "className is JSX's name for the HTML class attribute.",
+        "Why this happens is explained in the next lecture on props: anything written on a custom component tag is passed in as a prop, not applied as an HTML attribute."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "index.js: render the App root (react-scripts / React 16-17 style used in the video)",
+      "language": "jsx",
+      "code": "import React from \"react\";\nimport ReactDOM from \"react-dom\";\nimport App from \"./components/App\";\n\nReactDOM.render(<App />, document.getElementById(\"root\"));"
+    },
+    {
+      "caption": "components/App.jsx: root of the component tree",
+      "language": "jsx",
+      "code": "import React from \"react\";\nimport Header from \"./Header\";\nimport Note from \"./Note\";\nimport Footer from \"./Footer\";\n\nfunction App() {\n  return (\n    <div>\n      <Header />\n      <Note />\n      <Footer />\n    </div>\n  );\n}\n\nexport default App;"
+    },
+    {
+      "caption": "components/Header.jsx",
+      "language": "jsx",
+      "code": "import React from \"react\";\n\nfunction Header() {\n  return (\n    <header>\n      <h1>Keeper</h1>\n    </header>\n  );\n}\n\nexport default Header;"
+    },
+    {
+      "caption": "components/Footer.jsx: year computed at render time",
+      "language": "jsx",
+      "code": "import React from \"react\";\n\nfunction Footer() {\n  const currentYear = new Date().getFullYear();\n  return (\n    <footer>\n      <p>Copyright © {currentYear}</p>\n    </footer>\n  );\n}\n\nexport default Footer;"
+    },
+    {
+      "caption": "components/Note.jsx: className goes on the div, not on <Note />",
+      "language": "jsx",
+      "code": "import React from \"react\";\n\nfunction Note() {\n  return (\n    <div className=\"note\">\n      <h1>This is the note title</h1>\n      <p>This is the note content</p>\n    </div>\n  );\n}\n\nexport default Note;"
+    },
+    {
+      "caption": "What does NOT work",
+      "language": "jsx",
+      "code": "// In App.jsx: the class is passed as a prop and never reaches the DOM\n<Note className=\"note\" />"
+    },
+    {
+      "caption": "(Extra) Vite entry used in the reference repo (React 18+)",
+      "language": "jsx",
+      "code": "import { StrictMode } from \"react\";\nimport { createRoot } from \"react-dom/client\";\nimport App from \"./App.jsx\";\n\ncreateRoot(document.getElementById(\"root\")).render(\n  <StrictMode>\n    <App />\n  </StrictMode>\n);"
+    }
+  ],
+  "task": {
+    "name": "Keeper App Part 1: solution walkthrough",
+    "starting_point": "The Part 1 starter: index.html with #root, Google Fonts and styles.css linked; an index.js with the challenge steps as comments.",
+    "goal": "An App component that renders Header, Note and Footer, styled to match the sample app using the classes and element selectors in styles.css.",
+    "steps": [
+      "In index.js import React and ReactDOM and render a test <h1> into document.getElementById(\"root\") to confirm the project runs.",
+      "Create a components folder and add App.jsx: import React, define function App returning a div with a placeholder h1, export default App.",
+      "In index.js import App from \"./components/App\" and render <App /> in place of the test h1; check the placeholder text appears.",
+      "Add Header.jsx returning <header><h1>Keeper</h1></header>; import it into App and replace the placeholder with <Header />. The yellow bar styling appears automatically.",
+      "Add Footer.jsx: compute const currentYear = new Date().getFullYear() and return a <footer> wrapping <p>Copyright © {currentYear}</p>. Render <Footer /> under the header in App.",
+      "If the footer text sits unstyled at the top, check styles.css: the positioning rules target footer and the colour rule targets footer p, so the <footer> wrapper is required.",
+      "Add Note.jsx returning a <div> with an <h1> title and a <p> content line; render <Note /> between Header and Footer in App.",
+      "Read the .note rules in styles.css and add className=\"note\" to the div inside Note.jsx (not to <Note /> in App).",
+      "Compare against the sample app; then experiment by moving or changing elements to cement the ideas."
+    ],
+    "expected_result": "Yellow header with a white 'Keeper' title, a single white card with rounded corners and a soft shadow floated left beneath it, and the copyright line with the current year centred in light grey at the bottom of the page.",
+    "solution_code": {
+      "language": "jsx",
+      "code": "// App.jsx (reference repo version, Vite project: App.jsx in src/, children in src/components/)\nimport Header from \"./components/Header\";\nimport Footer from \"./components/Footer\";\nimport Note from \"./components/Note\";\n\nfunction App() {\n  return (\n    <>\n      <Header />\n      <Note />\n      <Footer />\n    </>\n  );\n}\nexport default App;\n\n// components/Header.jsx\nfunction Header() {\n  return (\n    <header>\n      <h1>Keeper App</h1>\n    </header>\n  );\n}\nexport default Header;\n\n// components/Footer.jsx\nconst year = new Date().getFullYear(); // computed once when the module loads\n\nfunction Footer() {\n  return (\n    <footer>\n      <p>Copyright © {year}. All rights reserved.</p>\n    </footer>\n  );\n}\nexport default Footer;\n\n// components/Note.jsx\nfunction Note() {\n  return (\n    <div className=\"note\">\n      <h1>This is the note title</h1>\n      <p>This is the note content</p>\n    </div>\n  );\n}\nexport default Note;"
+    },
+    "reference_repo_path": "Section 36 - React.js/36.17 Keeper App Part 1 Solution/keeper-app-part-1-challenge/src"
+  },
+  "pitfalls": [
+    "Putting className (or style/onClick) on the custom component tag, e.g. <Note className=\"note\" />. It is silently ignored; apply it to the div inside the component.",
+    "Returning a bare <p> from Footer: without the <footer> wrapper none of the footer positioning or colour rules match.",
+    "Writing the header text in a div instead of a <header> element, so the yellow bar never appears.",
+    "Naming a component in lowercase; React then treats it as an unknown HTML tag.",
+    "Hard-coding the year in the footer.",
+    "Mixing .js and .jsx conventions within one project.",
+    "(Extra) Reference repo note: its Footer text has a small typo (\"All right reserved\"), corrected in these notes; the files in 36.16 and 36.17 are identical."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "Pair with the Part 1 challenge lesson as its 'solution' view: show the four component files side by side with the rendered page, highlighting which CSS rule styles each element.",
+      "Explore demo: a toggle that moves className=\"note\" between <Note className=\"note\" /> and the inner <div>, with the rendered DOM shown beneath, so learners see the class only appears in the DOM in the second case.",
+      "Explore demo: a toggle that swaps <footer> for <div> in Footer and shows the footer jumping to the top and losing its colour, linking the bug to the 'footer p' selector.",
+      "Extra task: render the year inline ({new Date().getFullYear()}) and then refactor to a const, to show both styles produce the same output.",
+      "Callout comparing the course's ReactDOM.render entry with createRoot (React 18+) and noting the reference repo's Vite layout (src/main.jsx, src/App.jsx, src/components/*)."
+    ]
+  }
+}

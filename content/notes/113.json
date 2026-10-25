@@ -1,0 +1,33 @@
+{
+  "index": 113,
+  "lecture_id": 17966864,
+  "title": "Tip from Angela - Retrieval is How You Learn",
+  "section": "15. Intermediate Javascript",
+  "duration_min": 3,
+  "kind": "tip",
+  "summary": "A study tip: following tutorials feels easy, but solving problems alone is a different skill. Regular retrieval practice closes that gap.",
+  "concepts": [
+    {
+      "heading": "Key takeaways",
+      "points": [
+        "Feeling that everything makes sense while watching, then blanking on a challenge, is common and expected around this stage of the course.",
+        "Watching recognises information; coding requires recalling it from memory. They are separate skills, so passive viewing alone does not build the second.",
+        "Practise retrieval often: find extra exercises online, write your own quizzes, and try variations of what a lesson showed.",
+        "Predict the next step: pause before the instructor demonstrates something and attempt it yourself first.",
+        "More active practice leads to a firmer grasp than extra listening."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [
+    "Binge-watching lectures without attempting the exercise first."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson (tip video).",
+    "gaps_and_ideas": [
+      "(Extra) Possible 'pause and predict' prompt or self-quiz feature on lesson pages."
+    ]
+  }
+}

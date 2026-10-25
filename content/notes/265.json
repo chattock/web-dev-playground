@@ -1,0 +1,92 @@
+{
+  "index": 265,
+  "lecture_id": 40325688,
+  "title": "Instructions",
+  "section": "34. Capstone Project - Book Notes",
+  "duration_min": 2,
+  "kind": "admin",
+  "summary": "Brief for the Book Notes capstone: build an Express + PostgreSQL + EJS site that records books you have read, with covers from the Open Library Covers API. This is an instructions page (opened via an Open button, no video transcript), so the notes come from the brief and the reference repo.",
+  "concepts": [
+    {
+      "heading": "Project idea",
+      "points": [
+        "A personal reading-notes site: each book has a title, author, rating, review text, date read and an ISBN. The model is a public book-notes site by Derek Sivers, where the list can be sorted by rating, recency or title.",
+        "The stated learning goals are: revisit consuming public APIs, get more server-side practice with Express/Node, and show full Create/Read/Update/Delete against PostgreSQL."
+      ]
+    },
+    {
+      "heading": "Requirements checklist",
+      "points": [
+        "Persistence: store data in PostgreSQL and manipulate it with CRUD queries.",
+        "Planning: study the API docs first, decide what data to store, sketch the database diagram (draw.io) and plan the CREATE TABLE statement before coding.",
+        "Setup: Node + Express project, the pg package for the local database, EJS templates, an HTML/CSS/JS frontend, and a tidy folder structure.",
+        "API integration: at least one GET request to the chosen API through Axios, with the response handled.",
+        "Presentation: show covers and database fields in a friendly layout using EJS; think about how users will choose a sort order.",
+        "Error handling: handle failures from both the app/database and the API request; logging to the console is acceptable, user-facing messages are a bonus.",
+        "Documentation: comment the logic; include a README explaining how to start the server (npm i, then nodemon index.js).",
+        "Sharing: commit and push to GitHub so others can view it."
+      ]
+    },
+    {
+      "heading": "Open Library Covers API",
+      "points": [
+        "Covers are fetched by identifier, and the ISBN stored in the database is the natural key, so the page can build an image URL from each book's ISBN (e.g. https://covers.openlibrary.org/b/isbn/<ISBN>-M.jpg, sizes S/M/L).",
+        "(Extra) An img tag can point at that URL directly; Axios is only needed if you want to check the cover exists or fetch metadata server-side."
+      ]
+    },
+    {
+      "heading": "Reference implementation (one student's)",
+      "points": [
+        "Routes: GET / (list, optional ?orderBy= query, default date_read DESC), GET /new and POST /new (add), GET /books/:id/edit and POST /books/:id/edit (update), POST /books/:id/delete.",
+        "Uses body-parser urlencoded for form data, express.static for public/, a pg.Client connected to a database called book_notes, and res.redirect('/') after each write.",
+        "Queries are parameterised ($1..$7) for values, which prevents SQL injection for form input.",
+        "(Extra) The sort column is interpolated straight into the SQL string from req.query.orderBy, which is injectable; whitelist allowed columns (date_read, rating, title) instead.",
+        "(Extra) The repo does not use Axios or the cover API in index.js, so it diverges from the brief's API requirement; the rest of the brief is covered."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Suggested schema (from the reference repo)",
+      "language": "sql",
+      "code": "CREATE TABLE books (\n    id SERIAL PRIMARY KEY,\n    title VARCHAR(255) NOT NULL,\n    author VARCHAR(255) NOT NULL,\n    rating INTEGER CHECK (rating >= 1 AND rating <= 10),\n    review TEXT,\n    date_read DATE,\n    isbn VARCHAR(20)\n);"
+    },
+    {
+      "caption": "Reference server core (abridged)",
+      "language": "javascript",
+      "code": "import express from \"express\";\nimport bodyParser from \"body-parser\";\nimport pg from \"pg\";\n\nconst app = express();\napp.use(bodyParser.urlencoded({ extended: true }));\napp.use(express.static(\"public\"));\n\nconst db = new pg.Client({ user: \"postgres\", host: \"localhost\", database: \"book_notes\", password: \"<your password>\", port: 5432 });\ndb.connect();\n\napp.get(\"/\", async (req, res) => {\n  const orderBy = req.query.orderBy || \"date_read\";\n  const result = await db.query(`SELECT * FROM books ORDER BY ${orderBy} DESC`);\n  res.render(\"index.ejs\", { books: result.rows });\n});\n\napp.post(\"/new\", async (req, res) => {\n  const { title, author, rating, review, date_read, isbn } = req.body;\n  await db.query(\n    \"INSERT INTO books (title, author, rating, review, date_read, isbn) VALUES ($1,$2,$3,$4,$5,$6)\",\n    [title, author, rating, review, date_read, isbn]\n  );\n  res.redirect(\"/\");\n});\n// plus GET /new, GET+POST /books/:id/edit (UPDATE ... WHERE id=$7), POST /books/:id/delete (DELETE ... WHERE id=$1)"
+    }
+  ],
+  "task": {
+    "name": "Capstone: Book Notes",
+    "starting_point": "Empty project; nothing provided apart from the written brief.",
+    "goal": "Ship a CRUD web app backed by PostgreSQL that lists books with covers and notes and can be sorted.",
+    "steps": [
+      "Research the Open Library Covers API and decide the columns to store.",
+      "Draw the database diagram and write the CREATE TABLE statement; create a local database and the table.",
+      "npm init, install express, pg, ejs, axios (and body-parser if on older Express); set up index.js with static folder and views.",
+      "Build the list page showing cover, title, author, rating, date and review, with sort controls (rating, recency, title).",
+      "Add pages/routes to add, edit and delete a book; use parameterised queries.",
+      "Add try/catch around DB and API calls with sensible error messages.",
+      "Comment the code, write the README, push to GitHub."
+    ],
+    "expected_result": "A running site at localhost where books can be added, edited, deleted and sorted, with covers loaded from the API.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "import express from \"express\";\nimport bodyParser from \"body-parser\";\nimport pg from \"pg\";\n\nconst app = express();\napp.use(bodyParser.urlencoded({ extended: true }));\napp.use(express.static(\"public\"));\n\nconst db = new pg.Client({ user: \"postgres\", host: \"localhost\", database: \"book_notes\", password: \"<your password>\", port: 5432 });\ndb.connect();\n\napp.get(\"/\", async (req, res) => {\n  const orderBy = req.query.orderBy || \"date_read\";\n  const result = await db.query(`SELECT * FROM books ORDER BY ${orderBy} DESC`);\n  res.render(\"index.ejs\", { books: result.rows });\n});\n\napp.post(\"/new\", async (req, res) => {\n  const { title, author, rating, review, date_read, isbn } = req.body;\n  await db.query(\n    \"INSERT INTO books (title, author, rating, review, date_read, isbn) VALUES ($1,$2,$3,$4,$5,$6)\",\n    [title, author, rating, review, date_read, isbn]\n  );\n  res.redirect(\"/\");\n});\n// plus GET /new, GET+POST /books/:id/edit (UPDATE ... WHERE id=$7), POST /books/:id/delete (DELETE ... WHERE id=$1)"
+    },
+    "reference_repo_path": "Section 34 - Capstone Project - Book Notes"
+  },
+  "pitfalls": [
+    "Do not build the ORDER BY clause from raw query-string input; map allowed sort keys to fixed SQL.",
+    "Missing covers return a placeholder or 404 image; handle a fallback image.",
+    "Do not commit your real database password; keep it in config or env vars."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (section 34 has no file).",
+    "gaps_and_ideas": [
+      "New lesson 'Book notes capstone': blurb on planning a CRUD app; tasks: (1) write the CREATE TABLE, (2) list books with a sort dropdown, (3) add an add-book form route, (4) edit/delete routes, (5) show an Open Library cover by ISBN. Starter: Express skeleton with a hard-coded books array. Interactive demo: a mock in-browser list where changing the sort control reorders sample rows and shows the SQL that would run."
+    ]
+  }
+}

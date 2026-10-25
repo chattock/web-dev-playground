@@ -1,0 +1,84 @@
+{
+  "index": 55,
+  "lecture_id": 37368266,
+  "title": "Flex Direction",
+  "section": "9. Flexbox",
+  "duration_min": 14,
+  "kind": "concept+exercise",
+  "summary": "Explains flex-direction, the main axis and cross axis, and why properties like flex-basis mean width in a row but height in a column. The exercise stacks a rainbow of divs vertically using inline-flex, flex-direction: column and a child-combinator selector for flex-basis.",
+  "concepts": [
+    {
+      "heading": "Default flow versus flex flow",
+      "points": [
+        "Normal HTML flow stacks inline items along a line until space runs out and stacks block items top to bottom.",
+        "Once a container has display: flex, its children line up on a single row, left to right. This comes from the flex-direction property, whose default value is row.",
+        "Think of 'row' as the direction in which the next item is placed, not as the number of rows; a row-direction container visually looks like columns side by side."
+      ]
+    },
+    {
+      "heading": "Main axis and cross axis",
+      "points": [
+        "flex-direction defines the main axis: row gives a horizontal main axis (left to right); column gives a vertical main axis (top to bottom).",
+        "The cross axis is always perpendicular to the main axis: vertical for row, horizontal for column.",
+        "Axes matter because many flex properties work relative to them. flex-basis sets the initial size of an item along the main axis, so it acts like width in a row and like height in a column.",
+        "(Extra) The other values are row-reverse and column-reverse, which flip the order along the main axis."
+      ]
+    },
+    {
+      "heading": "Container properties versus item properties",
+      "points": [
+        "display, gap and flex-direction go on the parent (the flex container).",
+        "flex-basis goes on the children (flex items); putting it on the container does nothing.",
+        "Because the divs in the exercise share no class or element type and the HTML must not change, the children are targeted with the child combinator and universal selector: .container > *. The > only matches direct children, not grandchildren or deeper descendants; * matches any element.",
+        "This lesson deliberately leaves flex sizing details (grow, shrink, what happens when there is not enough room) for a later dedicated lesson."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Column direction with sized items",
+      "language": "css",
+      "code": ".container {\n  display: inline-flex;\n  flex-direction: column;\n}\n\n.container > * {\n  flex-basis: 100px;   /* height, because the main axis is vertical */\n}"
+    },
+    {
+      "caption": "Same flex-basis in a row means width",
+      "language": "css",
+      "code": ".container { display: flex; flex-direction: row; }\n.container > * { flex-basis: 100px; }  /* 100px wide */"
+    }
+  ],
+  "task": {
+    "name": "Stack the rainbow vertically",
+    "starting_point": "index.html with a div.container (already display: flex, gold border, white text) holding seven coloured divs (Red to Purple) with different classes. HTML must not be modified. A goal image shows tall items stacked top to bottom.",
+    "goal": "Change the layout using CSS only so the colours stack vertically, each 100px tall, and the container is only as wide as its content.",
+    "steps": [
+      "Add flex-direction: column to .container so items run top to bottom.",
+      "Notice the items now stretch the full page width; change display: flex to display: inline-flex so the container shrinks to its widest content.",
+      "Try flex-basis: 100px on .container and observe that nothing changes, because it is an item property.",
+      "Use the docs (child combinator and universal selector) to write .container > * and set flex-basis: 100px there.",
+      "Experiment: switch direction back to row, remove inline-flex, shrink the window, and compare."
+    ],
+    "expected_result": "Seven coloured blocks stacked vertically, each 100px high, inside a gold-bordered box that is only as wide as the longest label.",
+    "solution_code": {
+      "language": "css",
+      "code": ".container {\n  color: white;\n  border: 5px solid gold;\n  display: inline-flex;\n  flex-direction: column;\n}\n.container > * {\n  flex-basis: 100px;\n}\n.red { background-color: #eb4d4b; }\n.orange { background-color: #f0932b; }\n.yellow { background-color: #f6e58d; }\n.green { background-color: #6ab04c; }\n.blue { background-color: #4834d4; }\n.indigo { background-color: #30336b; }\n.purple { background-color: #be2edd; }"
+    },
+    "reference_repo_path": "Section 09 - Flexbox/09.02 - Flex Direction/solution.html"
+  },
+  "pitfalls": [
+    "Putting flex-basis on the container.",
+    "Forgetting that flex-basis in a column controls height, not width.",
+    "Leaving display: flex so the column stretches the full page width.",
+    "Reference repo adds an author footer that is not part of the course."
+  ],
+  "playground": {
+    "match": "s09-flex-direction (lesson 9.2, data/s09.js)",
+    "coverage": "Tasks mirror the exercise exactly: inline-flex, flex-direction: column, container > * with flex-basis 100px. Uses numbered .box items instead of the rainbow.",
+    "gaps_and_ideas": [
+      "Add the explicit main-axis / cross-axis explanation with a diagram; the s09-display-flex demo has an axis readout that could be reused here.",
+      "Add a step that sets flex-basis on the container first and shows nothing happens, to teach container vs item properties.",
+      "Mention the child combinator vs descendant combinator difference with a nested div example.",
+      "Add a 'no HTML changes' constraint and use differently-classed colour divs like the original.",
+      "Demo idea: toggle row/column and watch the same flex-basis change from width to height."
+    ]
+  }
+}

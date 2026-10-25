@@ -1,0 +1,87 @@
+{
+  "index": 283,
+  "lecture_id": 17038702,
+  "title": "Javascript Expressions in JSX & ES6 Template Literals",
+  "section": "36. React.js",
+  "duration_min": 12,
+  "kind": "concept+exercise",
+  "summary": "Shows how to embed JavaScript inside JSX with curly braces, why only expressions (not statements) are allowed, and several ways to build a full name including ES6 template literals.",
+  "concepts": [
+    {
+      "heading": "Curly braces inject JavaScript into JSX",
+      "points": [
+        "Text placed inside a JSX element is treated as a literal string. Writing Hello name prints the word name, not the variable.",
+        "Wrapping something in {} switches back to JavaScript: <h1>Hello {name}</h1> outputs the value stored in the const name.",
+        "JSX therefore works in both directions: HTML inside a JS file, and JS inside that HTML."
+      ]
+    },
+    {
+      "heading": "Any expression works",
+      "points": [
+        "Inside the braces you can put any JavaScript expression: a variable, maths such as {3 + 9}, or a function call like {Math.floor(Math.random() * 10)}, which yields a random whole number from 0 to 9 and changes on each page refresh.",
+        "Math.random() gives a decimal in [0,1); multiply by 10 to scale it, and Math.floor rounds down."
+      ]
+    },
+    {
+      "heading": "Expressions vs statements",
+      "points": [
+        "An expression evaluates to a value. A statement (if/else, loops) performs work and does not produce a value, so it is not allowed in the braces; an if (name === ...) block there is a syntax error.",
+        "(Extra) For conditional output inside JSX use the ternary operator or && instead; these are covered in a later lesson."
+      ]
+    },
+    {
+      "heading": "Building a full name: three approaches",
+      "points": [
+        "Concatenation inside one pair of braces: {fName + \" \" + lName}.",
+        "Two separate brace pairs with a literal space between them: {fName} {lName}. Multiple brace pairs in one element are fine.",
+        "ES6 template literal: backticks with ${} placeholders, for example `${fName} ${lName}`. Wrapped in JSX braces this nests three levels (string inside template inside JSX inside JS), so the simpler options are generally clearer.",
+        "Any approach that gives the right output is acceptable."
+      ]
+    },
+    {
+      "heading": "Rules of thumb",
+      "points": [
+        "Multiple top-level elements still need a single wrapper such as a div.",
+        "The completed sandbox is in the resources to experiment with."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "All the variants from the lesson in one render call",
+      "language": "jsx",
+      "code": "const fName = \"Angela\";\nconst lName = \"Yu\";\nconst num = 7;\n\nReactDOM.render(\n  <div>\n    <h1>Hello {fName + \" \" + lName}</h1>\n    <h1>Hello {fName} {lName}</h1>\n    <h1>Hello {`${fName} ${lName}`}</h1>\n    <p>Your lucky number is {num}</p>\n    <p>Random: {Math.floor(Math.random() * 10)}</p>\n  </div>,\n  document.getElementById(\"root\")\n);"
+    }
+  ],
+  "task": {
+    "name": "Lucky number and full name",
+    "starting_point": "Starter sandbox rendering one h1 from a name const",
+    "goal": "Display values from JavaScript variables and expressions inside JSX",
+    "steps": [
+      "Replace the hard-coded text with {name} to render a const.",
+      "Create a const num set to your lucky number and add a paragraph with the text Your lucky number is plus {num}.",
+      "Wrap the h1 and p in a div so render receives one element.",
+      "Experiment with expressions such as {3 + 9} and a random number using Math.random and Math.floor.",
+      "Create fName and lName consts and show the full name in an h1 in at least two different ways."
+    ],
+    "expected_result": "Heading showing the full name, paragraph showing the lucky number (or a random/calculated value).",
+    "solution_code": {
+      "language": "jsx",
+      "code": "const fName = \"Angela\";\nconst lName = \"Yu\";\nconst num = 7;\n\nReactDOM.render(\n  <div>\n    <h1>Hello {fName + \" \" + lName}</h1>\n    <h1>Hello {fName} {lName}</h1>\n    <h1>Hello {`${fName} ${lName}`}</h1>\n    <p>Your lucky number is {num}</p>\n    <p>Random: {Math.floor(Math.random() * 10)}</p>\n  </div>,\n  document.getElementById(\"root\")\n);"
+    },
+    "reference_repo_path": "Section 36 - React.js/36.07 Javascript Expressions in JSX & ES6 Template Literals"
+  },
+  "pitfalls": [
+    "Forgetting braces prints the variable name as plain text.",
+    "Statements such as if/else inside braces cause syntax errors; only expressions are allowed.",
+    "Sibling elements without a parent wrapper break render."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (no data file exists for section 36)",
+    "gaps_and_ideas": [
+      "New lesson 'JavaScript in JSX' with tasks: render a variable, calculate a value, build a full name three ways, then try an if inside braces and read the error.",
+      "Interactive demo: editable const values with a live preview, and a toggle that shows the same output via concatenation, adjacent braces and a template literal."
+    ]
+  }
+}

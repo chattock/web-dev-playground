@@ -1,0 +1,89 @@
+{
+  "index": 225,
+  "lecture_id": 38912006,
+  "title": "Introduction to APIs",
+  "section": "28. Application Programming Interfaces (APIs)",
+  "duration_min": 19,
+  "kind": "concept+exercise",
+  "summary": "Defines an API as an agreed set of rules letting one program use another's data or functions, shows three usage patterns (GET data, POST data, trigger hardware), and names REST as the style to learn for the web. Ends with a Postman exercise that calls the Where the ISS at? API and plots the result in Google Maps.",
+  "concepts": [
+    {
+      "heading": "What an API is",
+      "points": [
+        "API = Application Programming Interface: a set of rules and protocols defining how separate pieces of software talk to each other.",
+        "It acts as a translator or bridge: you do not need to know the other system's language, database or servers, only the documented requests it accepts and the responses it returns.",
+        "Key properties: communication, abstraction (hides internals), reusability, standardisation, and typical use of HTTP with JSON or XML formats.",
+        "Real examples: maps, social media data, payments."
+      ]
+    },
+    {
+      "heading": "Three usage patterns",
+      "points": [
+        "Fetching data with GET: a diary site asks a weather provider for the weather at a latitude/longitude. The API docs say which inputs are accepted and how the reply is structured (for example a temperature in Celsius and a weather-type icon). Your site then shows the result.",
+        "Sending data with POST: a newsletter signup form sends the collected email to an email-marketing provider. The API defines the shape of the data to send and the responses for success or error.",
+        "Controlling hardware: an IoT watering device exposes a path such as /water; a request to that path triggers the valve, and the response might report the water released or soil moisture.",
+        "Common thread: both sides follow an agreed protocol so each knows what to send and expect."
+      ]
+    },
+    {
+      "heading": "API styles and REST",
+      "points": [
+        "There are several architectural styles: REST, GraphQL, SOAP, gRPC and others. Each is a different rule set for designing an API.",
+        "Take a just-in-time approach: learn what you need when you need it. For web development that is REST.",
+        "A RESTful API follows a set of rules, the central one being that you use HTTP and its methods: GET, POST, PUT, PATCH, DELETE (covered earlier in the course)."
+      ]
+    },
+    {
+      "heading": "Reading API documentation",
+      "points": [
+        "Docs work like a menu: each endpoint lists its URL, the HTTP method, required inputs, and an example of the response structure.",
+        "Pick the endpoint that returns what you need, check required parameters (such as an ID), and copy the example request URL.",
+        "Postman is used to test requests with no front end or back end needed, so you can inspect the response before writing code."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Request used in the exercise (endpoint shape from the docs; ISS has satellite id 25544)",
+      "language": "text",
+      "code": "GET https://api.wheretheiss.at/v1/satellites/25544"
+    },
+    {
+      "caption": "Part of the JSON response that matters (illustrative values)",
+      "language": "json",
+      "code": "{\n  \"name\": \"iss\",\n  \"id\": 25544,\n  \"latitude\": 12.34,\n  \"longitude\": -150.67\n}"
+    }
+  ],
+  "task": {
+    "name": "Find the live location of the ISS",
+    "starting_point": "Postman installed, the Where the ISS at? API documentation page open.",
+    "goal": "Make a GET request to the right endpoint and use the returned coordinates to locate the ISS in Google Maps.",
+    "steps": [
+      "Read the docs and ignore the endpoint that only lists tracked satellites.",
+      "Choose the endpoint that returns position and velocity for one satellite; the ISS id is 25544.",
+      "In Postman create a GET request to the example URL ending in /satellites/25544 and press Send.",
+      "Read latitude and longitude from the JSON response.",
+      "Paste 'latitude,longitude' (single comma, keep minus signs) into Google Maps search.",
+      "If Maps rejects it, check Google's guidance on coordinate formats."
+    ],
+    "expected_result": "A map pin over the ISS's current position (the lecture's example was the North Pacific).",
+    "solution_code": null,
+    "reference_repo_path": "Section 28 - Aplication Programming Interfaces (APIs)/28.01 - Introduction to APIs/Introduction to APIs.txt"
+  },
+  "pitfalls": [
+    "Using the wrong endpoint (the satellite list gives no coordinates).",
+    "Dropping the minus sign from a coordinate, which moves the pin to another hemisphere.",
+    "Adding a space or other separator instead of a plain comma between the numbers.",
+    "Assuming every API is REST."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "New lesson 'What is an API': blurb on APIs as contracts between programs.",
+      "Tasks: (1) match example scenarios to GET or POST, (2) call the ISS endpoint with fetch and show latitude/longitude, (3) build the Google Maps link from the response, (4) read an endpoint 'menu' and choose the right one.",
+      "Starter idea: a pre-filled fetch call to the ISS endpoint with a result panel.",
+      "Interactive demo: a mini request/response viewer with Send button and live JSON, plus a map link."
+    ]
+  }
+}

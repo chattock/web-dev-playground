@@ -1,0 +1,139 @@
+{
+  "index": 318,
+  "lecture_id": 17039626,
+  "title": "Keeper App Project - Part 3",
+  "section": "36. React.js",
+  "duration_min": 25,
+  "kind": "project",
+  "summary": "Final functional step of the Keeper app: users can add notes (title and content captured in state, passed up to App, stored in an array and rendered with map) and delete them (a callback prop plus filter by id). The lecture first splits the challenge into sub-steps, then walks through the full solution.",
+  "concepts": [
+    {
+      "heading": "Challenge breakdown",
+      "points": [
+        "Two features: (1) add a note and (2) delete a note. On Add, the inputs should clear and the new note appears next to existing ones; on DELETE, that note disappears.",
+        "Add feature sub-steps: keep title and content in state inside CreateArea; pass the finished note up to App; store notes in an array held in App state; render one Note component per array item.",
+        "Delete feature sub-steps: Note triggers a callback prop; the delete function lives in App and uses filter(); each Note receives an id that it hands back when deleting.",
+        "Everything needed was taught earlier (state, props, events, spread, map, filter), so the lecture is mostly about combining them."
+      ]
+    },
+    {
+      "heading": "Step 1: track title and content in CreateArea",
+      "points": [
+        "Use a single state object instead of two separate constants: const [note, setNote] = useState({ title: '', content: '' }). One object means fewer lines and one setter.",
+        "Make the inputs controlled: value={note.title} on the input and value={note.content} on the textarea, so the displayed text always comes from state.",
+        "Give both elements an onChange that points to the same handleChange function.",
+        "Give each field a name attribute ('title' and 'content') that matches the keys in the state object. This is what lets one handler serve both fields.",
+        "Inside handleChange, destructure the event first: const { name, value } = event.target, then use name and value inside the setter callback.",
+        "(Extra) Grabbing name/value up front matters most in React 16 and earlier, where synthetic events were pooled and their fields were nulled before a deferred updater ran; since React 17 there is no pooling, but extracting the values first is still the clearer habit.",
+        "Update with the functional form of the setter: setNote(prevNote => ({ ...prevNote, [name]: value })). The spread copies the existing title and content, and the computed key [name] overwrites only the field being typed in (the brackets turn the variable's value into the key).",
+        "Check with React DevTools: typing in each field should show the CreateArea state object update."
+      ]
+    },
+    {
+      "heading": "Step 2: send the note up to App",
+      "points": [
+        "Add onClick={submitNote} to the Add button.",
+        "A button inside a form submits it by default, which reloads the page (visible as a flash). Call event.preventDefault() inside submitNote to stop that.",
+        "In App, define addNote(newNote) and give it to CreateArea as a prop, here named onAdd: <CreateArea onAdd={addNote} />. The prop name is arbitrary.",
+        "In CreateArea, props.onAdd(note) invokes App's addNote and passes the current note object as the argument. This child-to-parent pattern works by passing a function down and calling it with data.",
+        "Verify by console.log(newNote) inside addNote before wiring up state."
+      ]
+    },
+    {
+      "heading": "Step 3: store notes in an array and render them",
+      "points": [
+        "In App add const [notes, setNotes] = useState([]) (import useState from react). Start with an empty array so no sample note shows until the user adds one.",
+        "addNote appends with the spread operator: setNotes(prevNotes => [...prevNotes, newNote]). The callback must return the new array.",
+        "Replace the hardcoded sample Note with {notes.map(...)} (curly braces so JSX evaluates the expression). For each noteItem, return <Note title={noteItem.title} content={noteItem.content} />.",
+        "Result: each Add click creates a new object in the array and a new Note card on screen."
+      ]
+    },
+    {
+      "heading": "Step 4: delete via callback prop and filter",
+      "points": [
+        "In Note, add onClick={handleClick} on the DELETE button. A named handler is used for readability; an inline arrow would work as well.",
+        "In App create deleteNote(id) and pass it to each Note as onDelete={deleteNote}. DevTools will show it under the Note's props.",
+        "Note's handleClick calls props.onDelete(props.id). Initially a console.log confirms the callback fires.",
+        "deleteNote uses setNotes(prevNotes => prevNotes.filter((noteItem, index) => index !== id)). filter keeps items for which the callback returns true, and its second parameter is the item's index, so everything except the matching index survives.",
+        "The id comes from map: its callback also receives (noteItem, index). Pass id={index} to Note and also key={index}. Note then sends props.id back on click.",
+        "Because key and id are just the index, they are not stable identifiers; she treats it as the simplest option and mentions uuid or timestamps as alternatives."
+      ]
+    },
+    {
+      "heading": "Step 5: clear the form after adding",
+      "points": [
+        "In submitNote, after props.onAdd(note), call setNote({ title: '', content: '' }) to reset to the initial object.",
+        "Since the input and textarea are controlled by note.title and note.content, they empty out and show their placeholders again."
+      ]
+    },
+    {
+      "heading": "Data flow summary",
+      "points": [
+        "Down: App passes onAdd to CreateArea and title/content/id/onDelete to each Note.",
+        "Up: CreateArea calls onAdd(note); Note calls onDelete(id). State for the list lives in App because both siblings need it; state for the in-progress note lives in CreateArea because only it needs it.",
+        "(Extra) This is 'lifting state up': shared data goes to the nearest common parent, children communicate by calling functions received as props.",
+        "(Extra) setNotes and setNote updates are asynchronous; reading notes right after calling setNotes still gives the old array. The functional updater (prev => ...) guarantees each update builds on the latest state."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "App.jsx: notes array state, add/delete handlers, rendering with map",
+      "language": "jsx",
+      "code": "import { useState } from \"react\";\nimport Header from \"./components/Header\";\nimport Footer from \"./components/Footer\";\nimport Note from \"./components/Note\";\nimport CreateArea from \"./components/CreateArea\";\n\nfunction App() {\n  const [notes, setNotes] = useState([]);\n\n  function addNote(newNote) {\n    setNotes((prevNotes) => [...prevNotes, newNote]);\n  }\n\n  function deleteNote(id) {\n    setNotes((prevNotes) =>\n      prevNotes.filter((noteItem, index) => index !== id)\n    );\n  }\n\n  return (\n    <div>\n      <Header />\n      <CreateArea onAdd={addNote} />\n      {notes.map((noteItem, index) => (\n        <Note\n          key={index}\n          id={index}\n          title={noteItem.title}\n          content={noteItem.content}\n          onDelete={deleteNote}\n        />\n      ))}\n      <Footer />\n    </div>\n  );\n}\n\nexport default App;"
+    },
+    {
+      "caption": "CreateArea.jsx: controlled inputs, handleChange, submitNote",
+      "language": "jsx",
+      "code": "import { useState } from \"react\";\n\nfunction CreateArea(props) {\n  const [note, setNote] = useState({ title: \"\", content: \"\" });\n\n  function handleChange(event) {\n    const { name, value } = event.target;\n    setNote((prevNote) => ({ ...prevNote, [name]: value }));\n  }\n\n  function submitNote(event) {\n    props.onAdd(note);\n    setNote({ title: \"\", content: \"\" });\n    event.preventDefault();\n  }\n\n  return (\n    <div>\n      <form>\n        <input name=\"title\" onChange={handleChange} value={note.title} placeholder=\"Title\" />\n        <textarea name=\"content\" onChange={handleChange} value={note.content} placeholder=\"Take a note...\" rows=\"3\" />\n        <button onClick={submitNote}>Add</button>\n      </form>\n    </div>\n  );\n}\n\nexport default CreateArea;"
+    },
+    {
+      "caption": "Note.jsx: delete callback",
+      "language": "jsx",
+      "code": "function Note(props) {\n  function handleClick() {\n    props.onDelete(props.id);\n  }\n\n  return (\n    <div className=\"note\">\n      <h1>{props.title}</h1>\n      <p>{props.content}</p>\n      <button onClick={handleClick}>DELETE</button>\n    </div>\n  );\n}\n\nexport default Note;"
+    }
+  ],
+  "task": {
+    "name": "Keeper App Part 3: add and delete notes",
+    "starting_point": "Keeper starter project (Header, Footer, Note, CreateArea components with styling). App renders one static sample Note; CreateArea has a form with an input, a textarea and an Add button but no logic. Comments in App.jsx list the challenge.",
+    "goal": "Implement adding notes (state, pass to App, store in array, render each as a Note) and deleting notes (callback with id and filter), matching the demo behaviour.",
+    "steps": [
+      "In CreateArea, create a note state object {title, content} and bind the input and textarea value to it.",
+      "Add name attributes and a shared handleChange that updates the right key using destructuring, spread and [name].",
+      "Add an Add-button onClick (submitNote) that calls event.preventDefault().",
+      "Add addNote in App and pass it to CreateArea as onAdd; call props.onAdd(note) from submitNote.",
+      "Add notes state (empty array) in App; in addNote append the new note with the spread operator.",
+      "Replace the static Note with notes.map(...) rendering a Note per item with title and content props.",
+      "Add onClick/handleClick to the Note DELETE button that calls props.onDelete(props.id).",
+      "Create deleteNote(id) in App using filter to drop the item whose index equals id, and pass it as onDelete.",
+      "Pass key={index} and id={index} from map to each Note.",
+      "Reset note state to empty strings after a successful add."
+    ],
+    "expected_result": "Typing a title and text then clicking Add shows a new card and empties the form; clicking DELETE on a card removes only that card; the page never reloads.",
+    "solution_code": {
+      "language": "jsx",
+      "code": "// App.jsx (CreateArea.jsx and Note.jsx are in code_examples)\nimport { useState } from \"react\";\nimport Header from \"./components/Header\";\nimport Footer from \"./components/Footer\";\nimport Note from \"./components/Note\";\nimport CreateArea from \"./components/CreateArea\";\n\nfunction App() {\n  const [notes, setNotes] = useState([]);\n\n  function addNote(newNote) {\n    setNotes((prevNotes) => [...prevNotes, newNote]);\n  }\n\n  function deleteNote(id) {\n    setNotes((prevNotes) =>\n      prevNotes.filter((noteItem, index) => index !== id)\n    );\n  }\n\n  return (\n    <div>\n      <Header />\n      <CreateArea onAdd={addNote} />\n      {notes.map((noteItem, index) => (\n        <Note\n          key={index}\n          id={index}\n          title={noteItem.title}\n          content={noteItem.content}\n          onDelete={deleteNote}\n        />\n      ))}\n      <Footer />\n    </div>\n  );\n}\n\nexport default App;"
+    },
+    "reference_repo_path": "Section 36 - React.js/36.42 Keeper App Project - Part 3/keeper-app-part-3/src"
+  },
+  "pitfalls": [
+    "Forgetting event.preventDefault() on the Add button makes the page reload and the state vanish.",
+    "Returning nothing from the setNotes callback (a missing return in a braced arrow) sets state to undefined.",
+    "Forgetting the name attributes on the inputs, so [name] is undefined/empty in handleChange.",
+    "Omitting the key prop on mapped Notes triggers a React warning.",
+    "Forgetting curly braces around the map call in JSX so it prints as text.",
+    "(Extra) Index-based ids misbehave if the list is reordered or filtered elsewhere; for production use a unique id per note.",
+    "(Extra) The reference repo calls props.onAdd before preventDefault and uses != in the filter; behaviour is the same here, but !== is the safer comparison."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (the playground has files only for sections 1-11, 14, 15).",
+    "gaps_and_ideas": [
+      "Proposed lesson 'Keeper: add and delete notes' (blurb: lift state up so a form can add items to a list and each item can remove itself).",
+      "Tasks: (1) make a title/content form controlled with a single state object; (2) add an onAdd prop callback and append to an array with spread; (3) render the array with map and a key; (4) add a delete button using filter and an id; (5) clear the form after adding.",
+      "Starter code: a Keeper skeleton with static Header, a non-functional form and one hardcoded Note.",
+      "Interactive demo idea: a live panel showing the notes array as JSON next to the rendered cards, highlighting the state change on each add/delete, with a toggle to show what happens without preventDefault or without key.",
+      "Infrastructure prerequisite: the playground currently vendors only Bootstrap and CodeMirror, so React lessons would need React, ReactDOM and Babel standalone (for in-browser JSX) added to vendor/ and a preview mode that mounts App into a #root div."
+    ]
+  }
+}

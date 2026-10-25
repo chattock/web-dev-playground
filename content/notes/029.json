@@ -1,0 +1,97 @@
+{
+  "index": 29,
+  "lecture_id": 37350028,
+  "title": "How to Host Your Website for Free with GitHub",
+  "section": "4. Multi-Page Websites",
+  "duration_min": 9,
+  "kind": "concept+exercise",
+  "summary": "Explains web hosting (moving a site's files from your own machine onto an always-online web server) and then walks through publishing the HTML Portfolio project for free with GitHub Pages: create a public repository, upload the folder's contents, and switch Pages on for the main branch.",
+  "concepts": [
+    {
+      "heading": "Local development vs web hosting",
+      "points": [
+        "Local development: every HTML file, image and folder sits on your own computer, so only you can open the site.",
+        "Sharing a local site would mean handing over a copy of the files (like the course's zipped downloads), which is not a real website.",
+        "A web server is a computer permanently connected to the internet that serves the files it holds to anyone who requests them.",
+        "Web hosting = putting your site's files (index.html, other pages, images) onto such a server so the site gets a public address."
+      ]
+    },
+    {
+      "heading": "Why index.html matters",
+      "points": [
+        "GitHub Pages serves the file named index.html at the top level of the repository as the home page.",
+        "The name must be exactly index.html, all lowercase. home.html, me.html or Index.html will not become the landing page.",
+        "Upload your finished index.html, not the starter version that only had TODO comments.",
+        "(Extra) Most web servers follow the same convention: a folder URL returns that folder's index.html."
+      ]
+    },
+    {
+      "heading": "GitHub repository settings used",
+      "points": [
+        "Repository name: html-portfolio (it becomes part of the live URL). Description is optional.",
+        "Visibility must be Public so anyone can view the hosted site.",
+        "Tick 'Add a README file' at creation. The repo then opens on the normal file view with Add file > Upload files available.",
+        "Clicking Commit changes after uploading records the files on the main branch at the root (/), which is what Pages publishes. Git itself is covered properly in a later section.",
+        "(Extra) The live address follows the pattern https://<username>.github.io/html-portfolio/. Free Pages hosting needs a public repo."
+      ]
+    },
+    {
+      "heading": "Relative paths make hosting just work",
+      "points": [
+        "(Extra) The portfolio's relative links (./public/..., ./assets/images/...) work identically locally and on github.io as long as the folder structure is uploaded unchanged; an absolute path to your own disk would break once hosted.",
+        "(Extra) The Pages server is case-sensitive: Images/Preview.png will not find images/preview.png, even if it worked on your Mac or PC."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Folder contents to upload (drag these items, not the parent folder)",
+      "language": "text",
+      "code": "index.html          <- your finished portfolio home page (exact name, lowercase)\npublic/\n  about.html\n  contact.html\n  movie-ranking.html\n  birthday-invite.html\nassets/\n  images/\n    movie-ranking.png\n    birthday-invite.png"
+    },
+    {
+      "caption": "(Extra) How the live URL maps onto the uploaded files",
+      "language": "text",
+      "code": "https://<username>.github.io/html-portfolio/                     -> index.html\nhttps://<username>.github.io/html-portfolio/public/about.html    -> public/about.html\nhttps://<username>.github.io/html-portfolio/assets/images/x.png  -> assets/images/x.png"
+    }
+  ],
+  "task": {
+    "name": "Put the HTML Portfolio online with GitHub Pages",
+    "starting_point": "The completed HTML Portfolio project from the previous lesson on your computer: index.html with your code, a public folder with the other pages, and assets/images with the preview screenshots.",
+    "goal": "A live, shareable URL that shows the portfolio exactly as it looks locally, with every link and image working.",
+    "steps": [
+      "Go to github.com and sign up for a free account, or sign in if you already have one.",
+      "Use the + menu in the top-right corner and choose New repository.",
+      "Name it html-portfolio, optionally add a description, set visibility to Public, and tick Add a README file. Click Create repository.",
+      "On the new repo page, open the Add file dropdown and choose Upload files.",
+      "In your file manager, open the portfolio project folder. Confirm index.html is spelled exactly that, lowercase, and contains your finished code; confirm the images folder holds the previews and public holds the other pages.",
+      "Select the contents of the project folder (index.html, public, assets) and drag them into the upload area. Do not drag the outer folder itself.",
+      "Click Commit changes. Processing can take a few minutes; refresh until every file and folder appears in the repo listing. Re-upload anything missing.",
+      "Open the repo's Settings tab, then Pages in the sidebar.",
+      "Under Build and deployment > Branch, change None to main (root folder /) and click Save.",
+      "Refresh the Pages screen until a banner says the site is live at a github.io address. This can take roughly 1 to 10 minutes; if you see an error such as no server being available, wait and try again.",
+      "Click Visit site, click through every page and image to check it matches the local version, then share the URL (the course suggests posting it in the Q&A)."
+    ],
+    "expected_result": "A public github.io URL serving the portfolio home page, with working links to the project pages, About Me and Contact Me, and visible preview images.",
+    "solution_code": null,
+    "reference_repo_path": "Section 04 - Multi-Page Websites/04.03 - HTML Portfolio Project"
+  },
+  "pitfalls": [
+    "Dragging the whole project folder into the upload box. The repo root then has no index.html, so the Pages URL shows a 404 or the README instead of the portfolio.",
+    "Home page renamed (home.html, me.html) or capitalised (Index.html).",
+    "Uploading the untouched starter index.html.",
+    "Skipping the README checkbox, which leaves the empty-repo setup screen instead of the upload option.",
+    "Expecting the site instantly. Deployment can take several minutes, and transient server errors usually clear on retry."
+  ],
+  "playground": {
+    "match": "s04-portfolio (lesson 4.3, data/s04.js), partial",
+    "coverage": "No dedicated hosting lesson. The portfolio lesson's notes only say the page will eventually go online with GitHub Pages; nothing explains web servers, local vs hosted, or the Pages workflow.",
+    "gaps_and_ideas": [
+      "Add a short 4.4 'Publish it' lesson (or a section at the end of s04-portfolio): blurb 'Hosting means copying your files onto a computer that never switches off and is always online.' with a local-vs-server diagram.",
+      "Tasks: (1) check the root file is named index.html; (2) list the folder contents you will upload and spot the wrong one (the parent folder); (3) predict the live URL for public/about.html given a username; (4) find and fix a link that only works locally (absolute C:\\ path) and one that breaks on a case-sensitive server.",
+      "Explore demo: a mock 'repo root' file tree where the learner drags either the folder or its contents, and a fake browser bar shows either the portfolio or a 404, making the most common mistake visible.",
+      "Add a step-by-step checklist mirroring the GitHub UI: + > New repository, Public, Add README, Add file > Upload files, Commit changes, Settings > Pages > Branch: main / root > Save, wait for the live banner.",
+      "Mention that Pages deploys can take up to about 10 minutes and that transient errors are normal, so learners do not assume they broke something."
+    ]
+  }
+}

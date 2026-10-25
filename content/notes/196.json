@@ -1,0 +1,134 @@
+{
+  "index": 196,
+  "lecture_id": 12384326,
+  "title": "How to Use the Native Node Modules",
+  "section": "23. Node.js",
+  "duration_min": 12,
+  "kind": "concept+exercise",
+  "summary": "Introduces Node's built-in (native) modules and uses the File System module, fs, to write a text file with fs.writeFile. The challenge is to read the file back with fs.readFile and print its contents, which requires passing a 'utf8' encoding to get text instead of a Buffer.",
+  "concepts": [
+    {
+      "heading": "What native modules are",
+      "points": [
+        "Node ships with a set of modules that are available without installing anything: file system access (fs), networking (http, https), path handling (path), os, crypto and more. They are the reason Node can do things browser JavaScript cannot.",
+        "Comparable to the default apps bundled with an operating system: present out of the box, and you can add more later (npm packages, next lectures).",
+        "The Node API documentation lists every native module. Treat it as a reference you look things up in, not something to read start to finish.",
+        "Modules mentioned as coming up later in the course: http (HyperText Transfer Protocol) and path."
+      ]
+    },
+    {
+      "heading": "Why file access is a Node-only feature",
+      "points": [
+        "JavaScript running in a browser is sandboxed: a website must never be able to read or write files on a visitor's machine.",
+        "Node runs JavaScript outside the browser, on your own computer or a server, so it is allowed to read and write files there. You write the code yourself, so the safety concern of untrusted websites does not apply.",
+        "On a deployed web app the files are written to the server's disk, not the user's."
+      ]
+    },
+    {
+      "heading": "Loading a module with require (CommonJS)",
+      "points": [
+        "Two ways exist to pull a module into a file: CommonJS require() and ES module import. This lecture uses require; ESM import is covered in the next lecture.",
+        "Syntax: const fs = require(\"fs\"); The module name is a string. VS Code autocompletes the list of native module names once you type the opening quote.",
+        "fs is short for file system. The variable name is conventional; the methods are then reached with dot notation (fs.writeFile, fs.readFile).",
+        "The Node docs show examples in import form (import { writeFile } from 'node:fs'). The underlying method is the same."
+      ]
+    },
+    {
+      "heading": "fs.writeFile(file, data, [options], callback)",
+      "points": [
+        "Argument 1, file: the name or path of the file to create. A bare name like \"message.txt\" is resolved relative to the folder you run node from, which here is the project folder containing index.js.",
+        "Argument 2, data: what to put in the file, here a string such as \"Hello from NodeJS!\".",
+        "Optional options argument (e.g. encoding) can go between data and callback; the default encoding for strings is utf8.",
+        "Last argument, callback: a function Node calls when the write finishes. It receives err; if err is set, throw it, otherwise log a success message.",
+        "If the file already exists, writeFile replaces its contents completely.",
+        "(Extra) writeFile is asynchronous: Node starts the write and keeps going, then runs the callback once the disk operation is done. That is why success is reported inside the callback rather than on the next line."
+      ]
+    },
+    {
+      "heading": "Running the script",
+      "points": [
+        "Open the terminal, cd into the 2.2 Native Modules folder (your path depends on OS and where you keep projects), then run node index.js.",
+        "Output 'The file has been saved!' means no error occurred, and message.txt appears next to index.js in the VS Code explorer."
+      ]
+    },
+    {
+      "heading": "fs.readFile(path, [options], callback) and encodings",
+      "points": [
+        "Argument 1: the path of the file to read, e.g. \"./message.txt\" (./ means the current folder).",
+        "Last argument: a callback receiving (err, data). data holds the file contents.",
+        "Without an encoding option, data is a raw Buffer, which console.log prints as hex bytes like <Buffer 48 65 6c ...>.",
+        "Pass \"utf8\" as the second argument (fs.readFile(\"./message.txt\", \"utf8\", callback)) to get a normal string back.",
+        "Comment out the writeFile call before testing readFile, otherwise running the script overwrites the text you edited in message.txt."
+      ]
+    },
+    {
+      "heading": "(Extra) Reference repo notes",
+      "points": [
+        "(Extra) The reference repo's script.js/solution.js only shows the writeFile step (to file.txt, with a \"utf8\" options argument and console.error-based error handling). It does not contain the readFile challenge solution with message.txt, so use the solution in these notes.",
+        "(Extra) script.js also has commented-out examples of fs.readFile, fs.unlink (delete a file) and fs.access with fs.constants.F_OK (check a file exists); see the code example below. Ignore the student's personal text in file.txt."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Writing a file with the native fs module (CommonJS)",
+      "language": "javascript",
+      "code": "const fs = require(\"fs\");\n\nfs.writeFile(\"message.txt\", \"Hello from NodeJS!\", (err) => {\n  if (err) throw err;\n  console.log(\"The file has been saved!\");\n});"
+    },
+    {
+      "caption": "Terminal: run from the folder that contains index.js",
+      "language": "bash",
+      "code": "cd \"path/to/2.2 Native Modules\"\nnode index.js\n# The file has been saved!"
+    },
+    {
+      "caption": "Without an encoding, readFile returns a Buffer",
+      "language": "text",
+      "code": "<Buffer 48 65 6c 6c 6f 20 66 72 6f 6d ... >"
+    },
+    {
+      "caption": "(Extra) Other fs callback methods (adapted from the reference repo's commented examples)",
+      "language": "javascript",
+      "code": "const fs = require(\"fs\");\n\n// Delete a file\nfs.unlink(\"message.txt\", (err) => {\n  if (err) {\n    console.error(\"Error deleting the file:\", err);\n    return;\n  }\n  console.log(\"File deleted\");\n});\n\n// Check whether a file exists\nfs.access(\"message.txt\", fs.constants.F_OK, (err) => {\n  console.log(err ? \"The file does not exist\" : \"The file exists\");\n});\n\n// Note: both calls are asynchronous, so their order of completion is not guaranteed."
+    }
+  ],
+  "task": {
+    "name": "2.2 Native Modules: read a file with fs.readFile",
+    "starting_point": "Starter folder '2.2 Native Modules' with an empty index.js. During the lecture you add the writeFile code, which creates message.txt.",
+    "goal": "Edit the text inside message.txt, then write code that reads message.txt and logs its contents as readable text in the terminal.",
+    "steps": [
+      "Extract the starter zip and open the folder in VS Code.",
+      "In index.js add const fs = require(\"fs\"); and the fs.writeFile call; run node index.js once to create message.txt.",
+      "Open message.txt and change the text (e.g. a greeting with your own name), then save it.",
+      "Look up fs.readFile in the Node docs and copy its example pattern into index.js.",
+      "Call fs.readFile(\"./message.txt\", \"utf8\", (err, data) => { ... }) and inside the callback throw err if set, then console.log(data).",
+      "Comment out the writeFile block so it does not overwrite your edited text.",
+      "Run node index.js. If you see a <Buffer ...> output, add the \"utf8\" encoding argument and run again.",
+      "Compare with solution.js if something differs (spelling of readFile, path, missing encoding)."
+    ],
+    "expected_result": "The terminal prints the exact text currently stored in message.txt, including your edits.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "const fs = require(\"fs\");\n\n// fs.writeFile(\"message.txt\", \"Hello from NodeJS!\", (err) => {\n//   if (err) throw err;\n//   console.log(\"The file has been saved!\");\n// });\n\nfs.readFile(\"./message.txt\", \"utf8\", (err, data) => {\n  if (err) throw err;\n  console.log(data);\n});"
+    },
+    "reference_repo_path": "Section 23 - Node.js/23.02 - How to Use the Native Node Modules/script.js (writeFile only; readFile appears as a commented example)"
+  },
+  "pitfalls": [
+    "Running node from the wrong folder: relative paths resolve against the current working directory, so the file is created or looked for in the wrong place (ENOENT error on read).",
+    "Forgetting the 'utf8' encoding on readFile and getting a Buffer instead of text.",
+    "Leaving writeFile active, which silently overwrites the file you edited before readFile runs.",
+    "Putting the callback in the wrong position: it must always be the last argument.",
+    "Not extracting the starter zip before opening it in VS Code."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "New lesson 's23-native-modules' (blurb: Node includes modules like fs that browser JS cannot use; write and read files with callbacks).",
+      "Task 1: require fs and call writeFile to create message.txt; a simulated file explorer shows the new file and its contents.",
+      "Task 2: read message.txt without encoding and see the Buffer output, then add 'utf8' and see the text. Check that the output is a string.",
+      "Task 3: predict the order of console output when a console.log is placed after the writeFile call (shows async callbacks).",
+      "Task 4 (stretch): use fs.appendFile to add a line instead of overwriting.",
+      "Explore demo: a virtual file system panel (in-memory fs mock) where learners run writeFile/readFile/unlink and watch files appear, change and disappear, with a toggle to show the bytes of a Buffer next to the decoded text."
+    ]
+  }
+}

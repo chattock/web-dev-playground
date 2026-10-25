@@ -1,0 +1,114 @@
+{
+  "index": 352,
+  "lecture_id": 31673650,
+  "title": "Creating the Faucet Functionality Using the Shared Keyword",
+  "section": "41. Create Your Own Crypto Token",
+  "duration_min": 15,
+  "kind": "concept+exercise",
+  "summary": "Adds a payOut update function that credits the calling principal with 10,000 tokens. Uses Motoko's shared(msg) syntax to read msg.caller, tests it from the CLI and the frontend (two different callers), then adds a disabled button, a once-only claim check, and result text shown on the button.",
+  "concepts": [
+    {
+      "heading": "payOut skeleton",
+      "points": [
+        "Create a public function payOut taking no arguments and returning async Text. First version just returns \"Success\"; the frontend will display whatever string comes back on the button.",
+        "Unlike balanceOf this is not a query: it changes state, so it is an update call and takes a couple of seconds to complete."
+      ]
+    },
+    {
+      "heading": "shared(msg) and msg.caller",
+      "points": [
+        "Every public actor method is already callable by other actors/users (shared by default), but writing the shared keyword explicitly lets you name an implicit message parameter, conventionally msg.",
+        "msg.caller holds the Principal of whoever invoked the method: a user identity or another canister.",
+        "Declare it as public shared (msg) func payOut() : async Text.",
+        "Debug.print(debug_show(msg.caller)) prints the caller; it needs import Debug from mo:base/Debug. debug_show converts any value to text. The output appears in the terminal running dfx start, not in the command that made the call.",
+        "Test A, CLI: dfx canister call token payOut returns Success and the replica log shows your own identity principal.",
+        "Test B, frontend: import the generated bridge in Faucet.jsx and call await token.payOut() in the click handler. The log now shows a different, anonymous principal because the browser user has no logged-in identity. This shows msg.caller changes with the caller."
+      ]
+    },
+    {
+      "heading": "Crediting the caller",
+      "points": [
+        "balances.put(msg.caller, 10000) adds the caller to the ledger with the faucet amount (the page promises 10,000 tokens).",
+        "Verify with the Balance panel: a fresh anonymous principal shows 0, then after clicking the faucet button it shows 10,000. The owner still shows the original billion."
+      ]
+    },
+    {
+      "heading": "Disabling the button while the call runs",
+      "points": [
+        "Because the update takes seconds, repeated clicks should be blocked. Add const [isDisabled, setDisable] = useState(false) (import useState) and set disabled={isDisabled} on the button.",
+        "Call setDisable(true) at the start of handleClick. Optionally call setDisable(false) afterwards; leaving it disabled is reasonable since each user should claim once.",
+        "A page refresh resets React state, so the button becomes clickable again; the real protection must live in the backend."
+      ]
+    },
+    {
+      "heading": "Preventing repeat claims in the backend",
+      "points": [
+        "Without a check, someone could spend their tokens and claim again, giving away free supply and damaging the token's economics.",
+        "balances.get(msg.caller) returns null when the principal is not in the ledger. If it is null, add the 10,000 and return \"Success\"; otherwise return an 'already claimed' message.",
+        "Both branches return Text, so the frontend can show either one."
+      ]
+    },
+    {
+      "heading": "Showing the result on the button",
+      "points": [
+        "Add const [buttonText, setText] = useState(\"Gimme gimme\") and render {buttonText} as the button label.",
+        "In handleClick: const result = await token.payOut(); setText(result).",
+        "Redeploy with dfx deploy after changing main.mo. Because the HashMap is not persisted yet, every deploy resets balances (a later lesson fixes persistence), so a fresh test starts at 0 for the anonymous user."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "payOut in main.mo (reference repo version, comment/unused code trimmed)",
+      "language": "motoko",
+      "code": "import Debug \"mo:base/Debug\";\n// ... existing owner / balances / balanceOf / getSymbol ...\n\n  public shared (msg) func payOut() : async Text {\n    Debug.print(debug_show (msg.caller));   // prints in the `dfx start` terminal\n    if (balances.get(msg.caller) == null) {\n      let amount = 10000;\n      balances.put(msg.caller, amount);\n      return \"Success\";\n    } else {\n      return \"Already Claimed\";\n    };\n  };"
+    },
+    {
+      "caption": "Faucet.jsx after the lesson",
+      "language": "jsx",
+      "code": "import React, { useState } from \"react\";\nimport { token } from \"../../../declarations/token\"; // reference repo: DANG_backend\n\nfunction Faucet() {\n  const [isDisabled, setDisable] = useState(false);\n  const [buttonText, setText] = useState(\"Gimme gimme\");\n\n  async function handleClick() {\n    setDisable(true);\n    const result = await token.payOut();\n    setText(result);\n    // setDisable(false); // optional: re-enable after completion\n  }\n\n  return (\n    <div className=\"blue window\">\n      <label>Get your free tokens here! Claim 10,000 DANG tokens to your account.</label>\n      <p className=\"trade-buttons\">\n        <button id=\"btn-payout\" onClick={handleClick} disabled={isDisabled}>\n          {buttonText}\n        </button>\n      </p>\n    </div>\n  );\n}\nexport default Faucet;"
+    },
+    {
+      "caption": "Call from the CLI",
+      "language": "bash",
+      "code": "dfx deploy\ndfx canister call token payOut"
+    }
+  ],
+  "task": {
+    "name": "Build the faucet",
+    "starting_point": "main.mo with balances, balanceOf and getSymbol; Faucet.jsx with a button that does nothing useful.",
+    "goal": "Each distinct principal can claim 10,000 tokens exactly once from the UI, with the button reflecting the outcome.",
+    "steps": [
+      "Add public shared (msg) func payOut() : async Text returning \"Success\".",
+      "Import Debug and print msg.caller; deploy and call payOut from the CLI to see your principal in the dfx start log.",
+      "Import the token bridge in Faucet.jsx and await token.payOut() inside handleClick; click the button and note the anonymous principal in the log.",
+      "Replace the print-only body with balances.put(msg.caller, 10000).",
+      "Check the anonymous principal in the Balance panel before and after the click.",
+      "Add isDisabled state, bind disabled={isDisabled} and set it true on click.",
+      "Wrap the put in if (balances.get(msg.caller) == null) and return Success or an already-claimed message.",
+      "Add buttonText state and set it from the returned result; dfx deploy and test twice (refresh the page to re-enable the button)."
+    ],
+    "expected_result": "First claim: button reads Success and the balance becomes 10,000. After a refresh, a second click shows the already-claimed text and the balance is unchanged.",
+    "solution_code": {
+      "language": "motoko",
+      "code": "import Debug \"mo:base/Debug\";\n// ... existing owner / balances / balanceOf / getSymbol ...\n\n  public shared (msg) func payOut() : async Text {\n    Debug.print(debug_show (msg.caller));   // prints in the `dfx start` terminal\n    if (balances.get(msg.caller) == null) {\n      let amount = 10000;\n      balances.put(msg.caller, amount);\n      return \"Success\";\n    } else {\n      return \"Already Claimed\";\n    };\n  };"
+    },
+    "reference_repo_path": "Section 41 - Create Your Own Crypto Token/41.05 Creating the Faucet Functionality Using the Shared Keyword/DANG/src/DANG_backend/main.mo"
+  },
+  "pitfalls": [
+    "Forgetting dfx deploy after changing main.mo; npm start does not do this.",
+    "Looking for Debug.print output in the browser or CLI-call terminal instead of the dfx start terminal.",
+    "Assuming the disabled button is security: reloading resets it, so enforce once-only claims in Motoko.",
+    "Mismatch between method name in Motoko and CLI/JS (payOut spelling).",
+    "(Extra) Reference repo imports DANG_backend from declarations; use your canister name. Its shared (msg) line is written 'public shared (msg)'. It also keeps the frontend variable named isDisable, which differs from the lecture's isDisabled."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "Proposed lesson 'Faucet with shared(msg)': blurb on caller identity and update vs query. Tasks: (1) add payOut returning text, (2) log msg.caller via Debug.print, (3) credit the caller with 10,000, (4) reject a second claim, (5) show the result on the button.",
+      "Starter code idea: backend with balances and TODO in payOut; frontend button with a console.log.",
+      "Interactive demo idea: a simulated ledger with two selectable callers (owner, anonymous) and a claim button to show how msg.caller changes who gets credited and when the 'already claimed' branch triggers."
+    ]
+  }
+}

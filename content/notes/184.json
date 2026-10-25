@@ -1,0 +1,30 @@
+{
+  "index": 184,
+  "lecture_id": 17967152,
+  "title": "Tip from Angela - Dealing with Frustration",
+  "section": "20. Boss Level Challenge 2 - The Simon Game",
+  "duration_min": 3,
+  "kind": "tip",
+  "summary": "A short study tip after the Simon Game: when a bug or concept has you stuck and frustrated, step away from the screen rather than forcing it.",
+  "concepts": [
+    {
+      "heading": "Key takeaways",
+      "points": [
+        "Staring at the same code for too long makes it harder, not easier, to spot the problem. A break lets the brain reset.",
+        "Sleeping on a problem works: review it before bed and try again the next morning, when fixes often seem obvious.",
+        "Physical activity (a walk, a run, a swim) helps clear your head before returning to the code.",
+        "Getting stuck is normal for every developer. Avoid beating yourself up; the bug will still be there when you come back fresh."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [
+    "Grinding on one bug for hours without a break, which usually makes the frustration and the confusion worse."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": []
+  }
+}

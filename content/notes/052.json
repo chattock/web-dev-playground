@@ -1,0 +1,97 @@
+{
+  "index": 52,
+  "lecture_id": 37368196,
+  "title": "[Project] Web Design Agency Website",
+  "section": "8. Advanced CSS",
+  "duration_min": 7,
+  "kind": "project",
+  "summary": "Section 8 capstone: take a plain starter page for a design agency and use float, display, inline/block behaviour and a media query to produce a two-card layout that stacks on phones. The walkthrough afterwards highlights three details: a span for partial colouring, the 680px breakpoint, and object-fit.",
+  "concepts": [
+    {
+      "heading": "What the finished page looks like",
+      "points": [
+        "Header area with a logo, then an h1 along the lines of 'We are a Creative Design Agency', then two side-by-side cards (image + title + paragraph each), then a footer with the company motto.",
+        "On wide screens the left card floats left and the right card floats right, each about 45% wide, so they form two columns.",
+        "On narrow screens (roughly phone width) the cards stop being columns and stack vertically, each spanning the full width, with centred heading and justified text."
+      ]
+    },
+    {
+      "heading": "Skills the project is meant to exercise",
+      "points": [
+        "Block vs inline vs inline-block behaviour (the display property).",
+        "float: left / float: right (and clear for the footer) to build columns and wrap text around images.",
+        "Responsiveness through a viewport meta tag and a max-width media query.",
+        "The brief explicitly says an identical copy is not required: any attractive layout that uses these tools is acceptable; breaking the problem down yourself is the real goal."
+      ]
+    },
+    {
+      "heading": "Working with the starter files",
+      "points": [
+        "Starter folder contains index.html (the file to edit, already has fonts, images and text but no layout), solution.html and its stylesheet, plus an assets/images folder (logo, two card images).",
+        "Open both index.html and solution.html in Live Preview side by side; copy the preview URL into a real browser to resize the window and test the breakpoint.",
+        "Recommended order: attempt it yourself first, only then read the solution. Share especially good variations in the course Q&A."
+      ]
+    },
+    {
+      "heading": "Solution walkthrough: key details",
+      "points": [
+        "The word 'Creative' is wrapped in <span class=\"creative\"> so only that word gets its own colour (midnightblue) while staying in the normal text flow; span is an inline element so it does not break the line.",
+        "Cards use two layout classes plus a shared class: class=\"left card\" and class=\"right card\". .card sets width: 45%; .left floats left; .right floats right.",
+        "Card images use a .tile-image class with a fixed height (200px), float: left and a right margin, so the title and paragraph wrap around the image.",
+        "A media query for max-width: 680px targets phones and small tablets. Inside it: .card gets display: block, width: 100%, a bottom margin and text-align: justify; the card image gets width: 100%, display: inline and object-fit: cover; the h1 shrinks and is centred; the logo is made smaller.",
+        "text-align: justify stretches each line to both edges so the paragraph looks like a clean block on a narrow screen.",
+        "object-fit is new in this lesson: it controls how an image fills a box whose size differs from the image's aspect ratio (cover crops to fill without distortion). Advice given: when you meet an unfamiliar property, look it up on MDN; that is normal professional workflow.",
+        "(Extra) The reference CSS also makes body a flex column with min-height: 95vh and gives .main flex: 1 so the footer sticks to the bottom of short pages; that is a flexbox trick from the next section and is not explained here.",
+        "(Extra) The starter footer needs to sit below the floated cards; in the reference this works because .main is a flex item that contains the floats, otherwise clear: both on the footer is the classic fix."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Core layout CSS from the reference solution (condensed)",
+      "language": "css",
+      "code": ".tile-image { height: 200px; float: left; margin-right: 50px; }\n.card  { width: 45%; }\n.left  { float: left; }\n.right { float: right; }\n.creative { color: midnightblue; }\nfooter { text-align: right; color: midnightblue; }\n\n@media (max-width: 680px) {\n  .logo { width: 100px; }\n  h1 { font-size: 3.5rem; text-align: center; }\n  .card { width: 100%; display: block; margin-bottom: 30px; text-align: justify; }\n  .card img { margin-bottom: 10px; width: 100%; display: inline; object-fit: cover; }\n}"
+    },
+    {
+      "caption": "Heading with a coloured word (span)",
+      "language": "html",
+      "code": "<h1>We are a <span class=\"creative\">Creative</span> <br />Design Agency</h1>"
+    }
+  ],
+  "task": {
+    "name": "Section 8 project: Web Design Agency Website",
+    "starting_point": "Starter index.html with fonts, logo, two card images, headings, paragraphs and a footer already in place, but with no layout CSS; a solution.html is included for comparison.",
+    "goal": "Style the page into a two-column card layout using float/display and make it responsive so the cards stack on narrow screens.",
+    "steps": [
+      "Open index.html and solution.html in Live Preview and compare; open the preview URL in a full browser so the window can be resized.",
+      "Wrap the word 'Creative' in a span with a class and colour it in the stylesheet.",
+      "Give both cards a width (about 45%), float one left and one right so they sit side by side.",
+      "Float the card images left with a right margin so the text wraps around them.",
+      "Add a max-width media query (around 600-680px) that gives the cards full width and display: block so they stack, and adjust image, heading and text alignment for small screens.",
+      "Resize the browser to check the breakpoint, then compare with solution.html and look up unfamiliar properties such as object-fit on MDN."
+    ],
+    "expected_result": "Wide screen: two floated cards side by side below the heading, footer at the bottom. Narrow screen: cards stacked full width with justified text and a centred heading.",
+    "solution_code": {
+      "language": "css",
+      "code": "body { font-family: \"Poppins\", sans-serif; margin: 50px 50px 0 50px; background-color: #faf9f6; display: flex; flex-direction: column; min-height: 95vh; }\n.main { flex: 1; }\nh1 { font-size: 5rem; }\nfooter { text-align: right; color: midnightblue; }\n.tile-image { height: 200px; float: left; margin-right: 50px; }\n.card { width: 45%; }\n.left { float: left; }\n.right { float: right; }\n.creative { color: midnightblue; }\n@media (max-width: 680px) {\n  .logo { width: 100px; }\n  h1 { font-size: 3.5rem; text-align: center; }\n  .card { width: 100%; display: block; margin-bottom: 30px; text-align: justify; }\n  .card img { margin-bottom: 10px; width: 100%; display: inline; object-fit: cover; }\n}"
+    },
+    "reference_repo_path": "Section 08 - Advanced CSS/08.05 - Web Design Agency Project/solution.css"
+  },
+  "pitfalls": [
+    "Floated cards collapse their parent's height, so the footer can ride up unless the parent contains the floats or the footer uses clear: both.",
+    "Forgetting the viewport meta tag, which stops media queries behaving as expected on phones.",
+    "Peeking at the solution before attempting the layout.",
+    "The reference repo's solution.html has an author footer ('Made with love by ...') that is not part of the course."
+  ],
+  "playground": {
+    "match": "s08-agency (lesson 8.5, data/s08.js)",
+    "coverage": "Covers the span for 'Creative', floating the two cards, floating the images so text wraps, and clearing the footer. Uses a 120px image and 45% cards, with a media query only suggested as a go-further bullet.",
+    "gaps_and_ideas": [
+      "Add a task for the max-width media query that stacks the cards (display: block; width: 100%) since responsiveness is a core part of the real project.",
+      "Add a task introducing object-fit: cover on the images in the stacked layout, with a demo toggling fill/contain/cover.",
+      "Add text-align: justify and centred h1 for the mobile view as a small styling step.",
+      "Add a viewport-width slider in the explore demo to show the breakpoint flip at 680px.",
+      "Mention that the project is open-ended (alternative designs welcome)."
+    ]
+  }
+}

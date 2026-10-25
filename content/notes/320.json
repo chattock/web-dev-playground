@@ -1,0 +1,133 @@
+{
+  "index": 320,
+  "lecture_id": 17039638,
+  "title": "React Dependencies & Styling the Keeper App",
+  "section": "36. React.js",
+  "duration_min": 17,
+  "kind": "concept+exercise",
+  "summary": "Polishes the Keeper app by installing Material UI, swapping text buttons for icon components, using a Fab button with a Zoom transition, collapsing the create form until the textarea is clicked, and adding a patterned background. Closes by noting React alone does not persist data.",
+  "concepts": [
+    {
+      "heading": "Starting point and why to use the provided project",
+      "points": [
+        "The styled demo has icons, an expanding note form, a hover effect on the add button and a patterned page background.",
+        "The supplied starter differs from the previous lesson: styles.css has new rules and the form in CreateArea carries className='create-note'. Without both, the Fab renders grey and misplaced. Copy the stylesheet and add the class if you continue your own copy.",
+        "(Extra) In the reference styles.css the form, input/textarea and button rules are written as form.create-note, form.create-note input/textarea and form.create-note button. The Fab renders a real <button> element, so form.create-note button is what makes it yellow, round and absolutely positioned at the bottom-right of the form."
+      ]
+    },
+    {
+      "heading": "Installing Material UI",
+      "points": [
+        "Material UI (MUI) is a library of pre-built React components following Google's Material Design, so appearance and some behaviour come ready-made.",
+        "The video uses two packages, core (components) and icons. Locally, install them with npm; in a CodeSandbox, use Add Dependency.",
+        "(Extra) Per the preceding note lecture, use current packages: npm install @mui/material @mui/icons-material @emotion/react @emotion/styled. The reference repo uses MUI v7 with React 19.",
+        "Advantage over Bootstrap or icon fonts: each component bundles its markup, styles and logic as JSX, so it behaves like any other component you write."
+      ]
+    },
+    {
+      "heading": "Icons as components",
+      "points": [
+        "Find an icon in the MUI icon search page, copy its import line, and render it as a self-closing component.",
+        "Note.jsx: import DeleteIcon and put <DeleteIcon /> inside the button instead of the word DELETE. The button element and its onClick stay unchanged.",
+        "CreateArea: import AddIcon and use <AddIcon /> in place of the text Add. Icons are SVG, so they scale cleanly, unlike a typed plus character.",
+        "Header.jsx: place <HighlightIcon /> inside the h1 next to the title text."
+      ]
+    },
+    {
+      "heading": "Fab and Zoom",
+      "points": [
+        "Replace the plain button with MUI's Fab (floating action button), a circular button with a built-in colour change on hover. Swap the tag only: <Fab onClick={submitNote}><AddIcon /></Fab>. Component names are capitalised, which is how JSX tells them apart from HTML tags.",
+        "Zoom is a transition wrapper. Wrap the Fab in <Zoom> and control it with the boolean in prop: true makes the child animate in, false hides it.",
+        "(Extra) Zoom requires a single child that can hold a ref; Fab qualifies."
+      ]
+    },
+    {
+      "heading": "Challenge: expand the form on click (conditional rendering)",
+      "points": [
+        "Desired behaviour: initially only a one-row textarea shows. Clicking it reveals the title input, grows the textarea to three rows and zooms in the Fab.",
+        "Add const [isExpanded, setExpanded] = useState(false).",
+        "Define expand() that calls setExpanded(true) and attach it as onClick on the textarea.",
+        "Render the title input only when expanded, using either a ternary with null or the && short-circuit form: {isExpanded && <input ... />}.",
+        "Make rows depend on state: rows={isExpanded ? 3 : 1}.",
+        "Pass the state to Zoom: <Zoom in={isExpanded}> instead of a fixed true."
+      ]
+    },
+    {
+      "heading": "Background pattern",
+      "points": [
+        "transparenttextures.com offers tileable transparent PNG patterns. The lecture picks one called cubes.",
+        "Copy the pattern's URL and add background-image: url(...) to the body rule in styles.css, keeping the solid background colour (#eee in the reference) so the translucent pattern shows over it."
+      ]
+    },
+    {
+      "heading": "Persistence caveat",
+      "points": [
+        "Refreshing the page loses all notes because React is only the front end and keeps state in browser memory.",
+        "Saving notes would need a backend and database, such as Node with MongoDB from earlier modules. (Extra) localStorage is a lightweight alternative for a client-only app."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "CreateArea.jsx with expanding form, Fab and Zoom (MUI v5+ imports)",
+      "language": "jsx",
+      "code": "import { useState } from \"react\";\nimport AddIcon from \"@mui/icons-material/Add\";\nimport { Fab, Zoom } from \"@mui/material\";\n\nfunction CreateArea(props) {\n  const [isExpanded, setExpanded] = useState(false);\n  const [note, setNote] = useState({ title: \"\", content: \"\" });\n\n  function handleChange(event) {\n    const { name, value } = event.target;\n    setNote((prev) => ({ ...prev, [name]: value }));\n  }\n\n  function submitNote(event) {\n    props.onAdd(note);\n    setNote({ title: \"\", content: \"\" });\n    event.preventDefault();\n  }\n\n  function expand() {\n    setExpanded(true);\n  }\n\n  return (\n    <div>\n      <form className=\"create-note\">\n        {isExpanded && (\n          <input name=\"title\" onChange={handleChange} value={note.title} placeholder=\"Title\" />\n        )}\n        <textarea\n          name=\"content\"\n          onClick={expand}\n          onChange={handleChange}\n          value={note.content}\n          placeholder=\"Take a note...\"\n          rows={isExpanded ? 3 : 1}\n        />\n        <Zoom in={isExpanded}>\n          <Fab onClick={submitNote}>\n            <AddIcon />\n          </Fab>\n        </Zoom>\n      </form>\n    </div>\n  );\n}\n\nexport default CreateArea;"
+    },
+    {
+      "caption": "Note.jsx with DeleteIcon inside the delete button",
+      "language": "jsx",
+      "code": "import DeleteIcon from \"@mui/icons-material/Delete\";\n\nfunction Note(props) {\n  function handleClick() {\n    props.onDelete(props.id);\n  }\n\n  return (\n    <div className=\"note\">\n      <h1>{props.title}</h1>\n      <p>{props.content}</p>\n      <button onClick={handleClick}>\n        <DeleteIcon />\n      </button>\n    </div>\n  );\n}\n\nexport default Note;"
+    },
+    {
+      "caption": "Header.jsx with HighlightIcon before the title",
+      "language": "jsx",
+      "code": "import HighlightIcon from \"@mui/icons-material/Highlight\";\n\nfunction Header() {\n  return (\n    <header>\n      <h1>\n        <HighlightIcon />\n        Keeper\n      </h1>\n    </header>\n  );\n}\n\nexport default Header;"
+    },
+    {
+      "caption": "styles.css: body background colour plus the cubes pattern; form rules scoped to .create-note",
+      "language": "css",
+      "code": "body {\n  background: #eee;\n  background-image: url(\"https://www.transparenttextures.com/patterns/cubes.png\");\n  padding: 0 16px;\n}\n\n/* the new starter scopes the form rules to the class */\nform.create-note {\n  position: relative;\n  width: 480px;\n  margin: 30px auto 20px auto;\n  background: #fff;\n  padding: 15px;\n  border-radius: 7px;\n}\n\nform.create-note button {\n  position: absolute;   /* pins the Fab to the form's bottom-right edge */\n  right: 18px;\n  bottom: -18px;\n  background: #f5ba13;  /* Keeper yellow */\n  color: #fff;\n  border-radius: 50%;\n  width: 36px;\n  height: 36px;\n}"
+    }
+  ],
+  "task": {
+    "name": "Make the create-note form expand on click",
+    "starting_point": "Keeper app with working add/delete, MUI installed, form className 'create-note', Fab wrapped in Zoom with in set to true, title input and 3-row textarea always visible.",
+    "goal": "Show only a one-row textarea at first; on click, show the title input, make the textarea 3 rows and zoom in the Fab.",
+    "steps": [
+      "Open CreateArea.jsx (form already has className=\"create-note\", Fab wrapped in <Zoom in={true}>).",
+      "Add const [isExpanded, setExpanded] = useState(false) at the top of the component.",
+      "Write function expand() { setExpanded(true); } and attach it to the textarea with onClick={expand}.",
+      "Wrap the title input in {isExpanded && ( <input name=\"title\" ... /> )} so it is only rendered after the click (a ternary returning null works too).",
+      "Change the textarea's rows attribute from the fixed \"3\" to rows={isExpanded ? 3 : 1}.",
+      "Change <Zoom in={true}> to <Zoom in={isExpanded}> so the Fab animates in only when the form expands.",
+      "In Header.jsx import HighlightIcon from @mui/icons-material/Highlight and render <HighlightIcon /> inside the h1 before the text.",
+      "In styles.css add background-image: url(\"https://www.transparenttextures.com/patterns/cubes.png\") to the body rule.",
+      "Test: reload, confirm only one row shows, click it, type a title and note, click the yellow + button and confirm the note card appears with a delete icon."
+    ],
+    "expected_result": "Page loads with a compact note box; clicking it expands the box with title field and animated yellow add button; adding a note still works.",
+    "solution_code": {
+      "language": "jsx",
+      "code": "import { useState } from \"react\";\nimport AddIcon from \"@mui/icons-material/Add\";\nimport { Fab, Zoom } from \"@mui/material\";\n\nfunction CreateArea(props) {\n  const [isExpanded, setExpanded] = useState(false);\n  const [note, setNote] = useState({ title: \"\", content: \"\" });\n\n  function handleChange(event) {\n    const { name, value } = event.target;\n    setNote((prev) => ({ ...prev, [name]: value }));\n  }\n\n  function submitNote(event) {\n    props.onAdd(note);\n    setNote({ title: \"\", content: \"\" });\n    event.preventDefault();\n  }\n\n  function expand() {\n    setExpanded(true);\n  }\n\n  return (\n    <div>\n      <form className=\"create-note\">\n        {isExpanded && (\n          <input name=\"title\" onChange={handleChange} value={note.title} placeholder=\"Title\" />\n        )}\n        <textarea\n          name=\"content\"\n          onClick={expand}\n          onChange={handleChange}\n          value={note.content}\n          placeholder=\"Take a note...\"\n          rows={isExpanded ? 3 : 1}\n        />\n        <Zoom in={isExpanded}>\n          <Fab onClick={submitNote}>\n            <AddIcon />\n          </Fab>\n        </Zoom>\n      </form>\n    </div>\n  );\n}\n\nexport default CreateArea;"
+    },
+    "reference_repo_path": "Section 36 - React.js/36.44 React Dependencies and Styling the Keeper App/using-pre-built-react-components/src"
+  },
+  "pitfalls": [
+    "Forgetting the create-note className or updated stylesheet leaves a grey, mispositioned button.",
+    "Using the old @material-ui imports from the video with a modern React setup; use @mui/* paths.",
+    "Capitalisation: Fab not fab, otherwise React treats it as an unknown HTML element.",
+    "(Extra) The form never collapses again in this version: isExpanded only ever goes from false to true.",
+    "(Extra) MUI's Fab renders <button type=\"button\">, so unlike a plain <button> inside a form it does not submit the form by itself; event.preventDefault() in submitNote is now just a safety net. Keep onClick={submitNote} on the Fab itself, not on Zoom.",
+    "Expecting notes to survive a refresh."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (playground files exist only for sections 1-11, 14, 15).",
+    "gaps_and_ideas": [
+      "Proposed lesson 'Using a component library (MUI)'. Blurb: install pre-built React components, render icons as components, and drive a transition from state.",
+      "Tasks: (1) import DeleteIcon and render it inside the Note delete button; (2) replace the Add <button> with MUI <Fab> holding <AddIcon />; (3) wrap the Fab in <Zoom in={...}> and toggle it with a boolean; (4) add isExpanded state so the form starts as a one-row textarea; (5) render the title input with && and switch rows with a ternary.",
+      "Starter code: the finished Keeper add/delete app (App, CreateArea, Note, Header) with plain text buttons and form.create-note CSS already in place.",
+      "Demo idea: an isExpanded toggle beside the live form, with the JSX lines {isExpanded && ...}, rows={isExpanded ? 3 : 1} and in={isExpanded} highlighted as they flip between values, plus a side-by-side of plain <button> vs <Fab> rendering.",
+      "Infrastructure prerequisite: the playground vendors only Bootstrap and CodeMirror; MUI lessons would need React, ReactDOM, Babel standalone and an ESM/UMD build of @mui/material and @mui/icons-material (with Emotion) loaded in the preview frame."
+    ]
+  }
+}

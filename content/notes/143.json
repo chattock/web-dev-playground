@@ -1,0 +1,26 @@
+{
+  "index": 143,
+  "lecture_id": 13487950,
+  "title": "A Quick Note About the Next Lesson",
+  "section": "18. Advanced Javascript and DOM Manipulation",
+  "duration_min": 0,
+  "kind": "admin",
+  "summary": "Short announcement placed before the keyboard-events lesson. The page body was only an 'Open' link-out, so its text could not be read; it sits between the objects lessons and lecture 144 (keyboard event listeners).",
+  "concepts": [
+    {
+      "heading": "Takeaway",
+      "points": [
+        "(Extra) The next lesson in the course order is 144, 'Using Keyboard Event Listeners to Check for Key Presses', which extends the Drum Kit so keys trigger the same sounds as the buttons.",
+        "Content of the note itself was not available in the page, so nothing further is recorded."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (section 18 has no playground file).",
+    "gaps_and_ideas": []
+  }
+}

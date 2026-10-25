@@ -1,0 +1,83 @@
+{
+  "index": 187,
+  "lecture_id": 12384404,
+  "title": "Command Line Techniques and Directory Navigation",
+  "section": "21. The Unix Command Line",
+  "duration_min": 10,
+  "kind": "concept+exercise",
+  "summary": "Hands-on tour of ls and cd, how the prompt shows the current directory, multi-level paths, tab completion, history, and keyboard shortcuts for editing a command line.",
+  "concepts": [
+    {
+      "heading": "Knowing where you are",
+      "points": [
+        "The prompt displays the current directory; a tilde (~) means the user's home directory (the folder under Users named after the account).",
+        "The directory tree starts at the disk root, then Users, then the user's folder; Finder shows the same hierarchy as the terminal.",
+        "(Extra) pwd prints the full path of the current directory, useful when the prompt only shows the last folder name (covered in the next lecture)."
+      ]
+    },
+    {
+      "heading": "ls: list",
+      "points": [
+        "ls prints the files and folders inside the current directory, matching what Finder would show there."
+      ]
+    },
+    {
+      "heading": "cd: change directory",
+      "points": [
+        "cd Documents moves one level down into a child folder; cd Learn goes further in.",
+        "cd ~ jumps straight back to the home directory from anywhere.",
+        "A multi-level path can be given in one go with slashes: cd Documents/Learn/Languages.",
+        "cd .. moves up to the parent folder; repeat it to climb further (three times from Languages back to home).",
+        "A bare folder name only works for children of the current folder. To reach a sibling such as Music from inside Languages, go up first or give a full path.",
+        "(Extra) cd / goes to the filesystem root and cd - returns to the previous directory."
+      ]
+    },
+    {
+      "heading": "Speed techniques",
+      "points": [
+        "Tab completes a partly typed name. If several names share the typed prefix, add letters until it is unambiguous (Do matches both Documents and Downloads; Dow resolves).",
+        "Up and Down arrows cycle through earlier commands; Enter re-runs the selected one.",
+        "Option/Alt-click moves the cursor to a clicked point in the command.",
+        "Ctrl+A jumps to the start of the line, Ctrl+E to the end, Ctrl+U clears the line without running it.",
+        "(Extra) Strictly, in Bash Ctrl+U deletes from the cursor back to the start of the line, so it clears everything only when the cursor is at the end (zsh, the macOS default, clears the whole line regardless). Ctrl+K deletes from the cursor to the end."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Navigation session",
+      "language": "bash",
+      "code": "ls\ncd Documents\ncd Learn\ncd ~\ncd Documents/Learn/Languages\ncd ..\ncd ..\ncd .."
+    }
+  ],
+  "task": {
+    "name": "Navigate your own folders",
+    "starting_point": "A terminal open at the home directory.",
+    "goal": "Move into a deep folder, back out, and use the shortcuts without the mouse.",
+    "steps": [
+      "Run ls to see what is in the home directory.",
+      "cd into a folder one level at a time, using Tab to complete names.",
+      "Return home with cd ~.",
+      "Jump to a nested folder with a single multi-level cd path.",
+      "Climb back with repeated cd ..",
+      "Practice Up arrow, Ctrl+A, Ctrl+E and Ctrl+U on a long command."
+    ],
+    "expected_result": "The prompt reflects each directory you enter and leave.",
+    "solution_code": null,
+    "reference_repo_path": "Section 21 - The Unix Command Line/The Unix Command Line.txt"
+  },
+  "pitfalls": [
+    "cd Music fails when Music is not inside the current folder.",
+    "Alt-click cursor placement may not work in every terminal; the keyboard shortcuts always do."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "Proposed new lesson 'Command line navigation'. Blurb: ls shows what is in the current folder, cd moves you through the tree, ~ is home, .. is the parent, and paths with slashes jump several levels at once.",
+      "Tasks: (1) from ~, reach Documents/Learn/Languages one cd at a time; (2) return home with cd ~; (3) reach Languages again with a single multi-level path; (4) climb back with cd .. three times; (5) from Languages, get into Music (a sibling of Documents) with one command such as cd ../../../Music or cd ~/Music.",
+      "Starter code idea: a nested JS object for the fake tree (~ > Desktop, Documents > Learn > Languages, Downloads, Music) and a parser for ls, cd <path>, cd .., cd ~ that resolves relative and multi-level paths and returns an error for names that are not children of the current folder.",
+      "Interactive demo: a terminal simulator whose prompt updates after each cd, with Tab completion that fills unique prefixes (Dow > Downloads) and lists candidates when ambiguous (Do), Up/Down history, and a tree diagram that highlights the current folder."
+    ]
+  }
+}

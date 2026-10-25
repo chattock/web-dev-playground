@@ -1,0 +1,75 @@
+{
+  "index": 291,
+  "lecture_id": 17038820,
+  "title": "Javascript ES6 Import, Export and Modules Practice",
+  "section": "36. React.js",
+  "duration_min": 4,
+  "kind": "concept+exercise",
+  "summary": "Practice with named exports and imports: export four calculator functions from calculator.js and import them into the React app so a four-item list shows computed results. Solved both with named imports and with a wildcard import.",
+  "concepts": [
+    {
+      "heading": "Exporting several functions",
+      "points": [
+        "calculator.js has add, multiply, subtract and divide and no default export, so they are exported as a named group: export { add, multiply, subtract, divide };.",
+        "Export the function itself, with no parentheses; adding parentheses would call it rather than export it.",
+        "Until the import is in place, the app reports errors such as 'add is not defined'."
+      ]
+    },
+    {
+      "heading": "Importing them",
+      "points": [
+        "Named import: import { add, subtract, multiply, divide } from \"./calculator\"; The order inside the braces does not matter, only the exact names.",
+        "The source is a relative path to the file; the .js extension may be omitted.",
+        "Wildcard alternative: import * as Calculator from \"./calculator\"; then call Calculator.add(1, 2) etc. The namespace object holds one property per export.",
+        "Both approaches work and both appear in real code, so recognise each."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "calculator.js",
+      "language": "javascript",
+      "code": "function add(n1, n2) {\n  return n1 + n2;\n}\n\nfunction multiply(n1, n2) {\n  return n1 * n2;\n}\n\nfunction subtract(n1, n2) {\n  return n1 - n2;\n}\n\nfunction divide(n1, n2) {\n  return n1 / n2;\n}\n\nexport { add, multiply, subtract, divide };"
+    },
+    {
+      "caption": "App.jsx using named imports",
+      "language": "jsx",
+      "code": "import { add, multiply, subtract, divide } from \"./calculator\";\n\nfunction App() {\n  return (\n    <ul>\n      <li>{add(1, 2)}</li>\n      <li>{multiply(2, 3)}</li>\n      <li>{subtract(7, 2)}</li>\n      <li>{divide(5, 2)}</li>\n    </ul>\n  );\n}\n\nexport default App;"
+    },
+    {
+      "caption": "Wildcard variant",
+      "language": "jsx",
+      "code": "import * as Calculator from \"./calculator\";\n\n// <li>{Calculator.add(1, 2)}</li>\n// <li>{Calculator.multiply(2, 3)}</li>\n// <li>{Calculator.subtract(7, 2)}</li>\n// <li>{Calculator.divide(5, 2)}</li>"
+    }
+  ],
+  "task": {
+    "name": "Import the calculator functions",
+    "starting_point": "A sandbox whose App renders four list items calling add, multiply, subtract and divide, plus calculator.js defining them without exporting, and a Final.png of the target.",
+    "goal": "Make the page render four calculated numbers by exporting and importing the functions.",
+    "steps": [
+      "Open calculator.js and export all four functions as named exports.",
+      "In the file that renders the list, import add, multiply, subtract and divide with braces from the relative path of calculator.",
+      "Remove the 'not defined' errors and compare with Final.png.",
+      "Optionally redo it with import * as Calculator and prefix each call."
+    ],
+    "expected_result": "Four bullet points showing 3, 6, 5 and 2.5 (results of add(1,2), multiply(2,3), subtract(7,2), divide(5,2)).",
+    "solution_code": {
+      "language": "jsx",
+      "code": "import { add, multiply, subtract, divide } from \"./calculator\";"
+    },
+    "reference_repo_path": "Section 36 - React.js/36.15 Javascript ES6 Import, Export and Modules Practice/es6-import-export-practice"
+  },
+  "pitfalls": [
+    "Exporting with parentheses (add()) calls the function instead of exporting it.",
+    "Names in the import braces must match the export names exactly.",
+    "With the wildcard form every call needs the namespace prefix."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (section 36 is not in the playground data files).",
+    "gaps_and_ideas": [
+      "Use as the practice task in an 'ES6 modules' lesson: export and import four helper functions, then redo with a wildcard.",
+      "Interactive demo: a small calculator module whose exports can be toggled on and off to show which imports break."
+    ]
+  }
+}

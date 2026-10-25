@@ -1,0 +1,63 @@
+{
+  "index": 77,
+  "lecture_id": 12371362,
+  "title": "Data Types",
+  "section": "14. Introduction to Javascript ES6",
+  "duration_min": 4,
+  "kind": "concept",
+  "summary": "Introduces data types: string, number and boolean. Shows how quotes mark a string, how the console evaluates arithmetic, and how typeof reports a value's type.",
+  "concepts": [
+    {
+      "heading": "Why types exist",
+      "points": [
+        "Code is itself written as text, so the computer needs a way to tell code apart from plain text data. Quotation marks do this: everything inside them is a string, not instructions.",
+        "A data type classifies a value so the program knows how it may be used. Strings, numbers and booleans appear in virtually all languages.",
+        "String = a sequence of characters (text that is not meant to be run as code)."
+      ]
+    },
+    {
+      "heading": "The three basic types",
+      "points": [
+        "String: written inside quotes, e.g. \"Hello\".",
+        "Number: written bare, with no quotes (23, 3.14). Digits do not clash with code keywords, so no marker is needed.",
+        "Boolean: true or false, written bare in lowercase, no quotes.",
+        "(Extra) Putting quotes around a number, like \"23\", makes it a string, which changes how + and other operators behave.",
+        "(Extra) Other types exist (undefined, null, object, bigint, symbol); the playground lesson covers some."
+      ]
+    },
+    {
+      "heading": "Trying it in the console",
+      "points": [
+        "Type 2 + 3 and press Enter: the console evaluates it and prints 5.",
+        "alert(2 + 3); shows a pop-up containing 5, because the expression is evaluated before alert receives it.",
+        "typeof reports a value's type as a string: typeof 23 gives \"number\", typeof \"a name\" gives \"string\", typeof true gives \"boolean\". It is shown with parentheses in the lecture, typeof(23), but works as an operator without them."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Checking types (matches the reference repo's 14.02 script)",
+      "language": "javascript",
+      "code": "alert(typeof 18);       // \"number\"\nalert(typeof \"Wesley\"); // \"string\"\nalert(typeof true);     // \"boolean\""
+    },
+    {
+      "caption": "Arithmetic is evaluated before the alert shows",
+      "language": "javascript",
+      "code": "alert(2 + 3); // pop-up says 5"
+    }
+  ],
+  "task": null,
+  "pitfalls": [
+    "Quoting a number or boolean turns it into a string.",
+    "Writing True or TRUE; the boolean literals are lowercase."
+  ],
+  "playground": {
+    "match": "s14-data-types (lesson 14.2, data/s14.js)",
+    "coverage": "Good: covers typeof on strings, numbers, booleans plus null, undefined and arrays, the \"7\" + 1 coercion gotcha, and a types table.",
+    "gaps_and_ideas": [
+      "Add a task using alert(2 + 3) to show an expression is evaluated before alert displays it.",
+      "Add the lecture's framing: quotes are what tell the computer something is text rather than code.",
+      "Add a 'what is the type?' quiz with quoted vs unquoted values, such as 5 vs \"5\" vs true vs \"true\"."
+    ]
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "index": 309,
+  "lecture_id": 17039530,
+  "title": "Event Handling in React",
+  "section": "36. React.js",
+  "duration_min": 11,
+  "kind": "concept+exercise",
+  "summary": "Shows how to attach event handlers to JSX elements (onClick, onMouseOver, onMouseOut), update state from them with useState, and combine that with inline styles and a ternary to build a button that turns black on hover and white when the mouse leaves.",
+  "concepts": [
+    {
+      "heading": "Attaching handlers in JSX",
+      "points": [
+        "HTML event attributes become camelCase props in JSX: onclick becomes onClick, onmouseover becomes onMouseOver, onmouseout becomes onMouseOut.",
+        "The value is a JavaScript expression in curly braces that references a function: onClick={handleClick}. Pass the function itself, not a call (handleClick without parentheses), so React runs it when the event fires rather than at render.",
+        "A first test handler that only logs to the console proves the wiring; it fires each time the event occurs.",
+        "W3Schools' HTML event attributes list is a handy catalogue of other events to react to; remember to camelCase the name in JSX.",
+        "(Extra) React passes every handler a synthetic event object as its first argument (handleClick(event)); this lecture does not need it, the forms lecture uses event.target.value.",
+        "(Extra) onMouseOver/onMouseOut also fire when the pointer moves between child elements inside the target; onMouseEnter/onMouseLeave fire only once on entering and leaving, which is often what a hover effect wants."
+      ]
+    },
+    {
+      "heading": "Changing what is rendered from an event",
+      "points": [
+        "Heading text that must change is stored in state: const [headingText, setHeadingText] = useState(\"Hello\"). The name pair (value, setValue) is the usual convention.",
+        "In the handler call setHeadingText(\"Submitted\"). React re-renders the component and the h1 {headingText} shows the new value.",
+        "useState has to be imported from react before use: import React, { useState } from \"react\"; (or just import { useState } from \"react\" with the newer JSX transform used by Vite).",
+        "The argument to useState is the initial value used on first render only."
+      ]
+    },
+    {
+      "heading": "Hover colour change: state + inline style + ternary",
+      "points": [
+        "Inline style in JSX takes an object with camelCase keys inside double braces: style={{ backgroundColor: \"black\" }} (outer braces for the JS expression, inner for the object).",
+        "A second state value tracks hover: const [isMouseOver, setMouseOver] = useState(false). It starts false because the pointer is not over the button on load.",
+        "handleMouseOver calls setMouseOver(true); handleMouseOut calls setMouseOver(false).",
+        "The style picks its colour with a ternary: backgroundColor: isMouseOver ? \"black\" : \"white\". Every state change triggers a re-render that recomputes this.",
+        "Without onMouseOut the button would turn black and never revert; both events are needed.",
+        "This brings together conditional rendering, inline styling, event props and state.",
+        "(Extra) The setter name setMouseOver does not have to mirror the state name exactly (isMouseOver); only the [value, setter] order from useState matters."
+      ]
+    },
+    {
+      "heading": "What comes next",
+      "points": [
+        "The following lecture uses the same input element to handle form events, so the input here is just a placeholder for now."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Finished App: click changes heading, hover changes button colour (from reference repo, trimmed)",
+      "language": "jsx",
+      "code": "import { useState } from \"react\";\n\nfunction App() {\n  const [headingText, setHeadingText] = useState(\"Hello\");\n  const [isMouseOver, setMouseOver] = useState(false);\n\n  function handleClick() {\n    setHeadingText(\"Submitted\");\n  }\n  function handleMouseOver() {\n    setMouseOver(true);\n  }\n  function handleMouseOut() {\n    setMouseOver(false);\n  }\n\n  return (\n    <div className=\"container\">\n      <h1>{headingText}</h1>\n      <input type=\"text\" placeholder=\"What's your name?\" />\n      <button\n        style={{ backgroundColor: isMouseOver ? \"black\" : \"white\" }}\n        onClick={handleClick}\n        onMouseOver={handleMouseOver}\n        onMouseOut={handleMouseOut}\n      >\n        Submit\n      </button>\n    </div>\n  );\n}\n\nexport default App;"
+    }
+  ],
+  "task": {
+    "name": "Hover-to-black button",
+    "starting_point": "CodeSandbox starter: App with an h1 saying Hello, a text input with a name placeholder and a Submit button.",
+    "goal": "On clicking Submit the heading changes to Submitted; hovering the button turns its background black and leaving turns it white again.",
+    "steps": [
+      "Add onClick={handleClick} to the button; first just console.log in it to check wiring.",
+      "Create headingText state (initial \"Hello\"), render it in the h1 and make handleClick call setHeadingText(\"Submitted\").",
+      "Add onMouseOver with handleMouseOver; log to confirm it fires on entering the button.",
+      "Create isMouseOver state (initial false); handleMouseOver sets it to true.",
+      "Apply style={{ backgroundColor: isMouseOver ? \"black\" : \"white\" }} to the button.",
+      "Add onMouseOut with handleMouseOut that sets isMouseOver back to false."
+    ],
+    "expected_result": "White button turns black under the cursor, back to white when the cursor leaves; clicking changes the heading to Submitted.",
+    "solution_code": {
+      "language": "jsx",
+      "code": "import { useState } from \"react\";\n\nfunction App() {\n  const [headingText, setHeadingText] = useState(\"Hello\");\n  const [isMouseOver, setMouseOver] = useState(false);\n\n  function handleClick() { setHeadingText(\"Submitted\"); }\n  function handleMouseOver() { setMouseOver(true); }\n  function handleMouseOut() { setMouseOver(false); }\n\n  return (\n    <div className=\"container\">\n      <h1>{headingText}</h1>\n      <input type=\"text\" placeholder=\"What's your name?\" />\n      <button\n        style={{ backgroundColor: isMouseOver ? \"black\" : \"white\" }}\n        onClick={handleClick}\n        onMouseOver={handleMouseOver}\n        onMouseOut={handleMouseOut}\n      >\n        Submit\n      </button>\n    </div>\n  );\n}\n\nexport default App;"
+    },
+    "reference_repo_path": "Section 36 - React.js/36.33 Event Handling in React/event-handling-in-react/src/App.jsx"
+  },
+  "pitfalls": [
+    "Writing onClick={handleClick()} calls the function during render instead of on click.",
+    "Using lowercase attribute names (onclick, onmouseover) instead of camelCase.",
+    "Forgetting the double braces for the inline style object.",
+    "Misspelling the event name (onMouseOut) so the revert never fires.",
+    "(Extra) For plain colour-on-hover, CSS :hover would be simpler; this exercise is about practising state and events."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (playground data covers only sections 1-11, 14, 15).",
+    "gaps_and_ideas": [
+      "New 'React events' lesson (blurb: attach camelCase event props such as onClick and onMouseOver to JSX, and use state set inside handlers to change what renders). Tasks: (1) log a message on click, (2) change the heading to Submitted with useState, (3) black-on-hover button with onMouseOver/onMouseOut, a boolean state and a ternary inside style={{ }}, (4) add onDoubleClick to reset the heading, (5) show a counter of how many times the button was hovered.",
+      "Starter code idea: App with an h1 'Hello', a text input and a white Submit button, plus empty handleClick / handleMouseOver / handleMouseOut functions to fill in.",
+      "Demo idea: an event log panel beside the button that appends each event name as it fires (mouseover, mouseout, click), with a toggle to compare onMouseOver vs onMouseEnter when the button contains a child span."
+    ]
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "index": 288,
+  "lecture_id": 17038762,
+  "title": "React Components",
+  "section": "36. React.js",
+  "duration_min": 16,
+  "kind": "concept+exercise",
+  "summary": "Introduces React function components: a function with a PascalCase name that returns JSX, used as a custom tag. Shows splitting a Heading and a List out of one file into separate .jsx modules with default export and import, then the App component and components folder layout.",
+  "concepts": [
+    {
+      "heading": "Why components",
+      "points": [
+        "Long single files are hard to read; components split a big page into small, focused pieces.",
+        "A component can be reused wherever the same markup is needed, e.g. two List components without rewriting the ul and li tags.",
+        "Real components (heading with wrapper div, nav bar, styles) are much larger than the tiny examples used here."
+      ]
+    },
+    {
+      "heading": "Writing a function component",
+      "points": [
+        "A component is a JavaScript function that returns JSX: function Heading() { return <h1>My Favourite Foods</h1>; }.",
+        "The name must be PascalCase (every word capitalised). React uses the capital first letter to tell a custom component from a built-in HTML tag; lowercase names are treated as DOM elements.",
+        "Use it like a tag: <Heading />. When React reaches that tag it calls the function and puts the returned elements where the tag was.",
+        "Components without children should use a self-closing tag with a space before the slash (<Heading />). This follows the Airbnb React/JSX style guide, a commonly cited convention reference; a linter may auto-fix it. The compiler does not care, it is for readability.",
+        "Do not add parentheses in the export (export default Heading), since that would call the function immediately instead of handing it over."
+      ]
+    },
+    {
+      "heading": "One component per file (ES6 modules)",
+      "points": [
+        "Put each component in its own file named after it with the .jsx extension (Heading.jsx). Convention: the entry file (index.js / main.jsx) stays plain JS, components use .jsx.",
+        "Older setups required import React from \"react\" at the top of every component file so JSX could be compiled; the lecture does this each time. (Extra) With the modern JSX transform used by Vite and React 17+, this import is no longer needed, which is why the reference repo omits it.",
+        "At the bottom of the component file: export default Heading;. In the file that uses it: import Heading from \"./Heading\"; (relative path starting with ./).",
+        "File extensions are optional in the import path in the sandbox; the bundler resolves Heading to Heading.jsx.",
+        "Being the default export means the importer can pick any local name, but keeping it the same as the component is standard. (Extra)"
+      ]
+    },
+    {
+      "heading": "The App component and project structure",
+      "points": [
+        "Typical apps keep the entry file nearly empty: it only renders <App /> into the root element.",
+        "App.jsx defines the top of the component tree, returning a div containing <Heading /> and <List />, and is exported as default.",
+        "A component must return one root element (here a div, or a fragment <>...</>).",
+        "As the number of components grows, put them in a components folder (src/components) and update relative import paths accordingly, e.g. ./components/App. Larger apps further group by feature such as login or register screens."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "src/components/Heading.jsx",
+      "language": "jsx",
+      "code": "function Heading() {\n  return <h1>My Favourite Foods</h1>;\n}\n\nexport default Heading;"
+    },
+    {
+      "caption": "src/components/List.jsx",
+      "language": "jsx",
+      "code": "function List() {\n  return (\n    <ul>\n      <li>Bacon</li>\n      <li>Jamon</li>\n      <li>Noodles</li>\n    </ul>\n  );\n}\n\nexport default List;"
+    },
+    {
+      "caption": "src/App.jsx composing the two",
+      "language": "jsx",
+      "code": "import Heading from \"./components/Heading\";\nimport List from \"./components/List\";\n\nfunction App() {\n  return (\n    <div>\n      <Heading />\n      <List />\n    </div>\n  );\n}\n\nexport default App;"
+    },
+    {
+      "caption": "src/main.jsx entry point (Vite)",
+      "language": "jsx",
+      "code": "import { StrictMode } from 'react'\nimport { createRoot } from 'react-dom/client'\nimport App from './App.jsx'\n\ncreateRoot(document.getElementById('root')).render(\n  <StrictMode>\n    <App />\n  </StrictMode>\n)"
+    }
+  ],
+  "task": {
+    "name": "Extract a List component",
+    "starting_point": "Sandbox where Heading has been extracted already, and the h1 plus ul still sit in the entry file.",
+    "goal": "Create a List component in its own file and use it in place of the inline ul.",
+    "steps": [
+      "Create List.jsx inside src (use the new-file button, not new-folder).",
+      "Add the React import if the setup requires it, then define function List() returning the ul with its three li items.",
+      "Add export default List at the bottom.",
+      "In the entry/App file delete the ul markup, write <List /> as a self-closing tag, and import List from \"./List\".",
+      "Optionally restructure so the entry file only renders <App />, with App.jsx holding Heading and List inside a div, and move everything into a components folder, fixing the import paths."
+    ],
+    "expected_result": "The page looks identical to before (heading and list), but the markup lives in three small files.",
+    "solution_code": {
+      "language": "jsx",
+      "code": "// List.jsx\nfunction List() {\n  return (\n    <ul>\n      <li>Bacon</li>\n      <li>Jamon</li>\n      <li>Noodles</li>\n    </ul>\n  );\n}\nexport default List;"
+    },
+    "reference_repo_path": "Section 36 - React.js/36.12 React Components/react-components"
+  },
+  "pitfalls": [
+    "A lowercase component name (heading) is treated as an HTML tag and renders nothing useful.",
+    "Writing export default Heading() calls the function instead of exporting it.",
+    "Forgetting to import a component gives a 'List is not defined' error.",
+    "Moving files into a folder breaks relative import paths until they are updated.",
+    "The new-folder and new-file buttons in the sandbox sit side by side; choose the correct one."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (section 36 is not in the playground data files).",
+    "gaps_and_ideas": [
+      "New lesson 'React components': blurb on function components, PascalCase and default exports.",
+      "Tasks: (1) turn a heading into a Heading function component, (2) extract a List component, (3) rename it in lowercase and read the error, (4) render a component twice, (5) compose both in an App component.",
+      "Starter code: a single large App with a header, list and footer to be split.",
+      "Interactive demo: a mini multi-file editor where components can be pulled out into tabs, showing how the tree of components renders."
+    ]
+  }
+}

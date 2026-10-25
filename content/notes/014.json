@@ -1,0 +1,97 @@
+{
+  "index": 14,
+  "lecture_id": 37348656,
+  "title": "HTML Paragraph Elements",
+  "section": "2. Introduction to HTML",
+  "duration_min": 9,
+  "kind": "concept+exercise",
+  "summary": "Introduces the p element, shows why unmarked text collapses into one run-on block, and walks through an exercise that splits three blocks of Lorem Ipsum into separate paragraphs. Closes with where placeholder text comes from and how to generate it.",
+  "concepts": [
+    {
+      "heading": "The paragraph element",
+      "points": [
+        "Syntax mirrors the heading element: an opening tag <p>, the paragraph's text as content, then a closing tag </p>.",
+        "Without p tags, plain text typed into the HTML file renders as one continuous run: separate blocks of writing flow into each other on the same line, and the reader can't see where one paragraph stops and the next starts.",
+        "Wrapping each block in its own p element makes the browser display each one as a separate block, with a blank gap between them, so paragraphs are visually distinct.",
+        "(Extra) The browser ignores the line breaks and blank lines typed in the source. Any run of whitespace collapses to a single space, which is why pressing Enter in the editor does nothing to the layout and tags are needed.",
+        "(Extra) The gap between paragraphs comes from the browser's default stylesheet (roughly 1em margin above and below each p). CSS can change it later.",
+        "(Extra) p is a block-level element: it starts on a new line and takes the full available width."
+      ]
+    },
+    {
+      "heading": "Why it matters: accessibility",
+      "points": [
+        "Screen readers used by blind or low-vision visitors detect where each p element begins.",
+        "This lets the user jump from one paragraph to the next instead of listening through the whole page, so correct markup is about structure, not only looks."
+      ]
+    },
+    {
+      "heading": "Lorem Ipsum placeholder text",
+      "points": [
+        "Lorem Ipsum is dummy text used in web and print design to simulate real copy while the actual content is not yet written.",
+        "Repeating a phrase like 'this is a paragraph' over and over is a poor substitute: identical words and identical sentence lengths don't look like natural text, so the layout preview is misleading.",
+        "The text derives from a work by Cicero (over 2000 years old) and has been used by printers since the 1500s to fill page layouts.",
+        "lipsum.com generates any number of paragraphs, words, bytes or lists at the click of 'Generate', and offers versions in other languages (e.g. Dutch, Polish).",
+        "Novelty generators exist for fun: baconipsum.com (meat words), broipsum.com (slang), and many more found by searching for 'funny lorem ipsum' (Vegan Ipsum, Pirate Ipsum, etc.).",
+        "(Extra) In VS Code, Emmet expands the abbreviation lorem (or lorem50 for 50 words) followed by Tab into placeholder text without leaving the editor."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Without p tags the two blocks render on one continuous line",
+      "language": "html",
+      "code": "<body>\n  This is the first block of text.\n  This is the second block of text.\n</body>\n<!-- renders as: This is the first block of text. This is the second block of text. -->"
+    },
+    {
+      "caption": "With p tags each block is its own paragraph, separated by a gap",
+      "language": "html",
+      "code": "<body>\n  <p>This is the first block of text.</p>\n  <p>This is the second block of text.</p>\n</body>"
+    },
+    {
+      "caption": "(Extra) Emmet shortcut in VS Code: type this, then press Tab",
+      "language": "text",
+      "code": "p>lorem30\n<!-- expands to <p>…30 words of Lorem Ipsum…</p> -->"
+    }
+  ],
+  "task": {
+    "name": "2.2 Paragraph Element: separate three paragraphs",
+    "starting_point": "Download and extract the '2.2 Paragraph Element' zip from the lesson resources, move it into the Web Development Projects folder and open it in VS Code. index.html holds three blocks of Lorem Ipsum labelled 'First paragraph.', 'Second paragraph.' and 'Third paragraph.' with no tags. Right-click index.html, choose Show Preview, and the three blocks appear as one long jumble.",
+    "goal": "Use the p element so the preview shows three clearly separated paragraphs, matching goal.png.",
+    "steps": [
+      "Open index.html (the file to edit; solution.html is only for checking afterwards).",
+      "Place an opening <p> immediately before the words 'First paragraph.'",
+      "Place the closing </p> right after the last word of that first block. Moving the tag by click-and-drag or by cut and paste both work; only the final position matters.",
+      "Repeat for the second block: <p> before 'Second paragraph.', </p> after its final word.",
+      "Repeat for the third block.",
+      "Watch Live Preview update: each block should now sit on its own with a blank line between them.",
+      "Compare against goal.png, then open solution.html to confirm the tags are in the same places.",
+      "Optional extra challenge: generate your own placeholder text (Lorem Ipsum, Bacon Ipsum, Bro Ipsum...) and build a short article out of several p elements in the same index.html."
+    ],
+    "expected_result": "Three paragraph blocks of default-size body text, each starting on a new line with an empty line of space between them, as in goal.png. No headings or other elements.",
+    "solution_code": {
+      "language": "html",
+      "code": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\" />\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\n  <title>Paragraph Element</title>\n</head>\n<body>\n  <p>\n    First paragraph. Lorem ipsum dolor sit amet, consectetur adipiscing elit,\n    sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ...\n  </p>\n\n  <p>\n    Second paragraph. Suscipit adipiscing bibendum est ultricies. Tortor\n    aliquam nulla facilisi cras fermentum. ...\n  </p>\n\n  <p>\n    Third paragraph. Nisl purus in mollis nunc sed id semper risus. Ipsum a\n    arcu cursus vitae congue mauris rhoncus aenean. ...\n  </p>\n</body>\n</html>"
+    },
+    "reference_repo_path": "Section 02 - Introduction to HTML/02.02 - Paragraph Element/solution.html"
+  },
+  "pitfalls": [
+    "Expecting blank lines or Enter presses in the source to create separate paragraphs; only the p tags do that.",
+    "Putting the closing </p> in the wrong spot (e.g. after the next paragraph's first sentence), which merges or splits blocks incorrectly.",
+    "Forgetting the closing tag. (Extra) Browsers often auto-close a p when the next block element starts, so it may look fine while the structure is wrong.",
+    "Using repeated identical filler text instead of Lorem Ipsum, which hides how real text will wrap.",
+    "(Extra) The reference repo's index.html and solution.html both include a personal 'Made with ... by Harshit Soni' footer element that is not part of the course; ignore it. Its index.html is already solved, so it does not show the untagged starting state."
+  ],
+  "playground": {
+    "match": "s02-paragraphs (lesson 2.2, data/s02.js)",
+    "coverage": "Covers the core task (wrap three blocks in p), whitespace collapsing (with a live demo), block-level behaviour, the VS Code lorem shortcut, and not nesting p inside p. Starter uses shortened Lorem Ipsum and adds an h1 that the course file does not have.",
+    "gaps_and_ideas": [
+      "Add the accessibility point: screen readers use p boundaries to let users skip paragraph by paragraph. Pair it with the existing headings accessibility note.",
+      "Add a 'Lorem Ipsum' note: why placeholder text beats repeated phrases (varied word and sentence lengths), its Cicero/1500s print origin, lipsum.com's generator (paragraphs/words/bytes/lists, other languages), and novelty generators such as Bacon Ipsum and Bro Ipsum.",
+      "Add the course's optional add-on as a task: 'Generate your own ipsum (classic or novelty) and build a 4-paragraph article.'",
+      "Either remove the extra <h1>Lorem Ipsum</h1> from the starter/solution or label it as a playground addition, since the course exercise is paragraphs only.",
+      "Use longer paragraphs in the starter (5-10 lines each) so the 'one jumbled line' effect is obvious before the fix, as it is in the course file.",
+      "Explore-demo idea: a toggle that shows the same text with and without p tags side by side, plus a 'screen reader mode' list that counts the paragraphs a reader could jump between (0 without tags, 3 with)."
+    ]
+  }
+}

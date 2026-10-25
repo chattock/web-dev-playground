@@ -1,0 +1,35 @@
+{
+  "index": 9,
+  "lecture_id": 12398844,
+  "title": "Pathfinder",
+  "section": "1. Front-End Web Development",
+  "duration_min": 2,
+  "kind": "admin",
+  "summary": "Self-assessment article: pick one of six experience levels and follow a 'Start Here' link to the recommended entry point in the course. The suggestions are optional.",
+  "concepts": [
+    {
+      "heading": "Six profiles and where each should start",
+      "points": [
+        "1. Total beginner: start at the very beginning and skip nothing, because each module builds on the previous one. Get comfortable with each module before moving on; about one week per module is the suggested pace. Start link goes to lecture 37348056.",
+        "2. Some HTML/CSS already: begin at the intermediate tutorials and do every challenge. If the challenges feel too hard, drop back to the earlier lessons. Start link goes to lecture 37350296.",
+        "3. Under 6 months of JavaScript/web experience: skip the intro programming modules (dip in only if needed) and complete every lecture with 'challenge' in its title to confirm you can skip the rest.",
+        "4. Experienced programmer, new to web: usually knows some HTML/CSS, so start at the JavaScript modules. Expect JavaScript to have quirks that surprise people coming from stricter languages such as Swift.",
+        "5. Experienced web developer: jump to the back end, starting with Node, then Express, EJS, Postgres and so on.",
+        "6. Experienced web developer who only wants React: go straight to the 8-hour React module aimed at experienced developers (link goes to lecture 17038306).",
+        "These are recommendations only; learners can browse the curriculum and choose their own route."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [
+    "Beginners jumping ahead to the 'cool' later modules without the foundations, then getting lost."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (course navigation only).",
+    "gaps_and_ideas": [
+      "Optional: a short 'Where should I start?' picker on the playground home page with the same six profiles, each linking to the matching playground section (beginners → s01/s02, some HTML/CSS → s03+, JavaScript experience → s14)."
+    ]
+  }
+}

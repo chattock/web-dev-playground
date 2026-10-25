@@ -1,0 +1,30 @@
+{
+  "index": 159,
+  "lecture_id": 17967042,
+  "title": "Tip from Angela - Mixing Knowledge",
+  "section": "19. jQuery",
+  "duration_min": 2,
+  "kind": "tip",
+  "summary": "A short study tip: learning sticks better when topics from different modules are combined in small programs rather than practised only in isolation.",
+  "concepts": [
+    {
+      "heading": "Interleave topics to strengthen recall",
+      "points": [
+        "Practising each topic only inside its own module builds weaker mental links than using several topics together.",
+        "Example pairing: conditionals (if/else) from one module with loops (for/while) from another.",
+        "Exercise to try: write a tiny program of roughly 5-10 lines that deliberately combines ideas from two different course modules, such as one from module 3 and one from module 5.",
+        "The program does not need to be impressive; the act of combining the ideas is what consolidates them."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "(Extra) Possible 'mix-it-up' mini-challenges in the playground that require combining two earlier lessons, e.g. a loop that builds list items from an array with a conditional class."
+    ]
+  }
+}

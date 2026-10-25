@@ -1,0 +1,117 @@
+{
+  "index": 305,
+  "lecture_id": 17039436,
+  "title": "React Hooks - useState",
+  "section": "36. React.js",
+  "duration_min": 18,
+  "kind": "concept+exercise",
+  "summary": "Builds a counter to introduce the useState hook: why a changing variable or repeated ReactDOM.render is not the answer, how useState returns a [value, setter] pair, how array destructuring names them, and how the setter triggers a re-render. Ends with a small challenge to add a decrement button.",
+  "concepts": [
+    {
+      "heading": "Starting point and the naive attempts",
+      "points": [
+        "Start: a div with an h1 (hard-coded number) and a plus button, all rendered from the entry file. Goal: each click increases the number.",
+        "Step 1: replace the literal with a variable (count = 0) displayed with {count}. Nothing visible changes.",
+        "Step 2: attach behaviour with onClick. React's JSX uses the camelCase form of the HTML attribute and takes a function reference in braces: <button onClick={increase}>. Test with a console.log inside increase; it logs on every click.",
+        "Step 3: count++ inside increase. The console shows the number rising, but the h1 does not change, because JSX elements are descriptions rendered by ReactDOM; changing a variable does not redraw them.",
+        "Brute force fix: call the root render again inside increase. It works, but it re-renders everything, repeats code and is wasteful. Hooks are the intended solution. (Extra) In the older ReactDOM.render API this meant repeating ReactDOM.render(...); with React 18's createRoot it would be calling root.render(...) again."
+      ]
+    },
+    {
+      "heading": "Preparing: hooks live in function components",
+      "points": [
+        "Rule: hooks may only be called inside a function component (or another hook), so the UI is moved into function App() { ... return (<div>...</div>); } in its own file.",
+        "The entry file shrinks to rendering <App /> into the root; the old repeated render calls are deleted."
+      ]
+    },
+    {
+      "heading": "What useState returns",
+      "points": [
+        "useState comes from the react package. Either React.useState(...) or a named import: import { useState } from \"react\" (a non-default export, as in the earlier import/export lesson).",
+        "Called with an argument, it returns an array of two items: [currentValue, setterFunction]. The argument is the initial state, used only on the first render. With no argument the first item is undefined.",
+        "Accessing the value as state[0] works but is unreadable.",
+        "(Extra) Rules of hooks: call them at the top level of the component, never inside if statements, loops or nested functions, so React sees them in the same order on every render."
+      ]
+    },
+    {
+      "heading": "Array destructuring to name the pair",
+      "points": [
+        "Destructuring unpacks an array by position into named variables: const [red, green, blue] = rgb; (demo with an RGB colour array, where rgb[0] means nothing but red is self-explanatory).",
+        "Applied to hooks: const [count, setCount] = useState(0). First name holds the current value; second name is the function that updates it.",
+        "By convention the setter is named set + the capitalised state name (setCount).",
+        "(Extra) Destructuring is covered more fully in a later lesson; here the pattern just needs to be memorised."
+      ]
+    },
+    {
+      "heading": "Updating state",
+      "points": [
+        "Call the setter with the new value. setCount(12) on click sets the count to 12 and keeps resetting it to 12 on later clicks, so the new value must be derived from the current one.",
+        "Counter: function increase() { setCount(count + 1); }.",
+        "Flow: App renders, useState supplies the initial value, {count} appears in the h1, click runs increase, setCount stores the new value, and React re-renders the component so the h1 shows it. Only the parts of the DOM that changed are updated, which is more efficient than re-rendering manually.",
+        "Challenge solution: a minus button wired to decrease, which calls setCount(count - 1).",
+        "(Extra) count is a const that holds the value for this particular render. setCount does not change it in place; it schedules a new render in which useState returns the updated number.",
+        "(Extra) When the next value depends on the previous one, the updater form setCount(prev => prev + 1) is the safer pattern (it always uses the latest value, e.g. when several updates happen in one click)."
+      ]
+    },
+    {
+      "heading": "Recap and study advice",
+      "points": [
+        "State gives interactivity: the UI reflects the state, and calling the setter is how you change it.",
+        "Suggested practice: delete the component and rewrite it from memory until the useState syntax is familiar."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Attempt that logs but does not update the UI",
+      "language": "jsx",
+      "code": "var count = 0;\nfunction increase() {\n  count++;\n  console.log(count); // rises, h1 stays the same\n}\n// <h1>{count}</h1> <button onClick={increase}>+</button>"
+    },
+    {
+      "caption": "Array destructuring demo",
+      "language": "javascript",
+      "code": "const rgb = [9, 132, 227];\nconst [red, green, blue] = rgb;\nconsole.log(blue); // 227"
+    },
+    {
+      "caption": "Finished counter with useState",
+      "language": "jsx",
+      "code": "import { useState } from \"react\";\n\nfunction App() {\n  const [count, setCount] = useState(0);\n\n  function increase() {\n    setCount(count + 1);\n  }\n\n  function decrease() {\n    setCount(count - 1);\n  }\n\n  return (\n    <div className=\"container\">\n      <h1>{count}</h1>\n      <button onClick={decrease}>-</button>\n      <button onClick={increase}>+</button>\n    </div>\n  );\n}\n\nexport default App;"
+    }
+  ],
+  "task": {
+    "name": "Counter with increase and decrease buttons",
+    "starting_point": "Forked sandbox where the whole app (div, h1 with a hard-coded number, plus button) sits in the entry file.",
+    "goal": "A counter that goes up with + and down with -, using useState.",
+    "steps": [
+      "Create App.jsx with function App() returning the div (className \"container\"), the h1 and the + button; export default App. In the entry file render <App /> into the root and delete the old repeated render code.",
+      "Add import { useState } from \"react\"; at the top of App.jsx.",
+      "Inside App, before the return, write const [count, setCount] = useState(0); (0 is the starting value).",
+      "Replace the hard-coded number with {count} inside the h1.",
+      "Write function increase() { setCount(count + 1); } inside App and attach it with <button onClick={increase}>+</button> (pass the function, do not call it).",
+      "Challenge: add <button onClick={decrease}>-</button> and function decrease() { setCount(count - 1); }. Click both buttons to check the h1 updates."
+    ],
+    "expected_result": "Starts at 0, plus increments, minus decrements, with the screen updating each time.",
+    "solution_code": {
+      "language": "jsx",
+      "code": "// App.jsx\nimport { useState } from \"react\";\n\nfunction App() {\n  const [count, setCount] = useState(0);\n\n  function increase() {\n    setCount(count + 1);\n  }\n\n  function decrease() {\n    setCount(count - 1);\n  }\n\n  return (\n    <div className=\"container\">\n      <h1>{count}</h1>\n      <button onClick={decrease}>-</button>\n      <button onClick={increase}>+</button>\n    </div>\n  );\n}\n\nexport default App;\n\n// main.jsx (entry file)\nimport { createRoot } from \"react-dom/client\";\nimport App from \"./App\";\n\ncreateRoot(document.getElementById(\"root\")).render(<App />);"
+    },
+    "reference_repo_path": "Section 36 - React.js/36.29 React Hooks - useState/usestate-hook/src/App.jsx"
+  },
+  "pitfalls": [
+    "Writing onClick={increase()} (calls immediately) instead of onClick={increase}.",
+    "Mutating a normal variable (count++) and expecting a refresh.",
+    "Calling hooks outside a function component.",
+    "Setting a fixed value such as setCount(12) rather than building the new value from count.",
+    "(Extra) Expecting count to hold the new value on the line right after setCount(count + 1); it only changes on the next render."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (playground data only covers sections 1-11, 14, 15).",
+    "gaps_and_ideas": [
+      "New lesson 'useState: your first hook'. Blurb: state is a value React remembers between renders; calling its setter stores the new value and re-renders the component.",
+      "Tasks: (1) add onClick={increase} to a + button and console.log on each click; (2) do count++ on a plain variable and observe the h1 never changes; (3) switch to const [count, setCount] = useState(0) and setCount(count + 1); (4) add a - button and a Reset button that calls setCount(0); (5) log the array returned by useState(0) to see [0, f].",
+      "Starter code: App.jsx with <h1>0</h1> and one + button, no imports.",
+      "Interactive demo: a counter beside a live 'render count' badge and a readout of the [value, setter] pair, with a toggle between 'plain variable' (the console count rises, the UI stays frozen) and 'useState' (both update)."
+    ]
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "index": 303,
+  "lecture_id": 17039348,
+  "title": "Conditional Rendering Practice",
+  "section": "36. React.js",
+  "duration_min": 7,
+  "kind": "concept+exercise",
+  "summary": "Practice exercise: turn one login form into either a Login or a Register form depending on a userIsRegistered variable that must stay in App. Solved by passing the flag down as a prop, using a ternary for the button text and && for the optional Confirm Password input.",
+  "concepts": [
+    {
+      "heading": "Scenario",
+      "points": [
+        "A variable userIsRegistered lives in App and models the result of checking credentials: true means the user exists (show Login), false means they do not (show Register).",
+        "Register mode needs an extra Confirm Password input (type the password twice); Login mode shows only Username and Password.",
+        "Constraint: the variable must not be moved out of App, so the Form component needs to receive it another way."
+      ]
+    },
+    {
+      "heading": "Step 1: pass the flag as a prop",
+      "points": [
+        "In App, render <Form isRegistered={userIsRegistered} />. The prop name is chosen freely; the value is the variable inside curly braces.",
+        "Conditional rendering in React is very often driven by props handed down from a parent.",
+        "In Form, accept props and read props.isRegistered.",
+        "(Extra) Data only flows downward: Form can read props.isRegistered but cannot change userIsRegistered in App. Changing it from a child comes later with state and callback props."
+      ]
+    },
+    {
+      "heading": "Step 2: button text with a ternary",
+      "points": [
+        "Inside the button's children use curly braces: {props.isRegistered ? \"Login\" : \"Register\"}.",
+        "Without the braces the expression is shown as plain text instead of evaluated.",
+        "Toggling the variable in App between true and false flips the label.",
+        "(Extra) Only the text node inside <button> needs to change, so the ternary can return plain strings; the element itself stays the same in both modes."
+      ]
+    },
+    {
+      "heading": "Step 3: Confirm Password only when registering",
+      "points": [
+        "Use && so the input is rendered only when the user is not registered: {!props.isRegistered && <Input type=\"password\" placeholder=\"Confirm Password\" />}.",
+        "The first version compares explicitly (props.isRegistered === false &&); the shorter form negates with !, which flips a boolean and reads as 'is not registered'.",
+        "A ternary with null in the false branch gives the same result but is longer; && is the most compact option.",
+        "(Extra) When the right-hand JSX after && spans more than one line, wrap it in parentheses so the expression is parsed as one unit.",
+        "(Extra) ! converts any value to the opposite boolean, so !props.isRegistered is true when the prop is false (and also when it is missing/undefined)."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "App passes the flag down",
+      "language": "jsx",
+      "code": "import Form from \"./Form\";\n\nvar userIsRegistered = true;\n\nfunction App() {\n  return (\n    <div className=\"container\">\n      <Form isRegistered={userIsRegistered} />\n    </div>\n  );\n}\n\nexport default App;"
+    },
+    {
+      "caption": "Form.jsx: ternary for the button text, && for the extra input",
+      "language": "jsx",
+      "code": "import Input from \"./Input\";\n\nfunction Form(props) {\n  return (\n    <form className=\"form\">\n      <Input type=\"text\" placeholder=\"Username\" />\n      <Input type=\"password\" placeholder=\"Password\" />\n      {!props.isRegistered && (\n        <Input type=\"password\" placeholder=\"Confirm Password\" />\n      )}\n      <button type=\"submit\">\n        {props.isRegistered ? \"Login\" : \"Register\"}\n      </button>\n    </form>\n  );\n}\n\nexport default Form;"
+    }
+  ],
+  "task": {
+    "name": "Login / Register form switch",
+    "starting_point": "Forked sandbox with App holding userIsRegistered and a Form component that always renders username, password, confirm password and a Register button.",
+    "goal": "Without moving userIsRegistered, show Login text and hide Confirm Password when it is true; show Register and the Confirm Password field when it is false.",
+    "steps": [
+      "In App.jsx leave var userIsRegistered = true; where it is and render <Form isRegistered={userIsRegistered} />.",
+      "In Form.jsx accept props in the function signature (function Form(props)).",
+      "Replace the button's fixed text with {props.isRegistered ? \"Login\" : \"Register\"} inside the <button type=\"submit\">.",
+      "Wrap the Confirm Password input in {!props.isRegistered && ( ... )} so it only renders when the user is not registered (first try props.isRegistered === false &&, then shorten it with !).",
+      "Flip userIsRegistered in App between true and false and check both screens."
+    ],
+    "expected_result": "true: Username, Password, Login button. false: Username, Password, Confirm Password, Register button.",
+    "solution_code": {
+      "language": "jsx",
+      "code": "// App.jsx\nimport Form from \"./Form\";\n\nvar userIsRegistered = true;\n\nfunction App() {\n  return (\n    <div className=\"container\">\n      <Form isRegistered={userIsRegistered} />\n    </div>\n  );\n}\nexport default App;\n\n// Form.jsx\nimport Input from \"./Input\";\n\nfunction Form(props) {\n  return (\n    <form className=\"form\">\n      <Input type=\"text\" placeholder=\"Username\" />\n      <Input type=\"password\" placeholder=\"Password\" />\n      {!props.isRegistered && (\n        <Input type=\"password\" placeholder=\"Confirm Password\" />\n      )}\n      <button type=\"submit\">\n        {props.isRegistered ? \"Login\" : \"Register\"}\n      </button>\n    </form>\n  );\n}\nexport default Form;\n\n// Input.jsx\nfunction Input(props) {\n  return <input type={props.type} placeholder={props.placeholder} />;\n}\nexport default Input;"
+    },
+    "reference_repo_path": "Section 36 - React.js/36.27 Conditional Rendering Practice/conditional-rendering-practice/src"
+  },
+  "pitfalls": [
+    "Forgetting curly braces around the conditional, so it appears as literal text.",
+    "Trying to move the variable instead of passing it as a prop.",
+    "The reference repo puts the components in src/components, uses a Button component and switches the whole <Button text=...> in a ternary rather than just the text, and renders the Username field as a raw <input> while the others use <Input>. The notes' solution follows the lecture's simpler version."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (playground data only covers sections 1-11, 14, 15).",
+    "gaps_and_ideas": [
+      "Add as the closing practice task of the proposed 'Conditional rendering' lesson: starter App.jsx holds var userIsRegistered and a Form that always shows Username, Password, Confirm Password and a Register button.",
+      "Tasks: (1) pass the flag as an isRegistered prop without moving it; (2) switch the button text with a ternary; (3) hide Confirm Password with !props.isRegistered &&; (4) bonus: change the heading above the form to 'Welcome back' / 'Create an account' with a ternary.",
+      "Interactive demo: a 'registered?' checkbox that flips the prop, showing the rendered form next to the JSX with the active ternary branch and the && guard highlighted."
+    ]
+  }
+}

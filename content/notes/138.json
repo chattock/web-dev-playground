@@ -1,0 +1,50 @@
+{
+  "index": 138,
+  "lecture_id": 12400686,
+  "title": "Higher Order Function Challenge Solution",
+  "section": "18. Advanced Javascript and DOM Manipulation",
+  "duration_min": 0,
+  "kind": "solution",
+  "summary": "Solution page for the four-operation calculator challenge from the previous lecture. The page body was only an 'Open' link-out, so this note is built from the reference repo's finished code.",
+  "concepts": [
+    {
+      "heading": "Solution structure",
+      "points": [
+        "(Extra) Four operator functions (addition, subtraction, multiplication, division) each take num1 and num2 and return the result of one arithmetic operator.",
+        "(Extra) calculator(num1, num2, operator) is the higher order function: it simply returns operator(num1, num2), so the caller chooses the behaviour by passing a function name.",
+        "(Extra) Call sites pass the function name without parentheses. Adding parentheses would invoke the function early with no arguments.",
+        "(Extra) Division by zero in JavaScript gives Infinity rather than an error; there is no guard in the solution."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Reference solution",
+      "language": "javascript",
+      "code": "function addition(num1, num2) {\n  return num1 + num2;\n}\nfunction subtraction(num1, num2) {\n  return num1 - num2;\n}\nfunction multiplication(num1, num2) {\n  return num1 * num2;\n}\nfunction division(num1, num2) {\n  return num1 / num2;\n}\n\nfunction calculator(num1, num2, operator) {\n  return operator(num1, num2);\n}\n\nconsole.log(calculator(4, 5, addition));       // 9\nconsole.log(calculator(5, 4, subtraction));    // 1\nconsole.log(calculator(3, 4, multiplication)); // 12\nconsole.log(calculator(10, 2, division));      // 5"
+    }
+  ],
+  "task": {
+    "name": "Higher order function challenge (solution)",
+    "starting_point": "calculator with add and multiply from the previous lecture.",
+    "goal": "Support subtract and divide as well, selected by passing a function.",
+    "steps": [
+      "Define subtraction and division with two parameters each.",
+      "Call calculator with each of the four function names and log the results."
+    ],
+    "expected_result": "Logs 9, 1, 12, 5 for the four example calls.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "function subtraction(num1, num2) {\n  return num1 - num2;\n}\nfunction division(num1, num2) {\n  return num1 / num2;\n}"
+    },
+    "reference_repo_path": "Section 18 - Advanced Javascript and DOM Manipulation/18.02 - Higher Order Functions and Passing Functions as Arguments/script.js"
+  },
+  "pitfalls": [
+    "Reading this page expecting a long article: the content is a link-out, not text on the page."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (section 18 has no playground file).",
+    "gaps_and_ideas": []
+  }
+}

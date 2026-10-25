@@ -1,0 +1,119 @@
+{
+  "index": 21,
+  "lecture_id": 37349846,
+  "title": "Image Elements",
+  "section": "3. Intermediate HTML",
+  "duration_min": 8,
+  "kind": "concept+exercise",
+  "summary": "Covers the <img> element: a void (self-closing) element whose src attribute points to the image file and whose alt attribute gives a text description for screen readers. Also shows picsum.photos for placeholder images, a screen-reader demo of why alt text matters, and an exercise adding a cat or dog image (including an animated GIF) under a heading.",
+  "concepts": [
+    {
+      "heading": "The img element and its src attribute",
+      "points": [
+        "Syntax: <img src=\"URL\" />. As with the anchor's href, the attribute does the real work: src (short for source) tells the browser where the image file is.",
+        "The value of src is the image's location, e.g. a full URL to an image hosted online. (Extra) It can also be a path to a file in your own project, which the next section covers.",
+        "img has no closing tag. It is a self-closing tag, also called a void element, like <hr /> and <br /> from the previous section.",
+        "The reason it has no closing tag: there is no text content to wrap. The content is the picture loaded from src.",
+        "(Extra) The trailing slash in <img ... /> is optional in HTML5; <img ...> works the same. The course writes the slash."
+      ]
+    },
+    {
+      "heading": "Placeholder images with picsum.photos",
+      "points": [
+        "picsum.photos serves random photos for use while building a layout, the image equivalent of Lorem Ipsum placeholder text.",
+        "Add the size after a slash: https://picsum.photos/200 returns a random 200 x 200 pixel image. Each load may give a different photo.",
+        "Use it when you need some image in place to see the layout but do not care which one.",
+        "(Extra) https://picsum.photos/300/200 gives a 300 wide by 200 high image."
+      ]
+    },
+    {
+      "heading": "The alt attribute and accessibility",
+      "points": [
+        "alt stands for alternative text: a short written description of what the image shows. Always include it.",
+        "Blind and visually impaired users browse with a screen reader, which reads page content aloud. When it reaches an image, it reads the alt text, so the description is how they learn what the image is.",
+        "Demo: a Chrome extension (Silktide) that simulates a screen reader on a news site. Stepping through the page, it announces an image by reading its description. Right-click the image > Inspect shows that description is exactly the img's alt value.",
+        "The tool itself is not important (it may only run on some systems); the point is that alt text is what disabled users depend on.",
+        "Adding alt changes nothing visually for sighted users; it works behind the scenes.",
+        "If an image carries no meaning for someone reading the content (purely decorative), the alt can be left empty.",
+        "(Extra) Write empty as alt=\"\" rather than leaving the attribute out: an empty alt tells screen readers to skip the image, while a missing alt may make them read the file name. alt text is also shown if the image fails to load and is used by search engines.",
+        "(Extra) Good alt text describes the content ('puppy digging in the sand'), not the fact that it is an image ('image of a dog')."
+      ]
+    },
+    {
+      "heading": "Image formats",
+      "points": [
+        "GIFs go in src exactly like JPEG or PNG files. An animated GIF starts playing on its own once the page loads; no extra code is needed.",
+        "The exercise offers a static JPEG (kitten) and an animated GIF (puppy)."
+      ]
+    },
+    {
+      "heading": "Exercise workflow",
+      "points": [
+        "Download the lesson zip, move the extracted folder into the Web Development Projects folder and open it in VS Code.",
+        "index.html provides two image URLs, one cat and one dog. Pick either; the goal is to practise writing an img element.",
+        "Check the result in Live Preview."
+      ]
+    },
+    {
+      "heading": "(Extra) Reference repo notes",
+      "points": [
+        "The reference solution builds both versions, cat then dog, separated by an <hr />. The lecture only asks for one heading and one image.",
+        "It includes the author's footer line, which is not part of the exercise and is left out below."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Basic image: void element, src gives the location",
+      "language": "html",
+      "code": "<img src=\"https://picsum.photos/200\" />"
+    },
+    {
+      "caption": "Always add an alt description",
+      "language": "html",
+      "code": "<img src=\"https://picsum.photos/200\" alt=\"forest at sunset\" />"
+    },
+    {
+      "caption": "(Extra) Decorative image: empty alt so screen readers skip it",
+      "language": "html",
+      "code": "<img src=\"divider-swirl.png\" alt=\"\" />"
+    }
+  ],
+  "task": {
+    "name": "3.4 Image Elements: cat person or dog person",
+    "starting_point": "index.html contains two example image URLs: a kitten JPEG and an animated puppy GIF, both hosted on the course's GitHub (raw.githubusercontent.com/appbrewery/webdev/main/). goal1.png and goal2.png show the cat and dog versions of the finished page.",
+    "goal": "Add an h1 declaring whether you are a cat person or a dog person, followed immediately by an img showing the matching animal, with a descriptive alt.",
+    "steps": [
+      "Add an h1 with the text 'I am a Cat Person' or 'I am a Dog Person'.",
+      "Right after it, add an img element as a self-closing tag (no closing </img>).",
+      "Set src to the matching URL from index.html (kitten.jpeg or puppy.gif).",
+      "Open Live Preview: the cat is a still photo, the puppy GIF animates by itself.",
+      "Add an alt attribute describing the image, e.g. 'puppy digging in the sand' or 'kitten held in hand'. The preview looks the same; the benefit is for screen-reader users."
+    ],
+    "expected_result": "A heading with the chosen animal's picture below it; the dog version shows an animated GIF. Inspecting the img shows both src and alt.",
+    "solution_code": {
+      "language": "html",
+      "code": "<body>\n  <h1>I am a Dog Person</h1>\n  <img\n    src=\"https://raw.githubusercontent.com/appbrewery/webdev/main/puppy.gif\"\n    alt=\"puppy digging in the sand\"\n  />\n\n  <!-- or, for cat people: -->\n  <!--\n  <h1>I am a Cat Person</h1>\n  <img\n    src=\"https://raw.githubusercontent.com/appbrewery/webdev/main/kitten.jpeg\"\n    alt=\"kitten held in hand\"\n  />\n  -->\n</body>"
+    },
+    "reference_repo_path": "Section 03 - Intermediate HTML/03.04 - Image Elements/solution.html"
+  },
+  "pitfalls": [
+    "Writing a closing </img> tag. img is a void element.",
+    "Leaving out alt, which leaves screen-reader users with no description.",
+    "Writing alt text like 'image' or 'photo' that tells the listener nothing.",
+    "Typos in the src URL: the image silently fails and only a broken-image icon (or the alt text) appears.",
+    "Using a page URL (an HTML page that shows the picture) instead of the direct image file URL."
+  ],
+  "playground": {
+    "match": "s03-images (lesson 3.4, data/s03.js)",
+    "coverage": "Covers img with src and alt, a width attribute, a demo that breaks the src to show the alt text and what a screen reader announces, guidance on good and decorative alt text, image formats (JPG, PNG, SVG, GIF, WebP) and free image sources. The task uses an Unsplash dog photo under 'I am a Dog Person'.",
+    "gaps_and_ideas": [
+      "Say explicitly that img is a void/self-closing element and link it back to hr and br from section 2; this is a key point of the lecture.",
+      "Offer the course's cat/dog choice using the course image URLs (kitten.jpeg static, puppy.gif animated) so learners also see that a GIF animates with no extra code.",
+      "Add picsum.photos as a placeholder option, with a mini task: swap the src to https://picsum.photos/200 and reload to get a new random image.",
+      "Add an 'inspect a real site' task: find an image on any news site, Inspect it, and read its alt text, mirroring the screen-reader demo.",
+      "width is not part of this lecture; mark it as an extra (sizing properly comes with CSS later).",
+      "Clarify alt=\"\" vs omitting alt in the notes, since the lecture only says decorative images can be left blank."
+    ]
+  }
+}

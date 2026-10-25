@@ -1,0 +1,48 @@
+{
+  "index": 266,
+  "lecture_id": 41780520,
+  "title": "Introduction to Authentication",
+  "section": "35. Authentication and Security",
+  "duration_min": 6,
+  "kind": "theory",
+  "summary": "Frames the authentication module: why sites need accounts, the roadmap of security levels from plain-text storage up to OAuth, and the 'secrets' app (a Whisper-style anonymous confessions site) built throughout.",
+  "concepts": [
+    {
+      "heading": "Why authenticate",
+      "points": [
+        "User-generated data (posts, likes, messages, recipes) must be tied to an individual, so each person gets an account identified by credentials, acting like an ID card in the database.",
+        "Accounts keep private data private: only the owner, after logging in, can see their messages.",
+        "Accounts also gate access by status, e.g. a streaming service unlocks content once a payment flag is set on the user record."
+      ]
+    },
+    {
+      "heading": "Why it is hard",
+      "points": [
+        "Creating sign-up and login is easy; making it secure is the difficult part.",
+        "The module climbs through levels: (1) store email and password in the database, (2) encryption, (3) hashing, (4) salting, (5) cookies and sessions, (6) secrets in environment variables, (7) OAuth / social login such as Google.",
+        "After building everything by hand, third-party helpers such as Passport are introduced to simplify it. Learning the bottom-up version first means you understand what libraries do.",
+        "Skipping ahead to OAuth is possible but not recommended."
+      ]
+    },
+    {
+      "heading": "The app being built",
+      "points": [
+        "A secrets-sharing site: anonymous posts, not linked to an email or username on display.",
+        "Three entry points: a home page with Register and Login buttons, and a secrets page only reachable once authenticated.",
+        "Starter files with styling are supplied so the focus stays on auth logic rather than Bootstrap/CSS."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [
+    "(Extra) Treat each 'level' as a deliberately insecure stage that is fixed by the next one; do not ship early levels."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (section 35 has no file).",
+    "gaps_and_ideas": [
+      "New lesson 'Authentication overview': blurb on authentication vs authorisation; 3-5 tasks such as listing which of three sample pages need login, ordering the security levels, and sketching the register/login/secrets flow. Interactive demo: click-through flow diagram where a guest is redirected from /secrets to /login while a logged-in user passes."
+    ]
+  }
+}

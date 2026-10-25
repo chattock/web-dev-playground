@@ -1,0 +1,61 @@
+{
+  "index": 81,
+  "lecture_id": 12371642,
+  "title": "Naming and Naming Conventions for Javascript Variables",
+  "section": "14. Introduction to Javascript ES6",
+  "duration_min": 7,
+  "kind": "concept",
+  "summary": "Rules and conventions for naming variables: which names JavaScript rejects, what characters are allowed, why meaningful names matter, and camelCase. Also shows how to clear the DevTools console versus truly resetting memory.",
+  "concepts": [
+    {
+      "heading": "Clearing the console versus clearing state",
+      "points": [
+        "Cmd+K (Mac) or Ctrl+K (Windows) clears the console output only. Variables created earlier still exist, so typing myName still returns its value.",
+        "To wipe stored state, do a hard reload: hold the reload button (Mac) or right-click it (Windows) and choose Empty Cache and Hard Reload. Afterwards the old variable is gone (typing it gives a not-defined error).",
+        "(Extra) A plain page refresh in DevTools usually also discards variables from the page's memory, since a fresh page context is created."
+      ]
+    },
+    {
+      "heading": "Hard rules (JavaScript enforces these)",
+      "points": [
+        "Cannot be a reserved word: var var = ... is an error. A name may contain a keyword (myvar is fine).",
+        "Cannot start with a digit: 123 is invalid, but my123 is valid.",
+        "No spaces: my name would be read as variable my followed by a stray token.",
+        "Only letters, digits, $ and _ are allowed. my-name is invalid because the hyphen is read as subtraction, but my_name is valid.",
+        "(Extra) Names are case-sensitive: myname, myName and MyName are three different variables."
+      ]
+    },
+    {
+      "heading": "Conventions (humans enforce these)",
+      "points": [
+        "Choose meaningful names that make the contents obvious; strings of random characters work but make shared code unreadable. Compare folders labelled Pictures or Documents with folders called untitled folder 1 to 6.",
+        "Use camelCase: first word lowercase, each following word capitalised (userScoreFinal). Capital letters mark word boundaries so names stay readable.",
+        "A website domain example (a therapist-finder site) shows how running words together without case can be misread."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Valid and invalid names (matches the reference repo 14.04 file)",
+      "language": "javascript",
+      "code": "var myName = \"Wesley\";\nvar my123 = 123;      // digits allowed, but not at the start\nvar myvar = \"x\";      // contains a keyword: fine\nvar my_name = \"Eve\";  // underscore ok\nvar userScoreFinal = 12; // camelCase\n\n// var var = 1;       // error: reserved word\n// var 123 = 1;       // error: starts with a number\n// var my name = 1;   // error: space\n// var my-name = 1;   // error: hyphen"
+    }
+  ],
+  "task": null,
+  "pitfalls": [
+    "Using hyphens in names (kebab-case works in CSS, not JavaScript).",
+    "Starting a name with a number.",
+    "Thinking the console clear command also clears variables.",
+    "Assuming any name that runs is a good name."
+  ],
+  "playground": {
+    "match": "s14-naming (lesson 14.4, data/s14.js)",
+    "coverage": "Good: camelCase, PascalCase, SCREAMING_SNAKE, cannot start with a number, reserved words, case-sensitivity, boolean/function naming tips, and a rename-the-bad-names task.",
+    "gaps_and_ideas": [
+      "Add the specific rules about spaces and hyphens (my name, my-name) with a quick-fire 'valid or invalid?' task.",
+      "Add the allowed-characters rule: letters, digits, $ and _.",
+      "Add a tip about Cmd/Ctrl+K and hard reload when experimenting in real DevTools.",
+      "Interactive explore: type a name and get live valid/invalid feedback with the reason."
+    ]
+  }
+}

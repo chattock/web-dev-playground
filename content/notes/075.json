@@ -1,0 +1,66 @@
+{
+  "index": 75,
+  "lecture_id": 12371320,
+  "title": "Introduction to Javascript",
+  "section": "14. Introduction to Javascript ES6",
+  "duration_min": 12,
+  "kind": "theory",
+  "summary": "A history-and-context lecture on JavaScript: why it was created, what 'script' means, how it differs from Java, what interpreted vs compiled means, and why it is the core language of the web.",
+  "concepts": [
+    {
+      "heading": "Why JavaScript exists",
+      "points": [
+        "Early web pages were static HTML. Any calculation, lookup or unit conversion needed a round trip to a server that returned a fresh page.",
+        "Netscape wanted pages that react instantly (animation, live interaction), which requires code running inside the browser itself. They commissioned Brendan Eich to build a small, beginner-friendly scripting language, and a first version reportedly took about ten days.",
+        "Browsers are heavily dependent on it: with JavaScript switched off in Chrome settings, sites like Twitter lose features such as the live character counter, ads vanish on news sites, and apps like YouTube or Netflix fail to load."
+      ]
+    },
+    {
+      "heading": "Names and standards",
+      "points": [
+        "The first name was LiveScript. Microsoft's reverse-engineered version was JScript. Differences between versions led to standardisation as ECMAScript (from the European computer manufacturers' association).",
+        "Version names such as ES6 or ES7 refer to ECMAScript editions. ES6 (2015) is the baseline modern syntax this section teaches."
+      ]
+    },
+    {
+      "heading": "What 'script' means",
+      "points": [
+        "A script is a list of instructions for actors; in a web page the actors are HTML elements and the script is JavaScript.",
+        "Example idea: unhide the h1, wait one second, unhide the paragraph, then change the h1 text to Hello and the paragraph text to World. This shows JavaScript reading and changing elements over time."
+      ]
+    },
+    {
+      "heading": "JavaScript vs Java",
+      "points": [
+        "They are unrelated languages; the name was a 1990s marketing choice because 'Java' was fashionable.",
+        "JavaScript is interpreted: the engine runs instructions as it reads them. Java is compiled: translated to a runnable form ahead of time. Interpreted languages used to be seen as slow toys, but modern engines are fast and capable.",
+        "(Extra) Modern JavaScript engines use just-in-time compilation, so the interpreted/compiled split is blurrier than it was."
+      ]
+    },
+    {
+      "heading": "Where it is used and why learn it first",
+      "points": [
+        "Originally front-end only; now also used in back-end and full-stack frameworks, which later sections cover.",
+        "It is the only language every major browser runs natively. Other languages can compile to JavaScript, but JavaScript remains the foundation.",
+        "It topped the RedMonk language popularity ranking in early 2018, narrowly ahead of Java.",
+        "Choose a language by target: Swift for iOS, Java (or Kotlin) for Android, JavaScript for websites and web apps. Its quirks can bite, so the following lessons stress good practice."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [
+    "Assuming JavaScript and Java are related or share syntax rules and behaviour.",
+    "Calling versions 'JS6'; the standard naming is ES6 or ECMAScript 2015."
+  ],
+  "playground": {
+    "match": "s14-alerts (lesson 14.1, data/s14.js) is the first JS lesson, but there is no intro lesson",
+    "coverage": "The playground starts directly at alert and console.log. None of the history, interpreted-vs-compiled or 'what is a script' content is present.",
+    "gaps_and_ideas": [
+      "Add a short 'What is JavaScript?' intro card before 14.1 with a mini timeline (Mosaic, Netscape, 1995, ECMAScript).",
+      "Interactive demo: a tiny 'script' that unhides an h1, waits one second, unhides a paragraph, then changes both texts, with a Replay button, to illustrate elements as actors.",
+      "A 'JavaScript on/off' toggle demo showing a page with and without script features such as a live character counter.",
+      "Note that Java and JavaScript are different languages."
+    ]
+  }
+}

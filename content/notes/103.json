@@ -1,0 +1,60 @@
+{
+  "index": 103,
+  "lecture_id": 18143246,
+  "title": "Introducing the Leap Year Code Challenge",
+  "section": "15. Intermediate Javascript",
+  "duration_min": 4,
+  "kind": "challenge-intro",
+  "summary": "Sets out the leap year rules, shows a flowchart of the decision order, and explains the exact output strings the next exercise expects.",
+  "concepts": [
+    {
+      "heading": "Leap year rules",
+      "points": [
+        "A year divisible by 4 is a leap year.",
+        "Exception: a year also divisible by 100 is not a leap year.",
+        "Exception to the exception: a year also divisible by 400 is a leap year.",
+        "Example: 2000 divides by 4, by 100 and by 400, so it is a leap year. 1900 divides by 4 and 100 but not 400, so it is not.",
+        "Background: leap years compensate for the mismatch between the calendar and the Earth's orbit; the exercise links an explainer video and a reference site that steps through the rules."
+      ]
+    },
+    {
+      "heading": "Flowchart approach",
+      "points": [
+        "Draw the logic as a flowchart (draw.io) before coding.",
+        "Step 1: divisible by 4? If no, not a leap year.",
+        "Step 2: divisible by 100? If no, leap year.",
+        "Step 3: divisible by 400? If yes, leap year; if no, not a leap year.",
+        "Each decision diamond maps to an if statement, so the chart can be translated straight into code."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": {
+    "name": "Leap Year challenge",
+    "starting_point": "Exercise page with a function to write that receives a year.",
+    "goal": "Return the exact string \"Leap year.\" or \"Not leap year.\" for the given year.",
+    "steps": [
+      "Study the rules and examples.",
+      "Optionally draw your own flowchart.",
+      "Write the logic using the modulo operator (year % 4 === 0 and so on) inside if/else.",
+      "Match the output text exactly, including capital letter, space and full stop, or the tests fail."
+    ],
+    "expected_result": "2000 gives \"Leap year.\"; 1900 and 2023 give \"Not leap year.\"",
+    "solution_code": null,
+    "reference_repo_path": "Section 15 - Intermediate Javascript/15.06 - Leap Year Challenge Exercise/script.js"
+  },
+  "pitfalls": [
+    "Checking 100 before 4, or forgetting the 400 exception.",
+    "Typos in the returned strings.",
+    "Using = instead of === in the comparisons."
+  ],
+  "playground": {
+    "match": "s15-leap-year (lesson 15.6, data/s15.js)",
+    "coverage": "Matches the challenge with nested ifs, a one-line variant and test years.",
+    "gaps_and_ideas": [
+      "Add a task to sketch the three-question flowchart before coding.",
+      "Add a note that exact output strings matter for the course's tests.",
+      "Demo idea: year input that highlights each flowchart step as it is evaluated."
+    ]
+  }
+}

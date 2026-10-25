@@ -1,0 +1,55 @@
+{
+  "index": 130,
+  "lecture_id": 12400606,
+  "title": "Dicee Challenge Step 6 - Change the Title to Display a Winner",
+  "section": "17. Boss Level Challenge 1 - The Dicee Game",
+  "duration_min": 1,
+  "kind": "article-task",
+  "summary": "Step 6: compare the two numbers and set the h1 to announce Player 1, Player 2 or a draw.",
+  "concepts": [
+    {
+      "heading": "Winner logic",
+      "points": [
+        "Compare randomNumber1 and randomNumber2 with an if / else if / else chain: equal means draw, higher left means Player 1, otherwise Player 2.",
+        "Use strict equality (===) for the draw check.",
+        "Select the h1 and set its innerHTML (or textContent) to the result string.",
+        "Lecture hint: if statement, querySelector and innerHTML are all that is needed."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Winner announcement",
+      "language": "javascript",
+      "code": "if (randomNumber1 === randomNumber2) {\n  document.querySelector(\"h1\").innerHTML = \"Draw!\";\n} else if (randomNumber1 > randomNumber2) {\n  document.querySelector(\"h1\").innerHTML = \"Player 1 Wins!\";\n} else {\n  document.querySelector(\"h1\").innerHTML = \"Player 2 Wins!\";\n}"
+    }
+  ],
+  "task": {
+    "name": "Step 6: show the winner",
+    "starting_point": "Both dice randomised; heading says Refresh Me.",
+    "goal": "Heading reports which player won or a draw.",
+    "steps": [
+      "Write an if comparing the two values for equality.",
+      "Add else if for Player 1 higher.",
+      "Add else for Player 2.",
+      "In each branch change the h1 content."
+    ],
+    "expected_result": "Heading text always matches the dice faces shown.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "if (randomNumber1 === randomNumber2) {\n  document.querySelector(\"h1\").innerHTML = \"Draw!\";\n} else if (randomNumber1 > randomNumber2) {\n  document.querySelector(\"h1\").innerHTML = \"Player 1 Wins!\";\n} else {\n  document.querySelector(\"h1\").innerHTML = \"Player 2 Wins!\";\n}\n// reference repo adds flag emoji to the messages; optional"
+    },
+    "reference_repo_path": "Section 17 - Boss Level Challenge 1 - The Dicee Game"
+  },
+  "pitfalls": [
+    "Using = instead of === in the condition.",
+    "Wrong comparison direction mislabeling the winner."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (no s17.js data file); covered by the proposed Dicee project lesson.",
+    "gaps_and_ideas": [
+      "Task: swap innerHTML for textContent and explain why both work here."
+    ]
+  }
+}

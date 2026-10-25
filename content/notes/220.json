@@ -1,0 +1,92 @@
+{
+  "index": 220,
+  "lecture_id": 12386680,
+  "title": "Cloning",
+  "section": "27. Git, Github and Version Control",
+  "duration_min": 9,
+  "kind": "concept+exercise",
+  "summary": "Explains git clone as the way to copy a remote GitHub repository, with its full commit history, into a local working directory. Demonstrates cloning and running two open-source JavaScript projects (a browser Quake port and a Wordle clone) and points to beginner-friendly projects for first open-source contributions.",
+  "concepts": [
+    {
+      "heading": "What git clone does",
+      "points": [
+        "git clone <url> downloads a remote repository: every file, every commit and the whole version history, into a new folder on your machine.",
+        "The result is a complete local repository. You normally clone once, then keep working on your own branches and pull or push afterwards.",
+        "It is the reverse of the previous lesson's push: push sends local commits to a remote, clone brings a remote down for the first time.",
+        "The URL is the repository's GitHub address (https form ending in .git, copied from the green Code button)."
+      ]
+    },
+    {
+      "heading": "Why clone someone else's project",
+      "points": [
+        "Customise an open-source program to your own needs.",
+        "Extend it with features it lacks.",
+        "Fix a bug you found.",
+        "Self-host free alternatives to paid tools (project management, newsletter, time tracking); curated lists of such self-hosted apps exist on GitHub.",
+        "Reading and modifying other people's code is one of the fastest ways to improve as a developer."
+      ]
+    },
+    {
+      "heading": "Workflow: clone, install, run",
+      "points": [
+        "Clone the repo in a terminal, then cd into the new folder it created.",
+        "Read the repo's README for run instructions; JavaScript projects usually need npm install to fetch dependencies listed in package.json.",
+        "Some projects need extra setup commands (the Quake demo needed a content-server setting copied from its README before starting).",
+        "Start the app as the README says: node <file> or npm start. The terminal prints the local address (e.g. port 8080 for Quake) to open in the browser.",
+        "Because the code is now on your disk you can rename things, change colours, or alter game rules and re-run."
+      ]
+    },
+    {
+      "heading": "Examples used",
+      "points": [
+        "QuakeJS: the classic Quake game compiled to run in a browser, served by a small Node server on port 8080. Use the exact URL the README specifies.",
+        "Word Mastermind: a Wordle clone in plain JavaScript, HTML and CSS. After npm install and npm start it opens on a local address. The dict folder holds the word lists (including other languages) and the src folder holds the game logic.",
+        "The motivation for the clone was to play more than one word per day, which the official game forbids."
+      ]
+    },
+    {
+      "heading": "Next step: contributing to open source",
+      "points": [
+        "The awesome-for-beginners repository lists projects that welcome first-time contributors.",
+        "Contributing requires branches, merging and pull requests, covered in the following lessons."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Clone, install and run a Node-based project",
+      "language": "bash",
+      "code": "git clone https://github.com/<owner>/<repo>.git\ncd <repo>\nnpm install\nnpm start"
+    }
+  ],
+  "task": {
+    "name": "Clone and run an open-source repo",
+    "starting_point": "A terminal with git, Node and npm installed.",
+    "goal": "Clone a public JavaScript project from GitHub and run it locally, then make a small change.",
+    "steps": [
+      "Pick a project such as the Wordle clone or QuakeJS and copy its clone URL from GitHub.",
+      "Run git clone with that URL, then cd into the folder.",
+      "Follow the README: npm install, then any extra commands, then npm start or node.",
+      "Open the printed local address in the browser.",
+      "Browse the source and change something small (title, colours, word list)."
+    ],
+    "expected_result": "The game runs in the browser from your local copy and your small edit shows up.",
+    "solution_code": null,
+    "reference_repo_path": "Section 27 - Git, Github and Version Control/27.03 - Cloning/Example.txt"
+  },
+  "pitfalls": [
+    "Forgetting to cd into the cloned folder before npm install.",
+    "Skipping README setup steps, so the app starts but fails to work.",
+    "Opening a different URL from the one the README specifies when the app is tied to it."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "New lesson 'Cloning a repo': blurb on git clone and why copy someone else's code.",
+      "Tasks: (1) write the clone command for a given URL, (2) order the steps clone/cd/install/start, (3) spot the missing cd in a broken command list, (4) identify what package.json is for.",
+      "Starter idea: a fake terminal where the learner types commands and gets simulated output.",
+      "Interactive demo: an animated diagram of remote repo to local folder showing commits being copied."
+    ]
+  }
+}

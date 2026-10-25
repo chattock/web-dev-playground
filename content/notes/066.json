@@ -1,0 +1,179 @@
+{
+  "index": 66,
+  "lecture_id": 37389818,
+  "title": "Bootstrap Components",
+  "section": "11. Bootstrap",
+  "duration_min": 32,
+  "kind": "concept+exercise",
+  "summary": "Shows how Bootstrap components (buttons, cards, navbar, carousel, footer) are used by copying documentation or Examples snippets and editing text, images and classes. Builds the one-page 'Move It' moving-company site section by section, then covers spacing utilities, dark mode via data-bs-theme and where to find themes.",
+  "concepts": [
+    {
+      "heading": "Components are class names on ordinary HTML",
+      "points": [
+        "A component is a pre-styled UI piece (button, card, carousel, navbar) obtained just by adding Bootstrap classes to normal elements. No CSS has to be written for the basic look.",
+        "Workflow: open getbootstrap.com, Docs, Components, find the component, copy the example markup, paste it into the page, then swap the text, image src and alt text.",
+        "The Examples and Snippets areas (Headers, Heroes, Features, Footers) offer larger multi-component layouts that can be lifted the same way."
+      ]
+    },
+    {
+      "heading": "Buttons and the colour names",
+      "points": [
+        "A button needs the base class btn plus a colour class: btn-primary (default blue, used for main actions), btn-success, btn-danger, btn-warning and so on. The names hint at meaning (success for OK, danger for risky actions).",
+        "btn alone changes the font, padding, border and rounded corners; the colour class adds the background and hover behaviour.",
+        "Exercise result: <button class=\"btn btn-success\">Ok</button> gives a green button with hover animation."
+      ]
+    },
+    {
+      "heading": "Navbar",
+      "points": [
+        "Copy a navbar example from Components > Navbar (the version with brand, links, a dropdown and a search form is the starting point here). Paste it just inside body.",
+        "Below the lg breakpoint the links collapse behind a hamburger button (navbar-toggler). That button and the dropdown only work if Bootstrap's JavaScript bundle is loaded.",
+        "Fix: add the bootstrap.bundle.min.js script tag from the CDN (the second CDN link from the setup lesson) just before the closing body tag. data-bs-toggle and data-bs-target attributes on the toggler, dropdown and carousel are what the script hooks into.",
+        "Customising: delete the 'disabled' list item (a nav-link with the disabled class cannot be clicked), rename links (Link to About, Dropdown to Services), keep or trim dropdown-menu items.",
+        "navbar-brand holds the site name; an img inside it works as a logo. Control size with a height attribute (30 here) because raw images are far too large.",
+        "The form on the right is only restyled: change the input placeholder to Postcode and the button text to Check. Forms get real behaviour later in the back-end sections.",
+        "Inspecting a nav-link in dev tools shows how much CSS (padding, toggle styles, states) Bootstrap supplies for a single navbar item."
+      ]
+    },
+    {
+      "heading": "Bootstrap Icons and SVGs",
+      "points": [
+        "Bootstrap Icons (the Icons page) are free to use in any project. Search with the filter, e.g. box-seam for the moving-box logo.",
+        "Two ways to use an icon: paste the inline <svg> markup, or download the .svg file into the project and reference it with an img tag (src, alt, height). The lecture chooses the img route for a cleaner page.",
+        "Icons used: box-seam (brand), briefcase, bus-front, chat-square-heart (feature icons), chevron-right (link arrow)."
+      ]
+    },
+    {
+      "heading": "Hero section copied from Examples",
+      "points": [
+        "Examples > Heroes has a centred hero: heading, paragraph, two buttons and an image. Technique: right-click, Inspect, hover up the element tree until the whole section is highlighted, Copy element, then paste below the navbar.",
+        "Replace the image src with the moving van, paste the h1 'Move With Joy', the paragraph and button labels (Get a Quote, Contact Us) from the provided website-text file.",
+        "Useful classes in it: display-4 fw-bold (big bold heading), lead (larger intro paragraph), col-lg-6 mx-auto (centred half-width column), d-grid gap-2 d-sm-flex justify-content-sm-center (buttons stacked on phones, inline from sm), img-fluid rounded-3 shadow-lg border."
+      ]
+    },
+    {
+      "heading": "Features section and custom CSS",
+      "points": [
+        "Same copy-element technique from Examples > Features (three columns with icon squares). Replace the headings and text with Professional, Countrywide and Personal Touch.",
+        "Pasted result looks unstyled in the icon squares because Examples pages add their own CSS on top of Bootstrap. Class names like feature-icon do not exist in Bootstrap itself.",
+        "How to spot custom CSS: default classes live in Bootstrap's stylesheet, while page-specific ones appear in a separate custom file. Copy the .feature-icon rules (width and height 4rem, border-radius 0.75rem) into the page's style block.",
+        "Swap the example SVGs for your downloaded icon images and give each a height of 30. Do the same for the chevron-right in each 'Get a quote' icon-link.",
+        "The layout classes row, row-cols-1 row-cols-lg-3 and g-4 produce one column on mobile and three on large screens."
+      ]
+    },
+    {
+      "heading": "Carousel (exercise) and container",
+      "points": [
+        "Carousel = slideshow component. Use the basic 'With indicators' example from Components > Carousel; it gives dots at the bottom plus previous and next arrows.",
+        "Pasted images are broken because the example img tags have no usable src. Set them to couple, dog and family images.",
+        "Structure: .carousel > .carousel-indicators (buttons with data-bs-slide-to index), .carousel-inner > .carousel-item (exactly one has active), and prev/next controls using data-bs-slide. The id on the carousel must match every data-bs-target.",
+        "Because the carousel spans the viewport width it is huge. Wrap it in a div.container to line it up with other content and get responsive widths."
+      ]
+    },
+    {
+      "heading": "Footer",
+      "points": [
+        "Taken from Snippets > Footers: inspect, copy the footer element and place it last in the body. Only light editing is needed."
+      ]
+    },
+    {
+      "heading": "Spacing utilities",
+      "points": [
+        "Pattern: property + side + dash + size. Property m = margin, p = padding.",
+        "Sides: t top, b bottom, s start (left), e end (right), x left and right, y top and bottom, none = all sides. Sizes 0 to 5 (0 removes spacing, 5 is the largest standard step).",
+        "Examples: mt-5 margin-top size 5; my-3 vertical margin size 3; mb-2 margin-bottom size 2 (seen in the footer markup).",
+        "(Extra) Beware that the lecture describes x and y with the axes swapped in speech; in Bootstrap x is horizontal (left and right) and y is vertical (top and bottom)."
+      ]
+    },
+    {
+      "heading": "Dark mode",
+      "points": [
+        "Add data-bs-theme=\"dark\" on the html element (after lang) and the whole page switches to the dark colour scheme.",
+        "Docs location: Customize > Color modes. With JavaScript later, the attribute can be toggled to let users choose.",
+        "(Extra) The attribute can also be set on a single element to theme only that region."
+      ]
+    },
+    {
+      "heading": "Themes and templates",
+      "points": [
+        "Hosted builders charge a monthly fee; Bootstrap themes are typically a one-off purchase or free.",
+        "Sources mentioned: W3Schools Bootstrap templates (basic blog, portfolio, social layouts to customise), the official Themes page on getbootstrap.com (professional, paid), and web searches for free Bootstrap templates.",
+        "Approach is the same as in the lesson: pick a template, grab the parts needed, customise with some own CSS. Designers can also build and sell themes."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Green button (exercise)",
+      "language": "html",
+      "code": "<button class=\"btn btn-success\">Ok</button>"
+    },
+    {
+      "caption": "Move It navbar (trimmed from reference solution)",
+      "language": "html",
+      "code": "<nav class=\"navbar navbar-expand-lg bg-body-tertiary\">\n  <div class=\"container-fluid\">\n    <a class=\"navbar-brand\" href=\"#\"><img src=\"./box-seam.svg\" alt=\"moveit brand icon\" height=\"30\" /> Move It</a>\n    <button class=\"navbar-toggler\" type=\"button\" data-bs-toggle=\"collapse\"\n      data-bs-target=\"#navbarSupportedContent\" aria-controls=\"navbarSupportedContent\"\n      aria-expanded=\"false\" aria-label=\"Toggle navigation\">\n      <span class=\"navbar-toggler-icon\"></span>\n    </button>\n    <div class=\"collapse navbar-collapse\" id=\"navbarSupportedContent\">\n      <ul class=\"navbar-nav me-auto mb-2 mb-lg-0\">\n        <li class=\"nav-item\"><a class=\"nav-link active\" aria-current=\"page\" href=\"#\">Home</a></li>\n        <li class=\"nav-item\"><a class=\"nav-link\" href=\"#\">About</a></li>\n        <li class=\"nav-item dropdown\">\n          <a class=\"nav-link dropdown-toggle\" href=\"#\" role=\"button\" data-bs-toggle=\"dropdown\" aria-expanded=\"false\">Services</a>\n          <ul class=\"dropdown-menu\">\n            <li><a class=\"dropdown-item\" href=\"#\">Action</a></li>\n            <li><hr class=\"dropdown-divider\" /></li>\n            <li><a class=\"dropdown-item\" href=\"#\">Something else here</a></li>\n          </ul>\n        </li>\n      </ul>\n      <form class=\"d-flex\" role=\"search\">\n        <input class=\"form-control me-2\" type=\"search\" placeholder=\"Postcode\" aria-label=\"Search\" />\n        <button class=\"btn btn-outline-success\" type=\"submit\">Check</button>\n      </form>\n    </div>\n  </div>\n</nav>"
+    },
+    {
+      "caption": "Hero section",
+      "language": "html",
+      "code": "<div class=\"px-4 pt-5 my-5 text-center border-bottom\">\n  <h1 class=\"display-4 fw-bold text-body-emphasis\">Move With Joy</h1>\n  <div class=\"col-lg-6 mx-auto\">\n    <p class=\"lead mb-4\">...paragraph from website-text...</p>\n    <div class=\"d-grid gap-2 d-sm-flex justify-content-sm-center mb-5\">\n      <button type=\"button\" class=\"btn btn-primary btn-lg px-4 me-sm-3\">Get a Quote</button>\n      <button type=\"button\" class=\"btn btn-outline-secondary btn-lg px-4\">Contact Us</button>\n    </div>\n  </div>\n  <div class=\"overflow-hidden\" style=\"max-height: 30vh\">\n    <div class=\"container px-5\">\n      <img src=\"./moving-van.jpg\" class=\"img-fluid border rounded-3 shadow-lg mb-4\" alt=\"Example image\" width=\"700\" height=\"500\" loading=\"lazy\" />\n    </div>\n  </div>\n</div>"
+    },
+    {
+      "caption": "Features section with custom CSS",
+      "language": "html",
+      "code": "<style>\n  .feature-icon { width: 4rem; height: 4rem; border-radius: 0.75rem; }\n</style>\n...\n<div class=\"container px-4 py-5\" id=\"featured-3\">\n  <h2 class=\"pb-2 border-bottom\">Why Move With Us?</h2>\n  <div class=\"row g-4 py-5 row-cols-1 row-cols-lg-3\">\n    <div class=\"feature col\">\n      <div class=\"feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3\">\n        <img src=\"./briefcase.svg\" alt=\"briefcase\" height=\"30\" />\n      </div>\n      <h3 class=\"fs-2\">Professional</h3>\n      <p>...</p>\n      <a href=\"#\" class=\"icon-link\">Get a quote <img src=\"./chevron-right.svg\" alt=\"chevron-right\" /></a>\n    </div>\n    <!-- two more .feature.col blocks: bus-front.svg (Countrywide), chat-square-heart.svg (Personal Touch) -->\n  </div>\n</div>"
+    },
+    {
+      "caption": "Carousel inside a container",
+      "language": "html",
+      "code": "<div class=\"container\">\n  <div id=\"carouselExampleIndicators\" class=\"carousel slide\">\n    <div class=\"carousel-indicators\">\n      <button type=\"button\" data-bs-target=\"#carouselExampleIndicators\" data-bs-slide-to=\"0\" class=\"active\" aria-current=\"true\" aria-label=\"Slide 1\"></button>\n      <button type=\"button\" data-bs-target=\"#carouselExampleIndicators\" data-bs-slide-to=\"1\" aria-label=\"Slide 2\"></button>\n      <button type=\"button\" data-bs-target=\"#carouselExampleIndicators\" data-bs-slide-to=\"2\" aria-label=\"Slide 3\"></button>\n    </div>\n    <div class=\"carousel-inner\">\n      <div class=\"carousel-item active\"><img src=\"./couple.jpg\" class=\"d-block w-100\" alt=\"couple\" /></div>\n      <div class=\"carousel-item\"><img src=\"./dog.jpg\" class=\"d-block w-100\" alt=\"dog\" /></div>\n      <div class=\"carousel-item\"><img src=\"./family.jpg\" class=\"d-block w-100\" alt=\"family\" /></div>\n    </div>\n    <button class=\"carousel-control-prev\" type=\"button\" data-bs-target=\"#carouselExampleIndicators\" data-bs-slide=\"prev\">\n      <span class=\"carousel-control-prev-icon\" aria-hidden=\"true\"></span>\n      <span class=\"visually-hidden\">Previous</span>\n    </button>\n    <button class=\"carousel-control-next\" type=\"button\" data-bs-target=\"#carouselExampleIndicators\" data-bs-slide=\"next\">\n      <span class=\"carousel-control-next-icon\" aria-hidden=\"true\"></span>\n      <span class=\"visually-hidden\">Next</span>\n    </button>\n  </div>\n</div>"
+    },
+    {
+      "caption": "Dark mode and the JS bundle",
+      "language": "html",
+      "code": "<html lang=\"en\" data-bs-theme=\"dark\">\n...\n  <script src=\"https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js\"></script>\n</body>"
+    }
+  ],
+  "task": {
+    "name": "11.2 Bootstrap Components: Move It website",
+    "starting_point": "Starter folder with index.html (Bootstrap CSS link already added, empty style block), website-text file, SVG icons (box-seam, briefcase, bus-front, chat-square-heart, chevron-right) and images (moving-van, couple, dog, family).",
+    "goal": "Two small challenges inside a guided build: (1) add a green Ok button using the Buttons docs; (2) add a carousel section with three images, aligned with the page content. The guided build is a one-page Move It site: navbar, hero, features, carousel, footer.",
+    "steps": [
+      "Download and open the 11.2 starter files in VS Code and preview them.",
+      "Challenge 1: find Buttons in the docs and add a button saying Ok with btn and btn-success.",
+      "Paste the navbar example into body, then add the Bootstrap JS bundle script before </body> so the toggler and dropdown work.",
+      "Edit the navbar: remove the disabled item, rename links to About and Services, set brand to Move It with the box-seam image (height 30), set placeholder Postcode and button text Check.",
+      "Copy the hero element from Examples, set the image to the moving van, paste texts from website-text.",
+      "Copy the Features example, fill in texts, add the .feature-icon CSS to the style block, replace the SVGs with the downloaded icons with height 30.",
+      "Challenge 2: from Components > Carousel copy the indicators example, set the three img src values (couple, dog, family) and wrap the carousel in div.container.",
+      "Add a footer from Snippets > Footers. Optionally try data-bs-theme=\"dark\" on html."
+    ],
+    "expected_result": "A responsive one-page site with collapsing navbar, centred hero, three feature columns with icons, a working three-slide carousel inside a container, and a footer.",
+    "solution_code": {
+      "language": "html",
+      "code": "<!-- See code_examples: navbar, hero, features, carousel; footer copied from Snippets > Footers -->\n<button class=\"btn btn-success\">Ok</button>"
+    },
+    "reference_repo_path": "Section 11 - Bootstrap/11.02 - Bootstrap Components/solution.html"
+  },
+  "pitfalls": [
+    "Navbar toggler and dropdowns do nothing unless the bootstrap.bundle.min.js script is included.",
+    "Copied Examples may rely on page-specific CSS (feature-icon) that has to be copied too.",
+    "Broken carousel images: the example has no real src values.",
+    "Carousel without a container fills the full width and becomes very tall.",
+    "Carousel indicator and control data-bs-target values must match the carousel's id.",
+    "Reference repo diverges: uses Bootstrap 5.3.0-alpha CDN, keeps leftover placeholder text such as Action items, a stray svg use tag in the footer and a personal author footer line (ignore it)."
+  ],
+  "playground": {
+    "match": "s11-components (lesson 11.2, data/s11.js)",
+    "coverage": "Covers buttons, card, navbar basics and a component catalogue demo (buttons, alerts, badges, list group, form controls). Notes mention the JS bundle and utility class families.",
+    "gaps_and_ideas": [
+      "Add a task to paste the Bootstrap JS bundle and watch the navbar toggler and dropdown start working (the current navbar task uses navbar-nav without a toggler).",
+      "Add a carousel task (indicators, carousel-item active, matching data-bs-target ids) and a container-wrapping step.",
+      "Add spacing utility decoder table (m/p, t b s e x y, 0-5) with a live demo.",
+      "Add a dark mode toggle demo using data-bs-theme on html.",
+      "Add a 'copy from Examples' task: hero or features section with custom .feature-icon CSS, teaching the difference between Bootstrap classes and page-specific CSS.",
+      "Add Bootstrap Icons as img-referenced SVGs.",
+      "Playground solution uses Bootstrap 5.3.3 and currently has no script tag; mention version differences from the course."
+    ]
+  }
+}

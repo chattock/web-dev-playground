@@ -1,0 +1,82 @@
+{
+  "index": 284,
+  "lecture_id": 17038718,
+  "title": "Javascript Expressions in JSX Practice",
+  "section": "36. React.js",
+  "duration_min": 9,
+  "kind": "concept+exercise",
+  "summary": "Challenge to render two paragraphs, a credit line from a name constant and a copyright line with a dynamically computed current year, followed by the solution using new Date().getFullYear().",
+  "concepts": [
+    {
+      "heading": "Challenge requirements",
+      "points": [
+        "Build a React app from scratch in a forked sandbox: two p elements.",
+        "First paragraph: Created by plus a name stored in a const. Second: copyright text with the current year, computed by JavaScript rather than hard-coded.",
+        "Mixes React rendering, JSX braces and plain JavaScript (Date API); looking up the Date method online is encouraged."
+      ]
+    },
+    {
+      "heading": "Solution steps",
+      "points": [
+        "Import React and ReactDOM, then call ReactDOM.render with a wrapper div (single root) holding both paragraphs, and document.getElementById('root') as the target.",
+        "Declare const name and a placeholder year const (e.g. 2019) to confirm braces work: <p>Created by {name}</p>.",
+        "To get the real year: create a Date object with new Date() (current date and time), then call its getFullYear() method, which returns the four-digit year as a number.",
+        "Logging the date object to the console helps confirm what it holds before extracting the year.",
+        "Use the result in JSX either through a const (const year = new Date().getFullYear()) or directly inline as {new Date().getFullYear()}, since the call evaluates to a value."
+      ]
+    },
+    {
+      "heading": "Common mistake: missing parentheses",
+      "points": [
+        "getFullYear without () is a reference to the function, not its result. React logs that functions are not valid as a React child, and nothing useful renders.",
+        "The parentheses call the method so the expression resolves to a number."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Lecture solution (older React API)",
+      "language": "jsx",
+      "code": "import React from \"react\";\nimport ReactDOM from \"react-dom\";\n\nconst name = \"Angela\";\nconst currentDate = new Date();\nconst year = currentDate.getFullYear();\n\nReactDOM.render(\n  <div>\n    <p>Created by {name}</p>\n    <p>Copyright {year}</p>\n  </div>,\n  document.getElementById(\"root\")\n);\n// Inline alternative: <p>Copyright {new Date().getFullYear()}</p>"
+    },
+    {
+      "caption": "Reference repo equivalent (Vite App.jsx); the student's extra lorem-ipsum paragraphs and h2/h3 swapped for the lecture's two p elements",
+      "language": "jsx",
+      "code": "const name = \"Your Name\";\nconst currYear = new Date().getFullYear();\n\nfunction App() {\n  return (\n    <>\n      <p>Created by {name}</p>\n      <p>Copyright {currYear}</p>\n    </>\n  );\n}\nexport default App;"
+    }
+  ],
+  "task": {
+    "name": "Dynamic copyright footer",
+    "starting_point": "Practice sandbox with comments describing the steps and index.html containing div#root",
+    "goal": "Display Created by <name> and Copyright <current year> where the year updates automatically",
+    "steps": [
+      "Fork the sandbox.",
+      "Import React and ReactDOM.",
+      "Create const name with your name.",
+      "Obtain the current year using new Date().getFullYear() (look it up if needed).",
+      "Call ReactDOM.render with a div containing two paragraphs that use braces for name and year.",
+      "Render into the element returned by document.getElementById('root')."
+    ],
+    "expected_result": "Two paragraphs: Created by YOURNAME and Copyright with the current year (no hard-coded value).",
+    "solution_code": {
+      "language": "jsx",
+      "code": "import React from \"react\";\nimport ReactDOM from \"react-dom\";\n\nconst name = \"Angela\";\nconst currentDate = new Date();\nconst year = currentDate.getFullYear();\n\nReactDOM.render(\n  <div>\n    <p>Created by {name}</p>\n    <p>Copyright {year}</p>\n  </div>,\n  document.getElementById(\"root\")\n);\n// Inline alternative: <p>Copyright {new Date().getFullYear()}</p>"
+    },
+    "reference_repo_path": "Section 36 - React.js/36.08 Javascript Expressions in JSX Practice/js-experssions-in-jsx-practice"
+  },
+  "pitfalls": [
+    "Omitting the parentheses on getFullYear.",
+    "Rendering the two paragraphs without a wrapper element.",
+    "Hard-coding the year defeats the purpose of the exercise.",
+    "Reference repo diverges: it uses an h2/h3 and extra paragraphs, not the two p elements the lecture requested."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (no data file exists for section 36)",
+    "gaps_and_ideas": [
+      "Add as a task in the 'JavaScript in JSX' playground lesson: footer with dynamic year.",
+      "Stretch tasks: show the current time with toLocaleTimeString, display the weekday name, and greet Good morning/afternoon by hour using a ternary.",
+      "Demo idea: preview that lets you flip the system year value to show the footer computing it at render time."
+    ]
+  }
+}

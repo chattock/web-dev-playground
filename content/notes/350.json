@@ -1,0 +1,109 @@
+{
+  "index": 350,
+  "lecture_id": 31673630,
+  "title": "Using Motoko Hashmaps to Store Token Balances",
+  "section": "41. Create Your Own Crypto Token",
+  "duration_min": 20,
+  "kind": "concept+exercise",
+  "summary": "Builds the token's backend ledger in Motoko: an owner Principal, total supply and symbol, a HashMap from Principal to Nat holding balances, and a balanceOf query that safely unwraps the optional returned by get. Finishes by deploying and calling balanceOf from the command line.",
+  "concepts": [
+    {
+      "heading": "Principal: identifying users and canisters",
+      "points": [
+        "Principal is the Internet Computer type that uniquely identifies either a user (identity) or a canister.",
+        "Get your own id as text with dfx identity get-principal; it is a long dash-separated string for the default identity.",
+        "Import the type (import Principal from mo:base/Principal). Principal.fromText converts that string into a real Principal value; a plain Text cannot be used where a Principal is required.",
+        "The owner is the identity that receives the entire initial supply when the canister is created."
+      ]
+    },
+    {
+      "heading": "Actor state: owner, totalSupply, symbol",
+      "points": [
+        "Create an actor named Token in main.mo and define its variables inside it.",
+        "owner : Principal, assigned via Principal.fromText with your own id pasted in (whole string, all dashes).",
+        "totalSupply : Nat, set to one billion (nine zeros). Nat is a natural number, so it can never be negative.",
+        "symbol : Text, the short ticker (DANG here). Tickers imitate currency codes such as USD, GBP or ETH; the learner may choose any name.",
+        "(Extra) Newer reference code writes these as persistent actor with transient var, which is the Motoko enhanced-orthogonal-persistence syntax; the lecture uses a plain actor and var/let, and either way the ledger in this lesson is not meant to survive upgrades (that is handled in a later lesson)."
+      ]
+    },
+    {
+      "heading": "The ledger as a HashMap",
+      "points": [
+        "A ledger here is a store mapping an account id to the amount of tokens it holds. A dictionary-like structure fits, and Motoko's version is HashMap (a hash table): a key is hashed to find where its value lives, so lookups are efficient.",
+        "Import it with import HashMap from mo:base/HashMap (watch the capitals).",
+        "Declare: var balances = HashMap.HashMap<Principal, Nat>(1, Principal.equal, Principal.hash). The generic arguments are key type then value type.",
+        "Constructor arguments: (1) initial capacity, here 1; (2) an equality function so the map can compare keys, Principal.equal; (3) a hash function for the key type, Principal.hash.",
+        "balances.put(key, value) inserts a value at a key and overwrites any previous entry for that key. Calling balances.put(owner, totalSupply) at the top level of the actor gives the owner the whole supply when the canister is installed."
+      ]
+    },
+    {
+      "heading": "balanceOf query function",
+      "points": [
+        "public query func balanceOf(who : Principal) : async Nat. query means it reads state only and returns fast without going through consensus; async because all public canister functions return a future.",
+        "balances.get(who) returns an Option: ?Nat. If the key is absent the result is null, not a number, so it cannot be returned directly as Nat.",
+        "An Option is a type-safe null: it keeps the underlying type but allows 'no value'. It is the same idea as Swift optionals.",
+        "Unwrap with switch: switch (balances.get(who)) { case null 0; case (?result) result }. The null branch yields 0 (account has no balance); the ?result branch binds the inner Nat to result and drops the question mark.",
+        "Assign the switch result to let balance : Nat and return it. The earlier if-null-then-0 approach becomes unnecessary."
+      ]
+    },
+    {
+      "heading": "Deploying and calling from the CLI",
+      "points": [
+        "Save main.mo then run dfx deploy again; the canister is reinstalled with the owner holding the full supply.",
+        "Candid arguments on the command line must be typed: a Principal argument has to look like principal \"id\", not just the id text.",
+        "Build that string once in a shell variable using command substitution, check it with echo, then call the method with dfx canister call token balanceOf and the variable.",
+        "The response shows the billion as a nat, confirming the ledger and balanceOf work. The starter project's README holds copy-paste versions of these commands to avoid typos, plus a place to save your own principal for later lessons."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "main.mo after this lesson (reconstructed; reference repo uses persistent actor + transient var)",
+      "language": "motoko",
+      "code": "import Principal \"mo:base/Principal\";\nimport HashMap \"mo:base/HashMap\";\n\nactor Token {\n  // Replace with the output of: dfx identity get-principal\n  var owner : Principal = Principal.fromText(\"<your-principal-id>\");\n  var totalSupply : Nat = 1000000000;\n  var symbol : Text = \"DANG\";\n\n  // ledger: Principal -> balance\n  var balances = HashMap.HashMap<Principal, Nat>(1, Principal.equal, Principal.hash);\n\n  // runs once at deploy: give the whole supply to the owner\n  balances.put(owner, totalSupply);\n\n  public query func balanceOf(who : Principal) : async Nat {\n    let balance : Nat = switch (balances.get(who)) {\n      case null 0;\n      case (?result) result;\n    };\n    return balance;\n  };\n};"
+    },
+    {
+      "caption": "CLI sequence to deploy and check the owner balance",
+      "language": "bash",
+      "code": "dfx identity get-principal            # prints your principal id (text)\ndfx deploy                            # redeploy after editing main.mo\nOWNER_PUBLIC_KEY=\"principal \\\"$(dfx identity get-principal)\\\"\"\necho $OWNER_PUBLIC_KEY                # principal \"xxxxx-...-xxx\"\ndfx canister call token balanceOf \"$OWNER_PUBLIC_KEY\"   # (1_000_000_000 : nat)"
+    }
+  ],
+  "task": {
+    "name": "Create the ledger and check the owner's balance",
+    "starting_point": "The skeleton project from the previous lesson with an empty main.mo.",
+    "goal": "Mint a total supply to your own principal in a HashMap ledger and read it back through a balanceOf query.",
+    "steps": [
+      "Run dfx identity get-principal and copy the id.",
+      "In main.mo import Principal and HashMap, then define actor Token.",
+      "Add owner (Principal.fromText with your id), totalSupply (Nat, 1 billion) and symbol (Text).",
+      "Create balances as a HashMap<Principal, Nat> with initial size 1, Principal.equal and Principal.hash.",
+      "Put the owner into balances with the full total supply.",
+      "Write public query func balanceOf(who : Principal) : async Nat that switches on balances.get(who): null gives 0, ?result gives result.",
+      "Run dfx deploy.",
+      "In the terminal create OWNER_PUBLIC_KEY in the principal \"id\" format, echo it, then dfx canister call token balanceOf with it."
+    ],
+    "expected_result": "The canister call returns 1_000_000_000 : nat for the owner principal.",
+    "solution_code": {
+      "language": "motoko",
+      "code": "import Principal \"mo:base/Principal\";\nimport HashMap \"mo:base/HashMap\";\n\nactor Token {\n  // Replace with the output of: dfx identity get-principal\n  var owner : Principal = Principal.fromText(\"<your-principal-id>\");\n  var totalSupply : Nat = 1000000000;\n  var symbol : Text = \"DANG\";\n\n  // ledger: Principal -> balance\n  var balances = HashMap.HashMap<Principal, Nat>(1, Principal.equal, Principal.hash);\n\n  // runs once at deploy: give the whole supply to the owner\n  balances.put(owner, totalSupply);\n\n  public query func balanceOf(who : Principal) : async Nat {\n    let balance : Nat = switch (balances.get(who)) {\n      case null 0;\n      case (?result) result;\n    };\n    return balance;\n  };\n};"
+    },
+    "reference_repo_path": "Section 41 - Create Your Own Crypto Token/41.03 Using Motoko Hashmaps to Store Token Balances/DANG/src/DANG_backend/main.mo"
+  },
+  "pitfalls": [
+    "Passing the principal as plain text to balanceOf: it must be wrapped as principal \"...\".",
+    "Forgetting to import HashMap or Principal, or mistyping the capitals.",
+    "Trying to return balances.get(who) directly: it is ?Nat, not Nat.",
+    "Copying only part of the principal string into fromText.",
+    "(Extra) The reference README sets OWNER_PUBLIC_KEY with single quotes, which stops $(...) from expanding in a shell; use double quotes with escaped inner quotes as in the CLI snippet. Also the correct command spelling is dfx identity get-principal (the README text shows a stray 'get -principal').",
+    "(Extra) The reference repo's hard-coded principal is the student's own; use yours."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "Proposed lesson 'Token ledger with a HashMap': blurb on mapping principals to balances and Option unwrapping. Tasks: (1) declare owner/totalSupply/symbol, (2) create balances HashMap with the 3 constructor args, (3) put the owner entry, (4) write balanceOf with switch on null/?result, (5) call balanceOf for the owner and for an unknown principal (expect 0).",
+      "Starter code idea: main.mo with TODO comments and a stubbed balanceOf returning 0.",
+      "Interactive demo idea: a JS mock ledger (Map) where users call get() and see the null branch vs the value branch, with a visual of key hashing into buckets."
+    ]
+  }
+}

@@ -1,0 +1,155 @@
+{
+  "index": 62,
+  "lecture_id": 37368524,
+  "title": "Grid Placement",
+  "section": "10. Grid",
+  "duration_min": 26,
+  "kind": "concept+exercise",
+  "summary": "Defines the vocabulary of CSS Grid (container, items, tracks, cells, lines) and then shows how to place items explicitly with grid-column, grid-row, grid-column-start/end, order and the grid-area shorthand, including overlapping items. Three small Flexbox/Grid exercises and the Grid Garden game follow.",
+  "concepts": [
+    {
+      "heading": "Grid vocabulary",
+      "points": [
+        "Grid container: the parent element (usually a div) with display: grid. Grid items: its direct children.",
+        "Tracks: the rows and columns collectively. Row tracks and column tracks are created and sized with grid-template-rows and grid-template-columns.",
+        "Grid cell: the smallest unit, sitting at the intersection of one row track and one column track. Cells can differ in size. One grid item can occupy several cells (spanning two columns, or two rows).",
+        "Grid lines: the dividing lines between tracks, horizontal and vertical. They are layout-only: the only way to affect them is the gap property (their thickness). They cannot be coloured or hold content.",
+        "These terms (container, item, track, cell, line) are used throughout the rest of the grid material, especially for placement."
+      ]
+    },
+    {
+      "heading": "Base setup used in the demos",
+      "points": [
+        "A .container div holds three .item divs (cowboy, astronaut, book emojis). Container CSS: display: grid, height: 100vh, gap: 3rem, grid-template-columns: 1fr 1fr 1.5fr, grid-template-rows: 1fr 1fr.",
+        "A div is full window width by default but only as tall as its content, so height: 100vh stretches the container to the bottom of the viewport.",
+        "Without any placement rules, items auto-flow into empty cells in source order, one per cell, left to right then top to bottom. With three items and six cells, the second row is left empty.",
+        "gap: 3rem makes every grid line 3rem thick, so no margin or padding is needed to separate items.",
+        "(Extra) gap is shorthand for row-gap and column-gap; give two values to set them separately."
+      ]
+    },
+    {
+      "heading": "Centring item content with Flexbox (exercise 1)",
+      "points": [
+        "Each .item is made a flex container: display: flex, justify-content: center (main axis, horizontal for a row) and align-items: center (cross axis, vertical).",
+        "Grid and Flexbox are complementary: grid lays out the page-level areas, flexbox aligns the content inside each area.",
+        "The same centring would be painful with floats or absolute positioning."
+      ]
+    },
+    {
+      "heading": "Spanning with grid-column and grid-row",
+      "points": [
+        "grid-column: span 2 on the cowboy item makes it start where auto-placement puts it and cover two column tracks.",
+        "Chrome DevTools can overlay the grid: click the grid badge next to the container in the Elements panel to show lines and their numbers. The overlay colour is changeable, and negative numbers are displayed too.",
+        "Lines are numbered from 1: with three columns there are four vertical lines (1, 2, 3, 4). Counting from the end, the last line is -1, then -2, -3, -4.",
+        "grid-column is shorthand for grid-column-start and grid-column-end. Example: grid-column-start: 2; grid-column-end: 4 covers the second and third columns.",
+        "-1 always means the last line and 1 the first line, which is handy when the number of columns is unknown (for example generated dynamically). Prefer 1 and -1; -2 or -3 get confusing to read.",
+        "The start and end can be given in either order. Start at line 4 and end at line 2 still covers the same two columns because the browser swaps them.",
+        "Values can mix span and auto: start can be span 2 with end auto. grid-column: span 2 is equivalent to a start of auto plus a span of 2.",
+        "grid-row works identically on the vertical axis with grid-row-start and grid-row-end."
+      ]
+    },
+    {
+      "heading": "The order property",
+      "points": [
+        "A second item given grid-column: span 2 after the cowboy has no room on the first row, so auto-placement leaves it on its default track and the layout looks wrong.",
+        "Grid items support order just as flex items do. Default is 0 for all items. Giving the astronaut order: 1 pushes it after all items with a lower order, so it moves to the end (bottom row).",
+        "Only relative values matter: 1 or 100 behaves the same if everything else is 0. Items with higher values go later, ordering proceeds left to right then top to bottom.",
+        "Exercise 2: with order: 1 already set, add grid-column: span 2 to the astronaut so it sits beneath the blue div."
+      ]
+    },
+    {
+      "heading": "grid-area shorthand",
+      "points": [
+        "Instead of order, an item can be given exact coordinates: grid-column-start 1, grid-column-end 3, grid-row-start 2, grid-row-end 3.",
+        "grid-area packs these into one declaration of four slash-separated values in this order: row-start / column-start / row-end / column-end. Example: grid-area: 2 / 1 / 3 / 3.",
+        "The value is a set of line numbers, and the end line is exclusive, so 3 as end line means stop at line 3, not including track 3.",
+        "If one item uses grid-area, the others should too for predictable behaviour, because auto-placed items fill around explicitly placed ones.",
+        "Exercise 3: make the book fill the third column across both rows. Options: grid-row: span 2; or grid-area: 1 / 3 / 3 / 4; or with negative lines grid-area: 1 / 3 / -1 / -1."
+      ]
+    },
+    {
+      "heading": "Overlapping items",
+      "points": [
+        "Unlike Flexbox, grid lets items share cells and layer on top of each other.",
+        "Example: book with grid-area: 1 / 2 / 3 / 4 spans from row 1 column 2 to row 3 column 4, so it sits across the cowboy and astronaut boxes.",
+        "Use an 8-digit hex colour for see-through effects. The last two hex digits are alpha; 80 is roughly 50% opacity (e.g. #e5833180).",
+        "Later items in source order paint over earlier ones."
+      ]
+    },
+    {
+      "heading": "Practice game",
+      "points": [
+        "Grid Garden (appbrewery.github.io/gridgarden), by the author of Flexbox Froggy, has 28 levels of CSS grid practice. The course recommends completing all of them before the next lesson."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Base container and items, plus Flexbox centring",
+      "language": "css",
+      "code": ".container {\n  height: 100vh;\n  display: grid;\n  gap: 3rem;\n  grid-template-columns: 1fr 1fr 1.5fr;\n  grid-template-rows: 1fr 1fr;\n}\n\n.item {\n  font-size: 5rem;\n  color: white;\n  background-color: blueviolet;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}"
+    },
+    {
+      "caption": "Three equivalent ways to say the cowboy spans two columns",
+      "language": "css",
+      "code": ".cowboy { grid-column: span 2; }\n/* same result using lines */\n.cowboy { grid-column-start: 1; grid-column-end: 3; }\n.cowboy { grid-column: 1 / 3; }"
+    },
+    {
+      "caption": "Negative line numbers and reversed start/end",
+      "language": "css",
+      "code": ".cowboy { grid-column: 2 / -1; }  /* line 2 to the last line */\n.cowboy { grid-column: 4 / 2; }   /* reversed, still columns 2-3 */"
+    },
+    {
+      "caption": "order moves the astronaut to the end; then span fills two columns",
+      "language": "css",
+      "code": ".astronaut {\n  background-color: #03989e;\n  order: 1;\n  grid-column: span 2;\n}"
+    },
+    {
+      "caption": "Final layout with grid-area (row-start / column-start / row-end / column-end)",
+      "language": "css",
+      "code": ".cowboy    { background-color: #00b9ff; grid-area: 1 / 1 / 2 / 3; }\n.astronaut { background-color: #03989e; grid-area: 2 / 1 / 3 / 3; }\n.book      { background-color: #e5833180; grid-area: 1 / 2 / 3 / 4; } /* overlaps both */"
+    }
+  ],
+  "task": {
+    "name": "10.3 Grid Placement: three exercises",
+    "starting_point": "Download the lesson zip (exercise1.html to exercise3.html, goal1-3.png, demo1-4.html, solution1-3.html). Each exercise has the cowboy/astronaut/book container with grid-template-columns 1fr 1fr 1.5fr and two 1fr rows.",
+    "goal": "1: centre each emoji in its box with Flexbox. 2: place the astronaut under the cowboy spanning two columns. 3: make the book orange box fill the whole third column (two rows).",
+    "steps": [
+      "Exercise 1: on .item add display: flex, justify-content: center and align-items: center so each emoji is centred both ways.",
+      "Open demo1.html to see the cowboy rule (background #00b9ff, grid-column: span 2) and inspect it with the DevTools grid overlay.",
+      "Exercise 2: in exercise2.html the astronaut already has order: 1 (see demo2.html). Add grid-column: span 2 so it takes the two left columns on the bottom row, matching goal2.png.",
+      "Optionally replace order with grid-area: 2 / 1 / 3 / 3 (demo3.html) and observe the same result.",
+      "Exercise 3: in the book rule add grid-row: span 2 (or grid-area: 1 / 3 / 3 / 4) so the orange box fills column three on both rows, matching goal3.png.",
+      "Open demo4.html to see the overlapping variant with a semi-transparent book.",
+      "Play all 28 levels of Grid Garden."
+    ],
+    "expected_result": "Emojis centred in each cell; blue box across the top two columns; green box across the bottom two columns; orange box filling the right column over both rows (or overlapping the others in demo 4).",
+    "solution_code": {
+      "language": "css",
+      "code": ".item {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}\n\n.cowboy {\n  background-color: #00b9ff;\n  grid-column: span 2;\n}\n\n.astronaut {\n  background-color: #03989e;\n  grid-area: 2 / 1 / 3 / 3;\n}\n\n.book {\n  background-color: #e58331;\n  grid-area: 1 / 3 / 3 / 4;\n  /* or grid-area: 1 / 3 / -1 / -1; or grid-row: span 2; */\n}"
+    },
+    "reference_repo_path": "Section 10 - Grid/10.03 - Grid Placement"
+  },
+  "pitfalls": [
+    "Putting grid-area values in the wrong order. It is row-start / column-start / row-end / column-end, the reverse of the usual x then y thinking.",
+    "Forgetting that the end line is where the item stops, not the last track it covers: spanning columns 1 and 2 needs end line 3.",
+    "Giving an item span 2 when there is no room left on the current row, so auto-placement drops it elsewhere.",
+    "Mixing auto-placed items with a few explicitly placed ones and being surprised by the result.",
+    "Using -2, -3 and similar negative lines, which are hard to read at a glance.",
+    "Missing alpha digits when expecting overlap to show through (use 8-digit hex or rgba).",
+    "(Extra) The reference repo files carry a personal footer element on each demo page; ignore it."
+  ],
+  "playground": {
+    "match": "s10-grid-placement (lesson 10.3, data/s10.js)",
+    "coverage": "Starter and solution match the three exercises (span 2 on cowboy, grid-area for astronaut, grid-area or grid-row span for book). Explore demo lets learners place an item by line numbers.",
+    "gaps_and_ideas": [
+      "The Flexbox centring exercise (exercise 1) is not a task; the starter already has the flex rules. Add a task to remove and re-add them.",
+      "Add a vocabulary diagram labelling container, item, track, cell and line, with the gap line thickness visible.",
+      "Add the negative line numbers (-1) and reversed start/end demos to the explore widget.",
+      "Add the order property and the span-with-no-room problem as a task, since the lecture builds the astronaut step that way.",
+      "Add the overlap demo (semi-transparent book on grid-area 1/2/3/4) and a note on 8-digit hex alpha.",
+      "Show the grid-area argument order with labelled inputs (row-start, column-start, row-end, column-end).",
+      "Link to Grid Garden at the end of the lesson."
+    ]
+  }
+}

@@ -1,0 +1,131 @@
+{
+  "index": 262,
+  "lecture_id": 40494294,
+  "title": "How to update and delete data & tables",
+  "section": "33. PostgreSQL",
+  "duration_min": 19,
+  "kind": "concept+exercise",
+  "summary": "Covers the Postgres commands that change existing structure and data: ALTER TABLE (rename, change column type, add column, add constraint), DROP TABLE, UPDATE ... SET ... WHERE, ORDER BY with ASC/DESC, and DELETE FROM ... WHERE. Four short challenges run against the Family Travel Tracker tables in pgAdmin's Query Tool.",
+  "concepts": [
+    {
+      "heading": "ALTER TABLE: changing the schema",
+      "points": [
+        "ALTER TABLE <table> <action> is the entry point for any structural change. The action that follows decides what happens.",
+        "Rename a table: ALTER TABLE student RENAME TO user (the example turns a student table into a user table).",
+        "Change a column's data type: ALTER TABLE <table> ALTER COLUMN <column> TYPE <new type>. This is a two-level ALTER (table, then column). Example idea: a TEXT column becomes VARCHAR(20).",
+        "Add a column: ALTER TABLE <table> ADD COLUMN <name> <type>. Example: a contact_detail table holding telephone and address gets a third column, email TEXT.",
+        "Add a constraint after the table exists: ALTER TABLE <table> ADD UNIQUE (col1, col2). The constraint is the same one you can declare at the end of CREATE TABLE.",
+        "(Extra) Existing rows must already satisfy a new constraint, otherwise the ALTER fails. Dropping a column uses ALTER TABLE <t> DROP COLUMN <c>, which she mentions only in passing."
+      ]
+    },
+    {
+      "heading": "Composite UNIQUE constraint",
+      "points": [
+        "UNIQUE over several columns makes the combination unique, not each column on its own. With UNIQUE (a, c), a row (a=1, c=1) can coexist with (a=1, c=2) but a second (1, 1) pair is rejected. The b column is not part of the check.",
+        "Why it matters in the Family Travel Tracker: visited_countries had country_code as UNIQUE, which is wrong once several family members can visit the same country. The real rule is that one user cannot have the same country twice, so the pair (user_id, country_code) must be unique.",
+        "After the constraint exists, inserting user_id 1 with country_code 'FR' again fails with a duplicate-key / unique-violation error in pgAdmin.",
+        "This error is useful for the app: the server can catch it and show the visitor a message about the duplicate, instead of silently storing the same data twice.",
+        "(Extra) Postgres auto-names the constraint (e.g. visited_countries_user_id_country_code_key) unless you write ADD CONSTRAINT <name> UNIQUE (...)."
+      ]
+    },
+    {
+      "heading": "DROP TABLE",
+      "points": [
+        "DROP TABLE <table> removes the whole table and its rows from the database. It is the SQL equivalent of right-click then Delete on a table in pgAdmin. Be careful, there is no undo.",
+        "DROP TABLE IF EXISTS <t1>, <t2> only acts when the table is present, so the script does not error otherwise. The queries.sql file in the Family Travel Tracker starter starts with this so the script can be re-run and rebuild visited_countries and users from a clean state."
+      ]
+    },
+    {
+      "heading": "UPDATE: change data in existing rows",
+      "points": [
+        "Pattern: UPDATE <table> SET <column> = <new value> WHERE <condition>.",
+        "The WHERE clause narrows which rows change. Without it every row in the table gets the new value, which is almost never intended. Filtering on the primary key (id = 1) targets exactly one row.",
+        "Different conditions touch different parts of the table, e.g. WHERE id = 3 or WHERE name = 'Jack'.",
+        "(Extra) Several columns can be set at once with a comma list: SET name = 'A', color = 'red'."
+      ]
+    },
+    {
+      "heading": "ORDER BY, ASC and DESC",
+      "points": [
+        "SELECT * FROM <table> ORDER BY <column> [ASC | DESC] returns rows sorted by that column. It changes only the order of the result, not the stored data.",
+        "ASC is ascending and is the default. Numbers go small to large, text goes A to Z. DESC reverses this (large to small, Z to A).",
+        "The sort column does not have to be the id, so names, dates, and so on all work."
+      ]
+    },
+    {
+      "heading": "DELETE FROM: remove rows",
+      "points": [
+        "Table-level removal uses DROP; row-level removal uses DELETE. Pattern: DELETE FROM <table> WHERE <condition>.",
+        "As with UPDATE, leaving out WHERE would remove every row (the table itself stays).",
+        "Conditions can be combined with AND: WHERE user_id = 1 AND country_code = 'FR' removes only the row matching both parts.",
+        "Typical use case: a user wrongly recorded a country (user 2 and AU) so that row is deleted by its id."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "ALTER TABLE variants",
+      "language": "sql",
+      "code": "ALTER TABLE student RENAME TO \"user\";\nALTER TABLE contact_detail ALTER COLUMN telephone TYPE VARCHAR(20);\nALTER TABLE contact_detail ADD COLUMN email TEXT;"
+    },
+    {
+      "caption": "Composite unique constraint on an existing table (challenge solution)",
+      "language": "sql",
+      "code": "ALTER TABLE visited_countries\nADD UNIQUE (user_id, country_code);\n\n-- Test: second run fails with a unique violation\nINSERT INTO visited_countries (user_id, country_code) VALUES (1, 'FR');"
+    },
+    {
+      "caption": "Safe drop",
+      "language": "sql",
+      "code": "DROP TABLE IF EXISTS visited_countries, users;"
+    },
+    {
+      "caption": "UPDATE challenge solution",
+      "language": "sql",
+      "code": "UPDATE users\nSET name = 'Angelina'\nWHERE id = 1;"
+    },
+    {
+      "caption": "ORDER BY challenge solution",
+      "language": "sql",
+      "code": "SELECT * FROM users ORDER BY name DESC;\n-- numeric example\nSELECT * FROM users ORDER BY id ASC;"
+    },
+    {
+      "caption": "DELETE by id, and by two conditions",
+      "language": "sql",
+      "code": "DELETE FROM visited_countries WHERE id = 6;\n\nDELETE FROM visited_countries\nWHERE user_id = 1 AND country_code = 'FR';"
+    }
+  ],
+  "task": {
+    "name": "Four short pgAdmin Query Tool challenges on the Family Travel Tracker database",
+    "starting_point": "The users and visited_countries tables from the Family Travel Tracker lesson, with some rows (at least a couple of users, and visited countries for each). Work in pgAdmin: select the table, open the Query Tool, run SQL there instead of using the GUI.",
+    "goal": "Practise the schema change (ALTER), the data change (UPDATE), sorting (ORDER BY) and row removal (DELETE) with SQL.",
+    "steps": [
+      "Challenge 1: add a constraint so that user_id and country_code are unique together in visited_countries. Use ALTER TABLE ... ADD UNIQUE (user_id, country_code). Then try inserting a duplicate pair (user 1, 'FR') and confirm the unique-violation error.",
+      "Challenge 2: look at the users table, then run an UPDATE that sets the name of the user with id 1 to 'Angelina' using SET and WHERE id = 1. View the table to confirm only that row changed.",
+      "Challenge 3: select everything from users, sorted by the name column in descending order (ORDER BY name DESC). Add a couple of users first if the table is nearly empty.",
+      "Challenge 4: pick a row in visited_countries, note its id, user_id and country_code, and delete it with DELETE FROM visited_countries WHERE id = <n>. Then delete another row using a two-part condition (user_id and country_code joined with AND). Re-view the table after each."
+    ],
+    "expected_result": "The duplicate insert is rejected; user 1 now has the new name; the SELECT returns names in reverse alphabetical order; the chosen visited_countries rows disappear from the table.",
+    "solution_code": {
+      "language": "sql",
+      "code": "ALTER TABLE visited_countries ADD UNIQUE (user_id, country_code);\n\nUPDATE users SET name = 'Angelina' WHERE id = 1;\n\nSELECT * FROM users ORDER BY name DESC;\n\nDELETE FROM visited_countries WHERE id = 6;\nDELETE FROM visited_countries WHERE user_id = 1 AND country_code = 'FR';"
+    },
+    "reference_repo_path": "Section 33 - PostgreSQL/33.15 - How to update and delete data & tables/README.md (README only, no code files)"
+  },
+  "pitfalls": [
+    "Forgetting WHERE on UPDATE or DELETE affects every row in the table.",
+    "Adding a UNIQUE constraint to a table that already holds duplicate pairs fails until the duplicates are removed.",
+    "Keeping UNIQUE on country_code alone in a multi-user table blocks two users from visiting the same country.",
+    "DROP TABLE is irreversible and removes data, so prefer IF EXISTS in scripts and double-check the name.",
+    "Sorting text with ORDER BY is alphabetical, so mixed-case or numeric-looking text may not sort as expected (extra note)."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (section 33 has no data file).",
+    "gaps_and_ideas": [
+      "New lesson 'Changing data and tables': blurb covering ALTER, UPDATE, ORDER BY, DELETE and DROP in Postgres.",
+      "Tasks: (1) add a composite UNIQUE on user_id plus country_code, (2) UPDATE one user's name by id, (3) sort users by name DESC, (4) DELETE a row by id then by two AND conditions, (5) predict what an UPDATE with no WHERE would do.",
+      "Starter idea: a SQL script that creates users and visited_countries with sample rows.",
+      "Interactive demo idea: a mini table in the browser with a SQL box (or buttons) that applies UPDATE/DELETE/ORDER BY and highlights affected rows, plus a toggle to remove the WHERE clause to show the all-rows effect."
+    ]
+  }
+}

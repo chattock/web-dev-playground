@@ -1,0 +1,100 @@
+{
+  "index": 22,
+  "lecture_id": 37349866,
+  "title": "[Project] Birthday Invite",
+  "section": "3. Intermediate HTML",
+  "duration_min": 4,
+  "kind": "project",
+  "summary": "End-of-section project: build an unstyled birthday invitation page that combines headings, an image with alt text, a list and a link. It is an open-ended project rather than a graded exercise, with a minimum of one image, one list and one anchor; the sample solution is walked through briefly.",
+  "concepts": [
+    {
+      "heading": "Project vs coding exercise",
+      "points": [
+        "Projects are guidelines, not tests. There is no single correct answer; the aim is practice and developing your own style.",
+        "Minimum requirements: at least one img, at least one list, at least one anchor (a) tag. Everything else (wording, extra headings, extra sections) is up to you.",
+        "The page will look plain, like a 1990s website, because no CSS has been covered yet. Styling comes in later sections.",
+        "If you are happy with the result, take a screenshot and share it in the course Q&A."
+      ]
+    },
+    {
+      "heading": "Starting files",
+      "points": [
+        "Download and extract the lesson zip from the lecture resources.",
+        "index.html supplies an example image URL (a birthday cake photo hosted on the course's GitHub) and an example Google Maps link to use for the location.",
+        "goal.png shows one possible finished page. The Maps link leads to a joke location in Tokyo as an Easter egg."
+      ]
+    },
+    {
+      "heading": "Elements the project pulls together",
+      "points": [
+        "Headings for hierarchy: one h1 for the main message, h2 for the date, h3 for the sub-sections ('What to bring', 'Where to go'). Keep one h1 and do not skip levels.",
+        "img (void element) with src set to the image URL and alt describing the picture for screen-reader users.",
+        "ul with one li per item for the things guests should bring (order does not matter, so unordered).",
+        "a with an href holding the Google Maps URL; the text between the tags (e.g. 'Google map link') is what guests click.",
+        "(Extra) Good additions from earlier lessons: a p of invitation text, an hr between sections, an ol for a timeline of the day, br for a line break in an address."
+      ]
+    },
+    {
+      "heading": "How the sample solution is built",
+      "points": [
+        "h1: the main announcement that it is your birthday.",
+        "h2: the date of the party.",
+        "img: src from the starter code plus an alt description of the cake. If the image appears and has alt text, that part is done.",
+        "h3 'What to bring' followed by a ul, each item in its own li.",
+        "h3 telling guests where to go, followed by an anchor whose href is the supplied Maps link and whose link text says it is a Google Maps link."
+      ]
+    },
+    {
+      "heading": "(Extra) Reference repo notes",
+      "points": [
+        "The reference solution matches the sample described in the lecture (h1, h2, img with alt, h3 + ul, h3 + map link).",
+        "It spells 'Balloons' as 'Baloons' (fixed below) and includes the author's footer line, which is left out."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Skeleton of the required parts: image, list, link",
+      "language": "html",
+      "code": "<h1>It's My Birthday!</h1>\n<h2>On the 10th of October</h2>\n<img src=\"IMAGE_URL\" alt=\"what the picture shows\" />\n<h3>What to bring:</h3>\n<ul>\n  <li>...</li>\n</ul>\n<h3>Where to go:</h3>\n<a href=\"MAP_URL\">Google map link</a>"
+    }
+  ],
+  "task": {
+    "name": "3.5 Birthday Invite Project",
+    "starting_point": "index.html with the boilerplate, an example image URL (birthday-cake3.4.jpeg on raw.githubusercontent.com/appbrewery/webdev/main/) and an example Google Maps link; goal.png shows one possible result.",
+    "goal": "Create a party invitation web page that tells guests it is your birthday, when it is, what to bring and where to go. Must contain at least one image, one list and one link.",
+    "steps": [
+      "Add an h1 announcing the birthday.",
+      "Add an h2 with the date.",
+      "Add an img with src set to the supplied cake image URL (or your own) and an alt that describes it.",
+      "Add an h3 'What to bring' and a ul below it, one li per item.",
+      "Add an h3 telling guests where to go and an a element below it with href set to the supplied Google Maps link and readable link text.",
+      "Preview, click the link to check it opens the map, and adjust content as you like.",
+      "Optional: screenshot the page and share it in the Q&A."
+    ],
+    "expected_result": "An unstyled, browser-default page: large heading, smaller date heading, the cake photo, a bulleted list of items to bring and a blue underlined map link that opens Google Maps.",
+    "solution_code": {
+      "language": "html",
+      "code": "<body>\n  <h1>It's My Birthday!</h1>\n  <h2>On the 10th of October</h2>\n  <img\n    src=\"https://raw.githubusercontent.com/appbrewery/webdev/main/birthday-cake3.4.jpeg\"\n    alt=\"purple birthday cake with candles\"\n  />\n  <h3>What to bring:</h3>\n  <ul>\n    <li>Balloons (I love balloons)</li>\n    <li>Cake (I'm really good at eating)</li>\n    <li>An appetite (there will be lots of food)</li>\n  </ul>\n  <h3>This is where you need to go:</h3>\n  <!-- use the Google Maps link supplied in the starter index.html -->\n  <a href=\"https://www.google.com/maps/@35.7040744,139.5577317,3a,75y,289.6h,87.01t,0.72r/data=!3m6!1e1!3m4!1sgT28ssf0BB2LxZ63JNcL1w!2e0!7i13312!8i6656\">Google map link</a>\n</body>"
+    },
+    "reference_repo_path": "Section 03 - Intermediate HTML/03.05 - Birthday Invite Project/solution.html"
+  },
+  "pitfalls": [
+    "Forgetting the alt attribute on the image.",
+    "Typing list items without li wrappers inside the ul.",
+    "Pasting the map URL as visible text instead of putting it in the href of an anchor.",
+    "Using several h1 elements for the different sections instead of h2/h3.",
+    "Trying to style the page with attributes; styling waits for CSS."
+  ],
+  "playground": {
+    "match": "s03-birthday (lesson 3.5, project, data/s03.js)",
+    "coverage": "Project brief and solution combine headings, an image with alt, a paragraph, hr, a ul of things to bring, an ol plan for the day, a map link with target=\"_blank\" and a mailto RSVP link. Notes frame it as the last HTML-only project and suggest follow-ups for sections 4 and 6.",
+    "gaps_and_ideas": [
+      "State the course's minimum requirements up front (at least one image, one list, one link) and that the rest is free choice; the current tasks read as all required.",
+      "Offer the course's starter assets: the birthday-cake3.4.jpeg URL from the appbrewery GitHub and a Google Maps link, so the playground mirrors the downloaded files.",
+      "Mark mailto:, target=\"_blank\" and width as extras, since none of them are taught in sections 2-3.",
+      "Add an explore block (the lesson has none): a live checklist that scans the learner's HTML and ticks off 'img with alt', 'ul/ol with li', 'a with href', 'exactly one h1'.",
+      "Add a 'share it' prompt: a button that opens the rendered page in a new tab so learners can screenshot it."
+    ]
+  }
+}

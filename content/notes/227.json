@@ -1,0 +1,109 @@
+{
+  "index": 227,
+  "lecture_id": 38912014,
+  "title": "What is JSON?",
+  "section": "28. Application Programming Interfaces (APIs)",
+  "duration_min": 18,
+  "kind": "concept+exercise",
+  "summary": "Explains JSON (JavaScript Object Notation) as the string format APIs use to send data, how it differs from a JS object, and how JSON.stringify and JSON.parse convert between the two. Ends with the Taco Town exercise: parse a recipe JSON string in an Express POST route and render the chosen recipe in EJS.",
+  "concepts": [
+    {
+      "heading": "What JSON is",
+      "points": [
+        "JSON = JavaScript Object Notation: a text format for sending data over the internet that is both human-readable and compact. It is the usual format of API responses.",
+        "Its structure mirrors a JS object: key/value pairs separated by colons, comma-separated properties, arrays, and objects nested inside objects.",
+        "It is good at representing complex nested data (e.g. a person with an array of degrees, each degree an object)."
+      ]
+    },
+    {
+      "heading": "JSON vs a JavaScript object",
+      "points": [
+        "Layout is almost identical, but in JSON every key must be a double-quoted string. JS object keys do not need quotes.",
+        "Values can be strings, numbers, arrays, objects (and booleans/null).",
+        "The real difference: JSON is serialized, meaning it is one single string, usually because it is travelling across a network. A JS object is a live in-memory structure that the interpreter understands and that has relaxed syntax.",
+        "Analogy: a JS object is the assembled wardrobe, JSON is the flat-pack box. Same content, minimal size for transport, re-assembled at the destination.",
+        "(Extra) Real JSON also forbids comments, trailing commas, single quotes and functions/undefined values; a JS object may contain all of those."
+      ]
+    },
+    {
+      "heading": "Reading JSON: use a viewer",
+      "points": [
+        "Raw API JSON is usually minified onto one line, which is hard for humans to read.",
+        "Paste it into a JSON visualiser (recommended: jsonviewer.stack.hu, free) and open the Viewer tab to expand/collapse nested nodes.",
+        "In the taco example the viewer shows an array of three recipe objects; each has ingredients -> protein, salsa and a toppings array of objects.",
+        "Viewer icons distinguish objects from arrays, which matters when deciding whether to drill with dot notation or loop."
+      ]
+    },
+    {
+      "heading": "JSON.stringify and JSON.parse",
+      "points": [
+        "JSON.stringify(obj) serializes: turns a JS object into a JSON string, keeping all the quotes, colons and commas that encode the nesting. Use it before sending data out.",
+        "JSON.parse(jsonString) is the reverse: turns the JSON string back into a normal JS object (or array).",
+        "After parsing you use ordinary property access, e.g. data.ingredients, indexing like data[0], loops, and so on.",
+        "(Extra) JSON.parse throws a SyntaxError on invalid JSON, so wrap it in try/catch when the source is untrusted."
+      ]
+    },
+    {
+      "heading": "Taco Town exercise: how the pieces connect",
+      "points": [
+        "index.js holds recipeJSON as one long string constant (standing in for a response from a third-party API, to avoid real requests for now). recipe.json has the same data pretty-printed for reference.",
+        "The page has a form posting to /recipe with three buttons that share name=\"choice\" and have values chicken, beef, fish.",
+        "body-parser (urlencoded) makes the choice available as req.body.choice.",
+        "A switch on req.body.choice selects index 0, 1 or 2 of the parsed array.",
+        "The solution stores the pick in a variable, then redirects to GET /, which renders solution.ejs passing it as recipe.",
+        "In EJS: if recipe exists show recipe.name and the ingredients, otherwise show a prompt h2. Drill down with recipe.ingredients.protein.name, .preparation, recipe.ingredients.salsa.name.",
+        "toppings is an array of objects, so loop over it (forEach) and print quantity and name per li."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Serialize and parse",
+      "language": "javascript",
+      "code": "const wardrobe = { doors: 2, drawers: 3, color: \"oak\" };\nconst flat = JSON.stringify(wardrobe); // '{\"doors\":2,\"drawers\":3,\"color\":\"oak\"}'\nconst back = JSON.parse(flat);         // object again\nconsole.log(back.doors);               // 2"
+    },
+    {
+      "caption": "Shape of one recipe in the JSON (trimmed)",
+      "language": "json",
+      "code": "{\n  \"id\": \"0001\", \"type\": \"taco\", \"name\": \"Chicken Taco\", \"price\": 2.99,\n  \"ingredients\": {\n    \"protein\": { \"name\": \"Chicken\", \"preparation\": \"Grilled\" },\n    \"salsa\": { \"name\": \"Tomato Salsa\", \"spiciness\": \"Medium\" },\n    \"toppings\": [\n      { \"name\": \"Lettuce\", \"quantity\": \"1 cup\", \"ingredients\": [\"Iceberg Lettuce\"] }\n    ]\n  }\n}"
+    }
+  ],
+  "task": {
+    "name": "Taco Town",
+    "starting_point": "Starter folder with index.js (recipeJSON string, express, body-parser, empty POST /recipe), views/index.ejs, public/styles/main.css, recipe.json, solution.js and solution.ejs. Run npm install first.",
+    "goal": "Make the site behave like the solution: clicking a chicken/beef/fish button shows that taco's name and ingredient list; before any click it shows a prompt.",
+    "steps": [
+      "cd into the project folder and run npm install, then run nodemon solution.js and open localhost:3000 to see the target behaviour. Do not read solution.js or solution.ejs.",
+      "Study the JSON structure (recipe.json or a JSON viewer): array of 3 recipes, each with ingredients.protein, ingredients.salsa, ingredients.toppings[].",
+      "In the app.post(\"/recipe\") handler, read req.body.choice.",
+      "Parse recipeJSON with JSON.parse and choose the matching element (switch or lookup) for chicken, beef, fish.",
+      "Send the chosen recipe to the template (res.render with data, or store it and redirect to /).",
+      "In views/index.ejs, show an h2 prompt if no data exists; otherwise show the recipe name.",
+      "List protein name and preparation, the salsa name, and loop over toppings to output quantity + name as list items."
+    ],
+    "expected_result": "Initial page shows a 'pick your favourite taco' prompt; clicking an emoji button shows the recipe title and a ul such as 'Chicken, Grilled', 'Tomato Salsa', '1 cup of Lettuce', and so on.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "let data;\n\napp.get(\"/\", (req, res) => {\n  res.render(\"solution.ejs\", { recipe: data });\n});\n\napp.post(\"/recipe\", (req, res) => {\n  switch (req.body.choice) {\n    case \"chicken\": data = JSON.parse(recipeJSON)[0]; break;\n    case \"beef\":    data = JSON.parse(recipeJSON)[1]; break;\n    case \"fish\":    data = JSON.parse(recipeJSON)[2]; break;\n    default: break;\n  }\n  res.redirect(\"/\");\n});\n\n/* solution.ejs essentials */\n// <% if (locals.recipe) { %>\n//   <h2><%= recipe.name %></h2>\n//   <ul>\n//     <li><%= recipe.ingredients.protein.name %>, <%= recipe.ingredients.protein.preparation %></li>\n//     <li><%= recipe.ingredients.salsa.name %></li>\n//     <% recipe.ingredients.toppings.forEach(t => { %>\n//       <li><%= t.quantity %> of <%= t.name %></li>\n//     <% }) %>\n//   </ul>\n// <% } else { %> <h2>Pick your favourite taco ingredient</h2> <% } %>"
+    },
+    "reference_repo_path": "Section 28 - Aplication Programming Interfaces (APIs)/28.03 - What is JSON"
+  },
+  "pitfalls": [
+    "Forgetting to JSON.parse the string: indexing the string with [0] gives one character, not a recipe.",
+    "Using locals.recipe in EJS guards against a ReferenceError when the variable was never passed (first visit).",
+    "toppings is an array: use a loop, not dot notation. Protein and salsa are plain objects: use dot notation.",
+    "The reference solution keeps the choice in a module-level variable, so it is shared by all visitors; fine for a demo, wrong for real apps.",
+    "The reference repo's own index.ejs variant renders directly from the POST route (no redirect), so a refresh re-submits the form; the redirect pattern avoids that.",
+    "(Extra) Do not confuse JS object literal syntax with JSON: single quotes or unquoted keys make JSON.parse fail."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "New lesson 'What is JSON?' with blurb: JSON is a string; stringify/parse convert it to and from objects.",
+      "Tasks: (1) stringify an object and log typeof; (2) parse a given JSON string and read a nested value; (3) fix an invalid JSON string (single quotes, trailing comma) until JSON.parse succeeds; (4) loop over a toppings array to build list items; (5) wrap parse in try/catch.",
+      "Starter code: a minified recipe JSON string constant plus an empty render function.",
+      "Interactive demo: two textareas, left JS object, right JSON string, with Stringify/Parse buttons and an error readout for invalid input, plus a collapsible tree view of the parsed result."
+    ]
+  }
+}

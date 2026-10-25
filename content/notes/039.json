@@ -1,0 +1,117 @@
+{
+  "index": 39,
+  "lecture_id": 37350414,
+  "title": "Font Properties",
+  "section": "6. CSS Properties",
+  "duration_min": 21,
+  "kind": "concept+exercise",
+  "summary": "Covers the main text-styling properties: font-size (px, pt, em, rem, keywords), font-weight, font-family with generic fallbacks and Google Fonts, and text-align. Finishes with a TODO-driven exercise using an id per paragraph.",
+  "concepts": [
+    {
+      "heading": "font-size and its units",
+      "points": [
+        "font-size sets text size. Common absolute units: px (1/96 inch, about 0.26 mm) and pt (1/72 inch, about 0.35 mm, a little larger than a px).",
+        "Points are the unit word processors use, so 12pt on a page at 100% zoom looks roughly like 12 in Word.",
+        "em is relative to the parent element's font size: with a parent at 20px, 1em = 20px and 2em = 40px. Change the parent to 80px and the child becomes 160px, so the value moves with whatever the parent is.",
+        "rem ('root em') is relative to the root element (the html element). 1rem = root size, 2rem = twice root size. Changing a nearby parent such as a footer has no effect; only changing the html font-size does.",
+        "Recommendation: prefer rem. With nested elements (h2 in footer in body in html) em becomes confusing, especially across separate CSS files, while rem always points to one place.",
+        "Keyword sizes also exist (e.g. large, x-large, xx-large). px and pt are fixed; em and rem are relative.",
+        "The lesson's font-size.html demo lets you change the root, the em/rem values and keywords to see them respond; lowering the html size from xx-large to 20px shrinks everything declared in rem.",
+        "(Extra) Browser default root size is 16px, so 1rem = 16px unless overridden."
+      ]
+    },
+    {
+      "heading": "font-weight",
+      "points": [
+        "Keywords: normal and bold.",
+        "Relative keywords: lighter and bolder, which adjust the weight relative to the parent's weight.",
+        "Numeric: 100 to 900 in steps of 100 (400 = normal, 700 = bold, 900 = heaviest). Whether you see each step depends on the font having that weight.",
+        "(Extra) The numeric scale is the same one Google Fonts uses when it lists weights such as 400 and 700."
+      ]
+    },
+    {
+      "heading": "font-family and fallbacks",
+      "points": [
+        "font-family picks the typeface. Helvetica is installed on Macs but not many Windows machines, so always list one or more fallbacks ending with a generic family.",
+        "Syntax: comma-separated list, tried left to right. The first available font wins. Example: Helvetica, sans-serif.",
+        "Font names that contain spaces must be in quotation marks, e.g. \"Times New Roman\", serif.",
+        "Serif fonts have small decorative strokes ('feet') at letter ends; sans-serif fonts do not. Match the generic fallback to the primary font's kind.",
+        "Other generic families: cursive, monospace (every character equal width, like code or a typewriter), fantasy. The actual font behind each generic differs by OS and browser (sans-serif is often Arial-like on Windows).",
+        "Typography is covered in more depth in later lessons."
+      ]
+    },
+    {
+      "heading": "Adding a Google Font",
+      "points": [
+        "Browse fonts.google.com and open a font. Some families offer several weights, others only regular (400).",
+        "Select the style(s) you want (e.g. regular 400, bold 700); the selections panel in the top right lists them and lets you remove entries.",
+        "Choose the <link> option and copy it. Paste it inside the head element, outside the style element (placement matters).",
+        "Copy the CSS rule Google gives for that family and put it in your stylesheet on the element you want, e.g. the h1.",
+        "The link downloads the font for every visitor, regardless of what is installed on their computer. The fallback generic family in the CSS (e.g. cursive) is used if the link fails."
+      ]
+    },
+    {
+      "heading": "text-align",
+      "points": [
+        "Values include left, right, center, plus start and end.",
+        "start/end follow writing direction: for left-to-right Western text start is the left, but for right-to-left scripts such as Arabic start is the right.",
+        "Check MDN for further values (e.g. justify) and the interactive demo."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "em versus rem",
+      "language": "css",
+      "code": "html   { font-size: 30px; }\nfooter { font-size: 80px; }\n\n/* inside the footer: */\nh2.em  { font-size: 2em;  } /* 2 x footer = 160px */\nh2.rem { font-size: 2rem; } /* 2 x html   = 60px, footer ignored */"
+    },
+    {
+      "caption": "Font stacks with fallbacks",
+      "language": "css",
+      "code": "p.a { font-family: Helvetica, sans-serif; }\np.b { font-family: \"Times New Roman\", serif; }   /* quotes: name has spaces */\np.c { font-family: \"Caveat\", cursive; }          /* Google Font, generic backup */"
+    },
+    {
+      "caption": "Font weight options",
+      "language": "css",
+      "code": "h1 { font-weight: bold; }\np  { font-weight: 300; }\nspan { font-weight: bolder; } /* relative to parent */"
+    }
+  ],
+  "task": {
+    "name": "6.2 Font Properties: TODO list",
+    "starting_point": "index.html has a body (cornflowerblue background, white text, 18px) and a heading plus five paragraphs with ids color, size, weight, family, align. A comment says not to alter the existing CSS but add yours below it in the same style element. goal.png shows the target. Separate font-size.html and font-family.html are the demos.",
+    "goal": "Complete each TODO by adding rules below the existing CSS, keeping the Google Font link outside the style element.",
+    "steps": [
+      "Select #color and set its text colour to the named colour coral.",
+      "Select #size and set font-size to 2rem (twice the root size).",
+      "Select #weight and set font-weight to 900.",
+      "Choose Caveat (regular weight) on Google Fonts, paste its <link> tags in the head just before the head closes and outside the style element, then give #family the font-family rule with a backup generic (cursive).",
+      "Select #align and set text-align to right.",
+      "Select the html element and set font-size to 30px; the 2rem paragraph should grow to match (60px)."
+    ],
+    "expected_result": "A blue page: coral Color line, a large Font Size line that scales with the root, a very bold Font Weight line, a handwriting-style Font Family line, and a right-aligned Text Align line.",
+    "solution_code": {
+      "language": "css",
+      "code": "#color  { color: coral; }\n#size   { font-size: 2rem; }\n#weight { font-weight: 900; }\n#align  { text-align: right; }\n#family {\n  font-family: \"Caveat\", cursive;\n  font-weight: 400;\n}\nhtml { font-size: 30px; }\n\n/* in <head>, outside <style>: */\n/* <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\" />\n   <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin />\n   <link href=\"https://fonts.googleapis.com/css2?family=Caveat&display=swap\" rel=\"stylesheet\" /> */"
+    },
+    "reference_repo_path": "Section 06 - CSS Properties/06.02 - Font Properties/index.html"
+  },
+  "pitfalls": [
+    "Putting the Google Fonts link inside the style element; it belongs in the head as its own link element.",
+    "Forgetting quotes around multi-word font names.",
+    "Omitting a generic fallback so users without the font see an arbitrary default.",
+    "Mixing em values inside nested elements and losing track of which parent applies.",
+    "Reference repo adds font-optical-sizing and font-style lines copied from Google's snippet, plus an author footer; neither is required."
+  ],
+  "playground": {
+    "match": "s06-fonts (lesson 6.2, data/s06.js)",
+    "coverage": "Tasks cover size 2rem, weight 900, Caveat with cursive fallback, and right alignment; root is preset to 30px. Explore demos give a font control panel and a px/rem/em root-size slider. Notes cover the unit table and the Google Fonts link.",
+    "gaps_and_ideas": [
+      "Missing the #color (coral) TODO and the 'set html to 30px yourself' step; make the root rule a student task so the link between rem and root is discovered.",
+      "Playground pre-links Caveat; add a task to paste the link element into the head yourself and note it goes outside style.",
+      "Add pt (1/72 inch) and keyword sizes to the unit table and the px/rem/em demo.",
+      "Add font-weight values (lighter/bolder, 100-900) and text-align start/end vs RTL to the control panel.",
+      "Add an explore demo where an em-sized child inside a parent with changing font-size jumps while the rem child stays put (the footer 40px vs 160px example).",
+      "Add the quoting rule for multi-word names, e.g. a Times New Roman task."
+    ]
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "index": 324,
+  "lecture_id": 31673280,
+  "title": "What are DApps (Decentralised Apps) and how do you develop them?",
+  "section": "37. Web3 Decentralised App (DApp) Development with the Internet Computer",
+  "duration_min": 9,
+  "kind": "theory",
+  "summary": "Explains what DApps change about building companies and products (token funding, DAOs, pseudonymity), gives examples, and sets out the problem of building on Ethereum (cost, storage, no real backend) that motivates the Internet Computer.",
+  "concepts": [
+    {
+      "heading": "DApps as the backbone of Web3",
+      "points": [
+        "A DApp (decentralised application) runs its logic on a blockchain rather than on servers owned by one company.",
+        "Traditional startup path: build the product, deploy, raise venture funding, maybe go public later. Web3 path: build the product and issue tokens early, so funding can start from day one by selling tokens that grant use of or a stake in the app."
+      ]
+    },
+    {
+      "heading": "DAOs and governance tokens",
+      "points": [
+        "A DAO (Decentralised Autonomous Organisation) replaces the board and org chart: token holders vote on the project's direction.",
+        "Governance tokens give voting rights. Incentives align because good decisions raise the app's value and therefore the token price."
+      ]
+    },
+    {
+      "heading": "Funding comparison used in the lecture",
+      "points": [
+        "Dropbox (centralised file storage) raised a Series A of about 6 million dollars. Filecoin (decentralised file storage spread over many computers, giving redundancy) raised about 257 million dollars in its initial coin offering.",
+        "Point being made: DApps can raise money earlier and sometimes in far larger amounts. (Extra) ICOs carry heavy regulatory and fraud risk; treat the numbers as illustrative, not as a business model recommendation."
+      ]
+    },
+    {
+      "heading": "Possible DApp ideas",
+      "points": [
+        "A rideshare service owned and governed by drivers and riders through tokens.",
+        "Games where players pay an entry stake and winners receive cash prizes automatically.",
+        "General rule: anything benefiting from a trustless, decentralised system where users and creators share the upside."
+      ]
+    },
+    {
+      "heading": "Pseudonymity",
+      "points": [
+        "Participants can be known by a handle without revealing name, age or location, so work is judged on its merit. The lecture cites teenagers who built the DeFi lending project Rari Capital as an example."
+      ]
+    },
+    {
+      "heading": "Choosing a chain and Ethereum's limits",
+      "points": [
+        "Many chains exist (Ethereum, Avalanche, Polkadot, Solana). Ethereum hosts the most DApps simply because it introduced smart contracts first.",
+        "Its scaling problem: computation is expensive and on-chain storage is impractical, so there is effectively no proper backend or database.",
+        "NFTs on Ethereum usually store only a URL; the image lives elsewhere (IPFS/Filecoin or a private cloud server such as AWS). Many DApp front ends (HTML, CSS, JS, images) are also hosted on AWS, so the app is a patchwork of services rather than fully on-chain.",
+        "The Internet Computer, begun by DFINITY in 2014, aims to be a scalable cloud-like computer on a blockchain: fast computation, direct data storage, and full applications hosted on-chain. It is the platform used for the rest of the module."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [
+    "Assuming an NFT's image is stored on-chain; usually only a link is.",
+    "Assuming a DApp's website is decentralised just because its contract is; front ends are often on centralised hosting.",
+    "Treating token fundraising figures as typical outcomes."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (the playground has no section 37 data file).",
+    "gaps_and_ideas": [
+      "Proposed lesson 'Anatomy of a DApp': blurb contrasting a normal web app architecture with a DApp architecture.",
+      "Tasks: (1) label parts of a diagram as frontend, backend, database, hosting; (2) mark which parts Ethereum puts on-chain vs off-chain; (3) mark the same for the Internet Computer; (4) list two risks of off-chain pieces.",
+      "Starter idea: a JSON describing a sample NFT app's components and their hosting location.",
+      "Interactive demo: toggle between 'Ethereum DApp' and 'Internet Computer DApp' and see which boxes turn from cloud-hosted to on-chain."
+    ]
+  }
+}

@@ -1,0 +1,93 @@
+{
+  "index": 257,
+  "lecture_id": 40494256,
+  "title": "Travel Tracker Part 3",
+  "section": "33. PostgreSQL",
+  "duration_min": 11,
+  "kind": "solution",
+  "summary": "Optional polish for the Travel Tracker: wrap the queries in try/catch so bad or duplicate countries show an error in the input placeholder, and make the lookup forgiving with LOWER, LIKE and || so partial or differently cased names match.",
+  "concepts": [
+    {
+      "heading": "Edge cases being fixed",
+      "points": [
+        "Unknown country name: Part 2 either hangs or crashes. Goal: re-show the page with the placeholder saying the country does not exist.",
+        "Duplicate country: inserting an already-saved code violates the UNIQUE constraint on country_code. Goal: placeholder says it was already added.",
+        "Long official names: Tanzania is stored under a longer official name, so exact matching fails even though the country is valid.",
+        "These are optional; solution3.js covers error handling and solution4.js adds the fuzzy lookup."
+      ]
+    },
+    {
+      "heading": "Error handling with try/catch (solution3)",
+      "points": [
+        "index.ejs already shows the placeholder as the error value if an error variable exists (locals.error), otherwise the default prompt. So the server only needs to pass error.",
+        "Outer try wraps the lookup SELECT from countries and reading rows[0].country_code. If no row exists, rows[0] is undefined and reading its property throws, which lands in the outer catch.",
+        "Outer catch: log the error, fetch visited countries with the helper function, and res.render index.ejs with countries, total and error 'Country name does not exist, try again.'",
+        "Inner try wraps the INSERT into visited_countries. A UNIQUE violation throws and the inner catch renders the page with an 'already added' message.",
+        "In the error path use res.render, not res.redirect, because the error value has to be passed to the template; a redirect would drop it.",
+        "The helper that returns the visited codes is reused here so the map and total still display correctly alongside the error."
+      ]
+    },
+    {
+      "heading": "Fuzzy, case-insensitive lookup (solution4)",
+      "points": [
+        "Replace the equality check with LOWER(country_name) LIKE '%' || $1 || '%'. The || joins wildcards to both sides of the placeholder, so the input may appear anywhere in the stored name.",
+        "Pass input.toLowerCase() as the parameter, and wrap the column in SQL LOWER() so both sides are lowercase and casing is irrelevant.",
+        "This is the reason to know the || form from the LIKE lesson: the pattern includes a variable that is not a literal.",
+        "(Extra) A short input such as 'a' or 'in' will now match many countries and only the first row is used, so results can be surprising; ordering or an exact-match-first query would be a further refinement.",
+        "General lesson: find edge cases while testing, then fix them one at a time with more precise SQL and better error handling."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "solution3: nested try/catch in POST /add",
+      "language": "javascript",
+      "code": "app.post(\"/add\", async (req, res) => {\n  const input = req.body[\"country\"];\n  try {\n    const result = await db.query(\n      \"SELECT country_code FROM countries WHERE country_name = $1\",\n      [input]\n    );\n    const countryCode = result.rows[0].country_code;\n    try {\n      await db.query(\"INSERT INTO visited_countries (country_code) VALUES ($1)\", [countryCode]);\n      res.redirect(\"/\");\n    } catch (err) {\n      console.log(err);\n      const countries = await checkVisited();\n      res.render(\"index.ejs\", {\n        countries,\n        total: countries.length,\n        error: \"Country has already been added, try again.\",\n      });\n    }\n  } catch (err) {\n    console.log(err);\n    const countries = await checkVisited();\n    res.render(\"index.ejs\", {\n      countries,\n      total: countries.length,\n      error: \"Country name does not exist, try again.\",\n    });\n  }\n});"
+    },
+    {
+      "caption": "solution4: the only change, a fuzzy lowercase lookup",
+      "language": "javascript",
+      "code": "const result = await db.query(\n  \"SELECT country_code FROM countries WHERE LOWER(country_name) LIKE '%' || $1 || '%';\",\n  [input.toLowerCase()]\n);"
+    },
+    {
+      "caption": "Placeholder in index.ejs",
+      "language": "html",
+      "code": "<input type=\"text\" name=\"country\" autofocus\n  placeholder=\"<%= locals.error ? error : 'Enter country name' %>\">"
+    }
+  ],
+  "task": {
+    "name": "Travel Tracker Part 3: error handling and fuzzy matching (optional)",
+    "starting_point": "The working Part 2 app (solution2.js), plus solution3.js and solution4.js to compare.",
+    "goal": "Show a helpful message for unknown or duplicate countries, and let Tanzania (or a lowercase name) match the stored value.",
+    "steps": [
+      "Wrap the lookup query in try/catch; in the catch, log, fetch visited countries and render index.ejs with an error 'does not exist'.",
+      "Wrap the INSERT in its own try/catch; in the catch render with an 'already added' error.",
+      "Test by entering a nonsense name and re-adding a visited country; the input placeholder should change.",
+      "Change the lookup to LOWER(country_name) LIKE '%' || $1 || '%' and pass input.toLowerCase().",
+      "Test with Tanzania and with lowercase input."
+    ],
+    "expected_result": "Bad or duplicate entries leave the map intact and show a message; Tanzania is accepted.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "const result = await db.query(\n  \"SELECT country_code FROM countries WHERE LOWER(country_name) LIKE '%' || $1 || '%';\",\n  [input.toLowerCase()]\n);"
+    },
+    "reference_repo_path": "Section 33 - PostgreSQL/33.10 - Travel Tracker Part 3/Travel Tracker/solution4.js"
+  },
+  "pitfalls": [
+    "Using res.redirect on error, which loses the error value.",
+    "Forgetting that rows[0] is undefined for no match, so the thrown TypeError is what triggers the catch.",
+    "Passing the original-case input while lowercasing only one side of the comparison.",
+    "Leaving out the % wildcards so LIKE behaves like equality.",
+    "Very short inputs matching unintended countries."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "Could be folded into the Travel Tracker lesson series as a final 'edge cases' lesson.",
+      "Tasks: add try/catch with a user-visible error, handle duplicates, make the lookup case-insensitive, find an input that matches too many rows.",
+      "Starter idea: mock query function that throws for unknown or duplicate codes.",
+      "Interactive demo: type a name and watch a mock lookup table highlight rows matched by exact, LIKE and LOWER+LIKE modes."
+    ]
+  }
+}

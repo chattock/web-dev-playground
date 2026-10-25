@@ -1,0 +1,64 @@
+{
+  "index": 163,
+  "lecture_id": 12407700,
+  "title": "Step 1 - Add Javascript and jQuery",
+  "section": "20. Boss Level Challenge 2 - The Simon Game",
+  "duration_min": 1,
+  "kind": "article-task",
+  "summary": "Create game.js, link it, then add jQuery and verify both loaded.",
+  "concepts": [
+    {
+      "heading": "Why an external file",
+      "points": [
+        "All game logic lives in a separate JS file linked from the HTML, keeping markup and behaviour apart."
+      ]
+    },
+    {
+      "heading": "Verifying the setup",
+      "points": [
+        "A temporary alert() in game.js proves the file is linked: reload the page and the dialog should appear. Remove or comment it out afterwards.",
+        "Add the jQuery library (CDN script tag) before the game script so $ exists when the game file runs.",
+        "Test jQuery in DevTools: typing $(\"h1\") in the console should print a jQuery object wrapping the h1; if jQuery did not load you get a '$ is not defined' error."
+      ]
+    },
+    {
+      "heading": "Script tag placement",
+      "points": [
+        "(Extra) Put both script tags at the end of body so elements exist when the code runs, and jQuery's tag must come first."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Script tags at end of body",
+      "language": "html",
+      "code": "<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js\"></script>\n<script src=\"game.js\"></script>"
+    }
+  ],
+  "task": {
+    "name": "Link JS and jQuery",
+    "starting_point": "Starter project",
+    "goal": "game.js linked and jQuery loaded",
+    "steps": [
+      "Create game.js",
+      "Add a script tag for it in index.html",
+      "Add alert(\"hello\") and confirm it fires, then delete it",
+      "Add the jQuery CDN script tag above game.js",
+      "In the console run $(\"h1\") and confirm a jQuery object is returned"
+    ],
+    "expected_result": "Page loads with no console errors and $(\"h1\") works.",
+    "solution_code": null,
+    "reference_repo_path": "Section 20 - Boss Level Challenge 2 - The Simon Game/script.js"
+  },
+  "pitfalls": [
+    "jQuery script placed after game.js causes '$ is not defined'.",
+    "The reference repo names the file script.js; the lecture uses game.js. Either works if the link matches."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (web-dev-playground has no files for sections 19-20)",
+    "gaps_and_ideas": [
+      "Starter lesson check: auto-detect whether jQuery loaded and show a pass/fail."
+    ]
+  }
+}

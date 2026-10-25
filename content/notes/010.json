@@ -1,0 +1,30 @@
+{
+  "index": 10,
+  "lecture_id": 37390282,
+  "title": "A Note About 2023 Course Updates",
+  "section": "2. Introduction to HTML",
+  "duration_min": 1,
+  "kind": "admin",
+  "summary": "Short announcement article: the bootcamp, first made in 2018, was re-recorded through 2023, so most of the material is new. It names the new topics and explains the move from MongoDB to PostgreSQL.",
+  "concepts": [
+    {
+      "heading": "What changed in the 2023 rebuild",
+      "points": [
+        "Around 80% of the course was re-recorded, with more than 50 hours of fresh video added.",
+        "Whole new sections were created for CSS Flexbox, CSS Grid and PostgreSQL.",
+        "The database part of the course switched from MongoDB (NoSQL) to PostgreSQL (SQL), based on hiring research showing employers want SQL skills more than Mongo/NoSQL.",
+        "Takeaway for study planning: older forum answers, blog posts or GitHub repos may refer to the 2018-era version (e.g. Mongo/Mongoose lessons), so check that any outside material matches the current section order."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [
+    "(Extra) Mixing up course versions: tutorials or repos labelled with older course years may follow the old MongoDB track instead of the current Postgres one."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": []
+  }
+}

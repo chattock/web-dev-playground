@@ -1,0 +1,29 @@
+{
+  "index": 208,
+  "lecture_id": 17967258,
+  "title": "Tip from Angela - How to Solidify Your Knowledge",
+  "section": "24. Express.js with Node.js",
+  "duration_min": 3,
+  "kind": "tip",
+  "summary": "Study tip: explaining concepts to others and inventing your own analogies turns working-but-fuzzy understanding into durable knowledge.",
+  "concepts": [
+    {
+      "heading": "Key takeaways",
+      "points": [
+        "Code that merely runs can hide gaps. Having to explain why it works, or why one approach beats another, exposes what is not yet understood and prompts further reading.",
+        "Putting an idea into words (spoken or written) forces recall and fixes it in memory.",
+        "Once a concept is clear, devise personal analogies for it rather than relying only on the course's.",
+        "Share explanations and analogies with other learners in the course Q&A; a different framing may help someone else.",
+        "Regularly try to explain what you have learned to another person."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [],
+  "playground": {
+    "match": null,
+    "coverage": "Not applicable (study tip).",
+    "gaps_and_ideas": []
+  }
+}

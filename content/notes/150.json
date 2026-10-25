@@ -1,0 +1,103 @@
+{
+  "index": 150,
+  "lecture_id": 12384174,
+  "title": "How to Incorporate jQuery into Websites",
+  "section": "19. jQuery",
+  "duration_min": 9,
+  "kind": "concept+exercise",
+  "summary": "Shows how to add jQuery to a page, either by downloading it or via a CDN such as Google Hosted Libraries, builds a small starter project, and demonstrates why the position of the jQuery script tag matters. Also covers $(document).ready() as a guard when scripts sit in the head.",
+  "concepts": [
+    {
+      "heading": "Getting jQuery: download or CDN",
+      "points": [
+        "jquery.com offers the library as a downloadable file or as a CDN link, in the same way Bootstrap does.",
+        "The most common choice is Google's CDN (Google Hosted Libraries). Copy its script tag for the jQuery version you want.",
+        "A popular CDN has a caching benefit: if the visitor already fetched that same URL while on another site, the browser reuses the cached copy and your page loads faster.",
+        "Use a current 3.x release; the lecture used 3.3.1 and suggests picking whatever is latest. The reference repo uses 3.7.1."
+      ]
+    },
+    {
+      "heading": "Project setup used in the demo",
+      "points": [
+        "Create a project folder named jQuery inside the Web Development Projects folder with index.html, styles.css and index.js.",
+        "In index.html add the HTML boilerplate and a title of jQuery.",
+        "Link the stylesheet with a link element (rel=\"stylesheet\", href=\"styles.css\") in the head, just below the title.",
+        "Put the JavaScript script tag (src=\"index.js\") at the end of the body, right before the closing body tag.",
+        "Smoke-test both links: set the body background to red in the CSS and call an alert in index.js. When both show up, delete the test code.",
+        "Add an h1 saying Hello and five buttons labelled Click Me for later lessons."
+      ]
+    },
+    {
+      "heading": "First jQuery line and the missing-library error",
+      "points": [
+        "$(\"h1\").css(\"color\", \"red\"); selects the h1 and sets its colour property. The details of css() come in later lectures.",
+        "Without the library loaded, the console reports that $ is not defined, since $ only exists once jQuery has run.",
+        "To fix it, paste the CDN script tag into the page above the script tag for index.js. After a refresh the error disappears and the heading turns red."
+      ]
+    },
+    {
+      "heading": "Script order matters",
+      "points": [
+        "Browsers process script tags top to bottom. If the jQuery tag comes after index.js, index.js runs first, meets an unknown $ and fails with the same not defined error.",
+        "Rule: the jQuery script tag must come before any of your own scripts that use it.",
+        "If both script tags sit in the head, the page can fail silently (no helpful error), because your code may run before the document body exists or before the library has finished loading.",
+        "(Extra) The cause with head scripts is mostly that the h1 is not yet in the DOM when the selector runs, so nothing is matched."
+      ]
+    },
+    {
+      "heading": "$(document).ready()",
+      "points": [
+        "Wrapping code in $(document).ready(function () { ... }) delays it until the document is ready, so it works even if scripts are in the head.",
+        "You will often see this pattern in other people's code.",
+        "The alternative, used for the rest of the course, is to place all scripts at the end of the body. That has the same effect, so the ready() wrapper is not needed in later lessons.",
+        "(Extra) Modern shorthand: $(function () { ... }) does the same as $(document).ready(...)."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "index.html: stylesheet in head, jQuery before own script at end of body",
+      "language": "html",
+      "code": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>jQuery</title>\n  <link rel=\"stylesheet\" href=\"styles.css\">\n</head>\n<body>\n  <h1>Hello</h1>\n  <button>Click Me</button>\n  <button>Click Me</button>\n  <button>Click Me</button>\n  <button>Click Me</button>\n  <button>Click Me</button>\n\n  <script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js\"></script>\n  <script src=\"index.js\"></script>\n</body>\n</html>"
+    },
+    {
+      "caption": "index.js: first jQuery code",
+      "language": "javascript",
+      "code": "$(\"h1\").css(\"color\", \"red\");\n\n// jQuery(...) is the long form of $(...)\njQuery(\"h2\").css(\"color\", \"blue\");"
+    },
+    {
+      "caption": "Guarding with ready() when scripts are in the head",
+      "language": "javascript",
+      "code": "$(document).ready(function () {\n  $(\"h1\").css(\"color\", \"red\");\n});"
+    }
+  ],
+  "task": {
+    "name": "Link CSS and JS into the new jQuery project",
+    "starting_point": "Empty project folder with index.html, styles.css and index.js and boilerplate in index.html.",
+    "goal": "Link the stylesheet and script correctly, then get jQuery working through the CDN.",
+    "steps": [
+      "Pause and add a link element for styles.css in the head, and a script element for index.js before the closing body tag.",
+      "Prove both work with a red body background and an alert.",
+      "Add an h1 and five buttons.",
+      "Write $(\"h1\").css(\"color\", \"red\"); in index.js and observe the $ is not defined console error.",
+      "Add the Google CDN script tag above the index.js tag; refresh and confirm the heading is red.",
+      "Experiment: move the jQuery tag below index.js, then move both scripts into the head, and see each fail. Fix the head case with $(document).ready()."
+    ],
+    "expected_result": "Red h1 with no console errors when jQuery is loaded before index.js at the end of the body.",
+    "solution_code": null,
+    "reference_repo_path": "Section 19 - JQuery/19.01 - How to Incorporate jQuery into Websites"
+  },
+  "pitfalls": [
+    "jQuery script tag placed after your own script gives $ is not defined.",
+    "Both scripts in the head can fail without a clear error; use $(document).ready() or move scripts to the end of body.",
+    "Open the file from its real path or live preview when testing; refresh after each change.",
+    "The reference repo's index.html has a personal author footer (ignore it); its h2 example is extra to the lecture."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "New lesson 'Loading jQuery'. Tasks: (1) add the CDN script tag; (2) make $(\"h1\").css(...) work; (3) deliberately reverse the script order and read the console error; (4) move both scripts into the head and fix with $(document).ready(); (5) swap the CDN version number. Starter: h1, h2 and an index.js. Demo idea: a toggle for script order that reloads an iframe and shows the console message."
+    ]
+  }
+}

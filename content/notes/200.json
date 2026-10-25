@@ -1,0 +1,26 @@
+{
+  "index": 200,
+  "lecture_id": 18113055,
+  "title": "Tip from Angela - Step Up to the Challenge",
+  "section": "23. Node.js",
+  "duration_min": 1,
+  "kind": "tip",
+  "summary": "A short motivational tip encouraging learners to treat self-doubt as a signal to prepare and take on bigger challenges.",
+  "concepts": [
+    {
+      "heading": "Key takeaway",
+      "points": [
+        "Self-doubt when handed a demanding opportunity is common; preparing thoroughly and accepting the task is how skills grow.",
+        "Watch for moments of doubt paired with a request to step up, and treat them as growth opportunities rather than reasons to decline."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": []
+  }
+}

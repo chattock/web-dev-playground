@@ -1,0 +1,48 @@
+{
+  "index": 370,
+  "lecture_id": 12614090,
+  "title": "AAA 2 - Schedule for Learning to Code and more...",
+  "section": "43. Optional Module: Ask Angela Anything",
+  "duration_min": 39,
+  "kind": "qa",
+  "summary": "Second Ask-Angela-Anything session (recorded in 2017, with an iOS/Swift slant). Covers how much time to set aside for learning, where to practise coding between lessons, how the instructor picked up her programming languages, and some energy and focus habits. No code is written.",
+  "concepts": [
+    {
+      "heading": "How much time to spend learning",
+      "points": [
+        "Aim for at least one hour a day on learning new tech, since the web ecosystem changes constantly and employers rarely give much paid learning time.",
+        "Protect your best-focus hour (for most people early morning) rather than the tired end of the day.",
+        "Match task type to energy: creative or new-concept work when sharp, routine admin when moderately sharp, rest when drained.",
+        "Hours alone are not the measure; practise on problems slightly beyond your current ability so you keep growing."
+      ]
+    },
+    {
+      "heading": "Where to practise between lessons",
+      "points": [
+        "Project Euler: algorithm puzzles sortable by how many people solved them, solvable in any language.",
+        "CodeFights (now CodeSignal): arcade and challenge modes with automated tests and visible solutions after attempting.",
+        "The most valuable practice is building small original apps or sites with no step-by-step guide, practising reading docs, finding example code and using Stack Overflow.",
+        "Draw project ideas from your own annoyances, and try a 'new small site every day' habit (e.g. a notepad, egg timer, music player)."
+      ]
+    },
+    {
+      "heading": "Learning many programming languages",
+      "points": [
+        "Once one language is learnt, others mostly differ in syntax; concepts such as protocols and interfaces carry over.",
+        "Her own order was Visual Basic, C, C++, Objective-C, Swift, then JavaScript when clients wanted websites.",
+        "JavaScript feels permissive compared with strictly typed languages (e.g. out-of-range array access does not throw)."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [
+    "(Extra) The tool and website recommendations date from 2017; check they still exist and are current.",
+    "Health and diet comments (sugar, protein shakes, caffeine) are personal experience, not advice."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": []
+  }
+}

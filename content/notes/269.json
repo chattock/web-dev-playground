@@ -1,0 +1,65 @@
+{
+  "index": 269,
+  "lecture_id": 41780534,
+  "title": "How to Hack Passwords",
+  "section": "35. Authentication and Security",
+  "duration_min": 12,
+  "kind": "theory",
+  "summary": "Looks at password cracking from the attacker's side so that defences make sense: identical hashes reveal shared passwords, hash tables and dictionary attacks reverse weak passwords quickly, GPUs make guessing fast, and only long, non-dictionary passwords resist. Sets up salting as the next fix.",
+  "concepts": [
+    {
+      "heading": "Context and motivation",
+      "points": [
+        "Hashing passwords already puts a site ahead of many real ones. Sites that can email you your actual password are demonstrably storing it in plain text or reversibly encrypted; a plaintext-offenders listing site collects examples. Delete accounts on such sites; developers can use them as a prompt to offer security help.",
+        "Large breaches have exposed millions of accounts, and leaked credentials are traded. Check your own email on a breach-notification service and change any password that appears, everywhere it was reused."
+      ]
+    },
+    {
+      "heading": "How a leaked hash table is attacked",
+      "points": [
+        "A hash function is deterministic: the same password always yields the same hash. That is what makes login verification work, and also what lets an attacker spot users who share a password: identical hashes in the leaked table.",
+        "Attacker builds a hash table: hash lots of likely passwords (123456, qwerty, password, 111111, ...) with the same function, then look up each stolen hash in the table to read off the password.",
+        "Dictionary attack: hash every dictionary word (~150,000), plus phone-number style digits and all character combinations up to about six characters, reaching roughly 20 billion entries.",
+        "GPUs compute hashes in parallel; a modern one does around 20 billion MD5 hashes per second, so a table of that size takes about a second. MD5 is especially fast, so pre-built MD5 tables are common.",
+        "Pre-built tables exist for the most common passwords, drawn from earlier breaches and annual top-password lists. Pasting a hash into a search engine can even reveal the original."
+      ]
+    },
+    {
+      "heading": "What defends a user",
+      "points": [
+        "A strong password's hash will not appear in any table. Cracking cost grows exponentially with length.",
+        "Demo with a password strength checker: a 6-character random password falls in seconds on a desktop to brute force; doubling to 12 characters moves it to decades on a desktop and years on a fast GPU.",
+        "Length matters more than composition rules; short passwords with a capital and a symbol are still weak.",
+        "Avoid dictionary words, place names and anything found in a directory such as phone numbers.",
+        "(Extra) Use a password manager so every site gets a unique long random password."
+      ]
+    },
+    {
+      "heading": "Developer takeaways",
+      "points": [
+        "Fast, unsalted hashes (MD5) are not enough; the next lesson addresses the table and dictionary problem with salting.",
+        "(Extra) Also add rate limiting, breached-password checks and slow password hashes (bcrypt, scrypt, Argon2)."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "(Extra) Toy illustration: identical hashes and a lookup table",
+      "language": "javascript",
+      "code": "import crypto from \"node:crypto\";\n\n// (Extra) a toy dictionary/hash-table attack against unsalted MD5\nconst md5 = s => crypto.createHash(\"md5\").update(s).digest(\"hex\");\nconst common = [\"123456\", \"qwerty\", \"password\", \"111111\"];\nconst table = Object.fromEntries(common.map(p => [md5(p), p]));   // hash -> password\n\nconst leaked = [\n  { user: \"a\", hash: md5(\"qwerty\") },\n  { user: \"b\", hash: md5(\"qwerty\") },     // identical hash => same password\n  { user: \"c\", hash: md5(\"x9#Lm!2qZr7@Tb\") },\n];\nfor (const row of leaked) console.log(row.user, table[row.hash] ?? \"not in table\");"
+    }
+  ],
+  "task": null,
+  "pitfalls": [
+    "Identical hashes in a table expose users sharing a password.",
+    "Complexity rules with short length give false confidence.",
+    "Only test cracking techniques on your own data; the lesson is educational."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (section 35 has no file).",
+    "gaps_and_ideas": [
+      "New lesson 'How passwords get cracked': tasks: (1) hash four common passwords with SHA-256 via crypto.subtle, (2) build a hash-to-password lookup, (3) find which users in a sample leaked table share a password, (4) estimate crack time for lengths 6 vs 12 given guesses per second, (5) list three defences. Interactive demo: paste a hash from a small leaked table and watch a lookup find it, then toggle 'add salt' to show the lookup failing."
+    ]
+  }
+}

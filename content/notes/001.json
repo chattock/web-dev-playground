@@ -1,0 +1,30 @@
+{
+  "index": 1,
+  "lecture_id": 12638830,
+  "title": "What You'll Get in This Course",
+  "section": "1. Front-End Web Development",
+  "duration_min": 3,
+  "kind": "admin",
+  "summary": "Promotional course trailer. It outlines the scope of the bootcamp (HTML through to React and the back end), the project-based format, and who the course is aimed at. No code is shown.",
+  "concepts": [
+    {
+      "heading": "Key takeaways",
+      "points": [
+        "Instructor: Angela Yu, lead instructor at the London App Brewery. The online course follows the same curriculum as their 12-week in-person bootcamp.",
+        "Format: roughly 55+ hours of video plus step-by-step tutorials, interactive coding exercises and quizzes.",
+        "Scope runs from front end (HTML, CSS, Bootstrap, JavaScript) to back end (Node) and React, with the MERN stack mentioned as part of the full-stack path.",
+        "Everything is taught through projects. Examples named in the trailer: a product website built with HTML/CSS/Bootstrap, games, a drum-kit music app, plus portfolio-friendly projects such as a to-do list and a project-management tool.",
+        "No prior programming experience is assumed. Experienced developers are told to check the downloadable curriculum and start at whatever section fits their level.",
+        "The stated aim is to teach the reasoning behind each step as well as the steps themselves."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (trailer only, nothing to cover).",
+    "gaps_and_ideas": []
+  }
+}

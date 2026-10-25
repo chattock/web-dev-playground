@@ -1,0 +1,51 @@
+{
+  "index": 8,
+  "lecture_id": 17104604,
+  "title": "How to Get Help When You're Stuck",
+  "section": "1. Front-End Web Development",
+  "duration_min": 7,
+  "kind": "tip",
+  "summary": "A step-by-step routine for getting unstuck: compare what you expected with what happened, search the error message (Google → Stack Overflow), rewatch the video up to where things broke, diff your code against the downloadable solution, then search or post in the lesson's Q&A using a four-part question format with screenshots.",
+  "concepts": [
+    {
+      "heading": "The unsticking routine, in order",
+      "points": [
+        "1. Expectation vs reality: each time you run code, decide beforehand what should happen, then compare it with what did happen and work out what causes the gap.",
+        "2. Read the error message. Errors appear in the browser or the editor (typos, misspellings, failed installs). If the message is cryptic, paste it into Google and open the Stack Overflow results. Professional developers do this every day.",
+        "3. Rewatch the video up to the point where your code broke or started misbehaving, checking for typos and wrong capitalisation along the way.",
+        "4. Compare with the instructor's code: each module ends with a downloadable completed project. Scan it against yours; you can paste in a line or block to test whether it fixes the problem.",
+        "5. Q&A: check the Q&A of the specific lecture where it broke to see if someone had the same issue. If not, post there (not in an unrelated lecture), and include the video timestamp if the question is about a moment in the video."
+      ]
+    },
+    {
+      "heading": "How to write a good Q&A question",
+      "points": [
+        "State what you expected to happen.",
+        "State what actually happened.",
+        "Attach a screenshot of all the relevant code.",
+        "Attach a screenshot of the console/debug output showing any errors or the crash.",
+        "Partial-screen screenshots: Windows: Win+Shift+S, drag the crosshair, and the capture goes to the clipboard. Mac: Cmd+Shift+4, drag the area, and the file is saved to the Desktop."
+      ]
+    },
+    {
+      "heading": "Mindset",
+      "points": [
+        "Getting stuck is a normal part of learning to program; tiny slips such as a missing comma or semicolon can take a long time to find, and solving them builds skill."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [
+    "Posting a question with no code, no error output and no description of the expected behaviour.",
+    "Asking in the wrong lecture's Q&A, which makes it harder for others to find and answer.",
+    "Ignoring the error text instead of searching it."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (no 'when you're stuck' guidance on the site).",
+    "gaps_and_ideas": [
+      "Add a site-wide 'Stuck?' panel next to each lesson's Solution button with the routine: expectation vs reality → read and search the error → recheck your steps → diff against the solution. A built-in 'compare with solution' diff view would fit step 4."
+    ]
+  }
+}

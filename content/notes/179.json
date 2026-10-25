@@ -1,0 +1,45 @@
+{
+  "index": 179,
+  "lecture_id": 12653842,
+  "title": "Step 9 - Game Over",
+  "section": "20. Boss Level Challenge 2 - The Simon Game",
+  "duration_min": 1,
+  "kind": "article-task",
+  "summary": "Add game-over feedback: sound, flash and title message.",
+  "concepts": [
+    {
+      "heading": "On a wrong answer",
+      "points": [
+        "playSound(\"wrong\") (wrong.mp3 in sounds).",
+        "Add class game-over to body, remove after 200 ms with setTimeout; the CSS turns the body red with reduced opacity.",
+        "Change the h1 to 'Game Over, Press Any Key to Restart'."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Else branch",
+      "language": "javascript",
+      "code": "playSound(\"wrong\");\n$(\"body\").addClass(\"game-over\");\nsetTimeout(function () {\n  $(\"body\").removeClass(\"game-over\");\n}, 200);\n$(\"#level-title\").text(\"Game Over, Press Any Key to Restart\");"
+    }
+  ],
+  "task": {
+    "name": "Game over feedback",
+    "starting_point": "checkAnswer logs 'wrong'",
+    "goal": "Wrong click plays sound, flashes red, shows message",
+    "steps": [
+      "Play wrong sound",
+      "Add and remove game-over on body",
+      "Update h1 text"
+    ],
+    "expected_result": "Red flash, buzzer, new title.",
+    "solution_code": null,
+    "reference_repo_path": "Section 20 - Boss Level Challenge 2 - The Simon Game/script.js"
+  },
+  "pitfalls": [],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (web-dev-playground has no files for sections 19-20)",
+    "gaps_and_ideas": []
+  }
+}

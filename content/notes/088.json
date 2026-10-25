@@ -1,0 +1,53 @@
+{
+ "index": 88,
+ "lecture_id": 12371872,
+ "title": "Increment and Decrement Expressions",
+ "section": "14. Introduction to Javascript ES6",
+ "duration_min": 2,
+ "kind": "concept",
+ "summary": "Shows the programming-only shorthand operators ++, --, +=, -=, *= and /= as compact forms of reassigning a variable.",
+ "concepts": [
+  {
+   "heading": "Increment and decrement",
+   "points": [
+    "x++ is shorthand for x = x + 1 (increment). With x at 5 it becomes 6.",
+    "x-- is shorthand for x = x - 1 (decrement). With x at 5 it becomes 4.",
+    "These only ever change the value by exactly one.",
+    "(Extra) The name of C++ is a nod to this operator: C plus one."
+   ]
+  },
+  {
+   "heading": "Compound assignment operators",
+   "points": [
+    "x += 2 is the same as x = x + 2; use it to change by more than one.",
+    "The right side can be another variable: x += y means x = x + y.",
+    "The same pattern exists for -=, *= and /=, each applying its operator and storing the result back in the left variable."
+   ]
+  }
+ ],
+ "code_examples": [
+  {
+   "caption": "Shorthand forms",
+   "language": "javascript",
+   "code": "var x = 5;\nx++;        // x = x + 1  -> 6\nx--;        // x = x - 1  -> 5\nx += 2;     // x = x + 2  -> 7\nvar y = 1;\nx += y;     // x = x + y  -> 8\nx -= 3;     // 5\nx *= 2;     // 10\nx /= 5;     // 2"
+  },
+  {
+   "caption": "Reference repo demo (prefix form and compound assignments)",
+   "language": "javascript",
+   "code": "var a = 5, b = 5, c = 5, d = 5, e = 5;\nconsole.log(a + 1); // 6, a unchanged\nconsole.log(++b);   // 6\nconsole.log(--c);   // 4\nconsole.log(d += 2);// 7\nconsole.log(e -= 2);// 3"
+  }
+ ],
+ "task": null,
+ "pitfalls": [
+  "(Extra) a + 1 on its own does not change a; only ++, -- and the assignment operators do.",
+  "(Extra) x++ (postfix) returns the old value while ++x (prefix) returns the new one; matters only when the expression's value is used, as in console.log."
+ ],
+ "playground": {
+  "match": "s14-increment (lesson 14.10, data/s14.js)",
+  "coverage": "Covers all shorthands, a predict-then-run task, prefix versus postfix and all compound assignments, with a table in the notes.",
+  "gaps_and_ideas": [
+   "Add a tiny demo with buttons applying ++, --, += and *= to a displayed number.",
+   "Add a task using a counter in a loop to preview where ++ is used most."
+  ]
+ }
+}

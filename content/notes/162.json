@@ -1,0 +1,51 @@
+{
+  "index": 162,
+  "lecture_id": 12407762,
+  "title": "Step 0 - Download the Starting Files",
+  "section": "20. Boss Level Challenge 2 - The Simon Game",
+  "duration_min": 1,
+  "kind": "setup",
+  "summary": "Download and open the Simon starter project and look around before coding.",
+  "concepts": [
+    {
+      "heading": "Starter project",
+      "points": [
+        "Download the zip from the Course Resources button (top left of the lesson), unzip it and open the folder in the code editor.",
+        "Contents: index.html with four pre-styled button divs, styles.css, and a sounds folder with one mp3 per colour plus a wrong-answer sound.",
+        "Open index.html in Chrome (copy its full path into the address bar) to see the static layout.",
+        "The following lessons are numbered steps that add the behaviour one piece at a time."
+      ]
+    },
+    {
+      "heading": "Pieces the HTML already provides",
+      "points": [
+        "An h1 with id level-title, initially 'Press A Key to Start'.",
+        "Four divs with class btn plus a colour class, each with an id equal to the colour (green, red, yellow, blue). Those ids are what the JS will use to pick buttons and name sound files.",
+        "(Extra) styles.css already defines .pressed (grey + white glow) and .game-over (red body, 0.8 opacity), which later steps toggle."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": {
+    "name": "Open the Simon starter",
+    "starting_point": "Zip from Course Resources",
+    "goal": "Have the starter running in Chrome",
+    "steps": [
+      "Download zip",
+      "Unzip and open in editor",
+      "Inspect index.html, styles.css and sounds folder",
+      "Open index.html in Chrome"
+    ],
+    "expected_result": "Static page with a title and four coloured, non-functional buttons.",
+    "solution_code": null,
+    "reference_repo_path": "Section 20 - Boss Level Challenge 2 - The Simon Game/script.js"
+  },
+  "pitfalls": [],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (web-dev-playground has no files for sections 19-20)",
+    "gaps_and_ideas": [
+      "Provide the starter files inside the playground so no zip download is needed."
+    ]
+  }
+}

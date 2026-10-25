@@ -1,0 +1,46 @@
+{
+  "index": 68,
+  "lecture_id": 19655686,
+  "title": "Introduction to Web Design",
+  "section": "12. Web Design School - Create a Website that People Love",
+  "duration_min": 4,
+  "kind": "theory",
+  "summary": "Motivates a design-focused module: users judge a site on looks within seconds, and visual polish can strongly raise perceived value. Previews the four pillars covered next: colour theory, typography, UI design and UX design.",
+  "concepts": [
+    {
+      "heading": "Why design matters",
+      "points": [
+        "Functionality and clean code are necessary, but users mostly talk about and remember how a site looks and feels, not how bug-free it is.",
+        "First impressions form within a few seconds, so a visitor judges the brand, product and company almost immediately, comparable to an interview or a first date.",
+        "Case study: a children's juice carton site with clashing colours, mixed typefaces and inconsistent text colours was compared with a redesign by a professional. The redesign used a consistent colour scheme and better font choices.",
+        "In the informal survey she cites, people would pay up to about $1 per carton on the messy site versus about $3 on the redesign, roughly a threefold jump in perceived value from design alone.",
+        "Design is described as one of the cheapest ways to make a product look premium, and getting reasonably good at it does not require a long learning curve."
+      ]
+    },
+    {
+      "heading": "Module roadmap: the four pillars",
+      "points": [
+        "Colour theory: choosing and combining colours so a palette feels consistent.",
+        "Typography: choosing and pairing fonts.",
+        "User interface (UI) design: arranging visual elements to guide attention.",
+        "User experience (UX) design: making the whole journey through the site easy and pleasant.",
+        "(Extra) These map directly onto CSS skills from earlier sections: colour values, font-family and font properties, spacing and layout, and page structure."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [
+    "Treating design as an afterthought once the functionality works.",
+    "Using many unrelated colours and typefaces on one page, which makes a site look unprofessional."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (section 12 has no playground file).",
+    "gaps_and_ideas": [
+      "New lesson 'Design matters': blurb on first impressions. Tasks: 1) restyle a deliberately messy product card with a single colour scheme; 2) limit it to two fonts; 3) align and space the elements consistently; 4) compare before and after.",
+      "Starter code idea: a product card with five clashing colours, three fonts and uneven spacing.",
+      "Interactive demo idea: a before/after slider showing the messy and cleaned-up versions of the same card."
+    ]
+  }
+}

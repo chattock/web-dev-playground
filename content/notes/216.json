@@ -1,0 +1,39 @@
+{
+  "index": 216,
+  "lecture_id": 12386072,
+  "title": "Introduction to Version Control and Git",
+  "section": "27. Git, Github and Version Control",
+  "duration_min": 2,
+  "kind": "theory",
+  "summary": "Conceptual intro to version control with Git: commits act as save points of a project that you can compare against or restore. Previews the module: local Git on the command line, then cloning, forking, pull requests and merging.",
+  "concepts": [
+    {
+      "heading": "Version control as save points",
+      "points": [
+        "Putting a file under version control with Git lets you record snapshots of it over time. Each snapshot is a version (in Git terms a commit), for example version 1 after the first few lines and version 2 after more work.",
+        "If later changes wreck the code, you can diff the broken working copy against any earlier snapshot to see what changed, or roll back to a saved version.",
+        "You can return to any recorded version, not only the most recent one, as long as you know which one you want.",
+        "Rollback matters most when code is interdependent (many files or classes relying on each other), where a bad change can be hard to untangle by hand."
+      ]
+    },
+    {
+      "heading": "Module roadmap",
+      "points": [
+        "Git is used from the command line: local version control first (next lesson).",
+        "Later topics: GitHub remotes, cloning repositories, branching and merging, forking and pull requests."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [
+    "(Extra) Git only keeps versions you explicitly commit; unsaved edits between commits cannot be recovered from Git."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "A short interactive 'save points' timeline: the learner edits a file, clicks Commit to add a node, then restores or diffs against an earlier node."
+    ]
+  }
+}

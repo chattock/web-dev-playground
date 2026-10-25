@@ -1,0 +1,58 @@
+{
+  "index": 280,
+  "lecture_id": 42757326,
+  "title": "[Optional] Local Development Setup",
+  "section": "36. React.js",
+  "duration_min": 2,
+  "kind": "setup",
+  "summary": "Optional text guide for running the module's React projects locally with Node, VS Code and Vite instead of CodeSandbox.",
+  "concepts": [
+    {
+      "heading": "Prerequisites",
+      "points": [
+        "Node.js (LTS version) and VS Code installed, and basic comfort with a terminal. The instructor still recommends CodeSandbox for following the videos; local work means adapting differences from the video code.",
+        "Each lesson ships a downloadable zip you can use for the starter code."
+      ]
+    },
+    {
+      "heading": "Local workflow with Vite",
+      "points": [
+        "Scaffold the project with npm create vite@latest, pick the React framework and the JavaScript variant, then cd into the project.",
+        "npm install fetches dependencies into node_modules; npm run dev starts the Vite dev server, which recompiles and reloads on every save.",
+        "Open the printed local address (typically http://localhost:5173/) in the browser."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Create and run a local React app with Vite",
+      "language": "bash",
+      "code": "npm create vite@latest my-react-app -- --template react\ncd my-react-app\nnpm install\nnpm run dev\n# open http://localhost:5173/"
+    }
+  ],
+  "task": {
+    "name": "Optional local React setup",
+    "starting_point": "Node LTS and VS Code installed",
+    "goal": "Run a Vite React app locally",
+    "steps": [
+      "Open a terminal in the folder where the project should live.",
+      "Run the Vite scaffold command, accept the install prompt, choose React then JavaScript.",
+      "cd into the new folder and run npm install.",
+      "Run npm run dev and open the local URL shown."
+    ],
+    "expected_result": "Default Vite + React page served at localhost:5173 that hot-reloads on edits.",
+    "solution_code": null,
+    "reference_repo_path": "Section 36 - React.js/36.05 Introduction to JSX and Babel/my-react-app"
+  },
+  "pitfalls": [
+    "(Extra) Newer npm versions need the extra -- before --template for the flag to reach the template; without it npm may swallow the flag and the CLI asks for a framework interactively.",
+    "(Extra) The reference repo's later lessons are Vite projects (src/main.jsx, src/App.jsx, index.html with a div#root), matching this setup."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (no data file exists for section 36)",
+    "gaps_and_ideas": [
+      "Fold into a 'React setup' lesson: tasks to scaffold with Vite, locate index.html, main.jsx and App.jsx, and explain the role of each; demo idea: file-tree explorer showing how main.jsx mounts App into div#root."
+    ]
+  }
+}

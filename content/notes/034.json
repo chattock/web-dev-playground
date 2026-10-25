@@ -1,0 +1,118 @@
+{
+  "index": 34,
+  "lecture_id": 37350332,
+  "title": "CSS Selectors",
+  "section": "5. Introduction to CSS",
+  "duration_min": 23,
+  "kind": "concept+exercise",
+  "summary": "Explains the selector part of a CSS rule and walks through the five basic selector types: element, class, id, attribute and universal. Ends with a five-TODO exercise where only style.css is edited to hit the right elements.",
+  "concepts": [
+    {
+      "heading": "Anatomy of a rule",
+      "points": [
+        "A rule has two halves: the selector (outside the braces) decides which HTML is affected, and the declaration block inside the braces holds property: value pairs that say what changes.",
+        "A declaration is a property, a colon, then the value, e.g. color: blue. The lecture defers where to look up properties to the next section.",
+        "The selector is the part this lesson focuses on: it answers 'which elements does this styling apply to?'"
+      ]
+    },
+    {
+      "heading": "Element (type) selector",
+      "points": [
+        "Written as the bare tag name: h2 { color: red; }.",
+        "It matches every element of that tag in the document. With three h2s, all three turn red.",
+        "A well-formed page normally has one h1, but p, a, h2, li and so on usually appear many times, so an element selector hits all of them."
+      ]
+    },
+    {
+      "heading": "Class selector",
+      "points": [
+        "Written as a dot immediately followed by the class name, with no space: .red-text { color: red; }.",
+        "A class is an attribute you add to HTML (class=\"red-text\") to group elements; the same class can sit on different tag types, e.g. an h2 and a p, and both get the rule.",
+        "The name in the CSS must match the HTML exactly, including case. .Red-text will not match class=\"red-text\".",
+        "Classes are the flexible way to share styling across unrelated elements on bigger, multi-page sites."
+      ]
+    },
+    {
+      "heading": "ID selector",
+      "points": [
+        "Written as a hash sign immediately followed by the id value: #main { ... }, matching id=\"main\".",
+        "Difference from a class: a class may be reused on any number of elements, whereas an id value should appear on only one element per HTML file.",
+        "Use an id when you want to style one unique element, which an element selector would over-match."
+      ]
+    },
+    {
+      "heading": "Attribute selector",
+      "points": [
+        "Syntax: element, then square brackets with the attribute inside, e.g. p[draggable] { ... } selects every p that has a draggable attribute, whatever its value.",
+        "Add an equals sign and a value to match precisely: p[draggable=\"false\"] selects only paragraphs whose draggable attribute is false. With three paragraphs set to true, false, false, the first rule matches one and this rule matches two.",
+        "Works with any attribute (id, class, draggable, src, href, alt, value...), so it selects on something different from tag, class or id.",
+        "(Extra) Quote the value in brackets: [value=\"4\"] is the safe, conventional form."
+      ]
+    },
+    {
+      "heading": "Universal selector",
+      "points": [
+        "A single asterisk: * { ... } matches every element the stylesheet applies to, regardless of tag, class, id or attributes.",
+        "Simplest selector to understand; typically used for page-wide defaults."
+      ]
+    },
+    {
+      "heading": "Specificity teaser",
+      "points": [
+        "In the exercise, the li with the green id stays green even after a li[value] rule colours all list items blue. The reason is CSS specificity (some selectors outrank others), promised for the advanced CSS section later in the course.",
+        "(Extra) Rough order, weakest to strongest: universal, element, class/attribute, id, inline style."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "The five basic selectors",
+      "language": "css",
+      "code": "/* element: every h2 */\nh2 { color: red; }\n\n/* class: anything with class=\"red-text\" */\n.red-text { color: red; }\n\n/* id: the one element with id=\"main\" */\n#main { color: red; }\n\n/* attribute: every p that has draggable=\"false\" */\np[draggable=\"false\"] { color: red; }\n\n/* universal: everything */\n* { color: red; }"
+    },
+    {
+      "caption": "HTML that those selectors act on",
+      "language": "html",
+      "code": "<h2 class=\"red-text\" id=\"main\">Heading</h2>\n<p class=\"red-text\" draggable=\"true\">Paragraph</p>\n<p draggable=\"false\">Another paragraph</p>"
+    }
+  ],
+  "task": {
+    "name": "5.2 CSS Selectors: five TODOs",
+    "starting_point": "index.html already links style.css via a link tag and contains an h1, h2, one p (class note) and an ordered list whose li items carry class note, value attributes (2 to 5) and one id (id-selector-demo). style.css has an existing ol rule (margins, list-style-position) that must stay unchanged. The preview starts as plain black unstyled text; goal.png shows the finished look.",
+    "goal": "Complete five TODOs in order by writing only selectors in style.css, matching goal.png: centred text, a red paragraph, larger note text, one green item and one blue item.",
+    "steps": [
+      "Do not edit index.html (no changing classes, ids or values) and do not touch the existing ol rule.",
+      "TODO 1: select all paragraph tags with an element selector and set color: red.",
+      "TODO 2: select everything with class note using the class selector and set font-size: 20px. It affects the p and all li items but not the headings.",
+      "TODO 3: select the element with id id-selector-demo using the id selector and set color: green. That is list item 3.",
+      "TODO 4: select li elements whose value attribute is 4 using li[value=\"4\"] and set color: blue.",
+      "TODO 5: select all elements with * and set text-align: center.",
+      "Tip: copy class/id names from the HTML and paste them to avoid typos."
+    ],
+    "expected_result": "Everything centred; the paragraph red; paragraph and list items at 20px; item 3 green; item 4 blue.",
+    "solution_code": {
+      "language": "css",
+      "code": "/* existing ol rule stays above */\n\np {\n  color: red;\n}\n\n.note {\n  font-size: 20px;\n}\n\n#id-selector-demo {\n  color: green;\n}\n\nli[value=\"4\"] {\n  color: blue;\n}\n\n* {\n  text-align: center;\n}"
+    },
+    "reference_repo_path": "Section 05 - Introduction to CSS/05.02 - CSS Selectors/solution/solution-style.css"
+  },
+  "pitfalls": [
+    "Misspelling or mis-casing a class or id in CSS so it silently matches nothing.",
+    "Putting a space between the dot or hash and the name (. note or # id).",
+    "Reusing one id on several elements; use a class for groups.",
+    "Using only li[value] (no value) and wondering why every item is selected: the bracket selector without a value matches any element that merely has the attribute.",
+    "Expecting a later colour rule to override the green id item: specificity keeps the id rule winning.",
+    "The reference repo's TODO 5 comment mentions font-family but its code uses text-align: center, which is what the lecture asks for. It also adds a personal footer line to solution.html that should be ignored."
+  ],
+  "playground": {
+    "match": "s05-selectors (lesson 5.2, data/s05.js)",
+    "coverage": "Starter files, five tasks and solution mirror the lecture exercise exactly, including the preset ol rule. The explore demo highlights matched elements for seven selectors, and the notes table lists the five types plus class vs id.",
+    "gaps_and_ideas": [
+      "Add an attribute-selector demo without a value (li[value]) versus with a value, so learners see why TODO 4 needs =\"4\".",
+      "Add a mini demo of a class shared by an h2 and a p, and a case-mismatch example (.Red-text) that matches nothing.",
+      "Add a specificity teaser to the explore: show the id item staying green when a blue li[value] rule applies, to explain what the lecture only mentions in passing.",
+      "Add a 'break it' task: put the same id on two elements and see that the rule still hits both but is invalid HTML.",
+      "Note that the playground checker could confirm a stray edit to the HTML, since the lecture forbids it."
+    ]
+  }
+}

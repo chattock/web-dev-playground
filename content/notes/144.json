@@ -1,0 +1,94 @@
+{
+  "index": 144,
+  "lecture_id": 12384106,
+  "title": "Using Keyboard Event Listeners to Check for Key Presses",
+  "section": "18. Advanced Javascript and DOM Manipulation",
+  "duration_min": 8,
+  "kind": "concept+exercise",
+  "summary": "Extends the drum kit so it reacts to keyboard keys as well as button clicks. Covers attaching a key listener to the whole document, reading the event object's key property, and refactoring the switch statement into a reusable makeSound(key) function.",
+  "concepts": [
+    {
+      "heading": "Listening for keyboard input",
+      "points": [
+        "Keyboard events use the same addEventListener method as click handlers: document.addEventListener(type, callback).",
+        "Event type names are all lowercase strings (\"keypress\", \"keydown\", \"keyup\"). Check the MDN event list when unsure, since the casing is easy to get wrong.",
+        "A keyboard has no single element to attach to, so the listener goes on the document object. Then the entire page receives key events regardless of what is focused.",
+        "The lecture starts with \"keypress\" and an alert to prove the listener fires on any key. (Extra) keypress is deprecated; the finished reference code uses \"keydown\", which fires for every key including non-character keys, and is the recommended choice."
+      ]
+    },
+    {
+      "heading": "The event object",
+      "points": [
+        "The browser calls the callback with one argument describing what happened. It is conventionally named event or e.",
+        "Logging it with console.log(event) shows a KeyboardEvent whose properties include key, code, keyCode/charCode and more (deprecated ones are still visible in DevTools).",
+        "event.key is the property that matters here: it holds the value of the pressed key as a string, e.g. \"w\" or \"j\".",
+        "Expanding the logged object in the Chrome console is a quick way to discover what data an event gives you."
+      ]
+    },
+    {
+      "heading": "Refactor: one function, two triggers",
+      "points": [
+        "The existing switch statement lived inside the click handler and switched on the clicked button's innerHTML. That ties it to clicks only.",
+        "Move the switch into a named function, makeSound(key), and switch on the key parameter instead.",
+        "Click handler: call makeSound(this.innerHTML) (or via a variable holding the button text).",
+        "Keyboard handler: call makeSound(event.key).",
+        "Both paths end in the same switch, so each letter (w, a, s, d, j, k, l) plays its sound regardless of how it was triggered. The default branch just logs the unmatched key.",
+        "Splitting code into small, named functions like this avoids duplicating logic and keeps 'detect input' separate from 'respond to input'."
+      ]
+    },
+    {
+      "heading": "What comes next",
+      "points": [
+        "Passing a function as an argument (the anonymous function given to addEventListener) is a callback. The next lecture explains callbacks in detail."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Proof-of-concept: listener on the whole document",
+      "language": "javascript",
+      "code": "document.addEventListener(\"keypress\", function (event) {\n  console.log(event);   // inspect the KeyboardEvent\n});"
+    },
+    {
+      "caption": "Final structure: shared makeSound function (reference repo, trimmed)",
+      "language": "javascript",
+      "code": "var numberOfDrumButtons = document.querySelectorAll(\".drum\").length;\n\nfor (var i = 0; i < numberOfDrumButtons; i++) {\n  document.querySelectorAll(\".drum\")[i].addEventListener(\"click\", function () {\n    var buttonInnerHTML = this.innerHTML;\n    makeSound(buttonInnerHTML);\n  });\n}\n\ndocument.addEventListener(\"keydown\", function (event) {\n  makeSound(event.key);\n});\n\nfunction makeSound(key) {\n  switch (key) {\n    case \"w\":\n      var tom1 = new Audio(\"./sounds/tom-1.mp3\");\n      tom1.play();\n      break;\n    case \"j\":\n      var snare = new Audio(\"./sounds/snare.mp3\");\n      snare.play();\n      break;\n    // ...a, s, d, k, l follow the same pattern\n    default:\n      console.log(key);\n  }\n}"
+    }
+  ],
+  "task": {
+    "name": "Make the drum kit respond to keys",
+    "starting_point": "Drum kit project from the earlier lectures: click listeners on each .drum button with the sound switch statement written inside the click callback.",
+    "goal": "Create a function that takes a character, runs the switch to play the right sound, and call it from both the button click listener and a new keyboard listener on the document.",
+    "steps": [
+      "Add a document-level keyboard listener and log the event to see its properties.",
+      "Find the key property in the event (MDN KeyboardEvent docs).",
+      "Create function makeSound(key) and cut the switch statement into it, switching on key.",
+      "In the click handler call makeSound with the button's innerHTML.",
+      "In the keyboard handler call makeSound(event.key) in place of the console.log.",
+      "Test clicking each drum, then typing w, a, s, d, j, k, l."
+    ],
+    "expected_result": "Each drum plays its sound both when clicked and when its letter is typed.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "document.addEventListener(\"keydown\", function (event) {\n  makeSound(event.key);\n});\n\nfunction makeSound(key) {\n  switch (key) {\n    case \"w\": new Audio(\"./sounds/tom-1.mp3\").play(); break;\n    // ... other cases\n    default: console.log(key);\n  }\n}"
+    },
+    "reference_repo_path": "Section 18 - Advanced Javascript and DOM Manipulation/18.07 - Using Keyboard Event Listeners to Check for Key Presses/script.js"
+  },
+  "pitfalls": [
+    "Writing event names in camelCase (\"keyPress\") so the listener never fires.",
+    "Attaching the keyboard listener to a button rather than document.",
+    "Forgetting to rename the switch variable to the new parameter after moving it.",
+    "Key matching is case sensitive: with Caps Lock or Shift, event.key is \"W\" and hits the default branch.",
+    "The deprecated keypress event does not fire for some keys; prefer keydown."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (playground has no section 18 data).",
+    "gaps_and_ideas": [
+      "New lesson: 'Keyboard events and the event object'. Blurb: respond to keys by listening on document and reading event.key.",
+      "Tasks: (1) log event.key for every key press; (2) write a function that maps keys to messages; (3) call it from both a button click and keydown; (4) handle uppercase via toLowerCase().",
+      "Starter code: three buttons labelled w, a, s plus a stub makeSound(key) that logs.",
+      "Interactive demo: a key-press visualizer that shows key, code and type of the last event, and lights an on-screen pad."
+    ]
+  }
+}

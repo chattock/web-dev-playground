@@ -1,0 +1,31 @@
+{
+  "index": 276,
+  "lecture_id": 18113039,
+  "title": "Tip from Angela - How to Work as a Freelancer",
+  "section": "35. Authentication and Security",
+  "duration_min": 2,
+  "kind": "tip",
+  "summary": "Short career tip on starting freelance web development: accumulate a portfolio and client references on low-paying marketplaces first, then move to higher-paying platforms.",
+  "concepts": [
+    {
+      "heading": "Starting out as a freelancer",
+      "points": [
+        "Early obstacle: landing good contracts is hard without references or sample work, so the first goal is a portfolio plus clients who can vouch for you.",
+        "Begin on low-budget marketplaces such as Fiverr to practise dealing with real clients: working out what they need, communicating clearly, and delivering what they asked for.",
+        "Low pay at this stage is acceptable because the value is real projects, reviews and experience.",
+        "As skills and portfolio grow, move to platforms such as Upwork, Guru or Freelancer and charge more.",
+        "Rough timeline: about a year of steady small jobs should yield enough finished projects and testimonials to aim for premium clients."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [
+    "Pitching for top-paying gigs with no portfolio or references."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "Not applicable (career tip video).",
+    "gaps_and_ideas": []
+  }
+}

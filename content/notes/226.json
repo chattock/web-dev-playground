@@ -1,0 +1,95 @@
+{
+  "index": 226,
+  "lecture_id": 38912008,
+  "title": "Structuring API Requests",
+  "section": "28. Application Programming Interfaces (APIs)",
+  "duration_min": 14,
+  "kind": "concept+exercise",
+  "summary": "Covers the three parts of an API request URL: the endpoint, query parameters and path parameters, and distinguishes private from public APIs. Three Postman exercises against the course's Bored API practise each: GET /random, filter by type and participants, and fetch one activity by key.",
+  "concepts": [
+    {
+      "heading": "Private vs public APIs",
+      "points": [
+        "Your own front end calling your own server is effectively a private API: undocumented and meant only for your client.",
+        "A public API is one a provider deliberately exposes and documents so other developers' servers can request data or actions.",
+        "This module is about consuming public APIs from your own server code.",
+        "The practice API is the course's Bored API (bored-api.appbrewery.com), holding activities with fields such as type, participants, price and a unique key."
+      ]
+    },
+    {
+      "heading": "Endpoints",
+      "points": [
+        "URL structure: base URL, then a forward slash, then an endpoint. Each endpoint is a fixed route for a purpose, for example /random for a random activity and /filter for filtered lists.",
+        "Docs normally give an example request and sample response for each endpoint. Always read them first.",
+        "Public APIs often rate-limit to prevent abuse; this one allows about 100 requests per 15 minutes. If you get a too-many-requests response, wait.",
+        "Exercise 1: send GET base-URL/random in Postman; each send returns a different activity."
+      ]
+    },
+    {
+      "heading": "Query parameters",
+      "points": [
+        "Appended after the endpoint to add optional key/value information, mostly for filtering, sorting and searching.",
+        "Syntax: start with ?, write key=value, and join further pairs with &, for example ?a=1&b=2&c=3.",
+        "Parameter names are exact and come from the docs (the filter endpoint takes participants in the plural).",
+        "Postman's Params table builds the URL from key/value rows. In server code you must build the query string yourself, so practise typing it.",
+        "Exercise 2: GET /filter?type=social&participants=2 returns social activities for two people. The docs list the seven allowed type values."
+      ]
+    },
+    {
+      "heading": "Path parameters",
+      "points": [
+        "A variable segment placed after a slash in the path, used to identify one specific resource such as an ID or username.",
+        "Contrast: query parameters filter or search across many results; path parameters pinpoint a single item.",
+        "Every activity has a unique key. Request GET /activity/<key> to fetch that one, e.g. the movie marathon activity with key 5914292.",
+        "Handy when your site must always show a specific item."
+      ]
+    },
+    {
+      "heading": "Next up",
+      "points": [
+        "The following lesson covers JSON, the usual format of API responses."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "The three request shapes from the lecture",
+      "language": "text",
+      "code": "GET https://bored-api.appbrewery.com/random\nGET https://bored-api.appbrewery.com/filter?type=social&participants=2\nGET https://bored-api.appbrewery.com/activity/5914292"
+    },
+    {
+      "caption": "(Extra) Same query built in JavaScript",
+      "language": "javascript",
+      "code": "const params = new URLSearchParams({ type: \"social\", participants: 2 });\nconst res = await fetch(`https://bored-api.appbrewery.com/filter?${params}`);\nconst activities = await res.json();"
+    }
+  ],
+  "task": {
+    "name": "Three Bored API requests in Postman",
+    "starting_point": "Postman open and the Bored API documentation page.",
+    "goal": "Practise endpoint, query parameter and path parameter requests.",
+    "steps": [
+      "Create a GET request to the base URL plus /random and send it repeatedly to see different activities.",
+      "Create a GET to /filter, add type=social and participants=2 (first with the Params table, then by typing ?type=social&participants=2 yourself).",
+      "Copy an activity's key from a response and GET /activity/<key> to retrieve exactly that activity."
+    ],
+    "expected_result": "A random activity per request; a filtered list of social two-person activities; and one specific activity matching the key.",
+    "solution_code": null,
+    "reference_repo_path": "Section 28 - Aplication Programming Interfaces (APIs)/28.02 - Structuring API Requests/API Endpoints.png, Multiple Query Parameters.png, Path Parameters.png"
+  },
+  "pitfalls": [
+    "Using a second ? instead of & for later query parameters.",
+    "Misspelling parameter names such as participant vs participants.",
+    "Exceeding the rate limit while testing.",
+    "Confusing path and query parameters: use query for filtering, path for identifying one resource."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "New lesson 'Structuring API requests': blurb on endpoint, query and path parameters.",
+      "Tasks: (1) label parts of a URL, (2) build a filter URL with two query params, (3) fetch /random and render the activity, (4) fetch by key via a path parameter.",
+      "Starter idea: a fetch against the Bored API with a result div.",
+      "Interactive demo: a URL builder where editing fields updates a coloured URL and fires the request."
+    ]
+  }
+}

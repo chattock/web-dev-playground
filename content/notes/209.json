@@ -1,0 +1,128 @@
+{
+  "index": 209,
+  "lecture_id": 38911782,
+  "title": "What is EJS?",
+  "section": "25. EJS",
+  "duration_min": 23,
+  "kind": "concept+exercise",
+  "summary": "Explains why server-rendered pages need a templating language, introduces EJS (Embedded JavaScript) and res.render, then has the learner build a small Express app that tells visitors whether it is a weekday or the weekend using Date.getDay().",
+  "concepts": [
+    {
+      "heading": "The problem EJS solves",
+      "points": [
+        "Goal: take a value that arrives on the server (for example a name from a form's POST body, read via body-parser/req.body) and show it inside an HTML page that is then sent back.",
+        "The flow is: form page -> user submits -> POST route receives req.body -> server somehow injects the value into an HTML file -> rendered page returns to the browser. The 'somehow' step is templating.",
+        "Building the HTML as a string inside res.send works for a one-line reply, but gets unmanageable once the page needs stylesheets, fonts and full markup: structure ends up buried in server code.",
+        "Templating gives separation of concerns: HTML/CSS (structure and style) live in view files, JavaScript (behaviour) stays in the server, so each part can be worked on independently and frontend and backend stay apart."
+      ]
+    },
+    {
+      "heading": "Templating languages and why EJS",
+      "points": [
+        "Many exist: Handlebars, Pug, Jinja (Python), Twig (PHP), EJS. Jinja and Twig belong to other languages.",
+        "EJS is the most common choice for Express/Node and stands for Embedded JavaScript.",
+        "An EJS file is ordinary HTML with the .ejs extension, plus JavaScript fenced in special tags. It can, for instance, contain a for loop that emits one list item per element of an array supplied by the server.",
+        "The server runs the template, executes the embedded JavaScript, and sends the finished plain HTML to the browser."
+      ]
+    },
+    {
+      "heading": "res.render instead of res.send / res.sendFile",
+      "points": [
+        "res.sendFile only serves static files as-is, so it cannot insert values. Templates need res.render.",
+        "Signature: res.render(viewName, dataObject). First argument is the template filename (e.g. 'index.ejs'), second is an optional object of key/value pairs.",
+        "Each key becomes a variable in the template. If you pass { name: req.body.name }, the template can output name. The key names must match on both sides.",
+        "Express looks for templates in a folder named views at the project root by default, so EJS files must live there.",
+        "(Extra) Express 5 resolves the 'ejs' view engine automatically from the file extension as long as the ejs package is installed; no app.set('view engine') is needed when the extension is written out."
+      ]
+    },
+    {
+      "heading": "Output tag <%= %>",
+      "points": [
+        "<%= expression %> evaluates the JavaScript expression and writes its value into the HTML at that spot.",
+        "Used here inside an h1: Hey, it's <%= dayType %>, <%= advice %>!",
+        "(Extra) <%= %> HTML-escapes the value, which is the safe default for user-supplied text."
+      ]
+    },
+    {
+      "heading": "Editor support",
+      "points": [
+        "Install the VS Code extension 'EJS language support' (by DigitalBrainStem), the most downloaded one. It adds syntax highlighting for .ejs and autocompletes the tags when you type an opening angle bracket."
+      ]
+    },
+    {
+      "heading": "Project setup used in the exercise",
+      "points": [
+        "Make a project folder, cd into it, run npm init with -y style defaults, then npm i express ejs.",
+        "In package.json set \"type\": \"module\" so import syntax works.",
+        "Create a views directory, an index.js at the root, and views/index.ejs. A shell trick: chain commands on one line with a semicolon, e.g. mkdir views; touch index.js; touch views/index.ejs. Using the VS Code UI to create them is equivalent.",
+        "Server skeleton: import express, const app = express(), const port = 3000, app.listen(port, callback) that logs the port."
+      ]
+    },
+    {
+      "heading": "Weekday / weekend logic",
+      "points": [
+        "new Date() gives the current date-time; .getDay() returns an integer 0-6 where 0 is Sunday and 6 is Saturday.",
+        "Declare two let variables with weekday defaults (type and adv). If day === 0 || day === 6, overwrite them with weekend wording. The wording is chosen so the sentence reads naturally ('a weekday' vs 'the weekend').",
+        "Pass them to the template under different key names: { dayType: type, advice: adv }. Using different local names than the keys makes the mapping visible.",
+        "To test the other branch without waiting, temporarily construct a specific date, e.g. new Date('2023-06-24') which is a Saturday (or edit it to a weekday date), save, refresh.",
+        "Debug tip: console.log(day) first to confirm getDay works before wiring it into the if."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Server: choose wording from getDay and render the template",
+      "language": "javascript",
+      "code": "import express from \"express\";\n\nconst app = express();\nconst port = 3000;\n\napp.get(\"/\", (req, res) => {\n  const today = new Date();\n  const day = today.getDay(); // 0 = Sunday ... 6 = Saturday\n\n  let type = \"a weekday\";\n  let adv = \"it's time to work hard\";\n\n  if (day === 0 || day === 6) {\n    type = \"the weekend\";\n    adv = \"it's time to have some fun\";\n  }\n\n  res.render(\"index.ejs\", {\n    dayType: type,\n    advice: adv,\n  });\n});\n\napp.listen(port, () => {\n  console.log(`Server running on port ${port}.`);\n});"
+    },
+    {
+      "caption": "views/index.ejs: output tags insert the passed values",
+      "language": "html",
+      "code": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>Weekday Warrior</title>\n</head>\n<body>\n  <h1>Hey, it's <%= dayType %>, <%= advice %>!</h1>\n</body>\n</html>"
+    },
+    {
+      "caption": "Setup commands",
+      "language": "bash",
+      "code": "npm init -y\nnpm i express ejs\nmkdir views; touch index.js; touch views/index.ejs"
+    }
+  ],
+  "task": {
+    "name": "Weekday or weekend advice page",
+    "starting_point": "Empty folder. Build the project from scratch (initialise npm, install Express and EJS, create index.js and views/index.ejs).",
+    "goal": "Visiting http://localhost:3000 shows one h1 that greets the user and says it is a weekday and time to work hard, or the weekend and time to have fun, according to the current day.",
+    "steps": [
+      "Create a project folder, run npm init, install express and ejs, and set \"type\": \"module\" in package.json.",
+      "Create a views folder, index.js, and views/index.ejs.",
+      "In index.js import express, create the app, set the port to 3000 and call app.listen with a console.log.",
+      "Add app.get('/') that renders index.ejs and passes an object with two properties (dayType and advice) holding weekday defaults.",
+      "In index.ejs create the HTML boilerplate with an h1 using <%= %> for both values.",
+      "Run the server (node index.js) and check the weekday text appears.",
+      "Look up Date.getDay() in MDN/W3Schools; create new Date(), call getDay(), and console.log it to verify.",
+      "Use an if statement: when the day is 0 or 6 change the type and advice to the weekend wording.",
+      "Test the weekend branch by hard-coding a Saturday date, then restore the real date."
+    ],
+    "expected_result": "Weekday: 'Hey, it's a weekday, it's time to work hard!' Weekend: 'Hey, it's the weekend, it's time to have some fun!' in an h1.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "app.get(\"/\", (req, res) => {\n  const day = new Date().getDay();\n  let type = \"a weekday\";\n  let adv = \"it's time to work hard\";\n  if (day === 0 || day === 6) {\n    type = \"the weekend\";\n    adv = \"it's time to have some fun\";\n  }\n  res.render(\"solution.ejs\", { dayType: type, advice: adv });\n});"
+    },
+    "reference_repo_path": "Section 25 - EJS/25.01 - What is EJS/solution.js (template: views/solution.ejs)"
+  },
+  "pitfalls": [
+    "Putting the .ejs file anywhere other than the views folder, so render cannot find it.",
+    "Using res.send or res.sendFile for a template, which would not process the tags.",
+    "Mismatch between the key in the render object and the variable name used in the template, which causes a ReferenceError.",
+    "Forgetting \"type\": \"module\" when using import syntax.",
+    "Instructor says there are many valid ways (if/else, switch, lookup object); any that passes the data correctly is fine.",
+    "Reference repo diverges slightly: its index.ejs variant uses 'weekday'/'work hard' wording and has an author footer, which should be ignored."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (section 25 has no playground file).",
+    "gaps_and_ideas": [
+      "New lesson 'What is EJS?': blurb explaining templating and res.render. Tasks: (1) scaffold express+ejs with a views folder, (2) render a page passing one variable, (3) display it with <%= %>, (4) use getDay to switch weekday/weekend text, (5) rename the key in render without updating the template and read the error.",
+      "Starter code idea: server file with a TODO render call and a views/index.ejs with placeholders.",
+      "Interactive demo idea: a small in-browser panel with a JSON 'data object' editor on the left and a rendered template preview on the right, with a day-of-week dropdown that sets the getDay result."
+    ]
+  }
+}

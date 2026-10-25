@@ -1,0 +1,79 @@
+{
+  "index": 142,
+  "lecture_id": 12384070,
+  "title": "Objects, their Methods and the Dot Notation",
+  "section": "18. Advanced Javascript and DOM Manipulation",
+  "duration_min": 6,
+  "kind": "concept+exercise",
+  "summary": "Adds methods (functions stored on objects) to object literals and to constructor functions, then links this idea back to the built-in Audio object used in the drum kit. Challenge: add a clean method to the Housekeeper constructor and call it.",
+  "concepts": [
+    {
+      "heading": "Methods on an object",
+      "points": [
+        "A method is a function attached to an object. In an object literal, add it as a property whose value is an anonymous function, e.g. moveSuitcase: function () { ... }.",
+        "Call it with dot notation plus parentheses: bellBoy1.moveSuitcase(). Properties and methods are both reached with the dot; the parentheses are what mark a method call.",
+        "In a constructor function, define it with this.moveSuitcase = function () { ... }. Every object built with new then has that method."
+      ]
+    },
+    {
+      "heading": "Challenge: clean method",
+      "points": [
+        "Inside the Housekeeper constructor add this.clean = function () { alert(\"Cleaning in progress...\"); }.",
+        "Create an object with new Housekeeper(...) and call houseKeeper1.clean(). An alert should appear.",
+        "Without the parentheses you only reference the function and nothing runs."
+      ]
+    },
+    {
+      "heading": "Connecting to the Audio object",
+      "points": [
+        "new Audio(\"file\") follows the same pattern as the housekeeper constructor: the capitalised name is a constructor, the argument is stored as a property (the file location) and the object has methods.",
+        "The hidden Audio constructor can be imagined as setting a file-location property and defining a play() method, which would involve things such as checking the file exists and is audio, then using the audio hardware.",
+        "Code that uses it only needs to construct the object and call the method, which is what the drum kit does with tom1.play().",
+        "Much of DOM scripting is using properties and methods of built-in objects; occasionally you define your own.",
+        "The ideas are abstract; they get familiar through repetition and later projects."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Constructor with a method; call via the dot",
+      "language": "javascript",
+      "code": "function Housekeeper(name, yearsOfExperience, cleaningRepertoire) {\n  this.name = name;\n  this.yearsOfExperience = yearsOfExperience;\n  this.cleaningRepertoire = cleaningRepertoire;\n  this.clean = function () {\n    console.log(\"Cleaning in progress...\");\n  };\n}\n\nvar geovana = new Housekeeper(\"Geovana\", 2, [\"Bathroom\", \"Bedroom\"]);\ngeovana.clean();"
+    },
+    {
+      "caption": "Illustrative guess at how Audio might be built (own sketch, not real browser code)",
+      "language": "javascript",
+      "code": "function Audio(fileLocation) {\n  this.fileLocation = fileLocation;\n  this.play = function () {\n    // check the file exists, is a sound, then use audio hardware\n  };\n}\nvar tom1 = new Audio(\"sounds/tom-1.mp3\");\ntom1.play();"
+    }
+  ],
+  "task": {
+    "name": "Add a clean method to Housekeeper",
+    "starting_point": "The Housekeeper constructor from the previous lecture.",
+    "goal": "Housekeeper objects can clean, shown with an alert or log message.",
+    "steps": [
+      "Add this.clean = function () {...} that alerts \"Cleaning in progress...\".",
+      "Create a new Housekeeper object with new.",
+      "Call the method with the dot and parentheses."
+    ],
+    "expected_result": "Calling the method produces the 'Cleaning in progress...' message.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "function Housekeeper(name, yearsOfExperience, cleaningRepertoire) {\n  this.name = name;\n  this.yearsOfExperience = yearsOfExperience;\n  this.cleaningRepertoire = cleaningRepertoire;\n  this.clean = function () {\n    console.log(\"Cleaning in progress...\");\n  };\n}\n\nvar geovana = new Housekeeper(\"Geovana\", 2, [\"Bathroom\", \"Bedroom\"]);\nconsole.log(geovana.clean());"
+    },
+    "reference_repo_path": "Section 18 - Advanced Javascript and DOM Manipulation/18.06 - Objects, their Methods and the Dot Notation/script.js"
+  },
+  "pitfalls": [
+    "Calling houseKeeper1.clean without parentheses.",
+    "Assigning the method to a local variable instead of this.clean, so it is not attached to the object.",
+    "(Extra) The reference repo logs geovana.clean() inside console.log, which prints the method's own output first and then undefined because the method returns nothing; call geovana.clean() alone.",
+    "Mixing up property access (no parentheses) with method calls (parentheses)."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (section 18 has no playground file).",
+    "gaps_and_ideas": [
+      "Could extend the proposed 'Objects and constructors' lesson with a methods step: add a method, call it, then inspect new Audio(...) in the console to see its properties and play method.",
+      "Interactive demo: expand a console-style tree of an Audio object showing its properties and methods."
+    ]
+  }
+}

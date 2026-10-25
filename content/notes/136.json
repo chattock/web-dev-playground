@@ -1,0 +1,109 @@
+{
+  "index": 136,
+  "lecture_id": 12383942,
+  "title": "Adding Event Listeners to a Button",
+  "section": "18. Advanced Javascript and DOM Manipulation",
+  "duration_min": 14,
+  "kind": "concept+exercise",
+  "summary": "Wires the Drum Kit page to a script file, then uses addEventListener so a button reacts to clicks. Explains why the handler is passed by name (no parentheses), shows the anonymous-function form, and ends with a challenge to attach the listener to every drum button using a loop.",
+  "concepts": [
+    {
+      "heading": "Linking the script and testing",
+      "points": [
+        "The starter project has index.html, styles.css and a JavaScript file (called index.js in the video; script.js in the reference repo). Link it with a script tag with a src attribute placed just before the closing body tag, so the DOM already exists when the code runs.",
+        "Prove the link works by putting a throwaway alert in the JS file and reloading.",
+        "At the start the seven buttons (w, a, s, d, j, k, l) look right but do nothing when clicked."
+      ]
+    },
+    {
+      "heading": "Event listeners: the idea",
+      "points": [
+        "An event listener tells an element to watch for a specific kind of event and run some code when it happens. The element is the target, the event is what it is watching for, and the function is the reaction.",
+        "Step 1: write a function for the reaction (here handleClick, no parameters, which shows an alert).",
+        "Step 2: select the element with document.querySelector (returns only the FIRST match, here the w button).",
+        "Step 3: call addEventListener on that element.",
+        "The MDN page for addEventListener is the place to check argument details; the video stresses reading docs for any new method."
+      ]
+    },
+    {
+      "heading": "addEventListener arguments",
+      "points": [
+        "First argument: the event type as a case-sensitive string, such as \"click\". MDN lists every available event type.",
+        "Second argument: the listener, normally a function that the browser calls when the event is detected.",
+        "After the change only the first button responds to clicks; the other buttons still do nothing, which proves the listener is attached per element."
+      ]
+    },
+    {
+      "heading": "Passing the function vs calling it",
+      "points": [
+        "Write handleClick without parentheses. This hands the function over so the browser can call it later, when the click happens.",
+        "With parentheses (handleClick()) the function runs immediately while the script loads, as the line is executed, so the alert fires on page load and nothing useful is registered as the listener.",
+        "This 'pass a function as a value to be called later' idea is a recurring pattern in JavaScript and takes some getting used to."
+      ]
+    },
+    {
+      "heading": "Anonymous functions as listeners",
+      "points": [
+        "Instead of a named function you can write the function inline as the second argument: function () { ... }. It has no name, so it can't be reused elsewhere, but behaves identically here.",
+        "This inline form is the most common style seen in real code."
+      ]
+    },
+    {
+      "heading": "Challenge solution: loop over all drum buttons",
+      "points": [
+        "querySelectorAll returns a list of every match, indexed from 0, with a length property.",
+        "Count the elements with document.querySelectorAll(\".drum\").length rather than hard-coding 7. Selecting by the drum class is safer than selecting by the button tag, because a later extra button (e.g. a social link in the footer) would otherwise also get the listener.",
+        "Run a for loop from i = 0 while i is below that count, incrementing by 1, and in the body call addEventListener on querySelectorAll(\".drum\")[i].",
+        "Storing the count in a variable such as numberOfDrumButtons makes the loop header easier to read.",
+        "A while loop works equally well. The one thing to avoid is copy-pasting seven separate lines.",
+        "If this was hard, revisit the loops lessons from the JavaScript section."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Named handler passed by reference",
+      "language": "javascript",
+      "code": "function handleClick() {\n  alert(\"I got clicked!\");\n}\n\ndocument.querySelector(\".drum\").addEventListener(\"click\", handleClick); // no ()"
+    },
+    {
+      "caption": "Anonymous function version, applied to every drum button (matches the reference repo)",
+      "language": "javascript",
+      "code": "var numberOfDrumButtons = document.querySelectorAll(\".drum\").length;\n\nfor (var i = 0; i < numberOfDrumButtons; i++) {\n  document.querySelectorAll(\".drum\")[i].addEventListener(\"click\", function () {\n    alert(\"I got clicked!\");\n  });\n}"
+    }
+  ],
+  "task": {
+    "name": "Add the click listener to every drum button",
+    "starting_point": "Drum Kit starter (index.html with seven buttons of class drum, styles.css). Script is linked, and a listener is currently attached only to the first button via querySelector.",
+    "goal": "Clicking any of the seven buttons shows the alert 'I got clicked!', using no more than about five lines and no repetition.",
+    "steps": [
+      "Link the JS file before the closing body tag and test with an alert.",
+      "Count the buttons with document.querySelectorAll(\".drum\").length (optionally store in a variable).",
+      "Write a for loop from 0 up to that count.",
+      "Inside the loop select the i-th .drum element with square brackets and call addEventListener(\"click\", ...) with an anonymous function that alerts.",
+      "Reload and click each button to verify."
+    ],
+    "expected_result": "An alert appears for every one of the seven buttons.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "var numberOfDrumButtons = document.querySelectorAll(\".drum\").length;\n\nfor (var i = 0; i < numberOfDrumButtons; i++) {\n  document.querySelectorAll(\".drum\")[i].addEventListener(\"click\", function () {\n    alert(\"I got clicked!\");\n  });\n}"
+    },
+    "reference_repo_path": "Section 18 - Advanced Javascript and DOM Manipulation/18.01 - Adding Event Listeners to a Button/script.js"
+  },
+  "pitfalls": [
+    "Adding parentheses after the handler name, so it runs at page load instead of on click.",
+    "Using querySelector (first match only) when every element needs the listener.",
+    "Looping over the generic button tag, which will hit unrelated buttons added later.",
+    "Misspelling or mis-casing the event type string.",
+    "(Extra) The reference repo's index.html has a footer crediting the repo author; ignore it. Its markup also includes the Arvo Google font link used by the styling."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (section 18 has no playground file).",
+    "gaps_and_ideas": [
+      "Proposed lesson 'Event listeners': blurb on reacting to clicks; tasks: (1) attach a click listener to one button, (2) show why handler() with parentheses fires immediately, (3) rewrite with an anonymous function, (4) loop over all .drum buttons, (5) change the alert to toggle a class.",
+      "Starter code: 3-4 buttons with class drum and an empty script.",
+      "Interactive demo: a row of buttons with a live log panel that lists which listener fired, plus a toggle that switches between handleClick and handleClick() to show the immediate-call bug."
+    ]
+  }
+}

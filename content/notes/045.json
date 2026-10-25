@@ -1,0 +1,140 @@
+{
+  "index": 45,
+  "lecture_id": 37350588,
+  "title": "CSS Positioning",
+  "section": "7. Intermediate CSS",
+  "duration_min": 23,
+  "kind": "concept+exercise",
+  "summary": "Covers the CSS position property and its four values (static, relative, absolute, fixed), what each is measured against, plus z-index stacking and drawing a circle with border-radius. The exercise positions a blue rectangle and nests a red circle inside it.",
+  "concepts": [
+    {
+      "heading": "The position property and its offsets",
+      "points": [
+        "position takes static, relative, absolute or fixed. It is combined with the offset properties top, left, right and bottom to say how far the element moves.",
+        "An interactive demo (appbrewery.github.io/css-positioning) lets you switch between the values and inspect the generated CSS.",
+        "Offsets can use any side: right: 50px measures from the right edge instead. The browser works out the opposite side for you.",
+        "Position offsets are separate from margin, padding and width/height in the box model. Adding margin on top of an offset pushes the element further."
+      ]
+    },
+    {
+      "heading": "static",
+      "points": [
+        "The default for every element. Items stack in the normal document flow, each one after the previous.",
+        "top, left and the other offsets have no effect on a static element, even if written.",
+        "Browser extensions that outline elements (such as Pesticide) help to see where each block sits in the flow."
+      ]
+    },
+    {
+      "heading": "relative",
+      "points": [
+        "The element is shifted from where it would normally sit. The reference point is its own original location, not another element.",
+        "With position: relative; top: 50px; left: 50px; the box moves 50px down and 50px right from its normal spot.",
+        "(Extra) The original space it occupied stays reserved, so siblings do not close up around the gap.",
+        "Setting relative on a parent with no offsets is the standard way of making it the reference frame for an absolute child."
+      ]
+    },
+    {
+      "heading": "absolute",
+      "points": [
+        "Positions the element relative to its nearest ancestor that has a position value other than static. Only the closest positioned ancestor counts.",
+        "If no ancestor is positioned, the reference is the top-left of the page (the initial containing block).",
+        "Demonstrated in DevTools: adding position: relative via element.style on the parent makes the box jump to be offset from that parent instead of the page corner.",
+        "To place a child relative to a container, set the container to position: relative.",
+        "An absolute element leaves the normal flow and sits on its own layer above the others, so other content behaves as if it were not there."
+      ]
+    },
+    {
+      "heading": "z-index",
+      "points": [
+        "Controls stacking along the third axis: a higher number is drawn above a lower number.",
+        "Everything defaults to 0. Negative values push an element behind others.",
+        "Setting z-index: 0 on an absolute element still does not return it to the flow; it remains on a separate layer. Only static or relative returns it to the normal flow.",
+        "(Extra) z-index only applies to elements whose position is not static (flex and grid items are an exception)."
+      ]
+    },
+    {
+      "heading": "fixed",
+      "points": [
+        "Positions relative to the browser window (viewport) rather than the page.",
+        "Looks the same as absolute until you scroll: a fixed element stays in the same spot on screen, while an absolute one scrolls with the page.",
+        "Typical uses (Extra): sticky headers, floating buttons and chat widgets."
+      ]
+    },
+    {
+      "heading": "Drawing a circle",
+      "points": [
+        "border-radius rounds the corners of a box. 5px gives slight rounding and 50px a rounded square; a value of 50% on a square element produces a perfect circle.",
+        "The element still occupies a rectangular box in the box model even if it looks round. This matters for positioning: top: 50% and left: 50% place the circle's top-left corner at the centre of the parent, not the circle's middle.",
+        "A div needs an explicit width, height and background-color to be visible at all when it has no content."
+      ]
+    },
+    {
+      "heading": "Solution reasoning",
+      "points": [
+        "The blue box is made 500px wide and 300px tall. Its child circle has 200px by 200px, so the parent size must be set directly.",
+        "The blue box is moved with relative positioning (top and left 200px), which also makes it the reference frame for the circle. Absolute with no positioned ancestors would reach the same visual result.",
+        "The circle uses position: absolute with top: 150px and left: 250px. These equal half the parent's height and width, which is where the circle's top-left corner goes.",
+        "Many valid approaches exist, including making the blue box absolute or fixed since the page does not scroll. What matters is understanding what each choice does."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Relative: shifted from its normal position",
+      "language": "css",
+      "code": ".box {\n  position: relative;\n  top: 50px;\n  left: 50px;\n}"
+    },
+    {
+      "caption": "Absolute inside a relative parent, with z-index",
+      "language": "css",
+      "code": ".parent { position: relative; }\n.child {\n  position: absolute;\n  top: 50px;    /* from the parent's top edge */\n  left: 50px;\n  z-index: -1;  /* sits behind other content */\n}"
+    },
+    {
+      "caption": "Fixed: stays put while scrolling",
+      "language": "css",
+      "code": ".badge {\n  position: fixed;\n  top: 50px;\n  right: 50px;\n}"
+    },
+    {
+      "caption": "Circle via border-radius",
+      "language": "css",
+      "code": ".red-circle {\n  width: 200px;\n  height: 200px;\n  background-color: red;\n  border-radius: 50%;\n}"
+    }
+  ],
+  "task": {
+    "name": "7.3 CSS Positioning: rectangle with a circle",
+    "starting_point": "index.html holds a single div.blue-box that contains a div.red-circle, plus an empty style block for your CSS.",
+    "goal": "Produce a blue 500x300 rectangle placed 200px from the top and left, with a 200px red circle inside it at 150px from the top and 250px from the left of the rectangle. Use position properties, not margins.",
+    "steps": [
+      "Give .red-circle background-color red, width and height 200px, and border-radius 50% so it becomes a circle.",
+      "Give .blue-box background-color blue, width 500px and height 300px.",
+      "Set .blue-box to position: relative with top: 200px and left: 200px.",
+      "Set .red-circle to position: absolute with top: 150px and left: 250px, so its offsets are measured from the blue box.",
+      "Compare with the goal image; the circle's top-left corner lands at the centre of the rectangle."
+    ],
+    "expected_result": "A blue rectangle offset 200px from the top-left of the page, with a red circle overlapping its middle, extending beyond the right and bottom edges of the rectangle.",
+    "solution_code": {
+      "language": "css",
+      "code": ".red-circle {\n  background-color: red;\n  width: 200px;\n  height: 200px;\n  border-radius: 50%;\n  position: absolute;\n  top: 150px;\n  left: 250px;\n}\n\n.blue-box {\n  background-color: blue;\n  height: 300px;\n  width: 500px;\n  position: relative;\n  left: 200px;\n  top: 200px;\n}"
+    },
+    "reference_repo_path": "Section 07 - Intermediate CSS/07.03 - CSS Positioning/solution.html"
+  },
+  "pitfalls": [
+    "Expecting relative to measure from another element; it is measured from the element's own normal position.",
+    "Forgetting position: relative on the parent, so the absolute child flies to the page's top-left corner.",
+    "Offsets on a static element do nothing.",
+    "Assuming z-index: 0 returns an absolute element to the flow.",
+    "Using 50% offsets and expecting the circle centred; that places its corner, not its centre. (Extra) Use transform: translate(-50%, -50%) to centre.",
+    "Leaving out width, height or background colour on an empty div, which makes it invisible."
+  ],
+  "playground": {
+    "match": "s07-positioning (lesson 7.3, data/s07.js)",
+    "coverage": "Starter and solution match the exercise, tasks cover relative blue box, absolute circle, border-radius and removing the parent's relative to see the jump. Explore demos include a position playground with static, relative, absolute, fixed and sticky, an ancestor toggle, and a z-index stacking demo. Notes have a table of values and the absolute-in-relative pairing.",
+    "gaps_and_ideas": [
+      "Add a fixed-position scroll demo (a tall scrolling container) so the difference between absolute and fixed is visible, as in the course demo site.",
+      "Add a right/bottom offset toggle and a margin slider to show offsets and margin are separate and combine.",
+      "Add a border-radius slider (5px, 50px, 50%) to the circle task explaining that the element remains a box.",
+      "Add a task for centring the circle with 50%/50% plus transform translate, and note that plain 50% only aligns the corner.",
+      "Mention that z-index: 0 does not bring an absolute element back into the flow, and that sticky is beyond the course lecture (marked Extra)."
+    ]
+  }
+}

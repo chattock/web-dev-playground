@@ -1,7 +1,7 @@
 /* ===== Section 9 — Flexbox ===== */
 
 PG.add({
-  id:'s09-display-flex', section:'s09', slug:'display-flex', lesson:'9.1',
+  id:'s09-display-flex', index:54, udemyId:37368230, minutes:14, section:'s09', slug:'display-flex', lesson:'9.1',
   title:'Display: Flex',
   blurb:'Set <code>display: flex</code> on a <b>container</b> and its direct children become flex items, laid out in a row with proper control over spacing and alignment. It replaces the old float / inline-block / table hacks.',
   tasks:[
@@ -145,7 +145,7 @@ css:`body {
 
 
 PG.add({
-  id:'s09-flex-direction', section:'s09', slug:'flex-direction', lesson:'9.2',
+  id:'s09-flex-direction', index:55, udemyId:37368266, minutes:14, section:'s09', slug:'flex-direction', lesson:'9.2',
   title:'Flex Direction & Sizing',
   blurb:'<code>flex-direction</code> chooses which way items flow. <code>flex-basis</code> sets their starting size <em>along that direction</em> — so it means width in a row, and height in a column.',
   tasks:[
@@ -301,7 +301,7 @@ flex: 0 0 200px; /* don't grow, don't shrink, stay 200px */</pre>`
 
 
 PG.add({
-  id:'s09-pricing', section:'s09', slug:'pricing-table', lesson:'9.3', project:true,
+  id:'s09-pricing', index:58, udemyId:37368412, minutes:10, section:'s09', slug:'pricing-table', lesson:'9.3', project:true,
   title:'Flexbox Pricing Table',
   blurb:'Three pricing cards, equal width, centred on the page both ways — the classic flexbox exercise.',
   tasks:[

@@ -1,0 +1,26 @@
+{
+  "index": 132,
+  "lecture_id": 12400628,
+  "title": "Download the Completed Website",
+  "section": "17. Boss Level Challenge 1 - The Dicee Game",
+  "duration_min": 1,
+  "kind": "admin",
+  "summary": "Admin: the finished Dicee code is downloadable from the lecture resources if you are stuck or want to compare.",
+  "concepts": [
+    {
+      "heading": "Completed code",
+      "points": [
+        "Resources attached to the lecture hold the full finished project.",
+        "Use it to check your solution or when stuck, after trying the challenge yourself."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [],
+  "playground": {
+    "match": null,
+    "coverage": "Not applicable (admin).",
+    "gaps_and_ideas": []
+  }
+}

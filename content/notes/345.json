@@ -1,0 +1,116 @@
+{
+  "index": 345,
+  "lecture_id": 31673582,
+  "title": "Storing Data on a Canister",
+  "section": "40. Building DApps on ICP with a React Frontend",
+  "duration_min": 16,
+  "kind": "concept+exercise",
+  "summary": "Writes the first real Motoko backend for the Keeper app: a Note record type, a List of notes held in a variable, and a createNote function that prepends a note. Then App.jsx is changed to import the generated canister declarations and call createNote whenever a note is added, with Debug.print used to confirm it arrived. This completes the C of CRUD.",
+  "concepts": [
+    {
+      "heading": "Before starting",
+      "points": [
+        "The React frontend from the previous lesson must already run locally; if it does not, redo that lesson first because nothing here fixes frontend setup problems.",
+        "Open main.mo and remove the template hello-world code. The actor is rebuilt from scratch and named DKeeper (the D prefix is the instructor's naming habit; use the same names to avoid command mismatches)."
+      ]
+    },
+    {
+      "heading": "Defining a Note type in Motoko",
+      "points": [
+        "Declare a custom type with the type keyword, a name, an equals sign and curly braces holding fields: type Note = { title : Text; content : Text; }.",
+        "Inside a type declaration, fields use a colon to give their type and are separated by semicolons. Text is Motoko's string type.",
+        "The type describes the shape of the data stored for each note, much like deciding which keys a JavaScript note object has.",
+        "The lecture suggests marking the type public so the JavaScript side can see it. (Extra) In the reference repo the type is not marked public, yet it still works, because the generated candid interface exposes the types that public functions use."
+      ]
+    },
+    {
+      "heading": "Holding notes in a List",
+      "points": [
+        "Create a variable named notes of type List.List<Note>, initialised to an empty list with List.nil<Note>().",
+        "A List in Motoko is a linked list from the base library, similar in purpose to a JavaScript array but with different operations. The element type goes in angle brackets.",
+        "Using List.something means using the module's functions, so the module must be imported: import List \"mo:base/List\". The 'unbound variable List' error disappears after the import.",
+        "(Extra) The reference repo declares the actor as persistent actor DKeeper, a newer Motoko form where state persists across upgrades by default, which matters in the later persistence lesson."
+      ]
+    },
+    {
+      "heading": "The createNote function",
+      "points": [
+        "public func createNote(titleText : Text, contentText : Text) is callable from outside the canister. The JavaScript caller supplies two strings, in this order: title then content.",
+        "Inside, build the record: let newNote : Note = { title = titleText; content = contentText; }. Note the difference: type declarations use a colon between name and type, while record values use an equals sign.",
+        "List.push(newNote, notes) takes the item first and the list second and returns a brand new list with the item added at the front (prepend). It does not alter the original, unlike appending to the end of a JS array.",
+        "Because push returns a new list, assign it back with the reassignment operator: notes := List.push(newNote, notes).",
+        "Prepending matters later, because the order of notes on screen is affected by whether new entries go to the front or back.",
+        "For debugging, import Debug from mo:base/Debug and call Debug.print(debug_show(notes)). debug_show converts any value to printable text; the output appears in the terminal running dfx start."
+      ]
+    },
+    {
+      "heading": "CRUD framing",
+      "points": [
+        "This is the Create step of CRUD (Create, Read, Update, Delete), the same idea as inserting documents into MongoDB in earlier backend modules. Read arrives in the next lesson."
+      ]
+    },
+    {
+      "heading": "Calling the canister from App.jsx",
+      "points": [
+        "App.jsx has addNote, which the CreateArea component triggers when the user clicks Add. It calls setNotes with an updater that returns the previous notes plus the new one.",
+        "To reach the backend, import the canister object from the generated declarations folder, using a relative path that climbs up out of the frontend src folder (each ../ goes up one level): import { dkeeper_backend } from \"../../declarations/dkeeper_backend\" in the reference repo. The canister name comes from dfx.json.",
+        "The declarations are generated, so after changing main.mo run dfx deploy; the new createNote then appears in the generated interface (two text inputs, no return value).",
+        "In addNote, before returning, call dkeeper_backend.createNote(newNote.title, newNote.content). Argument order must match the Motoko parameter order, and both must be strings.",
+        "The attribute names title and content come from how CreateArea structures a note on the frontend, kept identical on both sides for consistency.",
+        "Expected behavior: on clicking Add the UI updates instantly through React state, and a print appears in the dfx start terminal showing the notes list with the typed title and content."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "main.mo after this lesson (reference repo version)",
+      "language": "motoko",
+      "code": "import List \"mo:base/List\";\nimport Debug \"mo:base/Debug\";\n\npersistent actor DKeeper {\n  type Note = {\n    title : Text;\n    content : Text;\n  };\n\n  var notes : List.List<Note> = List.nil<Note>();\n\n  public func createNote(titleText : Text, contentText : Text) {\n    let newNote : Note = {\n      title = titleText;\n      content = contentText;\n    };\n\n    notes := List.push(newNote, notes);\n    Debug.print(debug_show (notes));\n  };\n};"
+    },
+    {
+      "caption": "App.jsx changes: import the canister and call it inside addNote",
+      "language": "jsx",
+      "code": "import { dkeeper_backend } from \"../../declarations/dkeeper_backend\";\n\nfunction App() {\n  const [notes, setNotes] = useState([]);\n\n  function addNote(newNote) {\n    setNotes(prevNotes => {\n      dkeeper_backend.createNote(newNote.title, newNote.content);\n      return [...prevNotes, newNote];\n    });\n  }\n  // deleteNote and JSX unchanged\n}"
+    }
+  ],
+  "task": {
+    "name": "Store a note on the canister",
+    "starting_point": "dkeeper project from the previous lesson with the Keeper React UI running and default hello-world main.mo.",
+    "goal": "Each note added in the UI is also created in the Motoko canister and logged in the replica terminal.",
+    "steps": [
+      "Clear main.mo and import List and Debug from mo:base.",
+      "Create actor DKeeper with a Note type holding title and content as Text.",
+      "Add var notes : List.List<Note> initialised with List.nil<Note>().",
+      "Write public func createNote(titleText, contentText) building a Note and prepending it with List.push, assigning back with :=.",
+      "Print the list with Debug.print(debug_show(notes)).",
+      "In App.jsx import the canister from the declarations folder.",
+      "Call createNote(newNote.title, newNote.content) in addNote.",
+      "Run dfx deploy, refresh the app, add a note and check the dfx start terminal output."
+    ],
+    "expected_result": "The note appears in the UI and the terminal prints the list with the same title and content.",
+    "solution_code": {
+      "language": "motoko",
+      "code": "public func createNote(titleText : Text, contentText : Text) {\n  let newNote : Note = {\n    title = titleText;\n    content = contentText;\n  };\n  notes := List.push(newNote, notes);\n  Debug.print(debug_show (notes));\n};"
+    },
+    "reference_repo_path": "Section 40 - Building DApps on ICP with a React Frontend/40.02 Storing Data on a Canister/dkeeper/src/dkeeper_backend/main.mo"
+  },
+  "pitfalls": [
+    "Mixing up colon (type declarations) and equals (record values).",
+    "Forgetting to import List, giving an unbound variable error.",
+    "Calling List.push without assigning the result back; the original list is unchanged.",
+    "Skipping dfx deploy so the declarations lack createNote.",
+    "Passing arguments in the wrong order, which swaps title and content.",
+    "Wrong relative path to the declarations folder.",
+    "Notes still disappear on refresh because the frontend does not read them back yet."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (site data has files only for sections 1-11, 14, 15).",
+    "gaps_and_ideas": [
+      "New lesson 'Create: store a note in a canister'. Blurb: types, lists and calling a Motoko function from React.",
+      "Tasks: (1) write a Note type with an extra field; (2) declare a notes List; (3) write createNote with List.push; (4) predict the printed list after adding two notes; (5) match each JS call argument to the Motoko parameter.",
+      "Starter code: main.mo skeleton with blanks for type fields and push call.",
+      "Interactive demo idea: a small JS simulator of a prepend-only linked list that prints the list after each push and shows why the newest note comes first."
+    ]
+  }
+}

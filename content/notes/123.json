@@ -1,0 +1,60 @@
+{
+  "index": 123,
+  "lecture_id": 12383900,
+  "title": "Challenge: The Dicee Challenge",
+  "section": "17. Boss Level Challenge 1 - The Dicee Game",
+  "duration_min": 2,
+  "kind": "challenge-intro",
+  "summary": "Introduces the first boss-level project: a two-player dice page that rolls random dice on every refresh and announces the winner. Starter HTML/CSS is supplied so the focus stays on DOM and JavaScript, with an option to rebuild the HTML/CSS from scratch.",
+  "concepts": [
+    {
+      "heading": "What the finished page does",
+      "points": [
+        "An h1 headline reads 'Refresh Me' on first load.",
+        "Below it are two dice panels labelled Player 1 and Player 2, each with a dice image.",
+        "Every page refresh rolls two random values, swaps both images to match, and replaces the headline with the result (which player wins, or a draw).",
+        "Purpose of the project: apply the DOM, selection, attribute and text manipulation skills from the previous section in a standalone build."
+      ]
+    },
+    {
+      "heading": "How to approach it",
+      "points": [
+        "Use the provided starter project (next lecture) with HTML and CSS done, so only JS needs writing.",
+        "Optional extra practice: ignore the starter markup, open the finished Dicee page in Chrome from the skeleton zip and recreate the HTML and CSS to match. The zip includes the dice image assets.",
+        "Recommended practice is to concentrate on one new skill at a time, which is why the skeleton is provided."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": {
+    "name": "Dicee Game",
+    "starting_point": "Skeleton project with index.html, styles.css and the dice images (dice1.png to dice6.png), with both players showing dice 6 initially.",
+    "goal": "On every refresh, roll two random dice, show the matching images, and announce the winner in the h1.",
+    "steps": [
+      "Download the skeleton and open it.",
+      "Add an external JavaScript file and link it (steps follow in the next articles).",
+      "Generate two random numbers from 1 to 6.",
+      "Update both img elements to the matching dice image.",
+      "Change the h1 text to show Player 1 wins, Player 2 wins, or Draw."
+    ],
+    "expected_result": "Refreshing the page shows two random dice and a headline naming the winner or a draw.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "var randomNumber1 = Math.floor(Math.random() * 6) + 1;\nvar randomNumber2 = Math.floor(Math.random() * 6) + 1;\n\ndocument.querySelector(\".img1\").setAttribute(\"src\", \"./images/dice\" + randomNumber1 + \".png\");\ndocument.querySelector(\".img2\").setAttribute(\"src\", \"./images/dice\" + randomNumber2 + \".png\");\n\nif (randomNumber1 === randomNumber2) {\n  document.querySelector(\"h1\").innerHTML = \"Draw!\";\n} else if (randomNumber1 > randomNumber2) {\n  document.querySelector(\"h1\").innerHTML = \"Player 1 Wins!\";\n} else {\n  document.querySelector(\"h1\").innerHTML = \"Player 2 Wins!\";\n}"
+    },
+    "reference_repo_path": "Section 17 - Boss Level Challenge 1 - The Dicee Game"
+  },
+  "pitfalls": [
+    "Reference repo adds emoji flags and a personal footer, which are not part of the lesson."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (no s17.js data file).",
+    "gaps_and_ideas": [
+      "New project lesson: 'Dicee: random dice game'. Blurb: build a two-player dice roller with DOM updates.",
+      "Tasks: (1) link script.js, (2) get two random 1-6 numbers, (3) set both img src values, (4) show a winner in the h1, (5) stretch: add a roll button without reloading.",
+      "Starter: Dicee HTML/CSS with images; use inline SVG dice or emoji faces if images are unavailable.",
+      "Demo: rolled-number histogram over 600 rolls to show Math.random is roughly uniform."
+    ]
+  }
+}

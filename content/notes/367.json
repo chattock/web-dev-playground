@@ -1,0 +1,154 @@
+{
+  "index": 367,
+  "lecture_id": 31673804,
+  "title": "Buying NFTs",
+  "section": "42. Minting NFTs and Building an NFT Marketplace like OpenSea",
+  "duration_min": 32,
+  "kind": "project",
+  "summary": "Final step of the OpenD NFT marketplace: the Buy button now pays the seller in DANG tokens by calling a separate token canister, then asks the OpenD backend to move NFT ownership to the buyer. Also adds a loader and hides the bought item from the Discover page.",
+  "concepts": [
+    {
+      "heading": "Overall purchase flow",
+      "points": [
+        "Buying has three parts: (1) take the price in DANG from the buyer's token balance and credit the seller, (2) change the NFT's owner to the buyer, (3) tidy the marketplace records (remove the listing, update ownership lists).",
+        "Part 1 uses the token canister built in an earlier module. This is the first time one canister (OpenD, via the frontend) talks to another canister, which is the main new idea of the lecture.",
+        "The frontend orchestrates: it calls token.transfer first, and only if the result is the text 'Success' does it call the new OpenD method completePurchase."
+      ]
+    },
+    {
+      "heading": "Getting the token project running (token-local)",
+      "points": [
+        "To make everyone use the same token code, a zipped 'token-local' project is provided as a lesson download. Unzip it and drop the folder next to the other ic-projects, then open it in its own VS Code window.",
+        "It contains a token backend canister (tracks balances, lets you query a balance, pay out from a faucet, and transfer to another principal) and a small token frontend.",
+        "Follow the project's README deploy section: get your own principal from the command line (dfx identity get-principal), paste it as the owner value inside quotes in the token's main.mo, then run dfx deploy while dfx start is already running for OpenD.",
+        "Start its frontend with npm start. Because OpenD already occupies localhost:8080, the dev server picks the next port, localhost:8081.",
+        "Seed the token canister: store the token canister's id in a shell variable (the README gives the command, named CANISTER_PUBLIC_KEY), then call token transfer to send it half a billion tokens. Afterwards press the faucet button in the token frontend; the anonymous user receives 10,000 DANG, which is the balance used to buy NFTs.",
+        "Everything runs on a local replica with the anonymous identity (no Internet Identity login, no deploy to mainnet). This keeps the testing free; minting on the live network costs roughly several dollars of cycles each time."
+      ]
+    },
+    {
+      "heading": "Sharing the token canister's declarations with OpenD",
+      "points": [
+        "To call another canister the caller needs its interface. Copy the token project's declarations folder for the token canister into OpenD's declarations folder, so it sits beside the nft and opend declarations. (For a third party's live canister, its owner would supply this.)",
+        "token.did.js exports an idlFactory describing which methods exist and their input/output types, exactly like the idlFactory used for the dynamically created NFT canisters.",
+        "Both factories are called idlFactory, so alias the second import: import { idlFactory as tokenIdlFactory } from the token declarations path. In Item.jsx this goes next to the existing nft idlFactory import."
+      ]
+    },
+    {
+      "heading": "handleBuy in Item.jsx",
+      "points": [
+        "Create a token actor with Actor.createActor(tokenIdlFactory, { agent, canisterId }). It reuses the same HttpAgent and localhost host as the NFT actors. The canisterId is Principal.fromText('<id string>'), with the id obtained by running dfx canister id token inside the token-local project.",
+        "Get the seller with the existing OpenD query getOriginalOwner(props.id) (returns the Principal who listed the item) and the price with getListedNFTPrice(props.id) (returns a Nat). Both are awaited.",
+        "Call tokenActor.transfer(sellerId, itemPrice). Its two inputs are the destination principal and a natural-number amount, and it returns Text describing the outcome ('Success' when it worked). Log it while testing; checking the token frontend's balance should show it dropped by the price (2 DANG in the demo).",
+        "Wrap the follow-up in if (result == 'Success'): only then call the new backend method completePurchase with id (props.id), ownerId (the seller) and newOwnerId (CURRENT_USER_ID, the user identity exported by the app's main file). Await it and log the returned text."
+      ]
+    },
+    {
+      "heading": "New backend function: completePurchase (main.mo)",
+      "points": [
+        "Signature: public shared (msg) func completePurchase(id : Principal, ownerId : Principal, newOwnerId : Principal) : async Text.",
+        "Step 1: look up the NFT canister in mapOfNFTs with a switch on mapOfNFTs.get(id). The result is optional, so case null returns 'NFT does not exist' and case (?result) unwraps it into purchasedNFT (type NFTActorClass.NFT). A temporary 'return Success' at the end can be used while building to silence compiler errors.",
+        "Step 2: call await purchasedNFT.transferOwnership(newOwnerId). That method already exists in nft.mo and takes the new owner; its Text result is stored as transferResult. It needs await because it is an inter-canister call; forgetting it gives a type error saying Text was found where async Text was expected.",
+        "Step 3, only when transferResult == 'Success': remove the listing with mapOfListings.delete(id). HashMap.delete removes the entry for the key and does nothing if the key is missing.",
+        "Step 4: fetch the previous owner's list of NFT ids from mapOfOwners.get(ownerId) with a switch (null gives an empty List.nil<Principal>(), otherwise unwrap), assign it to a var ownedNFTs.",
+        "Step 5: List.filter(ownedNFTs, func) builds a new list from only those elements for which the function returns true. The function receives each id (listItemId : Principal) and returns listItemId != id, so the purchased NFT is dropped. Assign the result back with :=.",
+        "Step 6: give the NFT to the new owner with the existing helper addToOwnershipMap(newOwnerId, id), called outside the filter function. Return 'Success'.",
+        "Otherwise (transfer failed) return transferResult itself so the caller sees the error text.",
+        "A typo in a parameter name (newOwner vs newOwnerId) caused one compile error in the lecture; read compiler messages closely."
+      ]
+    },
+    {
+      "heading": "Redeploy and test sequence",
+      "points": [
+        "After changing main.mo, redeploy OpenD using the deploy command from the OpenD README.",
+        "The Discover page only shows listed NFTs, so mint one with the command-line mint command in the README, then list it for sale with the README's list command (paste in the new NFT principal), then transfer it to the OpenD canister (paste the OpenD canister id and the NFT principal into the README's final call). This produces an item for sale that the frontend user did not list themself.",
+        "Click Buy: the console shows the purchase result 'Success', the item vanishes from Discover after a refresh, appears under My NFTs, and the token frontend balance falls by the price."
+      ]
+    },
+    {
+      "heading": "UI polish: loader and hiding the item",
+      "points": [
+        "At the start of handleBuy call setLoaderHidden(false) to show the loading animation; set it back to true when the purchase finishes.",
+        "To remove a bought item without a reload, add state: const [shouldDisplay, setDisplay] = useState(true).",
+        "On the root div of Item.jsx add style={{ display: shouldDisplay ? 'inline' : 'none' }}. display: none removes the element from view although it remains in the DOM (visible in dev tools); 'inline' is the item's normal value.",
+        "At the end of handleBuy call setDisplay(false), so the card disappears as soon as the purchase succeeds.",
+        "Demo: starting at 9,988 DANG, buying a 2 DANG item shows the loader, the card disappears, and the balance drops by 2."
+      ]
+    },
+    {
+      "heading": "Wrap-up remarks",
+      "points": [
+        "The project now supports minting, listing, buying and viewing owned NFTs on the Internet Computer, mirroring the core of a marketplace like OpenSea.",
+        "Deploying live costs real cycles for every mint; the DFINITY developer grant program is mentioned as a way to get funding for a serious project.",
+        "Each earlier lesson ships the code for that step, which is handy when debugging; expect many errors in a Motoko plus React project."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Backend: completePurchase in main.mo (reference repo, trimmed)",
+      "language": "motoko",
+      "code": "public shared (msg) func completePurchase(id : Principal, ownerId : Principal, newOwnerId : Principal) : async Text {\n  var purchasedNFT : NFTActorClass.NFT = switch (mapOfNFTs.get(id)) {\n    case null return \"NFT does not exist\";\n    case (?result) result;\n  };\n\n  let transferResult = await purchasedNFT.transferOwnership(newOwnerId);\n  if (transferResult == \"Success\") {\n    mapOfListings.delete(id);\n    var ownedNFTs : List.List<Principal> = switch (mapOfOwners.get(ownerId)) {\n      case null List.nil<Principal>();\n      case (?result) result;\n    };\n    ownedNFTs := List.filter(\n      ownedNFTs,\n      func(listItemId : Principal) : Bool {\n        return listItemId != id;\n      },\n    );\n\n    addToOwnershipMap(newOwnerId, id);\n    return \"Success\";\n  } else {\n    return transferResult;\n  };\n};"
+    },
+    {
+      "caption": "Frontend: imports and handleBuy in Item.jsx",
+      "language": "jsx",
+      "code": "import { idlFactory } from \"../../../declarations/nft\";\nimport { idlFactory as tokenIdlFactory } from \"../../../declarations/token\";\nimport { Principal } from \"@dfinity/principal\";\n\nasync function handleBuy() {\n  setLoaderHidden(false);\n  const tokenActor = await Actor.createActor(tokenIdlFactory, {\n    agent,\n    canisterId: Principal.fromText(\"<TOKEN CANISTER ID from dfx canister id token>\"),\n  });\n\n  const sellerId = await OPEND_backend.getOriginalOwner(props.id);\n  const itemPrice = await OPEND_backend.getListedNFTPrice(props.id);\n\n  const result = await tokenActor.transfer(sellerId, itemPrice);\n  if (result == \"Success\") {\n    const transferResult = await OPEND_backend.completePurchase(\n      props.id,\n      sellerId,\n      CURRENT_USER_ID\n    );\n    console.log(\"purchase: \" + transferResult);\n    setLoaderHidden(true);\n    setDisplay(false);\n  }\n}"
+    },
+    {
+      "caption": "Hiding the card after purchase",
+      "language": "jsx",
+      "code": "const [shouldDisplay, setDisplay] = useState(true);\n// ...\n<div\n  style={{ display: shouldDisplay ? \"inline\" : \"none\" }}\n  className=\"disGrid-item\"\n>"
+    },
+    {
+      "caption": "Token canister setup commands (shape only; exact lines come from the token-local README)",
+      "language": "bash",
+      "code": "dfx identity get-principal          # copy into token main.mo as the owner\ndfx deploy                          # in token-local, with dfx start running\nnpm start                           # token frontend appears on localhost:8081\ndfx canister id token               # id used in Principal.fromText(...)"
+    }
+  ],
+  "task": {
+    "name": "Enable buying NFTs with DANG tokens",
+    "starting_point": "The OpenD project from the previous lesson: Item.jsx has a handleBuy that only logs that buying was triggered; main.mo has getOriginalOwner, getListedNFTPrice, listItem and addToOwnershipMap. The separate token-local project is provided as a download.",
+    "goal": "Clicking Buy transfers the price in DANG from the buyer to the seller, moves NFT ownership to the buyer, removes the listing, shows a loader meanwhile and hides the card from Discover afterwards.",
+    "steps": [
+      "Download and unzip token-local, put it beside the other projects, open it in a new VS Code window.",
+      "Put your own principal (dfx identity get-principal) inside quotes as owner in the token main.mo, run dfx deploy, then npm start (port 8081).",
+      "Store the token canister id in a shell variable, transfer 500,000,000 tokens to it, then use the faucet button to give the frontend user 10,000 DANG.",
+      "Copy the token declarations folder into OpenD's declarations folder.",
+      "In Item.jsx import the token idlFactory under the alias tokenIdlFactory.",
+      "In handleBuy create tokenActor with Actor.createActor using that factory, the shared agent and Principal.fromText of the token canister id.",
+      "Await getOriginalOwner and getListedNFTPrice for props.id, then await tokenActor.transfer(sellerId, itemPrice) and log the result.",
+      "Add completePurchase to main.mo: unwrap the NFT, call transferOwnership, delete the listing, filter the old owner's list, add the NFT to the new owner, return Success or the failure text.",
+      "In handleBuy, when the token result equals 'Success', await OPEND_backend.completePurchase(props.id, sellerId, CURRENT_USER_ID) and log it.",
+      "Redeploy OpenD, mint and list an NFT with the README commands, transfer it to the OpenD canister, then click Buy and verify.",
+      "Add the loader toggling and the shouldDisplay state with the conditional display style."
+    ],
+    "expected_result": "Buy shows the loader, the console logs the purchase result Success, the card disappears from Discover, the NFT appears in My NFTs for the buyer, and the token balance is reduced by the item price.",
+    "solution_code": {
+      "language": "motoko",
+      "code": "// See code_examples: completePurchase (main.mo) and handleBuy (Item.jsx)."
+    },
+    "reference_repo_path": "Section 42 - Minting NFTs and Building an NFT Marketplace like OpenSea/42.09 Buying NFTs/OPEND/src/OPEND_backend/main.mo and OPEND/src/OPEND_frontend/src/components/Item.jsx"
+  },
+  "pitfalls": [
+    "Missing await on the inter-canister call gives a type error (Text found where async Text expected).",
+    "Parameter name typos (newOwner vs newOwnerId) cause compile errors.",
+    "(Extra) In both the lecture code and the reference repo, the filtered ownedNFTs list is never written back with mapOfOwners.put(ownerId, ownedNFTs), so the seller's stored list still contains the sold NFT. Add that put line to fix it.",
+    "(Extra) The token payment and the ownership change are two separate calls from the browser. If the second fails, the buyer has paid without receiving the NFT, and a malicious client could skip the check. A production design would do the payment inside the backend.",
+    "(Extra) The reference repo's Item.jsx leaves a placeholder for the token canister id; it must be replaced with the real id from dfx canister id token, and that id changes if the token project is redeployed fresh.",
+    "Port clash: OpenD uses 8080, so the token frontend runs on 8081; don't mix them up.",
+    "Item to buy must be listed by someone other than the current user; mint and list one with the command line first.",
+    "Copying declarations: the token declarations must be re-copied if the token canister's interface changes.",
+    "Real-network minting costs money, so keep testing on localhost."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "Proposed lesson 'Paying for something: calling a second service': blurb about splitting a purchase into pay, transfer ownership and tidy records, with a success check between steps.",
+      "Tasks: (1) write a payFirst(buyer, seller, price) function against a fake balances object; (2) only call transferItem when the payment returns 'Success'; (3) filter an owner's array to remove a sold id with Array.filter; (4) toggle style.display via a boolean state to hide a sold card; (5) make payment fail (insufficient funds) and show the error text.",
+      "Starter code idea: a small JS marketplace with balances = {alice: 10, bob: 0}, listings and owners maps, and a buy button stub.",
+      "Interactive demo idea: two balance bars and a list of cards; clicking Buy animates the coin transfer, shows a loader, then fades out the card, with a toggle that simulates the second step failing to show the half-complete problem."
+    ]
+  }
+}

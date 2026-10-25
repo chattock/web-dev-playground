@@ -1,0 +1,55 @@
+{
+  "index": 151,
+  "lecture_id": 12384184,
+  "title": "How Minification Works to Reduce File Size",
+  "section": "19. jQuery",
+  "duration_min": 4,
+  "kind": "theory",
+  "summary": "Explains what minified code is, why CDN-hosted libraries like jQuery and Bootstrap look like unreadable walls of text, and how a minifier tool shrinks JS or CSS by stripping whitespace and comments.",
+  "concepts": [
+    {
+      "heading": "What minification is",
+      "points": [
+        "Opening a CDN URL for jquery.min.js (or the Bootstrap CSS) shows a dense blob. That is the minified build: the same code with spaces, line breaks, indentation and comments removed.",
+        "It is still valid JavaScript (for jQuery) or CSS (for Bootstrap). Reformatting it with line breaks and indentation reveals the ordinary code.",
+        "Browsers ignore whitespace and comments, so shipping them only wastes bytes."
+      ]
+    },
+    {
+      "heading": "Why minify",
+      "points": [
+        "Smaller files download faster, which matters most on slow connections.",
+        "Demo: a minifier website (minifier.org) takes pasted JavaScript or CSS and outputs the compressed version. The sample drum-kit script went from about 1539 bytes to about 1113 bytes, saving roughly 426 bytes, even with just one added comment.",
+        "(Extra) Real minifiers also shorten local variable names, which saves more; savings grow with file size."
+      ]
+    },
+    {
+      "heading": "Library distributions",
+      "points": [
+        "Libraries ship two versions: a readable, uncompressed one for developers who want to study or customise the source, and a minified one meant for the browser.",
+        "If you do not need to edit the library, drop the minified file in (or link the CDN version).",
+        "If you customise the source, you can minify it yourself afterwards.",
+        "(Extra) Minified files usually carry .min in the name (jquery.min.js); keep your own source readable and minify only for production."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "(Extra) Same logic, readable vs minified",
+      "language": "javascript",
+      "code": "// readable\nfunction add(a, b) {\n  // add two numbers\n  return a + b;\n}\n\n// minified\nfunction add(n,d){return n+d}"
+    }
+  ],
+  "task": null,
+  "pitfalls": [
+    "Do not hand-edit a minified file; edit the readable source and minify again.",
+    "Comments you rely on will vanish after minification, so keep an unminified original."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "Could fold into the jQuery loading lesson as an explore demo: a textarea where pasted JS is stripped of comments and whitespace, showing byte counts before and after."
+    ]
+  }
+}

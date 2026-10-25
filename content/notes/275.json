@@ -1,0 +1,120 @@
+{
+  "index": 275,
+  "lecture_id": 41790508,
+  "title": "Finish the app: let users submit secrets",
+  "section": "35. Authentication and Security",
+  "duration_min": 16,
+  "kind": "project",
+  "summary": "Final challenge of the Secrets app: add a secret column, make secrets.ejs render a per-user secret, protect a submit page, and save the submitted text against the logged-in user's row. The lecture sets the challenge, then walks through the solution.",
+  "concepts": [
+    {
+      "heading": "Feature overview",
+      "points": [
+        "Until now the secret on secrets.ejs was fixed text in a paragraph. The goal is to let each authenticated user store and view their own secret.",
+        "Storage is kept simple: one extra column on the existing users table, so a secret lives on the same row as its owner.",
+        "Flow: login (local or Google) -> /secrets shows the user's secret (or a default) -> 'Submit a Secret' button -> GET /submit shows a form -> POST /submit saves the text -> redirect back to /secrets."
+      ]
+    },
+    {
+      "heading": "Database change",
+      "points": [
+        "Add a text column: ALTER TABLE users ADD COLUMN secret TEXT; (run in pgAdmin or psql).",
+        "Rows for users who have not submitted anything have NULL in this column, which is what the default-message logic relies on."
+      ]
+    },
+    {
+      "heading": "Template change",
+      "points": [
+        "In secrets.ejs replace the hard-coded paragraph text with an output tag, <%= secret %>, so the server passes the value in when rendering.",
+        "submit.ejs contains a form with action /submit and method POST and a text input whose name attribute is secret, so the server reads it as req.body.secret (body-parser's urlencoded middleware is already enabled)."
+      ]
+    },
+    {
+      "heading": "Protecting GET /submit",
+      "points": [
+        "Passport adds req.isAuthenticated() to every request. Use it: if true, render submit.ejs; otherwise redirect to /login.",
+        "This is the same guard pattern already used for /secrets."
+      ]
+    },
+    {
+      "heading": "POST /submit",
+      "points": [
+        "Read the text from req.body.secret.",
+        "Identify the owner via req.user. Both the local and Google strategies pass the full user row to cb, which is serialized into the session and deserialized into req.user, so req.user.email is available in every route.",
+        "Run UPDATE users SET secret = $1 WHERE email = $2 with [secret, req.user.email]. The WHERE clause restricts the update to one user; it replaces any previous secret.",
+        "The handler must be async because of await db.query. Wrap in try/catch (the course just console.logs errors), then redirect to /secrets (a GET) so the new value is displayed."
+      ]
+    },
+    {
+      "heading": "Updated GET /secrets",
+      "points": [
+        "Make the handler async. Inside the authenticated branch query SELECT secret FROM users WHERE email = $1 with [req.user.email]; the parameter must be wrapped in an array.",
+        "result.rows[0].secret holds the value. If truthy, res.render('secrets.ejs', { secret }); otherwise render with a default string (the lecture uses a joke default; a prompt like 'You should submit a secret!' also works).",
+        "The second argument of res.render is the data object whose keys become variables in the EJS template.",
+        "Unauthenticated visitors are redirected to /login."
+      ]
+    },
+    {
+      "heading": "Testing and next steps",
+      "points": [
+        "Log in, submit a secret, confirm the row updated in the database, log out and back in to prove it persists in the database, not in the session.",
+        "Remember to fill GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in .env for Google login.",
+        "Suggested practice: add authentication to an earlier project of your own."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "SQL to add the column",
+      "language": "sql",
+      "code": "ALTER TABLE users ADD COLUMN secret TEXT;"
+    },
+    {
+      "caption": "Three routes that complete the app",
+      "language": "javascript",
+      "code": "// GET /secrets: show the logged-in user's own secret\napp.get(\"/secrets\", async (req, res) => {\n  if (req.isAuthenticated()) {\n    try {\n      const result = await db.query(\n        \"SELECT secret FROM users WHERE email = $1\",\n        [req.user.email]\n      );\n      const secret = result.rows[0].secret;\n      if (secret) {\n        res.render(\"secrets.ejs\", { secret: secret });\n      } else {\n        res.render(\"secrets.ejs\", { secret: \"Jack Bauer is my hero.\" });\n      }\n    } catch (err) {\n      console.log(err);\n    }\n  } else {\n    res.redirect(\"/login\");\n  }\n});\n\n// GET /submit: only for authenticated users\napp.get(\"/submit\", (req, res) => {\n  if (req.isAuthenticated()) {\n    res.render(\"submit.ejs\");\n  } else {\n    res.redirect(\"/login\");\n  }\n});\n\n// POST /submit: store the secret on the user's own row\napp.post(\"/submit\", async (req, res) => {\n  const submittedSecret = req.body.secret;\n  try {\n    await db.query(\"UPDATE users SET secret = $1 WHERE email = $2\", [\n      submittedSecret,\n      req.user.email,\n    ]);\n    res.redirect(\"/secrets\");\n  } catch (err) {\n    console.log(err);\n  }\n});"
+    },
+    {
+      "caption": "secrets.ejs output tag (key line)",
+      "language": "html",
+      "code": "<p class=\"secret-text\"><%= secret %></p>"
+    }
+  ],
+  "task": {
+    "name": "Finish the Secrets app",
+    "starting_point": "Working Express/Passport app with local and Google login. index.js has TODO comments for the /secrets query, the /submit GET route and the /submit POST route; submit.ejs exists; users table has no secret column.",
+    "goal": "Authenticated users can submit one secret that is stored in their users row and shown on /secrets.",
+    "steps": [
+      "Add column secret of type TEXT to the users table.",
+      "Change secrets.ejs to print <%= secret %> instead of fixed text.",
+      "Create GET /submit that renders submit.ejs only if req.isAuthenticated(), else redirects to /login.",
+      "Create POST /submit that reads req.body.secret and updates the row WHERE email = req.user.email, then redirects to /secrets.",
+      "Update GET /secrets to select the user's secret and pass it to the template, with a default when null.",
+      "Test login, submit, logout, login again, with both local and Google accounts."
+    ],
+    "expected_result": "Each user sees their latest saved secret after login; users without one see the default text; the submit page is inaccessible when logged out.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "// GET /secrets: show the logged-in user's own secret\napp.get(\"/secrets\", async (req, res) => {\n  if (req.isAuthenticated()) {\n    try {\n      const result = await db.query(\n        \"SELECT secret FROM users WHERE email = $1\",\n        [req.user.email]\n      );\n      const secret = result.rows[0].secret;\n      if (secret) {\n        res.render(\"secrets.ejs\", { secret: secret });\n      } else {\n        res.render(\"secrets.ejs\", { secret: \"Jack Bauer is my hero.\" });\n      }\n    } catch (err) {\n      console.log(err);\n    }\n  } else {\n    res.redirect(\"/login\");\n  }\n});\n\n// GET /submit: only for authenticated users\napp.get(\"/submit\", (req, res) => {\n  if (req.isAuthenticated()) {\n    res.render(\"submit.ejs\");\n  } else {\n    res.redirect(\"/login\");\n  }\n});\n\n// POST /submit: store the secret on the user's own row\napp.post(\"/submit\", async (req, res) => {\n  const submittedSecret = req.body.secret;\n  try {\n    await db.query(\"UPDATE users SET secret = $1 WHERE email = $2\", [\n      submittedSecret,\n      req.user.email,\n    ]);\n    res.redirect(\"/secrets\");\n  } catch (err) {\n    console.log(err);\n  }\n});"
+    },
+    "reference_repo_path": "Section 35 - Authentication and Security - Handling Credentials & Designing a Secure Login/35.10 Finish the app - let users submit secrets/solution.js"
+  },
+  "pitfalls": [
+    "Forgetting to make route handlers async when using await.",
+    "Passing the email as a bare value instead of an array to db.query parameters.",
+    "Reading req.user in POST /submit without any auth check: if logged out, req.user is undefined and the handler throws. (Extra) Add the isAuthenticated guard there as well.",
+    "(Extra) In this folder the starter index.js is identical to solution.js (already solved), so the TODO markers described in the lecture are not present in the repo copy.",
+    "Input name must be 'secret' to match req.body.secret.",
+    "Not redirecting after the update leaves the browser on a POST response."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (section 35 has no playground file).",
+    "gaps_and_ideas": [
+      "Proposed lesson 'Per-user data with sessions': blurb on req.user, req.isAuthenticated() and guarded routes.",
+      "Tasks: add the column, guard GET /submit, write the UPDATE route, pass data to res.render, handle the empty default.",
+      "Starter code: app skeleton with TODO comments as in the course.",
+      "Demo idea: a simulated logged-in/logged-out toggle showing which routes redirect, plus a mini table view showing the users row changing after each submit."
+    ]
+  }
+}

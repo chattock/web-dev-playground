@@ -1,0 +1,113 @@
+{
+  "index": 361,
+  "lecture_id": 31673756,
+  "title": "Viewing the NFT on the Frontend",
+  "section": "42. Minting NFTs and Building an NFT Marketplace like OpenSea",
+  "duration_min": 20,
+  "kind": "concept+exercise",
+  "summary": "Renders the minted NFT in the React Item component: pass the canister id as a prop, create an HttpAgent and an actor from the generated idlFactory, load name, owner and image bytes on mount with useEffect, and turn the byte array into a Blob object URL for the img tag. The owner field is a learner challenge.",
+  "concepts": [
+    {
+      "heading": "Starting the frontend",
+      "points": [
+        "Run npm start and open localhost:8080: header, footer and the static home image appear; nothing is clickable yet.",
+        "In App.jsx, comment out the home image (and its import) and render the Item component instead. Letting the editor autocomplete the component name inserts the import automatically, avoiding typos.",
+        "Item.jsx is plain markup: a card with an img, the name heading and an 'Owner:' line. Layout/centering is fixed in later lessons. Initially these are hardcoded values."
+      ]
+    },
+    {
+      "heading": "Passing the canister id as a prop",
+      "points": [
+        "Get the minted canister's id with dfx canister id nft.",
+        "In App, store it in a constant (e.g. nftId) and pass it down as a prop named id: <Item id={nftId} />. In Item read props.id.",
+        "This id is later used to address the right canister, so each Item can show a different NFT."
+      ]
+    },
+    {
+      "heading": "HttpAgent: talking to the canister over HTTP",
+      "points": [
+        "Calling a canister from the browser means HTTP requests to the replica. Locally that is the local dfx address; define it as a localHost URL string.",
+        "HttpAgent comes from @dfinity/agent: import { HttpAgent } from \"@dfinity/agent\" (case-sensitive; watch the spelling of dfinity).",
+        "const agent = new HttpAgent({ host: localHost }); the constructor takes an options object where host is the replica URL.",
+        "(Extra) In the reference repo the host constant is a localhost port; use whichever address your dfx or proxy actually serves."
+      ]
+    },
+    {
+      "heading": "Actor.createActor and the idlFactory",
+      "points": [
+        "Calls are asynchronous, so they happen in an async function, here loadNFT().",
+        "Create the actor: await Actor.createActor(idlFactory, { agent, canisterId }). First argument: the interface factory; second: options, including the agent and the target canister id.",
+        "idlFactory is exported from the generated declarations folder, in nft.did.js. It describes the Motoko canister's interface (methods getAsset, getName, getOwner, their inputs and outputs) in JavaScript terms, acting as a translator between frontend and Motoko.",
+        "Import path from the component: three levels up, then declarations/nft, i.e. ../../../declarations/nft. Note exact casing: idlFactory.",
+        "canisterId must be a Principal object, not a string. Import Principal from @dfinity/principal and wrap props.id with Principal.fromText(props.id)."
+      ]
+    },
+    {
+      "heading": "When to load: useEffect with an empty dependency array",
+      "points": [
+        "The NFT should be fetched once, on the first render. Use useEffect(() => { loadNFT(); }, []).",
+        "The second argument is the dependency list; empty means run only after the first render, otherwise the fetch would repeat on every state update."
+      ]
+    },
+    {
+      "heading": "Name, owner and image",
+      "points": [
+        "Name: const name = await NFTActor.getName(); then setName(name) using a state variable created with useState() (initially undefined). Replace the hardcoded heading text with {name}. The demo shows it changing to the minted CryptoDunks name.",
+        "Owner (challenge): await NFTActor.getOwner() returns a Principal; call .toText() before storing it so React can render it, then setOwner. Replace the hardcoded owner text with {owner}.",
+        "Image: getAsset() returns an array of 8-bit numbers. Wrap it in new Uint8Array(imageData) so JavaScript treats it as bytes.",
+        "Create a Blob from it: new Blob([imageContent.buffer], { type: \"image/png\" }). A Blob takes an array of parts and optional options such as the MIME type (see MDN). .buffer gives the underlying ArrayBuffer.",
+        "URL.createObjectURL(blob) returns a temporary URL string usable as the img src. Store in an image state variable and set src={image}.",
+        "Result: the card shows the minted name, the owner principal and the pixel-art image from the chain for the first time."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Item.jsx data loading (reference-repo version, tidied)",
+      "language": "jsx",
+      "code": "import { Actor, HttpAgent } from \"@dfinity/agent\";\nimport React, { useEffect, useState } from \"react\";\nimport { idlFactory } from \"../../../declarations/nft\";\nimport { Principal } from \"@dfinity/principal\";\n\nfunction Item(props) {\n  const [name, setName] = useState();\n  const [owner, setOwner] = useState();\n  const [image, setImage] = useState();\n\n  const id = Principal.fromText(props.id);\n  const localHost = \"http://localhost:3000/\";   // use your local replica address\n  const agent = new HttpAgent({ host: localHost });\n\n  async function loadNFT() {\n    const NFTActor = await Actor.createActor(idlFactory, {\n      agent,\n      canisterId: id,\n    });\n    const name = await NFTActor.getName();\n    const owner = await NFTActor.getOwner();\n    const imageData = await NFTActor.getAsset();\n    const imageContent = new Uint8Array(imageData);\n    const blob = new Blob([imageContent.buffer], { type: \"image/png\" });\n    const image = URL.createObjectURL(blob);\n    setName(name);\n    setOwner(owner.toText());\n    setImage(image);\n  }\n\n  useEffect(() => {\n    loadNFT();\n  }, []);\n\n  // JSX: <img src={image} />, {name}, Owner: {owner}\n}"
+    },
+    {
+      "caption": "App.jsx: pass the canister id",
+      "language": "jsx",
+      "code": "const nftId = \"<output of: dfx canister id nft>\";\n// ...\n<Item id={nftId} />"
+    }
+  ],
+  "task": {
+    "name": "Show the owner from the NFT canister",
+    "starting_point": "Item.jsx already loads and displays the NFT name from getName() via state, but the owner line is still hardcoded.",
+    "goal": "Replace the hardcoded owner with the real owner principal of the minted NFT, displayed as text.",
+    "steps": [
+      "Add const [owner, setOwner] = useState(); in Item.",
+      "Inside loadNFT call const owner = await NFTActor.getOwner();.",
+      "Convert the Principal with owner.toText() and pass the result to setOwner.",
+      "Replace the hardcoded owner in the JSX with {owner}.",
+      "Save, refresh and compare with the output of dfx canister call nft getOwner."
+    ],
+    "expected_result": "A long principal id equal to the one used when minting appears after 'Owner:'.",
+    "solution_code": {
+      "language": "jsx",
+      "code": "const [owner, setOwner] = useState();\n// in loadNFT:\nconst owner = await NFTActor.getOwner();\nsetOwner(owner.toText());\n// in JSX:\n// <p>Owner: {owner}</p>"
+    },
+    "reference_repo_path": "Section 42 - Minting NFTs and Building an NFT Marketplace like OpenSea/42.03 Viewing the NFT on the Frontend/OPEND/src/OPEND_frontend/src/components/Item.jsx"
+  },
+  "pitfalls": [
+    "Typos in HttpAgent, @dfinity/agent, or idlFactory casing.",
+    "Passing a string where a Principal is needed (forget Principal.fromText).",
+    "Forgetting await on actor creation or on the method calls.",
+    "Putting a Principal object in JSX instead of toText().",
+    "Omitting the empty array in useEffect, causing repeated fetches.",
+    "Using the wrong dfx address as host.",
+    "(Extra) The reference repo has typos (imageContant) and a hardcoded canister id and port; replace them with your own. Its Item.jsx builds the agent on each render, which is fine for the demo."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (section 42 has no playground file).",
+    "gaps_and_ideas": [
+      "Proposed lesson 'Turning bytes into an image': blurb on getting binary data from a backend and showing it in the browser.",
+      "Tasks: 1) make a Uint8Array from an array of numbers; 2) wrap it in a Blob with type image/png; 3) create an object URL and assign it to an img; 4) load the data once with useEffect and []; 5) convert a mock Principal to text before rendering.",
+      "Starter code: a fake async NFT actor returning getName/getOwner/getAsset with a tiny PNG byte array.",
+      "Explore demo idea: an editable byte array with a live image preview, plus a toggle showing what happens with the wrong MIME type or without revoking the object URL."
+    ]
+  }
+}

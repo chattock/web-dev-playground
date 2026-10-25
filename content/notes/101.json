@@ -1,0 +1,60 @@
+{
+  "index": 101,
+  "lecture_id": 12373978,
+  "title": "Comparators and Equality",
+  "section": "15. Intermediate Javascript",
+  "duration_min": 3,
+  "kind": "concept",
+  "summary": "Lists the comparison operators usable in conditions and explains the difference between strict (===) and loose (==) equality using a number versus a numeric string.",
+  "concepts": [
+    {
+      "heading": "Comparison operators",
+      "points": [
+        "=== is true when both sides are equal; !== is true when they differ.",
+        "> and < test greater than and less than; >= and <= also accept equality.",
+        "Each yields a boolean, which if/else statements use to decide the branch."
+      ]
+    },
+    {
+      "heading": "=== versus ==",
+      "points": [
+        "With a = 1 and b = \"1\", typeof a is \"number\" and typeof b is \"string\".",
+        "a === b is false because strict equality compares the data types as well as the values.",
+        "a == b is true because loose equality ignores type and converts first.",
+        "(Extra) Prefer === and !== by default to avoid type-coercion surprises (0 == \"\" is true, for example)."
+      ]
+    },
+    {
+      "heading": "Looking ahead",
+      "points": [
+        "To give the love calculator separate messages for low, middle and high scores, comparators must be combined, which the next lecture covers."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Strict vs loose equality",
+      "language": "javascript",
+      "code": "var a = 1;\nvar b = \"1\";\nconsole.log(typeof a, typeof b);   // number string\nif (a === b) { console.log(\"yes\"); } else { console.log(\"no\"); }   // no\nif (a == b)  { console.log(\"yes\"); } else { console.log(\"no\"); }   // yes"
+    },
+    {
+      "caption": "Reference-repo checks",
+      "language": "javascript",
+      "code": "console.log(5 === \"5\");  // false\nconsole.log(5 !== \"5\");  // true\nconsole.log(10 >= 10);   // true\nconsole.log(10 < 5);     // false"
+    }
+  ],
+  "task": null,
+  "pitfalls": [
+    "Using == and silently matching values of different types.",
+    "Confusing = (assign) with == / ===.",
+    "Mixing up > with >= at range boundaries."
+  ],
+  "playground": {
+    "match": "s15-comparators (lesson 15.3, data/s15.js)",
+    "coverage": "Covers all operators, == vs ===, the notorious loose results and the assignment pitfall. More than the lecture.",
+    "gaps_and_ideas": [
+      "Add typeof a / typeof b to the task, as the lecture does.",
+      "Interactive demo idea: two inputs and an operator dropdown showing the boolean result."
+    ]
+  }
+}

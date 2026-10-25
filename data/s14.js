@@ -2,7 +2,7 @@
 /* JS lessons use layout:'js' — big console, small preview strip underneath. */
 
 PG.add({
-  id:'s14-alerts', section:'s14', slug:'alerts', lesson:'14.1', layout:'js',
+  id:'s14-alerts', index:76, udemyId:12371344, minutes:14, section:'s14', slug:'alerts', lesson:'14.1', layout:'js',
   title:'Alerts & console.log',
   blurb:'JavaScript adds <b>behaviour</b> to a page. <code>alert()</code> pops a message box; <code>console.log()</code> writes to the console — which is the one you will actually use every day.',
   tasks:[
@@ -33,7 +33,7 @@ console.log("Angela", "Yu", 2026);
 
 
 PG.add({
-  id:'s14-data-types', section:'s14', slug:'data-types', lesson:'14.2', layout:'js',
+  id:'s14-data-types', index:77, udemyId:12371362, minutes:4, section:'s14', slug:'data-types', lesson:'14.2', layout:'js',
   title:'Data Types',
   blurb:'Every value has a type. The ones that matter early: <b>string</b> (text in quotes), <b>number</b>, <b>boolean</b> (true/false), plus <b>null</b> and <b>undefined</b> for "nothing".',
   tasks:[
@@ -82,7 +82,7 @@ console.log(Number("7") + 1);  // 8  <- convert explicitly, the safe way
 
 
 PG.add({
-  id:'s14-variables', section:'s14', slug:'variables', lesson:'14.3', layout:'js',
+  id:'s14-variables', index:78, udemyId:12371610, minutes:10, section:'s14', slug:'variables', lesson:'14.3', layout:'js',
   title:'Variables',
   blurb:'A variable is a labelled box for a value. <code>let</code> for something that will change, <code>const</code> for something that will not. (<code>var</code> is the old way — you will see it in the course videos and in old code.)',
   tasks:[
@@ -128,7 +128,7 @@ console.log("pi is still", pi);
 
 
 PG.add({
-  id:'s14-naming', section:'s14', slug:'naming', lesson:'14.4', layout:'js',
+  id:'s14-naming', index:81, udemyId:12371642, minutes:7, section:'s14', slug:'naming', lesson:'14.4', layout:'js',
   title:'Naming Conventions',
   blurb:'Names are how future-you understands present-you. JavaScript uses <b>camelCase</b>, names must not start with a number, and a handful of words are reserved.',
   tasks:[
@@ -181,7 +181,7 @@ console.log(answerToEverything, userName, userScoreTotal, isLoggedIn);
 
 
 PG.add({
-  id:'s14-concat', section:'s14', slug:'string-concatenation', lesson:'14.5', layout:'js',
+  id:'s14-concat', index:82, udemyId:12371720, minutes:3, section:'s14', slug:'string-concatenation', lesson:'14.5', layout:'js',
   title:'String Concatenation',
   blurb:'Join strings with <code>+</code>. Modern JavaScript also has <b>template literals</b> — backticks with <code>${...}</code> holes in them — which are far easier to read.',
   tasks:[
@@ -227,7 +227,7 @@ console.log(\`\${qty} items cost £\${price * qty}\`);
 
 
 PG.add({
-  id:'s14-length', section:'s14', slug:'string-length', lesson:'14.6', layout:'js',
+  id:'s14-length', index:83, udemyId:12371744, minutes:6, section:'s14', slug:'string-length', lesson:'14.6', layout:'js',
   title:'String Length',
   blurb:'Every string carries a <code>.length</code> property — no brackets, because it is a property and not a method.',
   tasks:[
@@ -267,7 +267,7 @@ console.log("héllo".length);  // 5
 
 
 PG.add({
-  id:'s14-slice', section:'s14', slug:'slicing', lesson:'14.7', layout:'js',
+  id:'s14-slice', index:84, udemyId:12371756, minutes:9, section:'s14', slug:'slicing', lesson:'14.7', layout:'js',
   title:'Slicing Strings',
   blurb:'<code>.slice(start, end)</code> cuts a piece out of a string. Counting starts at <b>0</b>, and the end index is <b>not</b> included.',
   tasks:[
@@ -316,7 +316,7 @@ console.log("JavaScript".slice(0, 4));
 
 
 PG.add({
-  id:'s14-casing', section:'s14', slug:'changing-casing', lesson:'14.8', layout:'js',
+  id:'s14-casing', index:85, udemyId:12371788, minutes:4, section:'s14', slug:'changing-casing', lesson:'14.8', layout:'js',
   title:'Challenge — Changing Casing',
   blurb:'The challenge: whatever the user types, output it with a capital first letter and the rest in lower case. <code>"aDa"</code> → <code>"Ada"</code>.',
   tasks:[
@@ -367,7 +367,7 @@ console.log("Every word:", full);
 
 
 PG.add({
-  id:'s14-arithmetic', section:'s14', slug:'arithmetic', lesson:'14.9', layout:'js',
+  id:'s14-arithmetic', index:87, udemyId:12371848, minutes:6, section:'s14', slug:'arithmetic', lesson:'14.9', layout:'js',
   title:'Arithmetic & Modulo',
   blurb:'The usual <code>+ - * /</code>, plus <code>%</code> (modulo) which gives the <b>remainder</b> after a division — much more useful than it sounds.',
   tasks:[
@@ -426,7 +426,7 @@ console.log((2 + 3) * 4);    // 20
 
 
 PG.add({
-  id:'s14-increment', section:'s14', slug:'increment', lesson:'14.10', layout:'js',
+  id:'s14-increment', index:88, udemyId:12371872, minutes:2, section:'s14', slug:'increment', lesson:'14.10', layout:'js',
   title:'Increment & Decrement',
   blurb:'Shorthands for the most common operations: <code>++</code> adds one, <code>--</code> subtracts one, and <code>+=</code> / <code>-=</code> / <code>*=</code> add, subtract or multiply in place.',
   tasks:[
@@ -485,7 +485,7 @@ score /= 4;   console.log(score);  // 6
 
 
 PG.add({
-  id:'s14-functions-1', section:'s14', slug:'functions-1', lesson:'14.11', layout:'js',
+  id:'s14-functions-1', index:89, udemyId:12371950, minutes:11, section:'s14', slug:'functions-1', lesson:'14.11', layout:'js',
   title:'Functions 1 — Creating & Calling',
   blurb:'A function is a named parcel of instructions. Defining it does nothing; <b>calling</b> it by name runs the code inside.',
   tasks:[
@@ -533,7 +533,7 @@ nameOfFunction();   // <- this runs it</pre>
 
 
 PG.add({
-  id:'s14-functions-2', section:'s14', slug:'functions-2', lesson:'14.12', layout:'js',
+  id:'s14-functions-2', index:93, udemyId:12373850, minutes:10, section:'s14', slug:'functions-2', lesson:'14.12', layout:'js',
   title:'Functions 2 — Parameters',
   blurb:'A <b>parameter</b> is a placeholder in the function definition; an <b>argument</b> is the real value you pass when calling it. That is how one function handles many situations.',
   tasks:[
@@ -593,7 +593,7 @@ getMilk(5);                 // 5 is the ARGUMENT</pre>
 
 
 PG.add({
-  id:'s14-life-in-weeks', section:'s14', slug:'life-in-weeks', lesson:'14.13', layout:'js',
+  id:'s14-life-in-weeks', index:93, sub:'b', udemyId:12373850, minutes:0, section:'s14', slug:'life-in-weeks', lesson:'14.13', layout:'js',
   title:'Life in Weeks',
   blurb:'Given an age, work out how many days, weeks and months you have left if you live to 90. A pure parameters-and-arithmetic exercise.',
   tasks:[
@@ -642,7 +642,7 @@ lifeInWeeks2(25);
 
 
 PG.add({
-  id:'s14-functions-3', section:'s14', slug:'functions-3', lesson:'14.14', layout:'js',
+  id:'s14-functions-3', index:95, udemyId:12373868, minutes:11, section:'s14', slug:'functions-3', lesson:'14.14', layout:'js',
   title:'Functions 3 — Return Values',
   blurb:'<code>return</code> hands a value back to whoever called the function — and stops the function immediately. A function that logs is a dead end; a function that returns can be built on.',
   tasks:[
@@ -707,7 +707,7 @@ console.log(checkAge(30));
 
 
 PG.add({
-  id:'s14-bmi', section:'s14', slug:'bmi-calculator', lesson:'14.15', layout:'js', project:true,
+  id:'s14-bmi', index:96, udemyId:12373874, minutes:2, section:'s14', slug:'bmi-calculator', lesson:'14.15', layout:'js', project:true,
   title:'Challenge — BMI Calculator',
   blurb:'Body Mass Index = weight ÷ height². Write a function that takes weight in kg and height in metres and returns the BMI as a whole number.',
   tasks:[

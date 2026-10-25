@@ -1,0 +1,31 @@
+{
+  "index": 264,
+  "lecture_id": 17967564,
+  "title": "Tip from Angela - Daily Routines",
+  "section": "33. PostgreSQL",
+  "duration_min": 3,
+  "kind": "tip",
+  "summary": "A short motivational tip about building a daily routine to reduce decision fatigue and make learning to code a habit.",
+  "concepts": [
+    {
+      "heading": "Key takeaways",
+      "points": [
+        "A fixed daily routine reduces the number of decisions to make during the day, which frees energy for learning.",
+        "Start the day with a short physical activity such as a walk before sitting down to work.",
+        "Do the hardest or most-avoided learning task first, for example a difficult module or concept you keep postponing. Finishing it early gives a sense of achievement and makes the rest of the day easier.",
+        "For a multi-day task, aim for at least about an hour on it each day.",
+        "Design the morning and day so the routine runs automatically, building towards a daily coding habit."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [
+    "Postponing the hardest topic until later in the day tends to mean it never gets done."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "Not applicable (non-technical tip).",
+    "gaps_and_ideas": []
+  }
+}

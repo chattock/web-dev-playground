@@ -1,0 +1,29 @@
+{
+  "index": 161,
+  "lecture_id": 12664256,
+  "title": "Play the Game",
+  "section": "20. Boss Level Challenge 2 - The Simon Game",
+  "duration_min": 0,
+  "kind": "article-task",
+  "summary": "Link to the live Simon game so the learner can try it before building it.",
+  "concepts": [
+    {
+      "heading": "What to do",
+      "points": [
+        "Open the hosted demo of the Simon game (londonappbrewery.github.io/Simon-Game) and play a few rounds first.",
+        "Watch the pattern: the game flashes one colour with a sound, you repeat it, then it adds one more colour each level; a wrong click ends the game.",
+        "(Extra) Note the details you will need to reproduce: title text changes per level, buttons flash/animate when pressed, red flash on game over, any key restarts."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (web-dev-playground has no files for sections 19-20)",
+    "gaps_and_ideas": [
+      "Link to the demo from the playground's Simon project page, plus a short checklist of the behaviours to observe before coding."
+    ]
+  }
+}

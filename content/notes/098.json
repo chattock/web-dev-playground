@@ -1,0 +1,31 @@
+{
+  "index": 98,
+  "lecture_id": 17966816,
+  "title": "Tip from Angela - Set Your Expectations",
+  "section": "14. Introduction to Javascript ES6",
+  "duration_min": 3,
+  "kind": "tip",
+  "summary": "A short motivational tip about realistic expectations: coding is neither trivial nor reserved for geniuses, and progress comes from accumulated practice.",
+  "concepts": [
+    {
+      "heading": "Key takeaways",
+      "points": [
+        "Claims that programming is easy apply only to the first basics; real mastery takes sustained effort.",
+        "Finding it difficult is normal and says nothing about ability.",
+        "The opposite myth, that only exceptional people can learn it, is also false.",
+        "Working developers differ from learners mainly in hours of practice, so more work leads to better results.",
+        "Take the middle view: it is hard but achievable, so keep going."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [
+    "Reading difficulty as a sign you are not suited to coding."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson (motivational tip).",
+    "gaps_and_ideas": []
+  }
+}

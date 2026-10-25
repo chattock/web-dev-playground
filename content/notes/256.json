@@ -1,0 +1,114 @@
+{
+  "index": 256,
+  "lecture_id": 40494240,
+  "title": "INSERT and add Data - Travel Tracker Part 2",
+  "section": "33. PostgreSQL",
+  "duration_min": 17,
+  "kind": "project",
+  "summary": "Teaches INSERT INTO in SQL and parameterised queries with $1 placeholders in node-postgres, creates and imports a countries lookup table, and builds the POST /add route that converts a typed country name to its code and saves it.",
+  "concepts": [
+    {
+      "heading": "INSERT INTO in SQL",
+      "points": [
+        "Form: INSERT INTO table (col1, col2, col3) VALUES (v1, v2, v3);",
+        "The column list order must match the order of the values. Leave out the id column so SERIAL generates it.",
+        "String values use single quotes; numbers are bare. End with a semicolon.",
+        "Exercise: insert a new world_food row for Italy with rice 1.46 and wheat 7.3, then view all rows to confirm it appears as row 10.",
+        "Inserting through SQL (rather than the pgAdmin grid) is what the app will need, because new data arrives from users at runtime."
+      ]
+    },
+    {
+      "heading": "The countries lookup table",
+      "points": [
+        "Users type a country name, not a two-letter code, so the backend needs a name-to-code mapping. The countries table provides it (e.g. Angola maps to AO).",
+        "Columns: id SERIAL PRIMARY KEY, country_code CHAR(2), country_name VARCHAR(100). 100 characters leaves room for long official names.",
+        "Create it in the world database, then import countries.csv via Import/Export Data with Header on. This CSV already contains ids, so import all three columns.",
+        "The result is a list of every country with its ISO code."
+      ]
+    },
+    {
+      "heading": "Parameterised queries in node-postgres",
+      "points": [
+        "db.query(text, values) takes two arguments: the SQL string and an array of values.",
+        "In the SQL text use numbered placeholders $1, $2, $3. Each is replaced by the array item in that position.",
+        "This lets you pass variables or computed expressions (even 5*6) rather than hard-coded literals.",
+        "(Extra) Because values are sent separately from the SQL, this also prevents SQL injection, so never build the query by concatenating user input into the string."
+      ]
+    },
+    {
+      "heading": "POST /add solution",
+      "points": [
+        "The form in index.ejs posts to /add, so add app.post('/add', ...). body-parser is already set up, so the typed value is available as req.body['country'] (the input's name attribute is country).",
+        "First query: SELECT country_code FROM countries WHERE country_name = $1 with [input].",
+        "result.rows is an array. If it is empty the name had no match; if rows.length !== 0, take rows[0].country_code.",
+        "Second query: INSERT INTO visited_countries (country_code) VALUES ($1) with [countryCode].",
+        "Finish with res.redirect('/') so the home route re-queries and re-renders the map and total.",
+        "The visited-countries query is moved into a helper function (checkVisisted in the reference) returning the array of codes; this is optional but sets up reuse later.",
+        "Debug by console.log of result and result.rows to check the data's shape rather than hunting documentation.",
+        "Matching is exact on country_name, so entries must be spelled as in the table (Germany, Colombia work).",
+        "(Extra) The reference solution does nothing when there is no match, so the request hangs with no response. Part 3 addresses error handling."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Insert a row by hand",
+      "language": "sql",
+      "code": "INSERT INTO world_food (country, rice_production, wheat_production)\nVALUES ('Italy', 1.46, 7.3);"
+    },
+    {
+      "caption": "Create the lookup table",
+      "language": "sql",
+      "code": "CREATE TABLE countries (\n  id SERIAL PRIMARY KEY,\n  country_code CHAR(2),\n  country_name VARCHAR(100)\n);"
+    },
+    {
+      "caption": "Placeholder syntax",
+      "language": "javascript",
+      "code": "db.query(\n  \"INSERT INTO world_food (country, rice_production, wheat_production) VALUES ($1, $2, $3)\",\n  [\"Italy\", 1.46, 7.3]\n);"
+    },
+    {
+      "caption": "Core of solution2.js",
+      "language": "javascript",
+      "code": "async function checkVisited() {\n  const result = await db.query(\"SELECT country_code FROM visited_countries\");\n  return result.rows.map((row) => row.country_code);\n}\n\napp.get(\"/\", async (req, res) => {\n  const countries = await checkVisited();\n  res.render(\"index.ejs\", { countries, total: countries.length });\n});\n\napp.post(\"/add\", async (req, res) => {\n  const input = req.body[\"country\"];\n  const result = await db.query(\n    \"SELECT country_code FROM countries WHERE country_name = $1\",\n    [input]\n  );\n  if (result.rows.length !== 0) {\n    const countryCode = result.rows[0].country_code;\n    await db.query(\n      \"INSERT INTO visited_countries (country_code) VALUES ($1)\",\n      [countryCode]\n    );\n    res.redirect(\"/\");\n  }\n});"
+    }
+  ],
+  "task": {
+    "name": "Travel Tracker Part 2: add a country from the form",
+    "starting_point": "Part 1 app, countries.csv in the lesson resources, and solution2.js for comparison.",
+    "goal": "Typing a country name in the form and pressing Add saves its code to visited_countries and the map shades it with an updated total.",
+    "steps": [
+      "Insert the Italy row into world_food using SQL.",
+      "Create the countries table and import countries.csv with all columns.",
+      "Check index.ejs: the form posts to /add and the input is named country.",
+      "Add an app.post('/add') route that reads req.body.country.",
+      "Look up the code in countries with a $1 placeholder.",
+      "If a row is found, INSERT the code into visited_countries.",
+      "Redirect to / so the map refreshes.",
+      "Test with names like Japan, Germany, Colombia."
+    ],
+    "expected_result": "Each added country turns teal and the total increments.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "app.post(\"/add\", async (req, res) => {\n  const input = req.body[\"country\"];\n  const result = await db.query(\n    \"SELECT country_code FROM countries WHERE country_name = $1\",\n    [input]\n  );\n  if (result.rows.length !== 0) {\n    const countryCode = result.rows[0].country_code;\n    await db.query(\"INSERT INTO visited_countries (country_code) VALUES ($1)\", [countryCode]);\n    res.redirect(\"/\");\n  }\n});"
+    },
+    "reference_repo_path": "Section 33 - PostgreSQL/33.09 - INSERT and ADD data - Travel Tracker Part 2/Travel Tracker/solution2.js"
+  },
+  "pitfalls": [
+    "Column list and value list in a different order or of a different length.",
+    "Forgetting single quotes around string literals.",
+    "Not excluding the id when the CSV has none, or excluding it when the CSV (countries.csv) does have one.",
+    "Inserting a duplicate country violates UNIQUE and throws, which is unhandled here.",
+    "No response when the name is not found.",
+    "Case-sensitive exact matching, so 'germany' fails."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "New lesson 'INSERT and parameterised queries': blurb on adding data safely from a form.",
+      "Tasks: write an INSERT, convert hard-coded values to $1/$2 placeholders, look up a code by name, redirect after insert.",
+      "Starter idea: in-memory fake db.query that logs the SQL text and values array.",
+      "Interactive demo: show text and values side by side, and an injection attempt contrasted between concatenated and parameterised queries."
+    ]
+  }
+}

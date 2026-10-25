@@ -1,0 +1,88 @@
+{
+  "index": 42,
+  "lecture_id": 37350494,
+  "title": "[Project] Motivational Poster Website",
+  "section": "6. CSS Properties",
+  "duration_min": 8,
+  "kind": "project",
+  "summary": "Section project: build a motivational-poster page with a black background, a white-bordered image, an uppercase title in a Google font and a caption, all centred in a poster div. The walkthrough shows the small HTML and CSS solution.",
+  "concepts": [
+    {
+      "heading": "Project overview",
+      "points": [
+        "Target look: a 1990s-style poster. Large image with a border, black page, big title above or below, short paragraph of text, all centred.",
+        "Consolidates the section: colours, borders, fonts, text-align, margins, box model and the div container.",
+        "The starter folder includes an assets/images folder with a sample photo; using your own image is recommended for practice. The task list has six points to satisfy; afterwards personalise freely."
+      ]
+    },
+    {
+      "heading": "Techniques the brief points to",
+      "points": [
+        "Wrap the image, h1 and paragraph in one div so a single box can be centred and styled instead of three separate elements.",
+        "Centre horizontally with a percentage width and margin: width 50% leaves 50% of the screen free, so a left margin of 25% pushes the box to the middle. (The video says 20% in passing; 25% is the arithmetic that actually centres.)",
+        "Set the image width to 100% so it fills the poster div and needs no separate centring.",
+        "Vertical position: a rough margin-top in pixels judged by eye. Proper centring techniques come in later sections.",
+        "Use a Google Font (Libre Baskerville) imitating the poster title typeface; link it in the head (as with the earlier font lesson) and reference it with a serif fallback.",
+        "Image border: 5px solid white.",
+        "Make the title uppercase using text-transform rather than retyping it; the brief asks you to find this property in the docs yourself.",
+        "Use a class (not an id) on the poster div so the style could be reused if the site grows."
+      ]
+    },
+    {
+      "heading": "How the solution works",
+      "points": [
+        "body: black background-color.",
+        ".poster: white text colour, black background, text-align center, width 50%, margin-left 25%, margin-top 100px, font-family Libre Baskerville with serif fallback. Children inherit the colour, centring and font.",
+        ".motivation-img: border 5px solid white; width 100% so it fills the poster.",
+        "h1: text-transform uppercase and a larger font-size (3rem).",
+        "The HTML head contains the stylesheet link plus the Google Fonts link tags. The body contains one div.poster with an img, an h1 and a p."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Solution HTML (body and head essentials)",
+      "language": "html",
+      "code": "<head>\n  <link rel=\"stylesheet\" href=\"./style.css\" />\n  <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\" />\n  <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin />\n  <link href=\"https://fonts.googleapis.com/css2?family=Libre+Baskerville&display=swap\" rel=\"stylesheet\" />\n</head>\n<body>\n  <div class=\"poster\">\n    <img class=\"motivation-img\" src=\"./assets/images/daenerys.jpeg\" alt=\"daenerys with egg\" />\n    <h1>That Special Moment</h1>\n    <p>When you find the perfect avocado at the supermarket</p>\n  </div>\n</body>"
+    }
+  ],
+  "task": {
+    "name": "6.4 Motivation Meme Project",
+    "starting_point": "Starter folder with index.html, style.css, an assets/images folder (sample image) and goal.png. The brief is a six-point TODO list; the finished version is in a solution folder.",
+    "goal": "Reproduce the poster in goal.png with your own image and text, using the properties from this section.",
+    "steps": [
+      "Add the Libre Baskerville Google Font link(s) to the head.",
+      "Put your image in assets/images and reference it with an img element (with alt text).",
+      "Wrap the image, title and paragraph in a div with a class such as poster.",
+      "Set a black page background and white text.",
+      "Give the image a 5px solid white border and width 100%.",
+      "Centre the text, give the div width 50% and margin-left 25% to centre it horizontally, and add a margin-top (about 100px) to move it down.",
+      "Apply the Libre Baskerville font (with serif backup) to the div.",
+      "Make the h1 appear uppercase with text-transform."
+    ],
+    "expected_result": "A centred black poster: white-bordered picture filling a half-width column, an uppercase serif title and a caption beneath, in white.",
+    "solution_code": {
+      "language": "css",
+      "code": "body {\n  background-color: black;\n}\n\n.poster {\n  color: white;\n  background-color: black;\n  text-align: center;\n  width: 50%;\n  margin-left: 25%;\n  margin-top: 100px;\n  font-family: \"Libre Baskerville\", serif;\n}\n\n.motivation-img {\n  border: 5px solid white;\n  width: 100%;\n}\n\nh1 {\n  text-transform: uppercase;\n  font-size: 3rem;\n}"
+    },
+    "reference_repo_path": "Section 06 - CSS Properties/06.04 - Motivation Meme Project/solution/solution.html"
+  },
+  "pitfalls": [
+    "Forgetting to link the Google Font in the head, so the serif fallback shows.",
+    "Using 20% instead of 25% left margin, which leaves the poster off-centre.",
+    "Typing the title in capitals instead of using text-transform.",
+    "Not wrapping the elements in a div, then having to centre three elements separately.",
+    "Reference repo uses a different sample picture and caption plus an author footer; the footer is not part of the brief."
+  ],
+  "playground": {
+    "match": "s06-meme (lesson 6.4, data/s06.js)",
+    "coverage": "Covers black background, centred content, white-bordered image, uppercase h1 via text-transform, and a smaller caption. Notes mention letter-spacing and text-shadow.",
+    "gaps_and_ideas": [
+      "Playground diverges from the course: no wrapper div/class, centres with text-align and padding, uses a fixed 500px image width and an h2 caption instead of a p.",
+      "Add tasks matching the brief: wrap content in div.poster, width 50% plus margin-left 25%, margin-top 100px, image width 100%, 5px white border.",
+      "Add Libre Baskerville: starter should require the Google Fonts link and a serif fallback.",
+      "Add an explore demo with width and margin-left percentage sliders showing that 50% width needs 25% margin to centre, and a hint that margin: 0 auto is the cleaner method coming later.",
+      "Let students supply their own image URL and text to personalise."
+    ]
+  }
+}

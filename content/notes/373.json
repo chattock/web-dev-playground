@@ -1,0 +1,26 @@
+{
+  "index": 373,
+  "lecture_id": 12409976,
+  "title": "Vote for the Next Module!",
+  "section": "44. Next Steps",
+  "duration_min": 0,
+  "kind": "admin",
+  "summary": "Short admin lecture inviting students to vote on which topic module the instructor should add next. The lecture page shows no readable body text in the player, so there is no technical content.",
+  "concepts": [
+    {
+      "heading": "Admin takeaway",
+      "points": [
+        "Students are asked to vote on future course content; nothing to code or practise.",
+        "(Extra) The article body did not render when read, so any vote link or option list was not captured; check the lecture page directly if you want to vote."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": []
+  }
+}

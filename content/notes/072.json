@@ -1,0 +1,97 @@
+{
+  "index": 72,
+  "lecture_id": 19655692,
+  "title": "User Experience (UX) Design",
+  "section": "12. Web Design School - Create a Website that People Love",
+  "duration_min": 14,
+  "kind": "theory",
+  "summary": "UX is the invisible quality of a site that lets people do what they want without effort. Covers five UX principles (simplicity, consistency, reading patterns, all-platform design, testing) and a tour of dark patterns to avoid.",
+  "concepts": [
+    {
+      "heading": "UX versus visual design",
+      "points": [
+        "Visual design imposes an aesthetic; good UX is nearly invisible because everything just feels easy.",
+        "A campus-path story illustrates the idea: wait to see where people actually walk, then pave those routes. Design around observed behaviour, not assumptions."
+      ]
+    },
+    {
+      "heading": "1. Simplicity",
+      "points": [
+        "Prefer the simpler option whenever you choose between simple and complex.",
+        "Contrast: a very dense news portal packed with links overwhelms the reader, while a magazine-style news site breaks content into varied chunks (text, images, video, quotes) with a consistent colour scheme and typography."
+      ]
+    },
+    {
+      "heading": "2. Consistency",
+      "points": [
+        "Keep both look and behaviour consistent across the site. Example: a telecom company's pages each had a differently styled navigation bar with moved buttons and a relocating search box, forcing users to relearn the site on each section.",
+        "Inconsistency hurts most for less technical or older users."
+      ]
+    },
+    {
+      "heading": "3. Reading patterns",
+      "points": [
+        "F-pattern: the eye scans across the top, then a shorter scan lower down, then moves down the left edge. Put key content, bullets, icons and buttons along the left, with the logo at top-left. Suited to text-heavy pages.",
+        "Z-pattern: the eye zigzags from top-left to top-right, diagonally down, then across the bottom. Suited to sparser pages with more media or fast browsing; a social network landing page is the example.",
+        "Place content where people naturally look."
+      ]
+    },
+    {
+      "heading": "4. All-platform design",
+      "points": [
+        "Sites must work on phones and desktops: mobile responsive layouts that rearrange rather than just shrinking.",
+        "A desktop layout squeezed onto a phone gives tiny links that are hard to tap. The reverse also fails: a narrow mobile-style layout on a wide monitor leaves vast unused space.",
+        "Avoid stacking so many banners, cookie notices and warnings on mobile that the actual content area is tiny. Equally, do not scale a single image or text block to fill an enormous scroll.",
+        "(Extra) In CSS this is done with the viewport meta tag, media queries, flexible units and max-width containers."
+      ]
+    },
+    {
+      "heading": "5. Test with real people",
+      "points": [
+        "Get feedback from professional testers if possible, otherwise friends and family. Observe what confuses them and iterate."
+      ]
+    },
+    {
+      "heading": "Dark patterns",
+      "points": [
+        "Dark patterns use design psychology to push users toward actions that benefit the company rather than the user. They count as bad UX.",
+        "Misleading hierarchy: highlighting the paid express delivery button in a bright colour so people click it instead of the free option they wanted.",
+        "Disguised ads: a one-pixel line in a mobile ad that looks like a hair on the screen so that swiping at it registers as a click.",
+        "Hidden opt-outs: an airline checkout where the 'no travel insurance' choice is buried in a long alphabetical country-style dropdown rather than shown as an obvious option.",
+        "Confusing double-negative checkbox wording so users cannot tell what ticking the box will do.",
+        "Good design helps people do what they want to do; the packaging analogy is a sandwich that looks full-size but is mostly air."
+      ]
+    },
+    {
+      "heading": "Lead-in to the project",
+      "points": [
+        "The next lecture applies colour, typography, UI and UX to designing a hotel website from scratch."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "(Extra) Basic responsive setup in HTML/CSS",
+      "language": "css",
+      "code": "/* HTML head must contain: <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> */\n.container { max-width: 1100px; margin: 0 auto; padding: 0 1rem; }\n.cards { display: flex; flex-wrap: wrap; gap: 1rem; }\n@media (max-width: 600px) {\n  nav ul { flex-direction: column; }\n  .cards > * { flex: 1 1 100%; }\n}"
+    }
+  ],
+  "task": null,
+  "pitfalls": [
+    "Cramming dense link lists or content onto one page.",
+    "Navigation that changes style or behaviour between sections.",
+    "Designing only for desktop, or only for mobile.",
+    "Stacking intrusive banners on mobile.",
+    "Skipping user testing.",
+    "Using dark patterns such as hidden opt-outs and misleading button emphasis."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet (section 12 has no playground file).",
+    "gaps_and_ideas": [
+      "New lesson 'UX basics': blurb on simplicity, consistency and responsiveness. Tasks: 1) make navigation identical on two pages; 2) simplify a cluttered page; 3) add a viewport meta tag and a media query so cards stack on mobile; 4) lay out a landing page along the F or Z pattern; 5) rewrite a dark-pattern checkout so the opt-out is obvious.",
+      "Starter code idea: a two-page site with inconsistent navbars and a fixed-width desktop-only layout.",
+      "Interactive demo idea: toggle between desktop and phone widths on the same page, with an F/Z-pattern overlay and a dark-pattern spotting quiz."
+    ]
+  }
+}

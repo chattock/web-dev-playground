@@ -1,0 +1,40 @@
+{
+  "index": 249,
+  "lecture_id": 39497140,
+  "title": "How to Install PostgreSQL and pgAdmin",
+  "section": "33. PostgreSQL",
+  "duration_min": 1,
+  "kind": "setup",
+  "summary": "Step-by-step install of the Postgres server together with pgAdmin on Windows or macOS using the EnterpriseDB installer.",
+  "concepts": [
+    {
+      "heading": "Installation steps",
+      "points": [
+        "Download the installer for your OS (separate Windows and Mac links are given in the lesson) and double-click it.",
+        "Allow the installer to run: choose Yes on the Windows permission prompt; on a Mac choose Open and enter your Mac password if asked.",
+        "Click Next through the wizard until the component list, and make sure everything is ticked, pgAdmin in particular (it is the GUI used in the following lessons).",
+        "At the password screen the superuser name is postgres. Pick a password and write it down: it goes into the db connection config in Node later.",
+        "Leave all other options at their defaults, click Next until done, then Finish.",
+        "If Stack Builder opens after install, close it; the course does not use it."
+      ]
+    },
+    {
+      "heading": "Defaults worth remembering",
+      "points": [
+        "(Extra) The default port is 5432 and the host is localhost; both go into the pg client config along with user postgres and your password.",
+        "(Extra) The notes here are based on the lesson's text as mirrored in the reference repo, because the article body opens in a separate window and could not be read inline."
+      ]
+    }
+  ],
+  "code_examples": [],
+  "task": null,
+  "pitfalls": [
+    "Forgetting the superuser password set during install; it cannot be skipped and is needed for pgAdmin and Node.",
+    "Leaving pgAdmin unticked in the component list, so no GUI is installed."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": []
+  }
+}

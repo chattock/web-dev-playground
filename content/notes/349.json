@@ -1,0 +1,77 @@
+{
+  "index": 349,
+  "lecture_id": 31673610,
+  "title": "Download and Configure the Skeleton Project",
+  "section": "41. Create Your Own Crypto Token",
+  "duration_min": 6,
+  "kind": "setup",
+  "summary": "Download the pre-built React frontend plus an empty Motoko backend, install dependencies, deploy the empty canister to the local replica and run the dev server so the DSurv token UI (Faucet, Check Balance, Transfer) appears on localhost:8080.",
+  "concepts": [
+    {
+      "heading": "What the skeleton contains",
+      "points": [
+        "A React frontend with the HTML/CSS and four components already written: Header, Faucet, Balance and Transfer, composed in App.jsx. Only blockchain logic and Motoko are left for the learner.",
+        "A blank Motoko backend: main.mo has had all starter code removed.",
+        "Pre-configured React tooling: a tsconfig file, adjusted bundler config and extra dependencies in package.json (Dfinity agent/auth packages, React, Material UI icons).",
+        "The visual design is modelled on the retro, old-Macintosh look of Curve Finance (an automated market maker used to swap stablecoins); the demo site is branded DSurv."
+      ]
+    },
+    {
+      "heading": "Run sequence",
+      "points": [
+        "Terminal 1: dfx start launches the local simulated Internet Computer replica.",
+        "Terminal 2: npm install fetches everything listed under dependencies and devDependencies in package.json into node_modules (over a thousand packages). Deprecation warnings (for example the Material UI icons package renamed to MUI) are harmless.",
+        "Terminal 3: dfx deploy creates the wallet canister, builds the backend canister and installs it on the local replica. It also generates the dist and declarations folders, which the frontend needs to talk to the backend. It must run before npm start even though main.mo is empty.",
+        "Then npm start serves the frontend; open localhost:8080 (the URL is printed in the terminal).",
+        "Expected page: header, a Faucet section (claim free tokens), a Check Balance section, and a Transfer section. The browser console should show no errors."
+      ]
+    },
+    {
+      "heading": "Where the next lessons go",
+      "points": [
+        "Next lesson builds the backend ledger and balance check in main.mo, then connects it to the Balance component."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Setup commands, each in its own terminal",
+      "language": "bash",
+      "code": "dfx start        # local replica (leave running)\nnpm install      # install frontend deps\ndfx deploy       # build + install canisters, generates declarations\nnpm start        # serve the frontend, open localhost:8080"
+    },
+    {
+      "caption": "App.jsx composition in the skeleton (from reference repo)",
+      "language": "jsx",
+      "code": "function App() {\n  return (\n    <div id=\"screen\">\n      <Header />\n      <Faucet />\n      <Balance />\n      <Transfer />\n    </div>\n  );\n}\nexport default App;"
+    }
+  ],
+  "task": {
+    "name": "Get the token skeleton running locally",
+    "starting_point": "token.zip from the lesson resources.",
+    "goal": "See the DSurv token frontend on localhost:8080 with no console errors.",
+    "steps": [
+      "Download token.zip, unzip it and open the folder in VS Code.",
+      "Run dfx start in one terminal.",
+      "In a second terminal run npm install.",
+      "In a third terminal run dfx deploy and wait for the deployed canisters message.",
+      "Run npm start and open localhost:8080.",
+      "Check that Faucet, Check Balance and Transfer sections render and the console is clean."
+    ],
+    "expected_result": "A retro-styled page with Faucet, Balance and Transfer panels (non-functional yet).",
+    "solution_code": null,
+    "reference_repo_path": "Section 41 - Create Your Own Crypto Token/41.02 Download and Configure the Skeleton Project/DANG"
+  },
+  "pitfalls": [
+    "Skipping dfx deploy: the declarations folder will not exist and the frontend cannot import the backend.",
+    "Stopping dfx start while working: deploy and the page then fail to reach the replica.",
+    "(Extra) The reference repo is a newer dfx scaffold: dfx.json uses a Vite workspace for DANG_frontend (with vite.config.js) rather than the webpack setup in the video, and the project is named DANG. Commands and the port may differ slightly (Vite typically uses 3000/5173 or the port printed by npm start)."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "Proposed lesson 'Local ICP project setup': blurb on replica + canisters + frontend dev server. Tasks: start the replica, install deps, deploy, start the frontend, identify which generated folders appeared (dist, declarations).",
+      "Interactive demo idea: a clickable terminal-order checklist that shows which process (replica, deploy, dev server) is running and what breaks if one is skipped."
+    ]
+  }
+}

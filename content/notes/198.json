@@ -1,0 +1,110 @@
+{
+  "index": 198,
+  "lecture_id": 12384340,
+  "title": "The NPM Package Manager and Installing External Node Modules",
+  "section": "23. Node.js",
+  "duration_min": 16,
+  "kind": "concept+exercise",
+  "summary": "Explains what npm is, how to initialise a project with npm init to get package.json, how to install and use a third-party package (sillyname), and how to switch a project to ES modules with \"type\": \"module\". The exercise is to install the superheroes package and print a random hero name.",
+  "concepts": [
+    {
+      "heading": "What npm is",
+      "points": [
+        "npm (Node Package Manager) is a public, open-source registry of reusable modules written by other developers, run by GitHub. It is shared code you pull in instead of writing everything yourself.",
+        "Native modules are the built-in toolbox; npm packages are the community library of extra tools you add when a task needs one.",
+        "npm is installed together with Node, so no separate install is needed.",
+        "Packages are searched on npmjs.com. Each package page shows the install command and usage examples."
+      ]
+    },
+    {
+      "heading": "Initialising a project with npm init",
+      "points": [
+        "cd into the project folder first, then run npm init. It starts an interactive wizard that produces package.json.",
+        "Prompts in order: package name (lecture uses learning-npm), version (default 1.0.0), description, entry point (default index.js), test command, git repository, keywords, author, license (default ISC). Pressing Enter keeps defaults/leaves blank.",
+        "At the end the wizard prints the JSON it will write and asks for confirmation; answer y.",
+        "package.json is a plain JSON file of key/value pairs describing the project. On its own it is only configuration; it becomes useful once packages are installed.",
+        "(Extra) npm init -y accepts every default without prompting."
+      ]
+    },
+    {
+      "heading": "Installing and using a package",
+      "points": [
+        "Install with npm install <package-name>. The shorthand npm i does the same. Several packages can be installed at once by listing names separated by spaces.",
+        "Installing adds a dependencies section to package.json recording the package name and version range, and creates a node_modules folder holding the downloaded package code (and its own dependencies).",
+        "(Extra) Also generated: package-lock.json, which pins exact resolved versions. node_modules is normally excluded from git and can be rebuilt with npm install.",
+        "Usage steps: read the package's npm page, import it, call the function it exposes. For sillyname the exported function generates a random funny name.",
+        "The lecture first uses the older CommonJS pattern, var generateName = require(\"sillyname\"), then calls generateName() and logs the result in a template literal (backticks with ${} interpolation).",
+        "Run the file with node index.js to see a different silly name each time."
+      ]
+    },
+    {
+      "heading": "CommonJS vs ES modules",
+      "points": [
+        "CJS (CommonJS) is the original Node system based on require(). ESM (ECMAScript modules) uses import/from and is the standard shared with front-end JavaScript. Node has supported ESM since about version 12.",
+        "To enable ESM in a project, add a top-level key in package.json: \"type\": \"module\". The default value is commonjs. The lecture places it just under \"main\".",
+        "ESM syntax: import name from \"package\". Typing the module path first (import {  } from \"pkg\") lets VS Code autocomplete the exported names; typing the name first gives no suggestions.",
+        "Once import is used, the old require line can be deleted."
+      ]
+    },
+    {
+      "heading": "(Extra) Reference repo notes",
+      "points": [
+        "(Extra) The reference script.js uses the current named import (import { randomSuperhero } from 'superheroes') with superheroes ^4.0.0 in package.json, while its solution.js still uses the old default import and superheroes.random(), which throws with v4.",
+        "(Extra) Its solution.js imports \"sillyName\" with a capital N; the npm name is all lowercase, sillyname."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Commands for the lecture",
+      "language": "bash",
+      "code": "cd path/to/project\nnpm init\nnpm i sillyname\nnode index.js"
+    },
+    {
+      "caption": "package.json after init and install, with ESM enabled",
+      "language": "json",
+      "code": "{\n  \"name\": \"learning-npm\",\n  \"version\": \"1.0.0\",\n  \"description\": \"I'm learning about npm\",\n  \"main\": \"index.js\",\n  \"type\": \"module\",\n  \"scripts\": {\n    \"test\": \"echo \\\"Error: no test specified\\\" && exit 1\"\n  },\n  \"license\": \"ISC\",\n  \"dependencies\": {\n    \"sillyname\": \"^0.1.0\"\n  }\n}"
+    },
+    {
+      "caption": "sillyname with ES module import",
+      "language": "javascript",
+      "code": "import generateName from \"sillyname\";\n\nvar sillyName = generateName();\nconsole.log(`My name is ${sillyName}.`);"
+    }
+  ],
+  "task": {
+    "name": "Superhero name generator",
+    "starting_point": "The same npm project and index.js used for sillyname, with package.json already set to \"type\": \"module\".",
+    "goal": "Use the superheroes package to print a random hero name in the console.",
+    "steps": [
+      "Find the superheroes package on npmjs.com (a link is in the course resources) and read its usage section.",
+      "In the project folder run npm i superheroes and confirm it appears under dependencies in package.json.",
+      "Comment out the sillyname code in index.js (or keep it; both can run in the same file).",
+      "Import the package at the top of index.js. With the current version this is a named import: import { randomSuperhero } from \"superheroes\"; (the package name string must match exactly).",
+      "Generate a name with const name = randomSuperhero(); (the video's older version used superheroes.random() on a default import).",
+      "console.log a sentence such as I am <name>! using a template literal: console.log(`I am ${name}!`).",
+      "Run node index.js; each run should print a different hero."
+    ],
+    "expected_result": "Console output like: I am Piledriver! (different each run).",
+    "solution_code": {
+      "language": "javascript",
+      "code": "// index.js (package.json has \"type\": \"module\"; superheroes 4.x installed)\nimport { randomSuperhero } from \"superheroes\";\n\nconst name = randomSuperhero();\nconsole.log(`I am ${name}!`);\n\n// Older API shown in the video (superheroes v3 default export).\n// Does NOT work with v4, so keep it commented out:\n// import superheroes from \"superheroes\";\n// const name = superheroes.random();\n// console.log(`I am ${name}!`);"
+    },
+    "reference_repo_path": "Section 23 - Node.js/23.03 - The NPM Package Manager and Installing External Node Modules/solution.js"
+  },
+  "pitfalls": [
+    "SyntaxError: Cannot use import statement outside a module means \"type\": \"module\" is missing from package.json.",
+    "The package name in the import string must match the npm name exactly, including case (the reference solution has an import of \"sillyName\" with a capital N that would fail on case-sensitive systems).",
+    "The latest superheroes version uses a named export, so superheroes.random() fails; use randomSuperhero().",
+    "Run npm commands from the project folder or package.json lands in the wrong place."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "Proposed lesson 'npm and packages' (blurb: install a package, read package.json, switch to ES modules). Tasks: 1) run npm init -y, 2) npm i a small package, 3) set type module and import it, 4) delete node_modules and restore with npm i, 5) swap require for import.",
+      "Starter idea: empty package.json plus an index.js with a commented-out require line.",
+      "Interactive demo idea: a simulated terminal that shows package.json and node_modules growing as commands are typed, with a toggle showing the CJS vs ESM syntax for the same call.",
+      "Teach the named-import form for superheroes (import { randomSuperhero } from \"superheroes\") and include a check task where the learner fixes a broken default import, since the reference repo's solution.js still uses the outdated default import."
+    ]
+  }
+}

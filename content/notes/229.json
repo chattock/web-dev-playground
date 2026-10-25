@@ -1,0 +1,121 @@
+{
+  "index": 229,
+  "lecture_id": 38912024,
+  "title": "API Authentication",
+  "section": "28. Application Programming Interfaces (APIs)",
+  "duration_min": 38,
+  "kind": "concept+exercise",
+  "summary": "Covers four levels of API access control (none, Basic, API key, Bearer token), how each is sent in a request, and the authentication vs authorization distinction. Learners first try each type in Postman against the Secrets API, then implement all four server-side with Axios.",
+  "concepts": [
+    {
+      "heading": "Why authenticate",
+      "points": [
+        "If data is valuable, an API should check who is asking before releasing it. Failing that check gives a 401 Unauthorized response.",
+        "Four levels in increasing security: no auth, Basic auth, API key, token-based (OAuth style).",
+        "Authentication = proving who you are (login/registration). Authorization = being permitted to use the service, e.g. by holding an API key that may or may not be tied to a registered user."
+      ]
+    },
+    {
+      "heading": "Level 0: no authentication",
+      "points": [
+        "Easy to adopt, inclusive; typical for public read-only data (the Bored API).",
+        "Abuse is limited with rate limiting, counting requests per IP per time window (the Bored API allows 100 per 15 minutes). That caps traffic but does not identify users."
+      ]
+    },
+    {
+      "heading": "Level 1: Basic authentication",
+      "points": [
+        "Client supplies a username and password it registered with the provider.",
+        "Transport: the pair is joined as username:password, Base64-encoded, and sent in the Authorization header as the word Basic, a space, then the encoded string.",
+        "Base64 re-encodes the text's bytes using a 64-character alphabet; the output is slightly longer than the input (e.g. 3 chars become 4). It is an encoding, not encryption.",
+        "Demonstration: copy the header Postman generates and decode it on a Base64 decoder site to recover the plain username:password. That shows the weakness; it is acceptable only because providers serve over HTTPS, which encrypts traffic in transit.",
+        "Postman builds this header for you when Authorization type is Basic Auth (check the Headers tab). Axios does the same via its auth option."
+      ]
+    },
+    {
+      "heading": "Level 2: API key",
+      "points": [
+        "Provider issues a key (in the Secrets API, a GET to the generate-api-key endpoint). The key goes with every request.",
+        "Placement depends on the API: sometimes a header, sometimes a query parameter. Read the docs. Here it is a query parameter named apiKey (capital K).",
+        "Benefits: provider can track and bill usage per key (e.g. Google Maps APIs bill by request count), cap usage, revoke and regenerate keys. A leaked key does not expose the user's password or payment details.",
+        "Secrets API /filter takes score (minimum embarrassment score, 1-10) plus apiKey."
+      ]
+    },
+    {
+      "heading": "Level 3: token-based (Bearer) auth and OAuth",
+      "points": [
+        "User logs in once with username and password, the server issues a token, and the token alone is used for later calls. The API (and any third-party app) never handles the password afterwards.",
+        "OAuth 2.0 is the industry standard: a third-party app (e.g. weather app reading a user's calendar) sends the user to 'sign in with Google'; Google issues a token the app uses to act for that user within granted permissions.",
+        "In the Secrets API: POST username and password (form-urlencoded) to get-auth-token. Calling again returns the already-issued token.",
+        "Send it as header Authorization: Bearer <token> (capital B, one space). Used for GET /secrets/{id}.",
+        "Postman: Authorization type Bearer Token generates that header."
+      ]
+    },
+    {
+      "heading": "Pagination (side note)",
+      "points": [
+        "GET /all returns secrets 10 per page and accepts a page query parameter, so huge result sets are sent in slices."
+      ]
+    },
+    {
+      "heading": "Postman walk-through (Secrets API at secrets-api.appbrewery.com)",
+      "points": [
+        "Register: POST /register, body type x-www-form-urlencoded with keys username and password. Status 200 means success; keep the credentials.",
+        "Basic: GET /all (try page=2), Authorization tab type Basic Auth with those credentials.",
+        "API key: GET generate-api-key, then GET /filter?score=7 with apiKey as a query param (Postman Authorization tab 'API Key', add to Query Params).",
+        "Bearer: POST get-auth-token with credentials, then GET /secrets/2 with Bearer Token auth."
+      ]
+    },
+    {
+      "heading": "Code with Axios",
+      "points": [
+        "No auth: await axios.get(API_URL + \"/random\"), then pass JSON.stringify(result.data) to the EJS view as content (just to display text).",
+        "Basic: second argument { auth: { username, password } }; Axios Base64-encodes and sets the header.",
+        "API key: second argument { params: { score: 5, apiKey } }, or write the query string into the URL. Both are valid.",
+        "Bearer: a config object { headers: { Authorization: `Bearer ${token}` } } as second argument.",
+        "Each route is wrapped in try/catch; on failure the reference sends status 404 with error.message."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "All four auth styles with Axios (credentials are placeholders)",
+      "language": "javascript",
+      "code": "const API_URL = \"https://secrets-api.appbrewery.com\";\nconst yourUsername = \"<username>\";\nconst yourPassword = \"<password>\";\nconst yourAPIKey = \"<api key>\";\nconst yourBearerToken = \"<token>\";\n\napp.get(\"/noAuth\", async (req, res) => {\n  try {\n    const result = await axios.get(API_URL + \"/random\");\n    res.render(\"index.ejs\", { content: JSON.stringify(result.data) });\n  } catch (error) { res.status(404).send(error.message); }\n});\n\napp.get(\"/basicAuth\", async (req, res) => {\n  try {\n    const result = await axios.get(API_URL + \"/all?page=2\", {\n      auth: { username: yourUsername, password: yourPassword },\n    });\n    res.render(\"index.ejs\", { content: JSON.stringify(result.data) });\n  } catch (error) { res.status(404).send(error.message); }\n});\n\napp.get(\"/apiKey\", async (req, res) => {\n  try {\n    const result = await axios.get(API_URL + \"/filter\", {\n      params: { score: 5, apiKey: yourAPIKey },\n    });\n    res.render(\"index.ejs\", { content: JSON.stringify(result.data) });\n  } catch (error) { res.status(404).send(error.message); }\n});\n\nconst config = { headers: { Authorization: `Bearer ${yourBearerToken}` } };\n\napp.get(\"/bearerToken\", async (req, res) => {\n  try {\n    const result = await axios.get(API_URL + \"/secrets/2\", config);\n    res.render(\"index.ejs\", { content: JSON.stringify(result.data) });\n  } catch (error) { res.status(404).send(error.message); }\n});"
+    }
+  ],
+  "task": {
+    "name": "API Auth with Axios",
+    "starting_point": "Folder with index.js (TODO 1-5), solution.js, views/index.ejs (four buttons and a response area); deps axios, express, ejs. First do the Postman steps to get your own username/password, API key and token.",
+    "goal": "Four buttons on localhost:3000 each call a different Secrets API endpoint using a different auth style and show the JSON in the page.",
+    "steps": [
+      "npm i, then put your own username, password, API key and bearer token in the constants in solution.js and run nodemon solution.js to see the target behaviour.",
+      "TODO 1: fill in the four constants in index.js.",
+      "TODO 2 (/noAuth): axios.get the /random endpoint, render index.ejs with content = JSON.stringify(result.data).",
+      "TODO 3 (/basicAuth): GET /all for page 2 using the auth option.",
+      "TODO 4 (/apiKey): GET /filter for embarrassment score 5 or more, passing apiKey as a query parameter.",
+      "TODO 5 (/bearerToken): GET /secrets/{id} with an Authorization: Bearer header (the lecture's reference uses id 2 in the snippet; the starter text mentions 42, so check the endpoint output)."
+    ],
+    "expected_result": "Clicking each button prints a JSON string in the response box: a random secret, page 2 of all secrets, secrets with score >= 5, and a single secret by id.",
+    "solution_code": null,
+    "reference_repo_path": "Section 28 - Aplication Programming Interfaces (APIs)/28.05 - API Authentication and Authorization"
+  },
+  "pitfalls": [
+    "Base64 is reversible by anyone; Basic auth over plain HTTP exposes the password.",
+    "Bearer header format must be exactly 'Bearer ' plus the token; a missing space or lowercase scheme can fail.",
+    "API key placement varies: query param vs header. Wrong location gives 401/403.",
+    "Never commit real usernames, passwords, keys or tokens. The reference repo hard-codes the author's real values in index.js and solution.js; those are omitted here. (Extra) Load them from a .env file with dotenv instead.",
+    "Reference quirk: its index.js fetches /secrets/2 while the starter comment asks for another id; and error handling just returns the Axios message with a 404 status regardless of the real cause.",
+    "Reusing /get-auth-token returns the same token, so a 'new' token not appearing is normal."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "New lesson 'API authentication' with blurb: prove who you are to an API via Basic, API key or Bearer token.",
+      "Tasks: (1) Base64-encode 'user:pass' with btoa and build a Basic header by hand; (2) send an API key as query param vs header; (3) add a Bearer header via an axios config object; (4) read a 401 response and display a message; (5) move secrets into environment variables.",
+      "Starter code: an Express file with four empty routes and placeholder constants.",
+      "Interactive demo: a mock API panel where the learner picks an auth type, sees the exact request headers/query that would be sent, a live Base64 encode/decode box, and the mock server's 200 or 401 response."
+    ]
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "index": 152,
+  "lecture_id": 12384192,
+  "title": "Selecting Elements with jQuery",
+  "section": "19. jQuery",
+  "duration_min": 2,
+  "kind": "concept",
+  "summary": "Shows that $() takes any CSS selector and replaces both querySelector and querySelectorAll, returning a jQuery object whether one or many elements match.",
+  "concepts": [
+    {
+      "heading": "Selecting with $()",
+      "points": [
+        "$(\"h1\") replaces document.querySelector(\"h1\"); the dollar sign stands for jQuery.",
+        "The argument is a standard CSS selector string: type selectors (\"h1\"), class selectors (\".title\"), id selectors (\"#header\"), combinators such as descendant (\"#header h1\") and compound selectors (\"h1.title\"). Selector syntax is unchanged from CSS.",
+        "CSS selectors were chosen because they are flexible and can be as specific as needed."
+      ]
+    },
+    {
+      "heading": "One call for one or many",
+      "points": [
+        "In vanilla JS you must choose querySelector (first match) or querySelectorAll (all matches). jQuery has a single form, so $(\"button\") grabs all buttons.",
+        "Methods called on the result apply to every matched element, so no explicit loop is needed.",
+        "(Extra) The returned value is a jQuery object (array-like wrapper), not a raw DOM node; logging it in the console shows a list of matches. Use $(\"h1\")[0] or .get(0) to reach the raw element."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Selecting in jQuery and logging the results (matches the reference repo)",
+      "language": "javascript",
+      "code": "console.log($(\"h1\"));\nconsole.log($(\"button\"));   // all five buttons in one object"
+    },
+    {
+      "caption": "Selector variety",
+      "language": "javascript",
+      "code": "$(\"h1.title\");\n$(\"#header h1\");\n$(\".title\");"
+    }
+  ],
+  "task": null,
+  "pitfalls": [
+    "The result is a jQuery object, not a DOM element: DOM properties like .style or .innerText are not available directly on it; use jQuery methods instead.",
+    "Selecting is silent when nothing matches: you get an empty object rather than an error."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "A jQuery selectors lesson: starter HTML with an h1, class and id elements and five buttons. Tasks: log $() with a tag, class and id selector; compare .length to querySelectorAll; find which of the console objects is a jQuery object. Demo: type a selector and highlight the matches live."
+    ]
+  }
+}

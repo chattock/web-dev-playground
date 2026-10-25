@@ -1,0 +1,98 @@
+{
+  "index": 365,
+  "lecture_id": 31673786,
+  "title": "Styling the Listed NFTs",
+  "section": "42. Minting NFTs and Building an NFT Marketplace like OpenSea",
+  "duration_min": 11,
+  "kind": "project",
+  "summary": "Gives visual feedback to the listing flow in Item.jsx: a loader during listing, hiding the sell controls afterwards, showing OpenD as owner, blurring the image and tagging the card as Listed. Adds an isListed query to the backend so the listed look survives a page refresh.",
+  "concepts": [
+    {
+      "heading": "Loader while listing",
+      "points": [
+        "Copy the loader markup (the lds-ellipsis div with four empty child divs) from the README or from Minter.jsx and place it right after the img in Item.jsx.",
+        "Add state const [loaderHidden, setLoaderHidden] = useState(true) and bind it to the loader's hidden attribute, so it is invisible initially.",
+        "In sellItem call setLoaderHidden(false) at the start. After the transfer result equals \"Success\", call setLoaderHidden(true)."
+      ]
+    },
+    {
+      "heading": "Cleaning up the card after the sale is listed",
+      "points": [
+        "Inside the success branch call setButton() and setPriceInput() with no argument. This resets both to undefined, so React renders nothing for them.",
+        "Replace the owner text with the literal \"OpenD\" using setOwner, because the real owner value is now the marketplace canister's Principal, which tells the user nothing.",
+        "(Extra) Items already transferred to OpenD cannot be sold again by the user since they no longer own them; the lecture defers handling this."
+      ]
+    },
+    {
+      "heading": "Blur effect with inline style",
+      "points": [
+        "State blur starts undefined and is passed to the image as style={blur}. React inline styles take an object.",
+        "At the start of sellItem call setBlur({ filter: \"blur(4px)\" }). The CSS filter property with blur(4px) softens the image while keeping it recognisable.",
+        "The blur is deliberately never removed after success, signalling that the NFT is listed and no longer interactive."
+      ]
+    },
+    {
+      "heading": "Persisting the listed look: isListed query",
+      "points": [
+        "On refresh the component re-runs loadNFT, which knows nothing about the listing, so the backend must be asked.",
+        "Add public query func isListed(id : Principal) : async Bool to main.mo. It checks whether mapOfListings.get(id) equals null: null gives false, otherwise true.",
+        "In loadNFT, before setting the button, call const nftIsListed = await OPEND_backend.isListed(props.id). If true: setOwner(\"OpenD\") and setBlur(...). If false: setButton with the Sell button. Since button state starts empty, listed items never get a Sell button.",
+        "After editing the backend, redeploy all canisters and check that the generated .did interface contains isListed. Minted NFTs vanish on redeploy."
+      ]
+    },
+    {
+      "heading": "Listed label",
+      "points": [
+        "A span with class purple-text sits inside the name heading. Add state sellStatus initialised to an empty string and render it as {sellStatus} inside the span; start the span content with a space so it separates from the name.",
+        "Set sellStatus to \"Listed\" both at the end of a successful sale and in loadNFT when nftIsListed is true."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "main.mo: isListed",
+      "language": "motoko",
+      "code": "public query func isListed(id : Principal) : async Bool {\n  if (mapOfListings.get(id) == null) {\n    return false;\n  } else {\n    return true;\n  };\n};"
+    },
+    {
+      "caption": "Item.jsx: sellItem with loader, blur and cleanup (reference repo)",
+      "language": "jsx",
+      "code": "async function sellItem() {\n  setBlur({ filter: \"blur(4px)\" });\n  setLoaderHidden(false);\n  const listingResult = await OPEND_backend.listItem(props.id, Number(price));\n  if (listingResult == \"Success\") {\n    const openDId = await OPEND_backend.getOpenDCanisterID();\n    const transferResult = await NFTActor.transferOwnership(openDId);\n    if (transferResult == \"Success\") {\n      setLoaderHidden(true);\n      setButton();\n      setPriceInput();\n      setOwner(\"OpenD\");\n      setSellStatus(\"Listed\");\n    }\n  }\n}"
+    },
+    {
+      "caption": "Item.jsx: check listing status on load",
+      "language": "jsx",
+      "code": "const nftIsListed = await OPEND_backend.isListed(props.id);\nif (nftIsListed) {\n  setOwner(\"OpenD\");\n  setBlur({ filter: \"blur(4px)\" });\n  setSellStatus(\"Listed\");\n} else {\n  setButton(<Button handleClick={handleSell} text={\"Sell\"} />);\n}"
+    }
+  ],
+  "task": {
+    "name": "Style and persist the listed state of an NFT card",
+    "starting_point": "Item.jsx from the previous lesson, where selling works but the UI does not change.",
+    "goal": "After selling, the card shows a loader then a blurred image, owner OpenD, a Listed tag and no controls, and the same appearance survives a page refresh.",
+    "steps": [
+      "Paste the loader markup under the image and bind hidden to loaderHidden state (true initially).",
+      "In sellItem show the loader first, and after a successful transfer hide it, clear button and priceInput.",
+      "Set the owner text to OpenD after the transfer.",
+      "Add blur state and apply it as the image's style; set filter blur(4px) at the start of sellItem.",
+      "Add isListed to main.mo, redeploy, and call it in loadNFT to decide between listed styling and the Sell button.",
+      "Add sellStatus state and render it in the purple-text span; set to Listed in both places."
+    ],
+    "expected_result": "Selling shows a spinner, then a blurred card labelled Listed with owner OpenD; refreshing keeps that look.",
+    "solution_code": null,
+    "reference_repo_path": "Section 42 - Minting NFTs and Building an NFT Marketplace like OpenSea/42.07 Styling the Listed NFTs/OPEND/src/OPEND_frontend/src/components/Item.jsx"
+  },
+  "pitfalls": [
+    "Forgetting to redeploy or to include isListed in the interface means the frontend call fails.",
+    "Redeploying wipes minted NFTs, so mint new ones to test.",
+    "Trying to sell an NFT already transferred to OpenD fails because the caller no longer owns it.",
+    "Without the isListed check the styling disappears on refresh."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet.",
+    "gaps_and_ideas": [
+      "Could extend the proposed marketplace lesson with a task: derive loader, blur and label from one status state ('idle', 'listing', 'listed').",
+      "Interactive demo: image card with a slider for blur(px) and a checkbox toggling hidden on a loader, showing React inline style objects versus CSS strings."
+    ]
+  }
+}

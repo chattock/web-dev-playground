@@ -1,7 +1,7 @@
 /* ===== Section 11 — Bootstrap ===== */
 
 PG.add({
-  id:'s11-intro', section:'s11', slug:'bootstrap-intro', lesson:'11.1',
+  id:'s11-intro', index:64, udemyId:37368626, minutes:16, section:'s11', slug:'bootstrap-intro', lesson:'11.1',
   title:'Bootstrap Intro & The Grid',
   blurb:'Bootstrap is a stylesheet full of ready-made classes. Add one <code>&lt;link&gt;</code> and you get a responsive 12-column grid, buttons, cards and a hundred other things — no CSS of your own required.',
   tasks:[
@@ -180,7 +180,7 @@ html:`<!DOCTYPE html>
 
 
 PG.add({
-  id:'s11-components', section:'s11', slug:'bootstrap-components', lesson:'11.2',
+  id:'s11-components', index:66, udemyId:37389818, minutes:32, section:'s11', slug:'bootstrap-components', lesson:'11.2',
   title:'Bootstrap Components',
   blurb:'Beyond the grid, Bootstrap ships pre-built components: buttons, cards, navbars, alerts, badges. You assemble a page from class names.',
   tasks:[
@@ -362,7 +362,7 @@ html:`<!DOCTYPE html>
 
 
 PG.add({
-  id:'s11-tindog', section:'s11', slug:'tindog-project', lesson:'11.3', project:true,
+  id:'s11-tindog', index:67, udemyId:37389824, minutes:31, section:'s11', slug:'tindog-project', lesson:'11.3', project:true,
   title:'TinDog Project',
   blurb:'The big one: a full marketing landing page — hero, features, testimonial, pricing, footer — assembled almost entirely from Bootstrap classes.',
   tasks:[

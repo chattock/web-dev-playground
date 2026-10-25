@@ -1,0 +1,117 @@
+{
+  "index": 238,
+  "lecture_id": 39461864,
+  "title": "Build your own API for a Blog",
+  "section": "30. Build Your Own API",
+  "duration_min": 15,
+  "kind": "project",
+  "summary": "Final project of the module: write the back end of a blog API in index.js so that a prebuilt front-end server (server.js) can list, create, edit and delete posts through it. The lecture explains the two-server setup, the five route challenges, and then walks through the solution.",
+  "concepts": [
+    {
+      "heading": "Project shape: two servers, two ports",
+      "points": [
+        "server.js is the website: it runs on port 3000, renders EJS pages and calls the API with Axios. index.js is the API itself and must listen on port 4000, which is where server.js expects to find it.",
+        "With only server.js running, localhost:3000 shows an 'Error fetching posts' message because nothing answers on port 4000 yet.",
+        "Start each server in its own terminal: cd into the project, run npm i once, then nodemon server.js in one and nodemon index.js (or solution.js) in the other.",
+        "Only one process can own a port. Starting index.js while solution.js still runs crashes with EADDRINUSE (address already in use). Stop the other one with Ctrl+C first. At any moment only two terminals should be active: the website on 3000 and one API on 4000.",
+        "solution.js is a complete working API. Running it instead of index.js is a quick way to see the finished app, or to confirm that the front-end works before debugging your own routes."
+      ]
+    },
+    {
+      "heading": "What the API must support",
+      "points": [
+        "Four HTTP verbs: GET, POST, PATCH and DELETE. PUT is deliberately skipped because PATCH already covers the update case (PATCH changes only the supplied fields, PUT would replace the whole record).",
+        "The front-end shows every post in order (title, creation date, author, content), has a form to create a post, an edit form that pre-fills the current values and sends a partial update, and a delete link per post.",
+        "Data is an in-memory array of post objects with id, title, content, author and date, plus a lastId counter. It resets whenever the server restarts. (Extra) Later modules replace this array with a real database.",
+        "Middleware is already wired: bodyParser.json() and bodyParser.urlencoded({ extended: true }), which is what lets req.body hold the fields sent by the HTML forms."
+      ]
+    },
+    {
+      "heading": "Solution walkthrough: GET routes",
+      "points": [
+        "GET /posts: respond with res.json(posts), returning the entire array as JSON.",
+        "GET /posts/:id: read the id path parameter from req.params.id, convert it to a number with parseInt (path params are strings), and look it up with posts.find. If found, return it with res.json; if not, respond with status 404 and a JSON message 'Post not found'."
+      ]
+    },
+    {
+      "heading": "Solution walkthrough: POST /posts",
+      "points": [
+        "server.js sends the new-post form data to API_URL + '/posts', so the API must define POST /posts.",
+        "Fields come from req.body.title, req.body.content and req.body.author. These names must equal the name attributes of the inputs in views/modify.ejs, which contains two forms: one for creating (POST) and one for editing (PATCH).",
+        "The date is set server-side with new Date(). The id is made by incrementing the lastId counter by one and storing it back, so ids never get reused after deletions.",
+        "The new object is pushed to the posts array and returned as JSON (status 201 is the semantic 'created' code)."
+      ]
+    },
+    {
+      "heading": "Solution walkthrough: PATCH /posts/:id",
+      "points": [
+        "Find the post by id as in the GET route; return 404 'Post not found' if it does not exist.",
+        "For each of title, content and author, overwrite the stored value only if a value arrived in req.body. Fields that are missing or empty are left untouched, which is the whole point of PATCH.",
+        "Respond with the updated post as JSON."
+      ]
+    },
+    {
+      "heading": "Solution walkthrough: DELETE /posts/:id",
+      "points": [
+        "In index.ejs the Delete button is a link to /api/post/delete/<id>, generated inside the forEach loop over posts. server.js handles that route and forwards a DELETE request to the API at /posts/<id>, passing the id as a path parameter.",
+        "The API uses findIndex to locate the post. If the index is -1, return 404; otherwise posts.splice(index, 1) removes exactly that one element, then send a confirmation message as JSON."
+      ]
+    },
+    {
+      "heading": "Learning advice from the lecture",
+      "points": [
+        "Nothing in the project is new: EJS views, an Express back end, Axios calls and self-built API routes have all appeared before. The difficulty is joining them mentally.",
+        "Reading someone else's code takes longer than writing your own. If it does not click the first time, redo the project while studying the solution and the other files."
+      ]
+    }
+  ],
+  "code_examples": [
+    {
+      "caption": "Core of the blog API (index.js), condensed from the reference solution",
+      "language": "javascript",
+      "code": "import express from \"express\";\nimport bodyParser from \"body-parser\";\n\nconst app = express();\nconst port = 4000;\n\nlet posts = [ /* { id, title, content, author, date } ... */ ];\nlet lastId = 3;\n\napp.use(bodyParser.json());\napp.use(bodyParser.urlencoded({ extended: true }));\n\n// 1. GET all posts\napp.get(\"/posts\", (req, res) => res.json(posts));\n\n// 2. GET one post\napp.get(\"/posts/:id\", (req, res) => {\n  const post = posts.find((p) => p.id === parseInt(req.params.id));\n  if (!post) return res.status(404).json({ message: \"Post not found\" });\n  res.json(post);\n});\n\n// 3. POST a new post\napp.post(\"/posts\", (req, res) => {\n  lastId += 1;\n  const post = {\n    id: lastId,\n    title: req.body.title,\n    content: req.body.content,\n    author: req.body.author,\n    date: new Date(),\n  };\n  posts.push(post);\n  res.status(201).json(post);\n});\n\n// 4. PATCH: update only the supplied fields\napp.patch(\"/posts/:id\", (req, res) => {\n  const post = posts.find((p) => p.id === parseInt(req.params.id));\n  if (!post) return res.status(404).json({ message: \"Post not found\" });\n  if (req.body.title) post.title = req.body.title;\n  if (req.body.content) post.content = req.body.content;\n  if (req.body.author) post.author = req.body.author;\n  res.json(post);\n});\n\n// 5. DELETE by id\napp.delete(\"/posts/:id\", (req, res) => {\n  const index = posts.findIndex((p) => p.id === parseInt(req.params.id));\n  if (index === -1) return res.status(404).json({ message: \"Post not found\" });\n  posts.splice(index, 1);\n  res.json({ message: \"Post deleted\" });\n});\n\napp.listen(port, () => console.log(`API is running at http://localhost:${port}`));"
+    },
+    {
+      "caption": "Running the two servers",
+      "language": "bash",
+      "code": "# terminal 1: the website (port 3000)\ncd \"30.03 Blog API Project\"\nnpm i\nnodemon server.js\n\n# terminal 2: the API (port 4000)\ncd \"30.03 Blog API Project\"\nnodemon index.js      # or: nodemon solution.js"
+    }
+  ],
+  "task": {
+    "name": "Blog API Project",
+    "starting_point": "Download the project, extract it, open it in VS Code and run npm i. server.js (the website on port 3000), the EJS views and the posts array in index.js are provided. index.js has five commented CHALLENGE placeholders and no routes.",
+    "goal": "Implement the API routes in index.js so the front-end on localhost:3000 can display, create, edit and delete blog posts through the API on localhost:4000.",
+    "steps": [
+      "Run npm i, then start server.js with nodemon and confirm localhost:3000 shows an error because no API answers on port 4000.",
+      "In a second terminal start nodemon index.js. Keep solution.js stopped, otherwise EADDRINUSE.",
+      "Challenge 1: GET /posts returns all posts as JSON.",
+      "Challenge 2: GET /posts/:id returns the post with that id, or 404 with a message when absent.",
+      "Challenge 3: POST /posts builds a new post from req.body.title, content and author, adds a new id and the current date, pushes it to the array and returns it.",
+      "Challenge 4: PATCH /posts/:id updates only the fields provided and returns the updated post (404 if not found).",
+      "Challenge 5: DELETE /posts/:id removes the matching post from the array.",
+      "Test in the browser: all posts show, a new post appears at the bottom, an edit changes the content, delete removes the post."
+    ],
+    "expected_result": "With nodemon index.js on port 4000 and server.js on port 3000, the blog UI lists posts and create, edit and delete all work.",
+    "solution_code": {
+      "language": "javascript",
+      "code": "app.get(\"/posts\", (req, res) => res.json(posts));\n\napp.get(\"/posts/:id\", (req, res) => {\n  const post = posts.find((p) => p.id === parseInt(req.params.id));\n  if (!post) return res.status(404).json({ message: \"Post not found\" });\n  res.json(post);\n});\n\napp.post(\"/posts\", (req, res) => {\n  lastId += 1;\n  const post = { id: lastId, title: req.body.title, content: req.body.content, author: req.body.author, date: new Date() };\n  posts.push(post);\n  res.status(201).json(post);\n});\n\napp.patch(\"/posts/:id\", (req, res) => {\n  const post = posts.find((p) => p.id === parseInt(req.params.id));\n  if (!post) return res.status(404).json({ message: \"Post not found\" });\n  if (req.body.title) post.title = req.body.title;\n  if (req.body.content) post.content = req.body.content;\n  if (req.body.author) post.author = req.body.author;\n  res.json(post);\n});\n\napp.delete(\"/posts/:id\", (req, res) => {\n  const index = posts.findIndex((p) => p.id === parseInt(req.params.id));\n  if (index === -1) return res.status(404).json({ message: \"Post not found\" });\n  posts.splice(index, 1);\n  res.json({ message: \"Post deleted\" });\n});"
+    },
+    "reference_repo_path": "Section 30 - Build Your Own API/30.03 Blog API Project/index.js (and solution.js)"
+  },
+  "pitfalls": [
+    "Running two servers on port 4000 gives EADDRINUSE; stop solution.js before starting index.js.",
+    "Forgetting parseInt: req.params.id is a string, so a strict === comparison with a numeric id never matches.",
+    "Body field names in req.body must match the name attributes in modify.ejs exactly.",
+    "(Extra) The reference index.js builds the id as posts.length + 1, which can duplicate an existing id after a deletion. Use the lastId counter as solution.js does.",
+    "(Extra) The in-memory array is wiped at every nodemon restart, so edits made during testing disappear."
+  ],
+  "playground": {
+    "match": null,
+    "coverage": "No playground lesson yet",
+    "gaps_and_ideas": [
+      "New lesson 'Build a blog API': blurb about two cooperating servers (website on 3000, API on 4000). Tasks: implement GET all, GET by id with 404, POST with id and date, PATCH partial update, DELETE with splice.",
+      "Starter code idea: an index.js with the posts array, middleware and five commented challenge stubs.",
+      "Interactive demo idea: a mock API console where the learner picks a verb and path, edits a JSON body, and sees the status code, response and the in-memory array change after each request; include a toggle that shows EADDRINUSE when two servers claim one port."
+    ]
+  }
+}

@@ -135,7 +135,7 @@ function sectionOfIndex(i) {
 
 (async () => {
   const args = process.argv.slice(2);
-  const files = fs.readdirSync(path.join(ROOT, 'data')).filter(f => /^s\d\d\.js$/.test(f)).filter(f => !args.length || args.some(a => f.startsWith(a))).sort();
+  const files = fs.readdirSync(path.join(ROOT, 'data')).filter(f => /^s\d\d(-2)?\.js$/.test(f)).filter(f => !args.length || args.some(a => f.startsWith(a))).sort();
   let total = 0, bad = 0;
   const allIds = new Set(), allIdx = new Set();
   for (const f of files) {

@@ -11,7 +11,7 @@ const DATA = path.join(ROOT, 'data');
 
 function loadLessons() {
   const lessons = [];
-  fs.readdirSync(DATA).filter(f => /^s\d\d\.js$/.test(f)).sort().forEach(f => {
+  fs.readdirSync(DATA).filter(f => /^s\d\d(-2)?\.js$/.test(f)).sort().forEach(f => {
     const src = fs.readFileSync(path.join(DATA, f), 'utf8');
     const PG = { add: l => lessons.push(Object.assign({ _file: f }, l)), notes() {}, index() {}, registerKit() {} };
     try { new Function('PG', src)(PG); } catch (e) { console.error(`${f}: ${e.message}`); process.exitCode = 1; }

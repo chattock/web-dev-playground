@@ -156,6 +156,7 @@ const PG = (function () {
     if (!loaded[secId]) {
       loaded[secId] = Promise.all([
         loadScript(`data/${secId}.js`).catch(() => {}),
+        loadScript(`data/${secId}-2.js`).catch(() => {}),     // optional second file for big sections
         loadScript(`data/notes/${secId}.js`).catch(() => {}),
       ]).then(sortManifest);
     }

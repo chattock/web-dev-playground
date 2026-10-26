@@ -1,8 +1,8 @@
 # Web Dev Playground
 
-An interactive playground for **The Complete Web Development Bootcamp** (Dr. Angela Yu) —
-every lesson from sections 1–11 and 14–15, with the real course exercise, a live preview
-that updates as you type, and interactive demos for poking at how each concept behaves.
+A hands-on companion to **The Complete Full-Stack Web Development Bootcamp** (Dr. Angela Yu,
+Udemy): one page for every lecture, numbered as in the course, where you practise exactly what
+that lecture teaches — in the browser, with nothing to install.
 
 **▶ [Open the playground](https://chattock.github.io/web-dev-playground/)**
 
@@ -10,77 +10,86 @@ that updates as you type, and interactive demos for poking at how each concept b
 
 ## What's in it
 
-67 lessons across 13 sections:
+Every one of the course's 374 lectures has a page, grouped into the course's 45 sections. Each
+page has the lecture number, a link back to the Udemy lecture, a short summary, the task, and
+these tabs:
 
-| Section | Topic | Lessons |
-|---|---|---|
-| 1 | Front-End Web Development | 1 |
-| 2 | Introduction to HTML | 4 |
-| 3 | Intermediate HTML | 5 |
-| 4 | Multi-Page Websites | 3 |
-| 5 | Introduction to CSS | 3 |
-| 6 | CSS Properties | 4 |
-| 7 | Intermediate CSS | 4 |
-| 8 | Advanced CSS | 5 |
-| 9 | Flexbox | 3 |
-| 10 | Grid | 4 |
-| 11 | Bootstrap | 3 |
-| 14 | JavaScript ES6 | 15 |
-| 15 | Intermediate JavaScript | 13 |
+- **Build** — the lecture's exercise or project, unsolved, with TODO comments. Edit on the left,
+  see the result on the right. *Show solution* swaps the answer in and back out without losing
+  your work; *Reset* restores the original exercise.
+- **Explore** — interactive demos: sliders and dropdowns wired to real CSS and JavaScript, with a
+  readout of the exact code you just made.
+- **Notes** — detailed notes on the lecture: what the code does and how it works, the task's
+  steps and solution, and common mistakes.
+- **Quiz** — a few quick questions on the key points.
 
-Every lesson has three tabs:
+### What runs where
 
-- **Build** — the course exercise, unsolved, with its TODO comments. Edit on the left, the
-  preview updates as you type. *Show solution* swaps the answer in and back out without
-  losing your work; *Reset* restores the original exercise.
-- **Explore** — 36 interactive demos. Sliders and dropdowns wired to real CSS, with a
-  readout showing the exact rule you just made. Box model dissector, specificity showdown,
-  flexbox playground, grid track builder, media query simulator, file path resolver, and more.
-- **Notes** — the concept in short form, with tables and the usual gotchas.
+| Lessons | How they run |
+|---|---|
+| HTML, CSS, Bootstrap, JavaScript, the DOM, jQuery | Live preview with a console (`console.log`, `alert`, and `prompt` with queued answers) |
+| React | JSX compiled in your browser with Babel, rendered with React 18 |
+| Node, Express, EJS, APIs, authentication | A simulated Node server: press **Run**, then use the built-in browser (links, forms, cookies) or the Postman-style panel to send requests to `localhost:3000` |
+| SQL and PostgreSQL | A real Postgres running in your browser (PGlite, downloaded once, about 12 MB) |
+| The command line and git | A shell with a virtual filesystem and a simulated git, with a live file tree and checks |
+| Web3 / Motoko | Code walkthroughs that highlight the lines each step talks about, plus React front ends running against mocked canisters |
+| Theory, tips and admin lectures | A reading page with the notes and a quiz |
+
+The course's own APIs (the secrets API, the bored API, a joke API) are built in as mocks with
+original data, so the API lessons work offline.
 
 ## Features
 
-- Live preview with a ~450ms debounce, or `Cmd/Ctrl + Enter` to force a run
-- Edits save automatically per lesson in `localStorage`
-- Preview width switcher (Full / Desktop / Tablet / Phone) for testing media queries
-- Console panel capturing `console.log`, `alert()` and errors
-- `prompt()` reads from a queued-answers box so nothing blocks while you type
-- Per-lesson "done" checkboxes
+- Search every lecture by number or title (press `/`)
+- Edits save automatically per lesson in your browser
+- "Done" checkboxes with progress per section
+- Preview width switcher for testing media queries
+- `#/l/131` jumps straight to lecture 131
+- `#/selftest` runs every lesson's solution and lists any that fail
 
 ## Running it locally
 
-No build step, no npm. Either:
+No build step and nothing to install. Either:
 
 ```bash
 python3 server.py
 ```
 
-…or on macOS just double-click `start.command`. Then open <http://localhost:4173>.
+…or on macOS double-click `start.command`. Then open <http://localhost:4173>.
 
-It is entirely static, so you can also just open `index.html` — though a server is tidier.
-
-## Built with
-
-Plain HTML, CSS and JavaScript. [CodeMirror 5](https://codemirror.net/5/) for the editors and
-[Bootstrap 5](https://getbootstrap.com/) for the Bootstrap lessons, both vendored in `vendor/`
-so nothing needs downloading and it works offline.
+The SQL lessons load PGlite from a CDN the first time, so they need a connection once.
 
 ## Structure
 
 ```
-index.html          app shell
-app/app.js          engine — router, editors, preview, console, demo kit
-app/style.css       styling
-data/sNN.js         lesson content, one file per course section
-vendor/             CodeMirror + Bootstrap
-server.py           local static server
+index.html              app shell
+app/core.js             router, sidebar, lesson page, quiz, shared editor workbench
+app/kit-*.js            one kit per lesson kind: build/js, react, node, sql, terminal, read/walkthrough
+app/sandbox/            the Node simulator and the shell/git simulator (also used by the tools)
+data/index.js           generated list of every lesson (for the sidebar)
+data/sNN.js             lessons, one file per course section (big sections also have sNN-2.js)
+data/notes/sNN.js       generated lecture notes
+content/notes/NNN.json  the lecture notes, one file per lecture
+content/manifest.txt    every lecture: number, Udemy id, title, type, length
+docs/LESSON-FORMAT.md   how to write a lesson
+tools/                  manifest, notes and validation scripts
+vendor/                 CodeMirror, Bootstrap, jQuery, React, Babel, EJS, bcryptjs, qrcode-generator
 ```
 
-Adding a lesson means one `PG.add({...})` call in the relevant `data/sNN.js`.
+To add or change a lesson, edit `data/sNN.js` (see `docs/LESSON-FORMAT.md`), then:
+
+```bash
+node tools/manifest.js && node tools/build-notes.js
+node tools/validate.js sNN
+```
+
+The validator runs each lesson's solution (Node servers, shell commands, SQL and React
+compilation). The SQL checks need PGlite: `cd tools && npm install` once.
 
 ## Credit
 
-Exercises are from Dr. Angela Yu's course on Udemy, with starters rewritten back to their
-unsolved state. Course files referenced from
-[this repo](https://github.com/Harshit-Soni78/The-Complete-2024-Web-Development-Bootcamp-by-Dr._Angela_Yu).
-Built for personal study.
+Built for personal study alongside Dr. Angela Yu's course on Udemy. Summaries, notes, tasks and
+quizzes are written in our own words, and the images and sounds are original (dice and drum
+graphics are generated; sounds are synthesised in the browser). Exercise code follows what each
+lecture builds, cross-checked against
+[a student's finished course code](https://github.com/Harshit-Soni78/The-Complete-2024-Web-Development-Bootcamp-by-Dr._Angela_Yu).

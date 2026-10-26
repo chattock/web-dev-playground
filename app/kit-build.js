@@ -98,8 +98,13 @@
 
     // strip the course footer credit if it came from the repo
     html = html.replace(/\s*<footer>Made with[^<]*<\/footer>/gi, '');
-    // local stylesheet links stand in for the CSS pane; local script tags for the JS pane
-    html = html.replace(/<link[^>]+href=["'](?:\.\/)?(?:css\/)?(style|styles|solution|index)\.css["'][^>]*>/gi, '');
+    // local stylesheet links stand in for the CSS pane, which goes where the first
+    // such link was so it still comes after framework CSS such as Bootstrap;
+    // local script tags stand in for the JS pane
+    const CSS_MARK = '<!--pg-css-->';
+    let marked = false;
+    html = html.replace(/<link[^>]+href=["'](?:\.\/)?(?:css\/)?(style|styles|solution|index)\.css["'][^>]*>/gi,
+      () => { if (marked) return ''; marked = true; return CSS_MARK; });
     html = html.replace(/<script[^>]+src=["'](?:\.\/)?(?:js\/)?(script|index|main|solution)\.js["'][^>]*><\/script>/gi, '');
 
     const answersJs = `<script>window.__PG_ANSWERS__=${JSON.stringify(answers || [])};<\/script>`;
@@ -112,10 +117,15 @@
     // a lesson can pretend its page lives somewhere else, so that relative
     // paths like ./cat.png and images/dice1.png resolve against a real folder
     const baseTag = lesson && lesson.previewBase ? `<base href="${abs(lesson.previewBase)}">` : '';
-    const head = baseTag + answersJs + fallback + SHIM + (css ? `\n<style>\n${css}\n</style>` : '');
+    const head = baseTag + answersJs + fallback + SHIM;
+    const cssTag = css ? `\n<style>\n${css}\n</style>\n` : '';
 
     if (/<head[^>]*>/i.test(html)) html = html.replace(/<head([^>]*)>/i, `<head$1>\n${head}`);
     else html = head + html;
+    // no stylesheet link in the page: the CSS goes last in the head (or straight after the shim)
+    if (html.includes(CSS_MARK)) html = html.replace(CSS_MARK, () => cssTag);
+    else if (/<\/head>/i.test(html)) html = html.replace(/<\/head>/i, () => cssTag + '</head>');
+    else html = html.replace(SHIM, () => SHIM + cssTag);
 
     if (js) {
       const tag = `\n<script>\ntry{\n${js}\n}catch(e){ console.error(e); }\n<\/script>\n`;

@@ -1,20 +1,24 @@
 /* ===== Section 7 — Intermediate CSS ===== */
 
 PG.add({
-  id:'s07-cascade', index:43, udemyId:37350528, minutes:25, section:'s07', slug:'cascade', lesson:'7.1',
-  title:'The Cascade & Specificity',
-  blurb:'When two rules touch the same element, which wins? The browser weighs four things: <b>position</b> (later beats earlier), <b>specificity</b> (id &gt; class &gt; element), <b>type</b> (inline beats stylesheets), and <b>importance</b> (<code>!important</code> trumps everything).',
+  id:'s07-cascade', index:43, udemyId:37350528, minutes:25, section:'s07', slug:'cascade', kind:'build',
+  title:'The Cascade - Specificity and Inheritance',
+  blurb:'When several rules set the same property on the same element, the browser picks one winner. It weighs four things, from weakest to strongest: <b>position</b> (later beats earlier), <b>specificity</b> (id beats class beats element), <b>type</b> (inline beats internal beats external) and <b>importance</b> (<code>!important</code> beats everything).',
   tasks:[
-    'The nested boxes should go purple → blue → red from the outside in. Add rules specific enough to beat <code>.box</code>.',
-    'Paragraphs are yellow, but the ones with <code>class="white-text"</code> should be white. Add a rule that wins.',
-    'Then try moving your <code>.white-text</code> rule <em>above</em> the <code>p</code> rule — does it still work? Why?'
+    'Leave index.html and the existing CSS alone, and add your rules at the bottom of style.css. First make <code>.white-text</code> white. It wins over the <code>p</code> rule wherever you put it, because a class is more specific than an element selector.',
+    'Make <code>.inner-box</code> red. Then move that rule <b>above</b> <code>.box</code>: the inner boxes turn blue again. Both are single classes, a tie on specificity, so position decides. Move it back below.',
+    'Make <code>#outer-box</code> purple. The id is the only thing that sets this div apart from the other <code>.box</code> divs, and an id outranks a class wherever it sits in the file.',
+    'Do not add any padding: every box already gets its 10px from <code>.box</code>. Compare the preview with the goal: purple outside, blue in the middle, red inside, yellow and white text.',
+    'Type and importance: give one inner box an inline <code>style="background-color: green"</code>. It beats every selector. Now add <code>!important</code> to your <code>.inner-box</code> declaration and it wins back. Remove both experiments afterwards.'
   ],
   files:{
-html:`<!DOCTYPE html>
+'index.html':`<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CSS Cascade</title>
+  <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
   <div id="outer-box" class="box">
@@ -33,155 +37,179 @@ html:`<!DOCTYPE html>
   </div>
 </body>
 </html>`,
-css:`body {
-  font-family: sans-serif;
-}
-
-/* TODO 1: #outer-box should be purple */
+'style.css':`/* Don't change the existing CSS. Add your rules at the bottom. */
 
 .box {
   background-color: blue;
   padding: 10px;
 }
-
-/* TODO 2: .inner-box should be red */
 
 p {
   color: yellow;
+  margin: 0;
+  padding: 0;
 }
 
-/* TODO 3: .white-text should be white */
+/* TODO 1: paragraphs with class "white-text" -> white text */
+
+/* TODO 2: boxes with class "inner-box" -> red background */
+
+/* TODO 3: the box with id "outer-box" -> purple background */
 `},
   solution:{
-css:`body {
-  font-family: sans-serif;
-}
-
-#outer-box {
-  background-color: purple;
-}
+'style.css':`/* Don't change the existing CSS. Add your rules at the bottom. */
 
 .box {
   background-color: blue;
   padding: 10px;
+}
+
+p {
+  color: yellow;
+  margin: 0;
+  padding: 0;
+}
+
+.white-text {
+  color: white;
 }
 
 .inner-box {
   background-color: red;
 }
 
-p {
-  color: yellow;
-}
-
-.white-text {
-  color: white;
+#outer-box {
+  background-color: purple;
 }
 `},
   explore:[
   {
-    title:'Specificity showdown', height:480,
-    note:'Every rule below targets the same heading. Switch them on and off — the most specific always wins, no matter what order they are written in.',
+    title:'Specificity showdown', height:560,
+    note:'Every rule below targets the same heading: <code>&lt;h1 id="main" class="title" draggable="true"&gt;</code>. Switch them on and off. Among selectors the most specific wins whatever the order; an inline style beats them all; <code>!important</code> beats even that.',
     html:`
-<div class="knobs">
-  <label><input type="checkbox" id="c1" checked> <span class="tag">h1</span> → teal (element = 1)</label>
-  <label><input type="checkbox" id="c2" checked> <span class="tag">.title</span> → orange (class = 10)</label>
-  <label><input type="checkbox" id="c3" checked> <span class="tag">#main</span> → crimson (id = 100)</label>
-  <label><input type="checkbox" id="c4"> <span class="tag">!important</span> → teal</label>
+<div class="knobs" style="flex-direction:column;align-items:flex-start">
+  <label><input type="checkbox" id="c1" checked> <span class="tag">h1 { color: teal; }</span> element</label>
+  <label><input type="checkbox" id="c2" checked> <span class="tag">.title { color: orange; }</span> class</label>
+  <label><input type="checkbox" id="c3"> <span class="tag">h1[draggable] { color: olive; }</span> attribute + element</label>
+  <label><input type="checkbox" id="c4" checked> <span class="tag">#main { color: crimson; }</span> id</label>
+  <label><input type="checkbox" id="c5"> <span class="tag">style="color: purple"</span> inline</label>
+  <label><input type="checkbox" id="c6"> add <span class="tag">!important</span> to the h1 rule</label>
 </div>
 <div class="stage">
-  <h1 id="main" class="title" style="margin:0">Who wins?</h1>
+  <h1 id="main" class="title" draggable="true" style="margin:0">Who wins?</h1>
 </div>
 <pre class="readout" id="ro"></pre>
 <style id="rules"></style>
-<p class="note"><b>Rough scoring:</b> inline = 1000, id = 100, class/attribute/pseudo-class = 10, element = 1. Add them up; highest total wins. <code>!important</code> sidesteps the whole system — which is why reaching for it usually means something has gone wrong.</p>
 <script>
-  var ids = ['c1','c2','c3','c4'];
-  var css = {
-    c1:'h1 { color: teal; }',
-    c2:'.title { color: orange; }',
-    c3:'#main { color: crimson; }',
-    c4:'h1 { color: teal !important; }'
-  };
-  var score = { c1:1, c2:10, c3:100, c4:10000 };
+  var R = [
+    { id:'c1', css:'h1 { color: teal; }', spec:[0,0,1] },
+    { id:'c2', css:'.title { color: orange; }', spec:[0,1,0] },
+    { id:'c3', css:'h1[draggable] { color: olive; }', spec:[0,1,1] },
+    { id:'c4', css:'#main { color: crimson; }', spec:[1,0,0] }
+  ];
+  function on(id){ return document.getElementById(id).checked; }
+  function beats(a, b){ for (var i = 0; i < 3; i++){ if (a[i] !== b[i]) return a[i] > b[i]; } return true; }
   function upd(){
-    var on = ids.filter(function(i){ return document.getElementById(i).checked; });
-    document.getElementById('rules').textContent = on.map(function(i){ return css[i]; }).join('\\n');
+    var imp = on('c6') && on('c1');
+    var live = R.filter(function(r){ return on(r.id); });
+    document.getElementById('rules').textContent = live.map(function(r){
+      return r.id === 'c1' && imp ? 'h1 { color: teal !important; }' : r.css;
+    }).join('\\n');
+    var h = document.getElementById('main');
+    h.style.color = on('c5') ? 'purple' : '';
     var best = null;
-    on.forEach(function(i){ if (!best || score[i] > score[best]) best = i; });
-    var lines = on.map(function(i){
-      return (i === best ? '  WINNER  ' : '          ') + css[i] +
-             '   /* ' + (score[i] === 10000 ? '!important' : score[i] + ' points') + ' */';
+    live.forEach(function(r){ if (!best || beats(r.spec, best.spec)) best = r; });
+    var winner = imp ? 'the h1 rule, because !important beats everything'
+               : on('c5') ? 'the inline style: type beats any selector'
+               : best ? best.css + '  (the highest specificity)'
+               : 'nothing set, so the browser default';
+    var lines = live.map(function(r){
+      return (r.id === 'c1' && imp ? 'h1 { color: teal !important; }' : r.css) + '   specificity ' + r.spec.join('-');
     });
-    document.getElementById('ro').textContent =
-      (lines.length ? lines.join('\\n') : '  (nothing on — browser default)') +
-      '\\n\\ncomputed colour: ' + getComputedStyle(document.getElementById('main')).color;
+    if (on('c5')) lines.push('style="color: purple"   inline');
+    document.getElementById('ro').textContent = (lines.length ? lines.join('\\n') : '(no rules on)') +
+      '\\n\\nwinner: ' + winner + '\\ncomputed colour: ' + getComputedStyle(h).color +
+      '\\n\\nspecificity is (ids - classes, attributes - elements), compared left to right';
   }
-  ids.forEach(function(i){ document.getElementById(i).addEventListener('change', function(){ setTimeout(upd,10); }); });
-  setTimeout(upd, 40);
+  ['c1','c2','c3','c4','c5','c6'].forEach(function(i){ document.getElementById(i).addEventListener('change', upd); });
+  upd();
 <\/script>`
   },
   {
-    title:'Position in the file matters', height:370,
-    note:'Two rules with <b>identical</b> specificity. Now order is the tie-breaker — the later one wins.',
+    title:'Position in the file matters', height:380,
+    note:'Two rules with <b>identical</b> specificity, like <code>.box</code> and <code>.inner-box</code> in the exercise. Now order is the tie-breaker, and the later rule wins.',
     html:`
 <div class="knobs">
-  <label>order:
+  <label>order
     <select id="ord">
-      <option value="ab">.a then .b</option>
-      <option value="ba">.b then .a</option>
+      <option value="ab">.box first, then .inner-box</option>
+      <option value="ba">.inner-box first, then .box</option>
     </select>
   </label>
 </div>
-<div class="stage"><h2 id="t" class="a b" style="margin:0">Same specificity — order decides</h2></div>
+<div class="stage"><div id="t" class="box inner-box">class="box inner-box"</div></div>
 <pre class="readout" id="ro"></pre>
 <style id="rules"></style>
 <script>
   var o = document.getElementById('ord');
   function upd(){
-    var a = '.a { color: seagreen; }', b = '.b { color: hotpink; }';
+    var a = '.box { background-color: blue; }', b = '.inner-box { background-color: red; }';
     var txt = o.value === 'ab' ? a + '\\n' + b : b + '\\n' + a;
     document.getElementById('rules').textContent = txt;
-    document.getElementById('ro').textContent = txt + '\\n\\nlast one wins: ' +
-      getComputedStyle(document.getElementById('t')).color;
+    document.getElementById('ro').textContent = txt +
+      '\\n\\nboth are one class: a tie, so the last one written wins -> ' + getComputedStyle(document.getElementById('t')).backgroundColor;
   }
-  o.addEventListener('change', function(){ setTimeout(upd, 10); }); setTimeout(upd, 40);
+  o.addEventListener('change', upd); upd();
 <\/script>`
   }],
+  quiz:[
+    { q:'<code>&lt;h1 class="title" id="main"&gt;</code> is styled by <code>.title { color: blue; }</code> and <code>#main { color: green; }</code>, in that order. What colour is it?', options:['Blue, it comes first','Green, an id is more specific than a class','Black, the rules cancel out','Blue, classes beat ids'], answer:1, why:'Specificity decides before position is even considered, and an id outranks a class.' },
+    { q:'<code>&lt;h1 class="first second"&gt;</code> is styled by <code>.first { color: green; }</code> and then <code>.second { color: blue; }</code>. What colour is it?', options:['Green','Blue','Teal, the colours mix','Black'], answer:1, why:'Two classes tie on specificity, so position breaks the tie: the later rule wins.' },
+    { q:'A stylesheet sets <code>#main { color: green; }</code>, and the element also has <code>style="color: blue"</code>. What colour is it?', options:['Green, an id is the most specific selector','Blue, inline styles outrank any selector','Green, stylesheets load later','Blue, but only after a reload'], answer:1, why:'Type ranks above specificity, and inline is the strongest type. Only !important beats it.' },
+    { q:'Which order runs from weakest to strongest?', options:['importance, type, specificity, position','position, specificity, type, importance','specificity, position, importance, type','type, position, importance, specificity'], answer:1, why:'Use it as a debugging checklist from the top: !important? inline? a more specific selector? a later rule?' },
+  ],
   notes:`
-    <h3>The four weights, weakest first</h3>
+    <h3>Debugging checklist</h3>
     <ol>
-      <li><b>Position</b> — a rule written later beats an identical one written earlier.</li>
-      <li><b>Specificity</b> — element (1) &lt; class / attribute (10) &lt; id (100) &lt; inline (1000).</li>
-      <li><b>Type</b> — inline styles beat internal and external stylesheets.</li>
-      <li><b>Importance</b> — <code>!important</code> beats the lot. Avoid it.</li>
+      <li>Is something marked <code>!important</code>?</li>
+      <li>Is an inline <code>style=""</code> involved?</li>
+      <li>Is a more specific selector winning? DevTools shows the loser struck through.</li>
+      <li>Is a later rule with the same specificity overriding yours?</li>
     </ol>
-    <h3>Debugging the cascade</h3>
-    <p>In Chrome DevTools, click an element and look at the Styles panel: losing rules appear with a <s>strikethrough</s>. That tells you instantly what beat what.</p>`
+    <h3>Attribute vs class</h3>
+    <p>In the lecture, <code>li[draggable]</code> beats <code>.first-class</code>, and it is presented as "attribute beats class". The real reason is that <code>li[draggable]</code> is an attribute <b>plus</b> an element. On their own, an attribute selector and a class have exactly the same weight, and a tie goes to the later rule. The showdown demo includes <code>h1[draggable]</code> so you can see this.</p>
+    <h3>A mental scoring model</h3>
+    <p>Many people count inline = 1000, id = 100, class or attribute = 10, element = 1. Browsers really compare column by column (any id beats any number of classes), but the model works for everyday CSS.</p>`
 });
 
 
 PG.add({
-  id:'s07-combining', index:44, udemyId:37350562, minutes:23, section:'s07', slug:'combining-selectors', lesson:'7.2',
-  title:'Combining Selectors',
-  blurb:'Selectors can be joined to be more precise: a <b>group</b> (comma), a <b>child</b> (<code>&gt;</code>), a <b>descendant</b> (space), or <b>chained</b> (no space at all).',
+  id:'s07-combining', index:44, udemyId:37350562, minutes:23, section:'s07', slug:'combining-selectors', kind:'build',
+  title:'Combining CSS Selectors',
+  blurb:'Simple selectors can be combined to aim precisely without adding classes to the HTML: a <b>group</b> with commas (<code>h1, h2</code>), a <b>child</b> with <code>&gt;</code> (one level down), a <b>descendant</b> with a space (any depth), and a <b>chain</b> with no space at all (one element that matches every part).',
   tasks:[
-    'Turn both <code>h1</code> and <code>h2</code> blueviolet with <b>one</b> grouped rule.',
-    'Turn paragraphs that are <b>direct children</b> of <code>.box</code> firebrick.',
-    'Turn list items <b>anywhere inside</b> <code>.box</code> blue.',
-    'Turn <code>li</code> elements that <b>also</b> have <code>class="done"</code> green.'
+    'Do not change index.html. <b>Group:</b> make the <code>h1</code> and the <code>h2</code> <code>blueviolet</code> with one rule.',
+    '<b>Child:</b> make only the paragraph that is a direct child of <code>.box</code> <code>firebrick</code>, using <code>.box &gt; p</code>. The other paragraphs stay as they are.',
+    '<b>Descendant:</b> make the three list items <code>blue</code> with <code>.box li</code>. <code>.box &gt; li</code> would match nothing, because the items sit two levels down, inside the <code>ul</code>.',
+    '<b>Chained:</b> make the two <code>li</code> elements with class <code>done</code> <code>seagreen</code> with <code>li.done</code> (no space, element first).',
+    '<b>Combined:</b> shrink the <code>p.done</code> inside the second <code>ul</code> to <code>font-size: 0.5rem</code> with <code>ul p.done</code>.',
+    '<code>.box li</code> and <code>li.done</code> have the same specificity (one class, one element). Swap their order and the done items turn blue: position breaks the tie.'
   ],
   files:{
-html:`<!DOCTYPE html>
+'index.html':`<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Combining Selectors</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Combining CSS Selectors</title>
+  <link rel="stylesheet" href="./style.css" />
 </head>
+
+<!-- Don't change any of the HTML code! -->
+
 <body>
   <h1>To Do List</h1>
   <h2>Monday</h2>
-
   <div class="box">
     <p class="done">Do these things today!</p>
     <ul class="list">
@@ -191,189 +219,227 @@ html:`<!DOCTYPE html>
     </ul>
   </div>
 
+  <ul>
+    <p class="done">Other items</p>
+  </ul>
   <p>The best preparation for tomorrow is doing your best today.</p>
 </body>
 </html>`,
-css:`body {
-  font-family: sans-serif;
-}
+'style.css':`/* Write your code here: */
 
-/* TODO 1: group — h1 and h2 blueviolet */
+/* TODO 1: group - the h1 and the h2 -> blueviolet */
 
-/* TODO 2: child — p directly inside .box firebrick */
+/* TODO 2: child - the p directly inside .box -> firebrick */
 
-/* TODO 3: descendant — li anywhere inside .box blue */
+/* TODO 3: descendant - every li inside .box -> blue */
 
-/* TODO 4: chained — li that also has .done green */
+/* TODO 4: chained - li elements that also have the class done -> seagreen */
+
+/* TODO 5: combined - the p.done inside a ul -> font-size 0.5rem */
 `},
   solution:{
-css:`body {
-  font-family: sans-serif;
-}
-
-h1, h2 {
+'style.css':`/* Group */
+h1,
+h2 {
   color: blueviolet;
 }
 
+/* Child */
 .box > p {
   color: firebrick;
 }
 
+/* Descendant */
 .box li {
   color: blue;
 }
 
+/* Chained */
 li.done {
-  color: green;
+  color: seagreen;
+}
+
+/* Combined */
+ul p.done {
+  font-size: 0.5rem;
 }
 `},
   explore:[{
-    title:'Combinator lab', height:580,
-    note:'Pick a combinator and watch which elements it catches. The difference between <code>&gt;</code> and a plain space is the one that trips everyone up.',
+    title:'Combinator lab', height:600,
+    note:'Type a selector, or pick one, and see what it catches. The difference between <code>&gt;</code> and a space trips everyone up, and so does a stray space inside a chain: <code>li.done</code> and <code>li .done</code> mean different things.',
     html:`
 <div class="knobs">
-  <label>selector
-    <select id="sel">
-      <option value=".box p">.box p — descendant (any depth)</option>
-      <option value=".box > p">.box &gt; p — child (one level only)</option>
-      <option value="h1, h2">h1, h2 — group</option>
-      <option value="li.done">li.done — chained (both true)</option>
-      <option value="li .done">li .done — note the space!</option>
-      <option value=".box li">.box li — descendant</option>
+  <label>selector <input type="text" id="sel" value=".box p" spellcheck="false" style="width:150px;font-family:ui-monospace,Menlo,monospace"></label>
+  <label>or pick
+    <select id="pick">
+      <option value="">…</option>
+      <option>.box p</option><option>.box &gt; p</option><option>h1, h2</option>
+      <option>.box li</option><option>.box &gt; li</option><option>li.done</option><option>li .done</option>
+      <option>ul p.done</option><option>p.done</option><option>.doneli</option>
     </select>
   </label>
   <span class="tag" id="count"></span>
 </div>
 <div class="stage" id="stage" style="font-size:13px">
-  <h1 style="font-size:20px;margin:0 0 6px">To Do List</h1>
-  <h2 style="font-size:16px;margin:0 0 10px">Monday</h2>
-  <div class="box" style="border:2px dashed #b9c0d4;padding:10px;background:none;color:inherit;text-align:left;font-weight:400">
-    <div style="font-size:10.5px;color:#8b92a8;margin-bottom:6px">.box</div>
-    <p style="margin:0 0 8px">direct child paragraph</p>
-    <div style="border:2px dotted #d8dce8;padding:8px">
-      <div style="font-size:10.5px;color:#8b92a8">a nested div</div>
-      <p style="margin:4px 0 0">paragraph nested TWO levels deep</p>
-    </div>
-    <ul style="margin:10px 0 0">
-      <li>Wash clothes</li>
-      <li class="done">Read <span class="done">(this span also has .done)</span></li>
-      <li class="done">Maths questions</li>
+  <h1 style="font-size:20px;margin:0 0 4px">To Do List</h1>
+  <h2 style="font-size:16px;margin:0 0 8px">Monday</h2>
+  <div class="box" style="border:2px dashed #b9c0d4;padding:8px 10px;background:none;color:inherit;text-align:left;font-weight:400;border-radius:6px">
+    <div style="font-size:10.5px;color:#8b92a8">div.box</div>
+    <p class="done" style="margin:2px 0 6px">p.done, a direct child of .box</p>
+    <ul class="list" style="margin:0">
+      <li>Wash Clothes</li>
+      <li class="done">Read <span class="done">(a span with .done inside the li)</span></li>
+      <li class="done">Maths Questions</li>
     </ul>
   </div>
-  <p style="margin:10px 0 0">a paragraph outside the box</p>
+  <ul style="margin:8px 0 4px">
+    <p class="done" style="margin:0">p.done inside a second ul</p>
+  </ul>
+  <p style="margin:0">a plain paragraph at the bottom</p>
 </div>
 <pre class="readout" id="ro"></pre>
 <style id="hi"></style>
 <script>
-  var sel = document.getElementById('sel');
+  var sel = document.getElementById('sel'), pick = document.getElementById('pick');
   var why = {
-    '.box p':'A space means "anywhere inside" — both paragraphs match, however deeply nested.',
-    '.box > p':'The > means "a DIRECT child only" — the deeply nested paragraph is skipped.',
-    'h1, h2':'A comma is just shorthand for writing two separate rules.',
-    'li.done':'No space = the SAME element must be both an li and carry .done.',
-    'li .done':'With a space it means a .done element INSIDE an li — that is the span, not the li itself.',
-    '.box li':'Every list item inside .box, at any depth.'
+    '.box p':'space = descendant: any p inside .box, at any depth.',
+    '.box > p':'> = child: only a p exactly one level below .box.',
+    'h1, h2':'comma = group: shorthand for two separate rules with the same declarations.',
+    '.box li':'descendant: the list items are two levels down, and a space does not care how deep.',
+    '.box > li':'child: matches nothing, because the li elements are children of the ul, not of .box.',
+    'li.done':'no space = chained: one element that is an li AND has the class done.',
+    'li .done':'with a space it means a .done element INSIDE an li: the span, not the li itself.',
+    'ul p.done':'a p with class done, somewhere inside a ul.',
+    'p.done':'every p with class done, wherever it is: too broad for the exercise.',
+    '.doneli':'class first, then the element glued on: the browser reads one class called "doneli". Element selectors must come first in a chain.'
   };
+  function scoped(s){ return s.split(',').map(function(x){ return '#stage ' + x.trim(); }).join(', '); }
   function upd(){
-    var s = sel.value;
-    document.getElementById('hi').textContent =
-      '#stage ' + s + ' { outline:3px solid #ff5c8a; outline-offset:2px; background:#ffe9ef; }';
-    var n = document.querySelectorAll('#stage ' + s).length;
-    document.getElementById('count').textContent = n + (n===1?' match':' matches');
-    document.getElementById('ro').textContent = s + ' { ... }\\n\\n' + (why[s]||'');
+    var s = sel.value.trim(), n = 0, bad = false;
+    if (s) { try { n = document.querySelectorAll(scoped(s)).length; } catch(e){ bad = true; } }
+    document.getElementById('hi').textContent = (s && !bad)
+      ? scoped(s) + ' { outline:3px solid #ff5c8a; outline-offset:2px; background:#ffe9ef; }' : '';
+    document.getElementById('count').textContent = bad ? 'not a valid selector' : n + (n === 1 ? ' match' : ' matches');
+    document.getElementById('ro').textContent = s + ' { ... }\\n\\n' + (bad ? 'The browser cannot parse this, so the rule would be ignored.' : (why[s] || 'Read it right to left: the last part names the element being styled.'));
   }
-  sel.addEventListener('change', upd); upd();
+  sel.addEventListener('input', upd);
+  pick.addEventListener('change', function(){ if (pick.value) { sel.value = pick.value; upd(); } });
+  upd();
 <\/script>`
   }],
+  quiz:[
+    { q:'What does <code>li.done</code> select?', options:['Any element with class done inside an li','An li that also has the class done','Every li and every .done','Nothing, it is invalid'], answer:1, why:'No space means one element must match both parts.' },
+    { q:'The list items sit inside a <code>ul</code> inside <code>.box</code>. Which selector reaches them?', options:['.box > li','.box li','.box + li','.box, li'], answer:1, why:'A space reaches any depth. > only reaches direct children.' },
+    { q:'What does <code>h1, h2 { color: blueviolet; }</code> do?', options:['Styles an h2 inside an h1','Styles every h1 and every h2','Styles only elements that are both','Styles the first h1 and h2'], answer:1, why:'A comma groups selectors so they share one declaration block.' },
+    { q:'Why does <code>.doneli</code> not select <code>&lt;li class="done"&gt;</code>?', options:['Chains cannot use classes','The browser reads it as a single class named "doneli"; the element must come first, as li.done','Class names cannot contain the letters li','It needs a space'], answer:1, why:'In a chain, a type (element) selector has to come first. Class and id parts can follow in any order.' },
+  ],
   notes:`
-    <h3>The four combinators</h3>
+    <h3>The four combinations</h3>
     <table>
       <tr><th>Written</th><th>Name</th><th>Means</th></tr>
-      <tr><td><code>h1, h2</code></td><td>Group</td><td>Both, as separate targets</td></tr>
+      <tr><td><code>h1, h2</code></td><td>Group</td><td>Both, with one shared block</td></tr>
+      <tr><td><code>.box &gt; p</code></td><td>Child</td><td>A <code>p</code> directly inside <code>.box</code></td></tr>
       <tr><td><code>.box p</code></td><td>Descendant</td><td>A <code>p</code> anywhere inside <code>.box</code></td></tr>
-      <tr><td><code>.box &gt; p</code></td><td>Child</td><td>A <code>p</code> that is a <em>direct</em> child</td></tr>
-      <tr><td><code>li.done</code></td><td>Chained</td><td>One element that is both</td></tr>
+      <tr><td><code>li.done</code></td><td>Chained</td><td>One element that is an <code>li</code> and has class <code>done</code></td></tr>
     </table>
-    <h3>The space is not decoration</h3>
-    <p><code>li.done</code> and <code>li .done</code> mean completely different things. No space = same element. Space = something inside it. Read selectors right to left: <code>.box li</code> is "an <code>li</code>… that has a <code>.box</code> somewhere above it".</p>`
+    <h3>Chains can get long</h3>
+    <pre data-lang="css">h1#title.big.heading { color: black; }
+/* an h1 with id "title" AND the classes "big" and "heading" */</pre>
+    <p>Read any combined selector as a sentence, from the right: <code>ul p.done</code> is "a paragraph with class done, somewhere inside a list". In DevTools, hovering a selector in the Styles pane highlights the elements it matches.</p>
+    <p>One oddity: the second <code>ul</code> holds a <code>p</code>, which is not valid HTML (a list should only contain <code>li</code> elements). The exercise uses it only to practise selectors.</p>`
 });
 
 
 PG.add({
-  id:'s07-positioning', index:45, udemyId:37350588, minutes:23, section:'s07', slug:'positioning', lesson:'7.3',
+  id:'s07-positioning', index:45, udemyId:37350588, minutes:23, section:'s07', slug:'positioning', kind:'build',
   title:'CSS Positioning',
-  blurb:'<code>position</code> decides how <code>top</code>/<code>right</code>/<code>bottom</code>/<code>left</code> behave. <b>relative</b> nudges an element from where it would have been; <b>absolute</b> pulls it out of the flow and pins it inside the nearest positioned ancestor.',
+  blurb:'<code>position</code> decides how <code>top</code>, <code>right</code>, <code>bottom</code> and <code>left</code> behave. <b>static</b> (the default) ignores them; <b>relative</b> moves an element from where it would normally be; <b>absolute</b> takes it out of the flow and places it inside the nearest positioned ancestor; <b>fixed</b> pins it to the browser window.',
   tasks:[
-    'Give <code>.blue-box</code> <code>position: relative</code> with <code>top: 200px</code> and <code>left: 200px</code>.',
-    'Give <code>.red-circle</code> <code>position: absolute</code> with <code>top: 150px</code> and <code>left: 250px</code>.',
-    'Make the circle round with <code>border-radius: 50%</code>.',
-    'Now delete <code>position: relative</code> from the blue box and watch where the circle jumps to. That is the whole lesson.'
+    'In the <code>&lt;style&gt;</code> element, make <code>.red-circle</code> red, <code>200px</code> wide and high, and round with <code>border-radius: 50%</code>. An empty div only shows up once it has a size and a colour.',
+    'Make <code>.blue-box</code> blue, <code>500px</code> wide and <code>300px</code> high.',
+    'Give <code>.blue-box</code> <code>position: relative</code> with <code>top: 200px</code> and <code>left: 200px</code>. It moves from where it would have been, and it also becomes the reference frame for its children.',
+    'Give <code>.red-circle</code> <code>position: absolute</code> with <code>top: 150px</code> and <code>left: 250px</code>. Those offsets are measured from the blue box, so the circle\'s top-left corner lands at the box\'s centre.',
+    'Delete <code>position: relative</code> from the blue box and watch the circle jump: with no positioned ancestor it measures from the page instead. Put it back.',
+    'Bonus: centre the circle properly with <code>top: 50%; left: 50%; transform: translate(-50%, -50%);</code>. The percentages place its corner; the transform pulls it back by half its own size.'
   ],
   files:{
-html:`<!DOCTYPE html>
+'index.html':`<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>CSS Positioning</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CSS Positioning Exercise</title>
+  <style>
+    /* Write your code here */
+
+    /* TODO 1: .red-circle - red, 200px by 200px, rounded into a circle */
+
+    /* TODO 2: .blue-box - blue, 500px wide and 300px high */
+
+    /* TODO 3: .blue-box - 200px down and 200px right of where it would normally sit */
+
+    /* TODO 4: .red-circle - 150px from the top and 250px from the left OF THE BLUE BOX */
+
+  </style>
 </head>
 <body>
   <div class="blue-box">
     <div class="red-circle"></div>
   </div>
 </body>
-</html>`,
-css:`.blue-box {
-  background-color: blue;
-  width: 500px;
-  height: 300px;
-  /* TODO 1: position + top + left */
-}
-
-.red-circle {
-  width: 200px;
-  height: 200px;
-  background-color: red;
-  /* TODO 2: position + top + left */
-  /* TODO 3: make it a circle */
-}
-`},
+</html>`},
   solution:{
-css:`.blue-box {
-  background-color: blue;
-  width: 500px;
-  height: 300px;
-  position: relative;
-  top: 200px;
-  left: 200px;
-}
+'index.html':`<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CSS Positioning Exercise</title>
+  <style>
+    .red-circle {
+      background-color: red;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      position: absolute;
+      top: 150px;
+      left: 250px;
+    }
 
-.red-circle {
-  width: 200px;
-  height: 200px;
-  background-color: red;
-  border-radius: 50%;
-  position: absolute;
-  top: 150px;
-  left: 250px;
-}
-`},
+    .blue-box {
+      background-color: blue;
+      width: 500px;
+      height: 300px;
+      position: relative;
+      top: 200px;
+      left: 200px;
+    }
+  </style>
+</head>
+<body>
+  <div class="blue-box">
+    <div class="red-circle"></div>
+  </div>
+</body>
+</html>`},
   explore:[
   {
-    title:'Position playground', height:580,
-    note:'The orange box is the one you are moving. Switch its <code>position</code> and drag the offsets — watch whether the other boxes shuffle up to fill the gap.',
+    title:'Position playground', height:600,
+    note:'The orange box is the one you are moving. Switch its <code>position</code> and drag the offsets, and watch whether the other boxes close up the gap. <code>sticky</code> is extra: it is not covered in the lecture.',
     html:`
 <div class="knobs">
   <label>position
     <select data-css="#mover|position">
       <option>static</option><option selected>relative</option>
-      <option>absolute</option><option>fixed</option><option>sticky</option>
+      <option>absolute</option><option>fixed</option><option value="sticky">sticky (extra)</option>
     </select>
   </label>
   <label>top <input type="range" min="-40" max="120" value="20" data-css="#mover|top|px"><span class="val"></span></label>
   <label>left <input type="range" min="-40" max="220" value="40" data-css="#mover|left|px"><span class="val"></span></label>
+  <label>margin-top <input type="range" min="0" max="40" value="0" data-css="#mover|margin-top|px"><span class="val"></span></label>
   <label><input type="checkbox" id="anc" checked> parent is <span class="tag">position: relative</span></label>
 </div>
-<div class="stage" id="parent" style="position:relative;height:260px;background:#eef1f9;border:2px dashed #b9c0d4">
+<div class="stage" id="parent" style="position:relative;height:270px;background:#eef1f9;border:2px dashed #b9c0d4">
   <div style="font-size:10.5px;color:#8b92a8;position:absolute;top:4px;left:6px">the parent container</div>
   <div class="box b" style="margin:22px 0 8px;width:200px">box one</div>
   <div class="box" id="mover" style="width:200px;position:relative;top:20px;left:40px;background:#ff9f43;color:#fff">I am the mover</div>
@@ -385,18 +451,18 @@ css:`.blue-box {
   var sel = document.querySelector('select[data-css="#mover|position"]');
   var anc = document.getElementById('anc');
   var text = {
-    static:'static is the default. top/left are IGNORED completely — the element sits wherever the normal flow puts it.',
-    relative:'relative nudges the element from its normal spot, but its original space is still reserved — notice the gap it left behind.',
-    absolute:'absolute lifts it out of the flow entirely, so the other boxes close the gap. It positions from the nearest ancestor that has a position set.',
-    fixed:'fixed pins it to the browser window rather than the page, so it ignores scrolling entirely.',
-    sticky:'sticky behaves like relative until you scroll past its offset, then it sticks like fixed.'
+    static:'static is the default. top and left are ignored: the box sits wherever the normal flow puts it. (margin still works: it is part of the box model, not of positioning.)',
+    relative:'relative shifts the box from its normal spot, but that spot stays reserved: see the gap it left behind. Margin adds to the offset.',
+    absolute:'absolute lifts the box out of the flow, so box three moves up into its place. It is measured from the nearest ancestor whose position is not static.',
+    fixed:'fixed measures from the browser window (here, this demo frame), not the page, and stays put when the page scrolls.',
+    sticky:'sticky acts like relative until scrolling would push it past its offset, then it sticks. It is not part of the lecture.'
   };
   function upd(){
     document.getElementById('parent').style.position = anc.checked ? 'relative' : 'static';
-    var extra = (sel.value === 'absolute')
-      ? '\\n\\nParent position is ' + (anc.checked
-          ? 'relative → the mover positions from the PARENT box.'
-          : 'static → no positioned ancestor, so it positions from the PAGE instead. Tick the box to compare.')
+    var extra = sel.value === 'absolute'
+      ? '\\n\\nThe parent is ' + (anc.checked
+          ? 'relative, so the mover is measured from the PARENT box.'
+          : 'static, and no other ancestor is positioned, so the mover is measured from the PAGE. Tick the box to compare.')
       : '';
     document.getElementById('explain').textContent = text[sel.value] + extra;
   }
@@ -404,115 +470,232 @@ css:`.blue-box {
 <\/script>`
   },
   {
+    title:'absolute vs fixed while scrolling', height:420,
+    note:'Scroll <b>inside this frame</b>. Both badges were placed 70px from the top. The absolute one belongs to the page, so it scrolls away; the fixed one belongs to the window, so it stays where it is.',
+    html:`
+<div id="tall" style="position:relative;height:1300px;border:1px solid #dfe3ee;border-radius:10px;
+     background:repeating-linear-gradient(#fff 0 39px,#eef1f9 39px 40px)">
+  <div style="padding:10px 14px;font-size:12.5px;color:#5b6382">a long page: keep scrolling</div>
+  <div class="box d" style="position:absolute;top:70px;right:20px;width:120px">absolute</div>
+</div>
+<div class="box b" style="position:fixed;top:70px;right:160px;width:120px">fixed</div>
+<pre class="readout" id="ro" style="position:fixed;left:16px;bottom:8px;margin:0;opacity:.95"></pre>
+<script>
+  function upd(){
+    var y = Math.round(window.scrollY);
+    document.getElementById('ro').textContent = 'scrolled ' + y + 'px: the absolute badge moved up ' + y + 'px, the fixed one did not move';
+  }
+  window.addEventListener('scroll', upd); upd();
+<\/script>`
+  },
+  {
     title:'z-index stacking', height:410,
-    note:'When positioned boxes overlap, <code>z-index</code> decides who is on top. Higher number = closer to you.',
+    note:'When positioned boxes overlap, <code>z-index</code> decides which is on top: the higher number is closer to you. Everything starts at the same level, and negative numbers sink behind the rest.',
     html:`
 <div class="knobs">
-  <label>red <input type="range" min="0" max="3" value="1" data-css="#r|z-index"><span class="val"></span></label>
-  <label>green <input type="range" min="0" max="3" value="2" data-css="#g|z-index"><span class="val"></span></label>
-  <label>yellow <input type="range" min="0" max="3" value="3" data-css="#y|z-index"><span class="val"></span></label>
+  <label>red <input type="range" min="-1" max="3" value="1" data-css="#r|z-index"><span class="val"></span></label>
+  <label>green <input type="range" min="-1" max="3" value="2" data-css="#g|z-index"><span class="val"></span></label>
+  <label>yellow <input type="range" min="-1" max="3" value="3" data-css="#y|z-index"><span class="val"></span></label>
 </div>
-<div class="stage" style="position:relative;height:200px">
+<div class="stage" style="position:relative;height:200px;z-index:0">
   <div id="r" class="box d" style="position:absolute;top:20px;left:20px;width:150px;height:110px;z-index:1">red</div>
   <div id="g" class="box b" style="position:absolute;top:50px;left:90px;width:150px;height:110px;z-index:2">green</div>
   <div id="y" class="box c" style="position:absolute;top:80px;left:160px;width:150px;height:110px;z-index:3">yellow</div>
 </div>
 <pre class="readout" data-readout="#r,#g,#y"></pre>
-<p class="note"><code>z-index</code> only works on elements whose <code>position</code> is something other than <code>static</code>. That is the number one reason it "doesn't work".</p>`
+<p class="note"><code>z-index</code> only affects positioned elements (position other than static). And a z-index of 0 does not put an absolute element back into the normal flow: only <code>static</code> or <code>relative</code> does that.</p>`
   }],
+  quiz:[
+    { q:'<code>position: relative; top: 50px;</code> moves an element 50px down from…', options:['the top of the page','its parent\'s top edge','where it would normally have been','the browser window'], answer:2, why:'relative is measured from the element\'s own normal position, and that original space stays reserved.' },
+    { q:'An absolute element has no positioned ancestors. Where are its offsets measured from?', options:['Its parent','The top-left of the page','Its original position','The centre of the screen'], answer:1, why:'Without a positioned ancestor, absolute falls back to the page itself. Give the parent position: relative to change that.' },
+    { q:'What do <code>top</code> and <code>left</code> do on a <code>static</code> element?', options:['Move it','Nothing at all','Move its children','Act like margins'], answer:1, why:'Offsets only work once position is relative, absolute or fixed.' },
+    { q:'You scroll down a long page. What happens to a <code>fixed</code> element?', options:['It scrolls away like everything else','It stays in the same place on the screen','It disappears','It jumps to the bottom'], answer:1, why:'fixed is relative to the viewport, which does not move when you scroll. An absolute element scrolls with the page.' },
+    { q:'A 200px circle gets <code>top: 50%; left: 50%</code> inside its parent. Where does it end up?', options:['Exactly centred','Its top-left corner is at the parent\'s centre','Half outside on the left','At the bottom right'], answer:1, why:'The element is still a rectangle, and the offsets place its top-left corner. translate(-50%, -50%) pulls it back to the true centre.' },
+  ],
   notes:`
-    <h3>The five values</h3>
+    <h3>The values</h3>
     <table>
-      <tr><th>Value</th><th>Behaviour</th><th>Keeps its space?</th></tr>
-      <tr><td><code>static</code></td><td>Default. Ignores top/left.</td><td>—</td></tr>
-      <tr><td><code>relative</code></td><td>Nudged from its normal spot.</td><td>Yes</td></tr>
-      <tr><td><code>absolute</code></td><td>Pinned inside nearest positioned ancestor.</td><td>No</td></tr>
-      <tr><td><code>fixed</code></td><td>Pinned to the viewport; ignores scrolling.</td><td>No</td></tr>
-      <tr><td><code>sticky</code></td><td>Relative until it hits your offset, then fixed.</td><td>Yes</td></tr>
+      <tr><th>Value</th><th>Measured from</th><th>Keeps its space in the flow?</th></tr>
+      <tr><td><code>static</code></td><td>Offsets are ignored</td><td>Yes</td></tr>
+      <tr><td><code>relative</code></td><td>Its own normal position</td><td>Yes</td></tr>
+      <tr><td><code>absolute</code></td><td>The nearest positioned ancestor (or the page)</td><td>No</td></tr>
+      <tr><td><code>fixed</code></td><td>The browser window</td><td>No</td></tr>
     </table>
-    <h3>The absolute + relative pairing</h3>
-    <p>The classic pattern: parent gets <code>position: relative</code> (with no offsets), child gets <code>position: absolute</code>. The parent becomes the child's coordinate system. Forget the parent's <code>relative</code> and the child flies off to the corner of the whole page.</p>`
+    <h3>The pairing you will use constantly</h3>
+    <pre data-lang="css">.parent { position: relative; }   /* no offsets: it doesn't move, it becomes the frame */
+.child  { position: absolute; top: 0; right: 0; }   /* pinned to the parent's corner */</pre>
+    <h3>A circle is still a box</h3>
+    <p><code>border-radius: 50%</code> only rounds the corners you see. For layout the circle is the same square as before, which is why <code>top: 50%; left: 50%</code> puts its top-left corner, not its middle, at the centre.</p>`
 });
 
 
 PG.add({
-  id:'s07-flag', index:46, udemyId:37350652, minutes:18, section:'s07', slug:'flag-project', lesson:'7.4', project:true,
-  title:'CSS Flag Project',
-  blurb:'Build a flag out of nothing but positioned boxes — a proper test of the box model plus positioning.',
+  id:'s07-flag', index:46, udemyId:37350652, minutes:18, section:'s07', slug:'flag-project', kind:'build', project:true,
+  title:'CSS Flag',
+  blurb:'Rebuild the flag of Laos with nothing but CSS: a red field, a blue band across the middle half and a white circle in its centre. The HTML is fixed and has almost no classes, so you reach elements by their structure with combinators, then place them with relative and absolute positioning.',
   tasks:[
-    'Give <code>.flag</code> whatever it needs to become the positioning context for its children.',
-    'Make <code>.circle</code> a 100px red circle centred in the flag.',
-    'Then try a harder flag — see the Notes tab for suggestions.'
+    'Do not edit the HTML. Make <code>.flag</code> <code>900px</code> × <code>600px</code> with the red <code>#ce1126</code>.',
+    'Select the blue band, the div that is a direct child of the flag, with <code>.flag &gt; div</code>. Make it <code>100%</code> wide, <code>300px</code> high and <code>#002868</code>.',
+    'Select the circle, the div inside that div, with <code>.flag &gt; div &gt; div</code>. Make it <code>200px</code> × <code>200px</code>, white, with <code>border-radius: 50%</code>.',
+    'Position it: <code>.flag</code> gets <code>position: relative</code> (it stays put and becomes the frame); the band gets <code>position: absolute; top: 150px</code> (a quarter of 600); the circle gets <code>position: absolute</code> with <code>top: 50px</code> = (300 − 200) ÷ 2 and <code>left: 350px</code> = (900 − 200) ÷ 2.',
+    'Style the text: every <code>p</code> gets <code>font-size: 5rem</code>, <code>text-align: center</code>, white, and <code>margin: 0</code> plus <code>padding: 0</code>. Without that, the paragraphs\' default margins push things out of place.',
+    'Make only the text inside the circle black with a descendant selector such as <code>.flag &gt; div div p</code>. It is more specific than <code>p</code>, so it wins wherever it sits. Tip: in DevTools, right-click the element, then Copy → Copy selector, and simplify what you get.',
+    'The flag is 900px wide, wider than the preview: scroll sideways, or press <b>↗ open</b> to see it whole.'
   ],
   files:{
-html:`<!DOCTYPE html>
+'index.html':`<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>CSS Flag</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CSS Flag Project</title>
+  <style>
+    /* Write your CSS here. Don't change the HTML.
+       The flag is 900px wide and 600px high.
+       Red: #ce1126   Blue: #002868   The white circle is 200px wide.
+       The blue band is half the flag's height, centred vertically. */
+
+  </style>
 </head>
 <body>
   <div class="flag">
-    <div class="circle"></div>
+    <p>The Flag</p>
+    <div>
+      <div>
+        <p>of Laos</p>
+      </div>
+    </div>
   </div>
 </body>
-</html>`,
-css:`body {
-  background: #ddd;
-  padding: 40px;
-}
-
-.flag {
-  width: 300px;
-  height: 200px;
-  background-color: white;
-  border: 1px solid #999;
-  /* TODO: make this the positioning context */
-}
-
-.circle {
-  /* TODO: a red circle, 100px, centred in the flag */
-}
-`},
+</html>`},
   solution:{
-css:`body {
-  background: #ddd;
-  padding: 40px;
-}
+'index.html':`<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CSS Flag Project</title>
+  <style>
+    .flag {
+      width: 900px;
+      height: 600px;
+      position: relative;
+      background-color: #ce1126;
+    }
 
-.flag {
-  width: 300px;
-  height: 200px;
-  background-color: white;
-  border: 1px solid #999;
-  position: relative;
-}
+    .flag > div {
+      background-color: #002868;
+      height: 300px;
+      width: 100%;
+      position: absolute;
+      top: 150px;
+    }
 
-.circle {
-  width: 100px;
-  height: 100px;
-  background-color: #bc002d;
-  border-radius: 50%;
-  position: absolute;
-  top: 50px;
-  left: 100px;
-}
-`},
+    .flag > div > div {
+      background-color: white;
+      position: absolute;
+      height: 200px;
+      width: 200px;
+      border-radius: 50%;
+      top: 50px;
+      left: 350px;
+    }
+
+    p {
+      font-size: 5rem;
+      color: white;
+      text-align: center;
+      padding: 0;
+      margin: 0;
+    }
+
+    .flag > div div p {
+      color: black;
+    }
+  </style>
+</head>
+<body>
+  <div class="flag">
+    <p>The Flag</p>
+    <div>
+      <div>
+        <p>of Laos</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>`},
+  explore:[{
+    title:'Why absolute, and why margin: 0', height:520,
+    note:'A small copy of the flag (360 × 240, so the band should start 60px down). Try the band with <code>relative</code>: it sits after the paragraph in the normal flow, so its position depends on the text and its margins. With <code>absolute</code> it lands exactly where you say.',
+    html:`
+<div class="knobs">
+  <label>band position
+    <select id="pos"><option value="relative">relative, top: 0</option><option value="absolute" selected>absolute, top: 60px</option></select>
+  </label>
+  <label><input type="checkbox" id="m0" checked> <span class="tag">p { margin: 0; }</span></label>
+</div>
+<div class="stage" style="padding:20px">
+  <div class="mini-flag" id="flag">
+    <p>The Flag</p>
+    <div>
+      <div>
+        <p>of Laos</p>
+      </div>
+    </div>
+  </div>
+</div>
+<pre class="readout" id="ro"></pre>
+<style>
+  .mini-flag { width: 360px; height: 240px; position: relative; background: #ce1126; }
+  .mini-flag > div { background: #002868; width: 100%; height: 120px; }
+  .mini-flag > div > div { background: #fff; width: 80px; height: 80px; border-radius: 50%; position: absolute; top: 20px; left: 140px; }
+  .mini-flag p { font-size: 2rem; color: #fff; text-align: center; font-family: sans-serif; }
+  .mini-flag > div div p { color: #000; font-size: 0.75rem; line-height: 80px; }
+</style>
+<style id="dyn"></style>
+<script>
+  function upd(){
+    var abs = document.getElementById('pos').value === 'absolute', m0 = document.getElementById('m0').checked;
+    document.getElementById('dyn').textContent =
+      '.mini-flag > div { position: ' + (abs ? 'absolute; top: 60px' : 'relative; top: 0') + '; }' +
+      (m0 ? ' .mini-flag p { margin: 0; padding: 0; }' : '');
+    var f = document.getElementById('flag').getBoundingClientRect();
+    var b = document.querySelector('.mini-flag > div').getBoundingClientRect();
+    var p = getComputedStyle(document.querySelector('.mini-flag p')).marginTop;
+    var off = Math.round(b.top - f.top);
+    document.getElementById('ro').textContent =
+      'band top: ' + off + 'px below the top of the flag   (target: 60px)\\n' +
+      'paragraph margin-top: ' + p + '\\n\\n' +
+      (abs ? (off === 60 ? 'Exactly right: absolute ignores the paragraph completely.' : 'Off target.')
+           : 'In the normal flow the band follows the paragraph, so the text size and the margins decide where it lands.');
+  }
+  document.getElementById('pos').addEventListener('change', upd);
+  document.getElementById('m0').addEventListener('change', upd);
+  upd();
+<\/script>`
+  }],
+  quiz:[
+    { q:'Which selector picks the white circle in this HTML?', options:['.flag > p','.flag > div','.flag > div > div','.flag + div'], answer:2, why:'The circle is a div inside the div that is a direct child of .flag.' },
+    { q:'Why does <code>.flag</code> get <code>position: relative</code> with no offsets?', options:['To move it 0px','So the absolute band is measured from the flag, not the page','To make it red','Absolute children need a relative parent to be visible'], answer:1, why:'A relative parent stays where it is but becomes the reference frame for absolute children.' },
+    { q:'The band is 900 × 300 and the circle 200 × 200. What centres the circle?', options:['top: 150px; left: 450px','top: 50px; left: 350px','top: 100px; left: 700px','top: 50%; left: 50%'], answer:1, why:'(300 − 200) ÷ 2 = 50 and (900 − 200) ÷ 2 = 350. Plain 50% would place its corner, not its centre.' },
+    { q:'Why does <code>.flag &gt; div div p { color: black; }</code> beat <code>p { color: white; }</code>?', options:['It is written later','It is more specific: a class plus several elements beat one element','Black always beats white','Descendant selectors are always !important'], answer:1, why:'Specificity decides before position, so it wins even if it comes first in the file.' },
+  ],
   notes:`
-    <h3>The maths for centring</h3>
-    <p>The flag is 300×200 and the circle is 100×100, so <code>left = (300 − 100) / 2 = 100px</code> and <code>top = (200 − 100) / 2 = 50px</code>.</p>
-    <p>A slicker way that needs no maths at all:</p>
-    <pre>.circle {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}</pre>
-    <h3>Harder flags to try</h3>
-    <ul>
-      <li><b>France / Italy</b> — three vertical stripes.</li>
-      <li><b>Norway / Denmark</b> — an off-centre cross: two overlapping bars.</li>
-      <li><b>Japan → South Korea</b> — the circle gets a lot more interesting.</li>
-      <li><b>USA</b> — repeating stripes; a good excuse to try <code>repeating-linear-gradient</code>.</li>
-    </ul>`
+    <h3>The centring maths</h3>
+    <p>To centre a child inside a parent with absolute offsets: <code>offset = (parent size − child size) ÷ 2</code>, separately for top and left.</p>
+    <h3>Getting exact colours</h3>
+    <p>Open an image of the real flag in Chrome, open DevTools, then the three-dot menu inside DevTools → More tools → CSS overview → Capture overview. It lists the colours on the page, which is where #ce1126 and #002868 come from.</p>
+    <h3>Copy selector, then simplify</h3>
+    <p>Right-click an element in the Elements panel → Copy → Copy selector gives a long chain such as <code>body &gt; div &gt; div &gt; div &gt; p</code>. Don't paste it blindly: swap the start for <code>.flag</code>, loosen the <code>&gt;</code>s where depth does not matter, and you get something readable like <code>.flag div div p</code>.</p>`
+});
+
+
+PG.add({
+  id:'l047', index:47, udemyId:17966538, minutes:4, section:'s07', slug:'nothing-easy-is-worth-doing', kind:'read',
+  title:'Tip from Angela - Nothing Easy is Worth Doing!',
+  blurb:'A short pep talk at the end of the intermediate CSS module. Feeling "not cut out for this" is normal: programming skill is built by practice, not inherited, and people who make it look easy have usually put in a lot of unseen hours. Keep showing up, especially when positioning feels frustrating.',
+  quiz:[
+    { q:'According to the tip, where does programming skill mostly come from?', options:['Natural talent you either have or don\'t','Regular practice over time','Memorising every property','Watching videos at double speed'], answer:1, why:'The point of the talk: skills that look effortless usually hide many hours of practice.' },
+  ],
 });

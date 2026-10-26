@@ -267,119 +267,110 @@ const HTML = `<!DOCTYPE html>
 
 const CSS = `html,
 body {
-  background-color: #211F2B;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
+  margin: 0;
+  min-height: 100%;
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  background: radial-gradient(circle at 20% 0%, #1f3b4d 0%, #0e1a23 70%);
+  color: #e8f1f5;
 }
 
 h1,
 h2 {
-  margin: 0;
+  margin: 0 0 8px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
 }
 
 h1 {
-  color: white;
-  font-size: 16px;
-  font-weight: 500;
-  margin-top: 10px;
+  font-size: 1.6rem;
+  color: #7fe0c3;
 }
 
 h2 {
-  color: rgba(255, 255, 255, 0.5);
-  font-size: 14px;
-  font-weight: 500;
-  margin-bottom: 10px;
+  font-size: 1.05rem;
+  color: #a9c6d4;
+}
+
+.container {
+  max-width: 420px;
+  margin: 40px auto;
+  padding: 28px 30px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(127, 224, 195, 0.25);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
 }
 
 form {
-  margin: 0;
-  padding: 0;
-  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 18px;
 }
 
 .divider {
-  width: 100px;
-  height: 3px;
-  margin: 20px auto;
-  background-color: #617BFF;
+  height: 1px;
+  margin: 18px 0;
+  background: rgba(169, 198, 212, 0.25);
 }
 
 input,
 textarea {
-  position: relative;
-  text-align: center;
-  display: block;
-  margin: 0;
-  border-radius: 7px;
-  border: 2px white solid;
-  background-color: white;
-  padding: 10px 20px;
   width: 100%;
-  color: #1E1C29;
-  margin-bottom: 20px;
   box-sizing: border-box;
-  transition: all 0.2s;
+  padding: 10px 12px;
+  font: inherit;
+  color: #e8f1f5;
+  background: #0b151c;
+  border: 1px solid #2c4757;
+  border-radius: 8px;
+  outline: none;
 }
 
 input:focus,
 textarea:focus {
-  outline: none;
-  border: 2px #617BFF solid;
-}
-
-.container {
-  background-color: rgba(255, 255, 255, 0.1);
-  width: 300px;
-  margin: 0 auto;
-  border-radius: 14px;
-  padding: 30px 30px 20px 30px;
-  margin-top: 50px;
+  border-color: #7fe0c3;
+  box-shadow: 0 0 0 3px rgba(127, 224, 195, 0.18);
 }
 
 input[name="amount"] {
-  font-size: 20px;
-  font-weight: 600;
+  font-size: 1.2rem;
+  font-variant-numeric: tabular-nums;
 }
 
+/* hide the number input's arrows */
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 
+textarea[name="address"] {
+  min-height: 70px;
+  resize: vertical;
+}
+
 #submit-btn {
-  display: block;
-  text-decoration: none;
-  border-radius: 7px;
-  margin-bottom: 10px;
-  cursor: pointer;
-  font-size: 20px;
+  margin-top: 6px;
+  padding: 11px 16px;
+  font: inherit;
   font-weight: 600;
-  border: 2px #617BFF solid;
-  color: white;
-  background-color: #617BFF;
-  padding: 15px;
-  transition: all 0.2s;
+  color: #0e1a23;
+  background: #7fe0c3;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s;
 }
 
 #submit-btn:hover {
-  border: 2px #8095FF solid;
-  background-color: #8095FF;
+  background: #a5ecd7;
 }
 
 #submit-btn:disabled {
-  border: 2px rgba(255, 255, 255, 0.1) solid;
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
-textarea[name="address"] {
-  resize: none;
-  font-size: 16px;
-  font-weight: 600;
-  padding: 10px 2.7rem;
-  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  color: #93a9b3;
+  background: #3e5a66;
+  cursor: not-allowed;
 }
 `;
 

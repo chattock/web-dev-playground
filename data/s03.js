@@ -245,8 +245,8 @@ PG.add({
   blurb:'Two kinds of list: <code>&lt;ul&gt;</code> when the order does not matter (bullets) and <code>&lt;ol&gt;</code> when it does (numbers the browser adds for you). Either way, each item goes in its own <code>&lt;li&gt;</code>, and only <code>li</code> elements sit directly inside the list.',
   tasks:[
     'Wrap the recipe title in an <code>&lt;h1&gt;</code>, <i>Ingredients</i> and <i>Instructions</i> in <code>&lt;h2&gt;</code>, and the two "For the …" labels in <code>&lt;h3&gt;</code>.',
-    'Turn the six dough ingredients into an <b>unordered</b> list: one <code>&lt;ul&gt;</code>, each ingredient in its own <code>&lt;li&gt;</code>.',
-    'Do the same for the three filling ingredients.',
+    'Turn the six batter ingredients into an <b>unordered</b> list: one <code>&lt;ul&gt;</code>, each ingredient in its own <code>&lt;li&gt;</code>.',
+    'Do the same for the three topping ingredients.',
     'The ten steps must happen in order, so they go in an <code>&lt;ol&gt;</code>. Don\'t type any numbers: the list counts for you.',
     'Move one step to a different place in the list and watch every number update.',
   ],
@@ -261,37 +261,37 @@ PG.add({
 
   <!-- TODO 1: headings: h1 for the title, h2 for Ingredients and Instructions,
        h3 for the two "For the ..." labels -->
-  Recipe for the Best Cinnamon Rolls
+  Recipe for Weekend Banana Pancakes
 
   Ingredients
 
-  For the dough:
+  For the batter:
   <!-- TODO 2: an unordered list, one li per ingredient -->
-  ¾ cup warm milk
-  2¼ teaspoons yeast
-  ¼ cup granulated sugar
-  1 egg plus 1 egg yolk
-  ¼ cup butter
-  3 cups bread flour
+  2 ripe bananas
+  2 eggs
+  1 cup plain flour
+  2 teaspoons baking powder
+  ¾ cup milk
+  a pinch of salt
 
-  For the filling:
+  For the topping:
   <!-- TODO 3: another unordered list -->
-  ⅔ cup dark brown sugar
-  1½ tablespoons ground cinnamon
-  ¼ cup butter
+  1 cup mixed berries
+  2 tablespoons maple syrup
+  a spoonful of yoghurt
 
   Instructions
   <!-- TODO 4: an ORDERED list, because these steps happen in sequence -->
-  Stir the yeast, sugar and eggs into the warm milk.
-  Melt the butter and add it to the mixture.
-  Add the flour and mix until it comes together as a dough.
-  Knead the dough for 10 minutes.
-  Put the dough in a large bowl, cover it and leave it to rise for 2 hours.
-  Once it has doubled in size, roll it out into a large rectangle.
-  For the filling, melt the butter and stir in the sugar and cinnamon.
-  Spread the filling over the dough and roll it up like a swiss roll.
-  Slice the roll into 3cm pieces and lay them flat in a baking tray.
-  Bake at 180°C (350°F) for 20–25 minutes, until lightly browned.
+  Mash the bananas in a large bowl until smooth.
+  Whisk in the eggs and the milk.
+  Mix the flour, baking powder and salt in a second bowl.
+  Fold the dry mix into the wet mix until just combined.
+  Leave the batter to rest for 5 minutes.
+  Heat a lightly oiled frying pan over a medium heat.
+  Pour in about ¼ cup of batter for each pancake.
+  Flip each pancake when bubbles appear on top, after about 2 minutes.
+  Cook the other side for another minute, then keep it warm.
+  Stack the pancakes and finish with the berries, syrup and yoghurt.
 
 </body>
 </html>
@@ -305,39 +305,39 @@ PG.add({
 </head>
 <body>
 
-  <h1>Recipe for the Best Cinnamon Rolls</h1>
+  <h1>Recipe for Weekend Banana Pancakes</h1>
 
   <h2>Ingredients</h2>
 
-  <h3>For the dough:</h3>
+  <h3>For the batter:</h3>
   <ul>
-    <li>¾ cup warm milk</li>
-    <li>2¼ teaspoons yeast</li>
-    <li>¼ cup granulated sugar</li>
-    <li>1 egg plus 1 egg yolk</li>
-    <li>¼ cup butter</li>
-    <li>3 cups bread flour</li>
+    <li>2 ripe bananas</li>
+    <li>2 eggs</li>
+    <li>1 cup plain flour</li>
+    <li>2 teaspoons baking powder</li>
+    <li>¾ cup milk</li>
+    <li>a pinch of salt</li>
   </ul>
 
-  <h3>For the filling:</h3>
+  <h3>For the topping:</h3>
   <ul>
-    <li>⅔ cup dark brown sugar</li>
-    <li>1½ tablespoons ground cinnamon</li>
-    <li>¼ cup butter</li>
+    <li>1 cup mixed berries</li>
+    <li>2 tablespoons maple syrup</li>
+    <li>a spoonful of yoghurt</li>
   </ul>
 
   <h2>Instructions</h2>
   <ol>
-    <li>Stir the yeast, sugar and eggs into the warm milk.</li>
-    <li>Melt the butter and add it to the mixture.</li>
-    <li>Add the flour and mix until it comes together as a dough.</li>
-    <li>Knead the dough for 10 minutes.</li>
-    <li>Put the dough in a large bowl, cover it and leave it to rise for 2 hours.</li>
-    <li>Once it has doubled in size, roll it out into a large rectangle.</li>
-    <li>For the filling, melt the butter and stir in the sugar and cinnamon.</li>
-    <li>Spread the filling over the dough and roll it up like a swiss roll.</li>
-    <li>Slice the roll into 3cm pieces and lay them flat in a baking tray.</li>
-    <li>Bake at 180°C (350°F) for 20–25 minutes, until lightly browned.</li>
+    <li>Mash the bananas in a large bowl until smooth.</li>
+    <li>Whisk in the eggs and the milk.</li>
+    <li>Mix the flour, baking powder and salt in a second bowl.</li>
+    <li>Fold the dry mix into the wet mix until just combined.</li>
+    <li>Leave the batter to rest for 5 minutes.</li>
+    <li>Heat a lightly oiled frying pan over a medium heat.</li>
+    <li>Pour in about ¼ cup of batter for each pancake.</li>
+    <li>Flip each pancake when bubbles appear on top, after about 2 minutes.</li>
+    <li>Cook the other side for another minute, then keep it warm.</li>
+    <li>Stack the pancakes and finish with the berries, syrup and yoghurt.</li>
   </ol>
 
 </body>

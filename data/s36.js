@@ -55,70 +55,64 @@ ${exported ? '\nexport default contacts;\n' : '\n// TODO 4: export the array as 
 
 // The contact-card stylesheet supplied by the course for lectures 295–297.
 const CARD_CSS = `body {
-  font-family: sans-serif;
-  margin: 0 auto;
-  padding: 25px;
-  max-width: 400px;
-  min-width: 400px;
-  background-color: #dfe6e9;
-  text-align: center;
+  margin: 0;
+  padding: 24px 16px 40px;
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  background: linear-gradient(160deg, #eef3ff 0%, #fdf6ec 100%);
+  color: #222a3a;
 }
 
 .heading {
   text-align: center;
-  font-size: 2em;
-  color: #2d3436;
-  margin: 20px 0 30px;
+  font-size: 2rem;
+  letter-spacing: 0.02em;
+  margin: 0 0 24px;
+  color: #2f3e66;
 }
 
 .card {
-  border-radius: 25px;
-  position: relative;
-  padding: 25px 15px;
-  background-color: #81ecec;
-  margin: 50px 0;
-  height: 200px;
-  box-shadow: 0 2px 5px #ccc;
-  text-align: left;
+  display: inline-block;
+  vertical-align: top;
+  width: 260px;
+  margin: 10px;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(31, 45, 80, 0.12);
+  overflow: hidden;
 }
 
 .top {
-  border-radius: 25px 25px 0 0;
-  height: 100px;
-  width: 100%;
-  background-color: #00cec9;
-  position: absolute;
-  top: 0;
-  left: 0;
   display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: #3d5a99;
+  color: #ffffff;
 }
 
 .name {
-  font-size: 2em;
-  color: #2d3436;
-  display: flex;
-  flex: 1;
-  margin: 10% 20px 0;
+  margin: 0;
+  font-size: 1.15rem;
 }
 
-.card img {
-  margin: 30px 20px 0 0;
-}
-
+.card img,
 .circle-img {
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
-  border: 7px solid #fff;
-  width: 120px;
-  height: 120px;
+  object-fit: cover;
+  border: 3px solid rgba(255, 255, 255, 0.85);
+  flex-shrink: 0;
 }
 
 .bottom {
-  margin-top: 120px;
+  padding: 12px 16px 16px;
 }
 
 .info {
-  margin: 20px 0;
-  color: #1a7e76;
+  margin: 6px 0;
+  font-size: 0.92rem;
+  color: #4a5571;
 }
 `;
 
@@ -173,64 +167,80 @@ const HAND_CARDS = [0, 1, 2].map(i => `      <Card
 
 // The Keeper App stylesheet supplied by the course (fonts come from Google Fonts;
 // offline the page falls back to the system fonts).
-const KEEPER_CSS = `@import url("https://fonts.googleapis.com/css?family=McLaren|Montserrat&display=swap");
-
-* {
-  padding: 0;
-  margin: 0;
+const KEEPER_CSS = `* {
   box-sizing: border-box;
 }
+
 html {
-  font-family: "Montserrat", sans-serif;
+  font-family: "Trebuchet MS", "Segoe UI", sans-serif;
 }
+
 body {
-  background: #eee;
-  padding: 0 16px;
+  margin: 0;
+  min-height: 100vh;
+  padding: 0 16px 80px;
+  background: #f3efe6;
 }
 
 header {
-  background-color: #f5ba13;
-  margin: auto -16px;
-  padding: 16px 32px;
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.3);
+  margin: 0 -16px 20px;
+  padding: 14px 32px;
+  background: #3b6ea8;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 header h1 {
-  color: #fff;
-  font-family: "McLaren", cursive;
-  font-weight: 200;
+  margin: 0;
+  color: #ffffff;
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 400;
+  letter-spacing: 0.04em;
 }
 
 footer {
-  position: absolute;
-  text-align: center;
+  position: fixed;
+  left: 0;
+  right: 0;
   bottom: 0;
-  width: 100%;
-  height: 2.5rem;
+  padding: 10px;
+  text-align: center;
 }
 
 footer p {
-  color: #ccc;
+  margin: 0;
+  color: #9a917c;
+  font-size: 0.85rem;
 }
 
 .note {
-  background: #fff;
-  border-radius: 7px;
-  box-shadow: 0 2px 5px #ccc;
-  padding: 10px;
-  width: 240px;
-  margin: 16px;
-  float: left;
+  display: inline-block;
+  vertical-align: top;
+  width: 220px;
+  margin: 12px;
+  padding: 14px 16px;
+  background: #fff8c4;
+  border-radius: 4px 4px 14px 4px;
+  box-shadow: 0 3px 8px rgba(80, 60, 0, 0.18);
+  transform: rotate(-0.6deg);
 }
+
+.note:nth-child(even) {
+  transform: rotate(0.8deg);
+}
+
 .note h1 {
-  font-size: 1.1em;
-  margin-bottom: 6px;
+  margin: 0 0 6px;
+  font-size: 1.1rem;
+  color: #4d3b00;
 }
+
 .note p {
-  font-size: 1.1em;
-  margin-bottom: 10px;
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.45;
   white-space: pre-wrap;
   word-wrap: break-word;
+  color: #3d3423;
 }
 `;
 
@@ -253,72 +263,64 @@ ${list.map(e => `  {
 ];
 ${exported ? '\nexport default emojipedia;\n' : '\n// TODO 4: export the array as the default export\n'}`;
 
-const EMOJI_CSS = `@import url("https://fonts.googleapis.com/css?family=Montserrat&display=swap");
-
-body {
-  font-family: "Montserrat", sans-serif;
-  font-weight: 400;
-  line-height: 1.666;
-  background: #c0d2d4;
-  color: #555;
+const EMOJI_CSS = `body {
+  margin: 0;
+  padding: 24px 20px 40px;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  background: #fbfaf7;
+  color: #2b2b2b;
 }
 
 h1 {
-  font-weight: 900;
-  font-size: 500%;
   text-align: center;
-  margin-top: 4rem;
-  color: #fff;
-  line-height: 1.2;
+  font-size: 2rem;
+  margin: 0 0 24px;
 }
 
 h1 span {
-  padding: 5px 15px;
-  background: #2ec2b0;
+  color: #d9480f;
 }
 
 .dictionary {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  margin: 4rem auto;
-  max-width: 90%;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px;
+  margin: 0;
 }
 
 .dictionary > .term {
-  text-align: center;
-  max-width: 20rem;
-  margin-bottom: 3rem;
-  padding: 2rem;
-  border-radius: 3px;
-  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.05), 0 5px 20px rgba(0, 0, 0, 0.1);
-  background-color: #fff;
-  transition: all 100ms ease-in-out;
+  padding: 14px 16px;
+  background: #ffffff;
+  border: 1px solid #ece7dd;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 
 .dictionary > .term > dt {
-  margin-bottom: 1rem;
+  margin-bottom: 8px;
 }
 
 dt {
-  color: #2ec2b0;
-  line-height: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
 }
 
 dt span {
-  font-size: 200%;
-  font-weight: 900;
+  font-size: 1.05rem;
 }
 
 .emoji {
-  margin: 0 auto 20px;
-  display: block;
-  font-size: 400%;
+  font-size: 2rem;
+  line-height: 1;
 }
 
 dd {
-  font-size: 92.5%;
-  margin-left: 0;
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: #555555;
 }
 `;
 
@@ -1318,14 +1320,15 @@ export default Heading;
 `;
 
 const GREETING_CSS = `body {
-  font-family: sans-serif;
-  padding: 20px;
+  margin: 0;
+  padding: 40px 20px;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  text-align: center;
 }
 
 .heading {
-  font-size: 50px;
-  font-weight: bold;
-  border-bottom: 5px solid black;
+  font-size: 2.6rem;
+  font-weight: 700;
 }
 `;
 

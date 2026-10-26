@@ -1101,7 +1101,7 @@ app.listen(port, () => {
 </head>
 <body>
   <div class="container">
-    <h1>Let's find something for you to do ✌️</h1>
+    <h1>Bored? Pick a type and get an idea 🎲</h1>
 
     <form action="/" id="form" class="form" method="POST">
       <select name="type" class="form-select">
@@ -1145,108 +1145,101 @@ app.listen(port, () => {
 'public/styles/main.css':`*,
 *::after,
 *::before {
-  margin: 0;
-  padding: 0;
   box-sizing: border-box;
 }
 
 html {
-  height: 100%;
+  font-size: 16px;
 }
 
 body {
-  font-family: monospace;
-  height: 100%;
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  color: #1d2433;
+  background: #f4f1ea;
 }
 
 h1 {
-  width: 100%;
-  margin-bottom: 40px;
+  margin: 0 0 18px;
+  font-size: 2rem;
+  text-align: center;
+  color: #23395d;
 }
 
 .container {
-  height: 100%;
-  width: 100%;
-  max-width: 570px;
+  max-width: 820px;
   margin: 0 auto;
-  padding: 60px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  padding: 32px 18px 48px;
 }
 
 .form {
-  width: 100%;
-  display: grid;
-  grid-template-columns: 1fr 1fr 80px;
-  grid-column-gap: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 26px;
 }
 
 .form-select {
-  height: 38px;
-  padding: 0 8px;
-  border: 1px solid #e8e8e8;
-  border-radius: 5px;
-  background: white;
-  font-family: monospace;
+  min-width: 170px;
+  padding: 9px 12px;
+  font: inherit;
+  background: #ffffff;
+  border: 1px solid #cfc8b8;
+  border-radius: 8px;
 }
 
 .form-submit {
-  outline: none;
-  border: 1px solid #e8e8e8;
-  background-color: white;
-  border-radius: 5px;
+  padding: 9px 22px;
+  font: inherit;
+  font-weight: 600;
+  color: #ffffff;
+  background: #e07a5f;
+  border: none;
+  border-radius: 8px;
   cursor: pointer;
-  font-family: monospace;
-  font-size: 14px;
-  line-height: 36px;
 }
 
 .form-submit:focus {
-  box-shadow: 0 0 0 0.5px #999;
+  outline: 3px solid rgba(224, 122, 95, 0.35);
+  outline-offset: 2px;
 }
 
 .cards {
-  display: flex;
-  flex-direction: column;
-  margin: 20px 0;
-  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 16px;
 }
 
 .card-item {
-  width: 100%;
-  padding: 5px 20px 20px;
-  border: 1px solid #e8e8e8;
-  background-color: white;
-  border-radius: 5px;
-}
-
-.card-info {
-  margin-top: 40px;
-  display: flex;
-  justify-content: space-between;
+  padding: 18px 20px;
+  background: #ffffff;
+  border-left: 5px solid #81b29a;
+  border-radius: 10px;
+  box-shadow: 0 4px 14px rgba(29, 36, 51, 0.08);
 }
 
 .card-activity {
-  line-height: 1.2;
-  margin-top: 10px;
+  margin: 0 0 10px;
+  font-size: 1.15rem;
+  line-height: 1.35;
+}
+
+.card-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: #5b6475;
 }
 
 .tag-error {
-  width: 100%;
+  padding: 14px 18px;
   text-align: center;
-  color: #b91c1c;
-}
-
-@media (max-width: 620px) {
-  .container {
-    padding: 60px 20px;
-  }
-  .form {
-    grid-template-columns: 1fr;
-    grid-gap: 10px;
-  }
+  color: #8a1c1c;
+  background: #fde2e1;
+  border-radius: 10px;
 }
 `,
 'package.json':`{
@@ -1322,7 +1315,7 @@ app.listen(port, () => {
 </head>
 <body>
   <div class="container">
-    <h1>Let's find something for you to do ✌️</h1>
+    <h1>Bored? Pick a type and get an idea 🎲</h1>
 
     <form action="/" id="form" class="form" method="POST">
       <select name="type" class="form-select">

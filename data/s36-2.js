@@ -3546,12 +3546,9 @@ form.create-note textarea {
 }
 
 /* The round add button hangs off the bottom-right corner of the form.
-   The first selector is the plain <button> you start with. The second is for
-   the Fab: in this playground <Zoom> wraps its child in <span class="mui-zoom">,
-   so that wrapper is what gets positioned (with real MUI you would position
-   the Fab itself). The Fab brings its own round yellow look. */
-form.create-note > button,
-form.create-note .mui-zoom {
+   This rule covers both the plain <button> you start with and the Fab that
+   replaces it: <Zoom> adds no wrapper of its own, it animates the Fab itself. */
+form.create-note > button {
   position: absolute;
   right: 18px;
   bottom: -18px;
@@ -3733,7 +3730,7 @@ export default Header;
 'styles.css':KEEPER_RESET + KEEPER4_BODY_DONE + KEEPER4_REST,
   },
   notes:`<h3>Material UI in this playground</h3>
-<p>The playground cannot install npm packages, so a few Material UI pieces are built in as light stand-ins: icons from <code>@mui/icons-material/&lt;Name&gt;</code> (Add, Delete, Edit, Check, Close, Favorite, Highlight, Note, Search, Menu, Star, Send, Save) and <code>Fab</code> and <code>Zoom</code> from <code>@mui/material</code>. You import them exactly as in a real project. Two differences: the stand-in <code>Zoom</code> wraps its child in a <code>&lt;span class="mui-zoom"&gt;</code>, which is why styles.css positions that span, and the stand-in <code>Fab</code> is a plain <code>&lt;button&gt;</code>, so inside a form it submits unless you call <code>event.preventDefault()</code> (the real MUI Fab is <code>type="button"</code>).</p>
+<p>The playground cannot install npm packages, so a few Material UI pieces are built in as light stand-ins: icons from <code>@mui/icons-material/&lt;Name&gt;</code> (Add, Delete, Edit, Check, Close, Favorite, Highlight, Note, Search, Menu, Star, Send, Save) and <code>Fab</code> and <code>Zoom</code> from <code>@mui/material</code>. You import them exactly as in a real project. Two differences: the stand-in <code>Zoom</code> adds no element of its own: like the real one, it scales the Fab itself, so styles.css positions the button directly. The stand-in <code>Fab</code> is a <code>&lt;button type="button"&gt;</code>, as in MUI, so clicking it does not submit the form by itself; the click handler still calls <code>event.preventDefault()</code> in case you swap in a plain button.</p>
 <h3>On your own machine</h3>
 <pre>npm install @mui/material @mui/icons-material @emotion/react @emotion/styled</pre>`,
   quiz:[

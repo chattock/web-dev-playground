@@ -1,11 +1,8 @@
 /* ===== Section 11 — Bootstrap ===== */
-/* Playground notes for this section:
-   - the CSS pane is injected at the top of <head>, BEFORE the page's Bootstrap link, so it
-     loses ties with Bootstrap. Rules that override Bootstrap live in a <style> block placed
-     after the link (as the course does in 11.1 and 11.2).
-   - Bootstrap's JS: when a page names the CDN bootstrap.bundle, the engine also injects its
-     vendored copy, and two copies make dropdowns open and instantly close. Lesson 66 therefore
-     loads the vendored file directly (vendor/bootstrap/bootstrap.bundle.min.js). */
+/* Playground note for this section:
+   Bootstrap's JS: when a page names the CDN bootstrap.bundle, the engine also injects its
+   vendored copy, and two copies make dropdowns open and instantly close. Lesson 66 therefore
+   loads the vendored file directly (vendor/bootstrap/bootstrap.bundle.min.js). */
 
 PG.add({
   id:'s11-intro', index:64, udemyId:37368626, minutes:16, section:'s11', slug:'bootstrap-intro', kind:'build',
@@ -156,9 +153,7 @@ PG.add({
 &lt;script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"&gt;&lt;/script&gt;</pre>
     <p>The link copied from the docs also carries <code>integrity</code> and <code>crossorigin</code> attributes. <code>integrity</code> is a hash of the file: if the CDN ever served something different, the browser would refuse it.</p>
     <h3>When to reach for it</h3>
-    <p>Good fit: a responsive, polished site that has to go live quickly. Poor fit: a tiny page, or a bespoke design where you want control of every pixel. Either way it sits on top of the CSS you already know; it does not replace it.</p>
-    <h3>In this playground</h3>
-    <p>The <code>style.css</code> pane is loaded before anything in your <code>&lt;head&gt;</code>, so in Bootstrap lessons put overriding rules in a <code>&lt;style&gt;</code> block after the Bootstrap link, as this lesson does.</p>`
+    <p>Good fit: a responsive, polished site that has to go live quickly. Poor fit: a tiny page, or a bespoke design where you want control of every pixel. Either way it sits on top of the CSS you already know; it does not replace it.</p>`
 });
 
 
@@ -500,13 +495,13 @@ PG.add({
 PG.add({
   id:'s11-components', index:66, udemyId:37389818, minutes:32, section:'s11', slug:'bootstrap-components', kind:'build',
   title:'Bootstrap Components',
-  blurb:'Components are pre-styled pieces of interface (buttons, navbars, cards, carousels, footers) made from ordinary HTML plus Bootstrap\'s classes. The workflow is: find one in the docs or the Examples pages, copy it, paste it, then change the words, images and classes. This lecture builds a one-page site for the moving company <b>Move It</b> that way.',
+  blurb:'Components are pre-styled pieces of interface (buttons, navbars, cards, carousels, footers) made from ordinary HTML plus Bootstrap\'s classes. The workflow is: find one in the docs or the Examples pages, copy it, paste it, then change the words, images and classes. This lecture builds a one-page site for an imaginary bike workshop, <b>Spoke &amp; Chain</b>, that way.',
   tasks:[
     'Challenge 1: find <a href="https://getbootstrap.com/docs/5.3/components/buttons/" target="_blank" rel="noopener">Buttons</a> in the docs and put a green button that says <b>Ok</b> where TODO 1 is. Two classes: <code>btn</code> for the shape, <code>btn-success</code> for the colour.',
     'The navbar is already pasted in from the docs. The preview is narrower than 992px, so its links hide behind a menu button that does nothing yet: collapsing menus and dropdowns need Bootstrap\'s JavaScript. Add <code>&lt;script src="vendor/bootstrap/bootstrap.bundle.min.js"&gt;&lt;/script&gt;</code> just before <code>&lt;/body&gt;</code> and try the menu and the dropdown. (In your own projects paste the jsDelivr link from the docs; the playground serves the same file locally, and loading both at once makes dropdowns open and instantly close.)',
-    'Make the navbar Move It\'s: brand <b>Move It</b> with the box icon from the comment, rename <b>Link</b> to <b>About</b> and <b>Dropdown</b> to <b>Services</b>, delete the <b>Disabled</b> item, and change the search box placeholder to <b>Postcode</b> and its button to <b>Check</b>.',
-    'Hero: build a centred hero (Examples → Heroes): an <code>&lt;h1 class="display-4 fw-bold"&gt;</code> reading <b>Move With Joy</b>, the paragraph from the comment with class <code>lead</code>, two large buttons <b>Get a Quote</b> and <b>Contact Us</b>, and the van picture with <code>img-fluid border rounded-3 shadow-lg</code>.',
-    'Features: a <b>Why Move With Us?</b> heading and three columns in <code>row g-4 py-5 row-cols-1 row-cols-lg-3</code> for <b>Professional</b>, <b>Countrywide</b> and <b>Personal Touch</b>, each topped with an icon square. The squares only take shape once you add the Examples page\'s own rule to the <code>&lt;style&gt;</code> block: <code>.feature-icon { width: 4rem; height: 4rem; border-radius: .75rem; }</code>.',
+    'Make the navbar Spoke &amp; Chain\'s: brand <b>Spoke &amp; Chain</b> with the 🚲 icon from the comment, rename <b>Link</b> to <b>About</b> and <b>Dropdown</b> to <b>Services</b>, delete the <b>Disabled</b> item, and change the search box placeholder to <b>Postcode</b> and its button to <b>Check</b>.',
+    'Hero: build a centred hero (Examples → Heroes): an <code>&lt;h1 class="display-4 fw-bold"&gt;</code> reading <b>Ride Further</b>, the paragraph from the comment with class <code>lead</code>, two large buttons <b>Book a Service</b> and <b>Visit the Shop</b>, and the workshop picture with <code>img-fluid border rounded-3 shadow-lg</code>.',
+    'Features: a <b>Why Ride With Us?</b> heading and three columns in <code>row g-4 py-5 row-cols-1 row-cols-lg-3</code> for <b>Same-Day Fixes</b>, <b>Fair Prices</b> and <b>Local Riders</b>, each topped with an icon square. The squares only take shape once you add the Examples page\'s own rule to the <code>&lt;style&gt;</code> block: <code>.feature-icon { width: 4rem; height: 4rem; border-radius: .75rem; }</code>.',
     'Challenge 2: add a carousel with indicators (Components → Carousel) showing the three photos from the comment. Wrap it in a <code>container</code> so it lines up with the rest of the page, and check that the carousel\'s <code>id</code> matches every <code>data-bs-target</code>.',
     'Finish with a footer from Examples → Footers. Then add <code>data-bs-theme="dark"</code> to the <code>&lt;html&gt;</code> tag and the whole page switches to dark mode (take it out again if you prefer light).'
   ],
@@ -516,16 +511,15 @@ PG.add({
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Move It</title>
+  <title>Spoke &amp; Chain</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <style>
     /* Your own CSS. It comes after the Bootstrap link, so it wins ties. */
   </style>
 </head>
 <body>
-  <!-- Pasted straight from the docs (Components > Navbar). TODO 3: make it Move It's.
-       Brand icon to use (a small inline SVG):
-       <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 16 16" fill="currentColor" fill-rule="evenodd" aria-hidden="true"><path d="M8 1 1.5 4v8L8 15l6.5-3V4L8 1Zm0 1.1 5.2 2.4L8 6.9 2.8 4.5 8 2.1ZM2.5 5.3l5 2.3v6.2l-5-2.3V5.3Zm6 8.5V7.6l5-2.3v6.2l-5 2.3Z"/></svg>
+  <!-- Pasted straight from the docs (Components > Navbar). TODO 3: make it Spoke &amp; Chain's.
+       Brand icon to use: the bike emoji 🚲 in a <span> before the name
   -->
   <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
@@ -569,26 +563,25 @@ PG.add({
   </div>
 
   <!-- TODO 4: hero
-       Heading: Move With Joy
-       Paragraph: We are a small, friendly moving company that thinks moving house can be calm,
-       quick and even fun. Tell us where you are going and we will handle the boxes, the van
-       and the heavy lifting.
-       Buttons: Get a Quote, Contact Us
-       Image: https://picsum.photos/seed/movingvan/700/500 -->
+       Heading: Ride Further
+       Paragraph: A neighbourhood bike workshop for everyday riders. Drop your bike off in the
+       morning and collect it in the evening, tuned, cleaned and ready to roll.
+       Buttons: Book a Service, Visit the Shop
+       Image: https://picsum.photos/seed/bikeworkshop/700/500 -->
 
-  <!-- TODO 5: features, heading "Why Move With Us?"
-       Professional: Our movers are trained to pack carefully, load efficiently and treat every
-       box as if it held something precious, because it usually does.
-       Countrywide: Across town or across the country, one team handles packing, transport and
-       unpacking, with a clear price agreed before we start.
-       Personal Touch: You get one coordinator from the first call to the last box, so someone
-       always knows your move inside out.
-       Icons: 💼 🚚 💬 (emoji stand in for the course's icon files) -->
+  <!-- TODO 5: features, heading "Why Ride With Us?"
+       Same-Day Fixes: Most repairs are done while you are at work, from punctures and brake
+       pads to a full gear set-up.
+       Fair Prices: Every job is priced before we start, and we ring you before doing anything
+       that would change the bill.
+       Local Riders: Our mechanics cycle these streets every day, so they know which parts wear
+       out first and how to make them last.
+       Icons: 🔧 🏷️ 🗺️ (emoji stand in for icon files) -->
 
   <!-- TODO 6: carousel with indicators, inside a .container. Photos:
-       https://picsum.photos/seed/movingcouple/1200/500
-       https://picsum.photos/seed/movingdog/1200/500
-       https://picsum.photos/seed/movingfamily/1200/500 -->
+       https://picsum.photos/seed/bikeride/1200/500
+       https://picsum.photos/seed/bikeparts/1200/500
+       https://picsum.photos/seed/biketeam/1200/500 -->
 
   <!-- TODO 7: footer -->
 
@@ -601,7 +594,7 @@ PG.add({
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Move It</title>
+  <title>Spoke &amp; Chain</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <style>
     /* copied from the Features example page: it is not part of Bootstrap itself */
@@ -616,8 +609,8 @@ PG.add({
   <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
       <a class="navbar-brand d-flex align-items-center gap-2" href="#">
-        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 16 16" fill="currentColor" fill-rule="evenodd" aria-hidden="true"><path d="M8 1 1.5 4v8L8 15l6.5-3V4L8 1Zm0 1.1 5.2 2.4L8 6.9 2.8 4.5 8 2.1ZM2.5 5.3l5 2.3v6.2l-5-2.3V5.3Zm6 8.5V7.6l5-2.3v6.2l-5 2.3Z"/></svg>
-        Move It
+        <span aria-hidden="true">🚲</span>
+        Spoke &amp; Chain
       </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -655,46 +648,45 @@ PG.add({
   </div>
 
   <div class="px-4 pt-5 my-5 text-center border-bottom">
-    <h1 class="display-4 fw-bold text-body-emphasis">Move With Joy</h1>
+    <h1 class="display-4 fw-bold text-body-emphasis">Ride Further</h1>
     <div class="col-lg-6 mx-auto">
       <p class="lead mb-4">
-        We are a small, friendly moving company that thinks moving house can be calm,
-        quick and even fun. Tell us where you are going and we will handle the boxes, the van
-        and the heavy lifting.
+        A neighbourhood bike workshop for everyday riders. Drop your bike off in the
+        morning and collect it in the evening, tuned, cleaned and ready to roll.
       </p>
       <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mb-5">
-        <button type="button" class="btn btn-primary btn-lg px-4 me-sm-3">Get a Quote</button>
-        <button type="button" class="btn btn-outline-secondary btn-lg px-4">Contact Us</button>
+        <button type="button" class="btn btn-primary btn-lg px-4 me-sm-3">Book a Service</button>
+        <button type="button" class="btn btn-outline-secondary btn-lg px-4">Visit the Shop</button>
       </div>
     </div>
     <div class="overflow-hidden" style="max-height: 30vh">
       <div class="container px-5">
-        <img src="https://picsum.photos/seed/movingvan/700/500" class="img-fluid border rounded-3 shadow-lg mb-4"
-          alt="Placeholder photo standing in for the moving van" width="700" height="500" loading="lazy" />
+        <img src="https://picsum.photos/seed/bikeworkshop/700/500" class="img-fluid border rounded-3 shadow-lg mb-4"
+          alt="Placeholder photo standing in for the workshop" width="700" height="500" loading="lazy" />
       </div>
     </div>
   </div>
 
   <div class="container px-4 py-5" id="featured-3">
-    <h2 class="pb-2 border-bottom">Why Move With Us?</h2>
+    <h2 class="pb-2 border-bottom">Why Ride With Us?</h2>
     <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
       <div class="feature col">
-        <div class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">💼</div>
-        <h3 class="fs-2 text-body-emphasis">Professional</h3>
-        <p>Our movers are trained to pack carefully, load efficiently and treat every box as if it held something precious, because it usually does.</p>
-        <a href="#" class="icon-link">Get a quote ›</a>
+        <div class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">🔧</div>
+        <h3 class="fs-2 text-body-emphasis">Same-Day Fixes</h3>
+        <p>Most repairs are done while you are at work, from punctures and brake pads to a full gear set-up.</p>
+        <a href="#" class="icon-link">Book a service ›</a>
       </div>
       <div class="feature col">
-        <div class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">🚚</div>
-        <h3 class="fs-2 text-body-emphasis">Countrywide</h3>
-        <p>Across town or across the country, one team handles packing, transport and unpacking, with a clear price agreed before we start.</p>
-        <a href="#" class="icon-link">Get a quote ›</a>
+        <div class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">🏷️</div>
+        <h3 class="fs-2 text-body-emphasis">Fair Prices</h3>
+        <p>Every job is priced before we start, and we ring you before doing anything that would change the bill.</p>
+        <a href="#" class="icon-link">Book a service ›</a>
       </div>
       <div class="feature col">
-        <div class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">💬</div>
-        <h3 class="fs-2 text-body-emphasis">Personal Touch</h3>
-        <p>You get one coordinator from the first call to the last box, so someone always knows your move inside out.</p>
-        <a href="#" class="icon-link">Get a quote ›</a>
+        <div class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-primary bg-gradient fs-2 mb-3">🗺️</div>
+        <h3 class="fs-2 text-body-emphasis">Local Riders</h3>
+        <p>Our mechanics cycle these streets every day, so they know which parts wear out first and how to make them last.</p>
+        <a href="#" class="icon-link">Book a service ›</a>
       </div>
     </div>
   </div>
@@ -708,13 +700,13 @@ PG.add({
       </div>
       <div class="carousel-inner">
         <div class="carousel-item active">
-          <img src="https://picsum.photos/seed/movingcouple/1200/500" class="d-block w-100" alt="Placeholder photo for slide 1" />
+          <img src="https://picsum.photos/seed/bikeride/1200/500" class="d-block w-100" alt="Placeholder photo for slide 1" />
         </div>
         <div class="carousel-item">
-          <img src="https://picsum.photos/seed/movingdog/1200/500" class="d-block w-100" alt="Placeholder photo for slide 2" />
+          <img src="https://picsum.photos/seed/bikeparts/1200/500" class="d-block w-100" alt="Placeholder photo for slide 2" />
         </div>
         <div class="carousel-item">
-          <img src="https://picsum.photos/seed/movingfamily/1200/500" class="d-block w-100" alt="Placeholder photo for slide 3" />
+          <img src="https://picsum.photos/seed/biketeam/1200/500" class="d-block w-100" alt="Placeholder photo for slide 3" />
         </div>
       </div>
       <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
@@ -731,7 +723,7 @@ PG.add({
   <div class="container">
     <footer class="row row-cols-1 row-cols-sm-2 row-cols-md-5 py-5 my-5 border-top">
       <div class="col mb-3">
-        <p class="fw-bold mb-1">Move It</p>
+        <p class="fw-bold mb-1">Spoke &amp; Chain</p>
         <p class="text-body-secondary">&copy; 2026</p>
       </div>
       <div class="col mb-3"></div>
@@ -755,7 +747,7 @@ PG.add({
         <h5>Help</h5>
         <ul class="nav flex-column">
           <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">FAQs</a></li>
-          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Get a quote</a></li>
+          <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Book a service</a></li>
           <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-body-secondary">Contact</a></li>
         </ul>
       </div>
@@ -869,9 +861,9 @@ PG.add({
 <script>
   var fr = document.getElementById('fr');
   fr.srcdoc = '<!DOCTYPE html><html lang="en"><head><link href="vendor/bootstrap/bootstrap.min.css" rel="stylesheet"></head><body>' +
-    '<nav class="navbar bg-body-tertiary px-3"><span class="navbar-brand">Move It</span><span class="text-body-secondary small">navbar with bg-body-tertiary</span></nav>' +
-    '<div class="container py-3"><h4>Move With Joy</h4><p class="text-body-secondary">Ordinary text and a form control follow the theme too.</p>' +
-    '<div class="d-flex gap-3 align-items-start"><div class="card" id="card" style="width:14rem"><div class="card-body"><h5 class="card-title">A card</h5><p class="card-text small">Its own theme can differ from the page.</p><a href="#" class="btn btn-primary btn-sm">Get a quote</a></div></div>' +
+    '<nav class="navbar bg-body-tertiary px-3"><span class="navbar-brand">Spoke &amp; Chain</span><span class="text-body-secondary small">navbar with bg-body-tertiary</span></nav>' +
+    '<div class="container py-3"><h4>Ride Further</h4><p class="text-body-secondary">Ordinary text and a form control follow the theme too.</p>' +
+    '<div class="d-flex gap-3 align-items-start"><div class="card" id="card" style="width:14rem"><div class="card-body"><h5 class="card-title">A card</h5><p class="card-text small">Its own theme can differ from the page.</p><a href="#" class="btn btn-primary btn-sm">Book a service</a></div></div>' +
     '<input class="form-control" style="max-width:200px" placeholder="Postcode"></div></div></body></html>';
   function upd(){
     var d = fr.contentDocument; if (!d || !d.getElementById('card')) return;
@@ -964,9 +956,8 @@ PG.add({
 </body>
 </html>`,
 'style.css':`/* css/style.css
-   Your own classes go here. (In this playground this pane is loaded before
-   Bootstrap, so it can add new classes but cannot override Bootstrap's own;
-   for that, use a <style> block placed after the Bootstrap link.) */
+   Your own classes. This file is linked after Bootstrap, so when one of
+   its rules ties with a Bootstrap rule, this one wins. */
 
 /* Provided: an animated gradient. Add the class to any element. */
 .gradient-background {
@@ -1169,9 +1160,8 @@ PG.add({
 </body>
 </html>`,
 'style.css':`/* css/style.css
-   Your own classes go here. (In this playground this pane is loaded before
-   Bootstrap, so it can add new classes but cannot override Bootstrap's own;
-   for that, use a <style> block placed after the Bootstrap link.) */
+   Your own classes. This file is linked after Bootstrap, so when one of
+   its rules ties with a Bootstrap rule, this one wins. */
 
 /* Provided: an animated gradient. Add the class to any element. */
 .gradient-background {

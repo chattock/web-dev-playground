@@ -288,7 +288,7 @@ function moveDemo() {
     $('where').textContent = p.root + 'index.html';
     var abs = new URL('/Users/you/Desktop/Project/Images/cat.png', p.root).href;
     var rel = new URL('./Images/cat.png', p.root).href;
-    card('abs', '&lt;img src="/Users/you/Desktop/Project/Images/cat.png" /&gt;', abs, abs === 'file:///Users/you/Desktop/Project/Images/cat.png');
+    card('abs', '&lt;img src="/Users/you/Desktop/Project/Images/cat.png" /&gt;', abs, abs === p.root + 'Images/cat.png');
     card('rel', '&lt;img src="./Images/cat.png" /&gt;', rel, true);
     $('ro').textContent = p.say;
   }

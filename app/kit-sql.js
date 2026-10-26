@@ -103,8 +103,10 @@
           <div class="sql-schema"><div class="console-head">Tables</div><div id="sqlSchema" class="sch"></div></div>
         </div>
         ${lesson.checks && lesson.checks.length ? `<div class="checks" id="checks">${lesson.checks.map((c, i) => `<div class="check" data-i="${i}"><span class="tick">○</span> ${c.desc}</div>`).join('')}</div>` : ''}`,
-      onRun: files => run(files),
+      // a solution usually creates its own tables, so it gets a fresh database
+      onRun: async (files, isSolution) => { if (isSolution && !lastWasSolution) await ensureDb(true); lastWasSolution = isSolution; run(files); },
     });
+    let lastWasSolution = false;
     const results = host.querySelector('#sqlResults'), status = host.querySelector('#dbStatus');
     const setStatus = (t, cls) => { status.textContent = t; status.className = 'hint-inline ' + (cls || ''); };
 

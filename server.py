@@ -23,7 +23,8 @@ def main():
     global PORT
     for attempt in range(20):
         try:
-            httpd = socketserver.TCPServer(("127.0.0.1", PORT), Handler)
+            httpd = socketserver.ThreadingTCPServer(("127.0.0.1", PORT), Handler)
+            httpd.daemon_threads = True
             break
         except OSError:
             PORT += 1

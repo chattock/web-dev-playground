@@ -98,7 +98,9 @@ async function checkLesson(l, problems) {
       if (body && typeof body === 'object') { body = new URLSearchParams(body).toString(); headers['content-type'] = 'application/x-www-form-urlencoded'; }
       if (s.json) { body = JSON.stringify(s.json); headers['content-type'] = 'application/json'; }
       const res = await sim.request({ method: s.method || 'GET', url: `http://localhost:${port}${s.path || '/'}`, headers, body });
-      [].concat(res.headers && res.headers['set-cookie'] || []).forEach(c => { const [nv] = c.split(';'); const i = nv.indexOf('='); jar[nv.slice(0, i)] = decodeURIComponent(nv.slice(i + 1)); });
+      [].concat(res.headers && res.headers['set-cookie'] || []).forEach(c => { const parts = c.split(';').map(x => x.trim()); const nv = parts[0]; const i = nv.indexOf('='); const name = nv.slice(0, i);
+        const expired = parts.some(x => /^expires=/i.test(x) && new Date(x.slice(8)) < new Date()) || parts.some(x => /^max-age=/i.test(x) && Number(x.slice(8)) <= 0);
+        if (expired) delete jar[name]; else jar[name] = decodeURIComponent(nv.slice(i + 1)); });
       const want = s.expect || (res.status >= 300 && res.status < 400 ? res.status : 200);
       if (res.error) p(`${s.method || 'GET'} ${s.path}: ${res.error}`);
       else if (res.status !== want && !(want === 200 && res.status < 400)) p(`${s.method || 'GET'} ${s.path} → ${res.status} (expected ${want})`);
@@ -107,7 +109,7 @@ async function checkLesson(l, problems) {
     if (db) await db.close();
   }
   if (kind === 'terminal') {
-    const sh = ShellSim.create({ files: l.fs || {}, cwd: l.cwd || '/Users/you' });
+    const sh = ShellSim.create({ files: l.fs || {}, cwd: l.cwd || '/Users/you', remotes: l.remotes });
     sh.hooks.node = () => '';
     (Array.isArray(l.solution) ? l.solution : []).forEach(c => { const r = sh.run(c); if (/not found|No such file|fatal:|usage:|error:/.test(r.out || '')) p(`solution "${c}" → ${r.out.split('\n')[0]}`); });
     (l.checks || []).forEach(c => { try { const fn = new Function('fs', 'git', 'shell', c.test); if (!fn(sh.fs, pth => sh.gitInfo(pth), { cwd: sh.cwd, history: sh.history, home: sh.home })) p(`check fails after solution: ${c.desc}`); } catch (e) { p(`check throws: ${c.desc} — ${e.message}`); } });
@@ -126,7 +128,21 @@ async function checkLesson(l, problems) {
   if (kind === 'walkthrough') (l.steps || []).forEach((s, i) => { if (s.file && files[s.file] == null) p(`step ${i} refers to missing file ${s.file}`); });
   if ((kind === 'read' || kind === 'walkthrough') && l.index) { if (!fs.existsSync(path.join(ROOT, 'content/notes', String(l.index).padStart(3, '0') + '.json')) && !l.body) p('read lesson has no notes and no body'); }
 }
-function split(sql) { const out = []; let cur = '', q = null; for (let i = 0; i < sql.length; i++) { const c = sql[i]; if (!q && sql.startsWith('--', i)) { const j = sql.indexOf('\n', i); i = j < 0 ? sql.length : j; continue; } if (q) { cur += c; if (c === q) q = null; continue; } if (c === "'" || c === '"') { q = c; cur += c; continue; } if (c === ';') { if (cur.trim()) out.push(cur.trim()); cur = ''; continue; } cur += c; } if (cur.trim()) out.push(cur.trim()); return out; }
+function split(sql) {
+  const out = []; let cur = '', q = null, i = 0;
+  while (i < sql.length) {
+    const c = sql[i], two = sql.slice(i, i + 2);
+    if (!q && two === '--') { const j = sql.indexOf('\n', i); cur += sql.slice(i, j < 0 ? sql.length : j); i = j < 0 ? sql.length : j; continue; }
+    if (!q && two === '/*') { const j = sql.indexOf('*/', i); i = j < 0 ? sql.length : j + 2; continue; }
+    if (q) { cur += c; if (c === q[0] && (q.length === 1 || two === q)) { if (q === '$$') { cur += '$'; i++; } q = null; } i++; continue; }
+    if (c === "'" || c === '"') { q = c; cur += c; i++; continue; }
+    if (two === '$$') { q = '$$'; cur += two; i += 2; continue; }
+    if (c === ';') { if (cur.trim()) out.push(cur.trim()); cur = ''; i++; continue; }
+    cur += c; i++;
+  }
+  if (cur.trim()) out.push(cur.trim());
+  return out;
+}
 let sectionBounds = null;
 function sectionOfIndex(i) {
   if (!sectionBounds) { sectionBounds = []; let cur = null; fs.readFileSync(path.join(ROOT, 'content/manifest.txt'), 'utf8').split('\n').forEach(l => { const m = l.match(/^## (\d+)\./); if (m) cur = 's' + m[1].padStart(2, '0'); else if (l && !l.startsWith('#')) sectionBounds[Number(l.split('|')[0])] = cur; }); }

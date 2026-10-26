@@ -24,6 +24,7 @@ PG.add({
   blurb: 'html string',       // 1–3 sentences: what the lecture teaches, in your own words. <code> and <b> allowed.
   tasks: ['html', ...],       // "Your task": 3–7 concrete, numbered steps the learner does HERE. Omit for read.
   quiz: [{ q, options:[4], answer: 0-based, why }],   // 2–5 questions on the lecture's key points
+  links: [{ title, url, note }],                      // optional resources the lecture points to (shown on every kind)
   explore: [{ title, note, height, html }],           // optional interactive demos (see below)
   notes: 'html',              // optional SHORT notes of your own; the full lecture notes are added automatically
   openTab: 'explore',         // optional: open this tab first
@@ -40,9 +41,11 @@ are attached by lecture index automatically — do not copy them into the lesson
 files:    { 'index.html': '...', 'style.css': '...', 'script.js': '...' },   // any subset; the STARTER with TODO comments
 solution: { 'index.html': '...', 'style.css': '...', 'script.js': '...' },   // same keys, finished
 previewBase: 'assets/dicee/',   // optional: relative image paths in the HTML resolve under this folder
-answers: 'Ada\n25',             // optional queued answers for prompt(), one per line
+answers: 'Ada, 25',             // optional queued answers for prompt(), comma-separated
 ```
-- The preview strips `<link href="style.css">` / `styles.css` and `<script src="script.js|index.js">` tags, so the course's own markup works unchanged; the panes are injected instead.
+- Any file the page links is used: `<link rel="stylesheet" href="x.css">` and `<script src="x.js">` are inlined when `x.css` / `x.js` is one of the lesson's files (so the course's own names — `styles.css`, `index.js`, `game.js` — work as they are). A link to `style(s).css` that is not a lesson file marks where the `style.css` pane goes, so it still comes after Bootstrap; with no link the pane goes last in `<head>`. `script.js` always runs at the end of `<body>`.
+- Several pages: put `about.html`, `contact.html`… in `files`. Links between them work in the preview, and a page picker appears above it. The page's `<title>` shows above the preview.
+- Every loop is guarded: a loop that runs for more than 1.5 s stops with an error instead of freezing the app.
 - `alert`, `console.log`, `prompt` go to the console panel. `prompt()` reads queued answers.
 - Sound: `new Audio("sounds/tom-1.mp3").play()` is synthesised (tom-1..4, snare, crash, kick-bass, red, green, blue, yellow, wrong). Do not ship audio files.
 - Images available (course assets are NOT copied; these are originals):
@@ -67,6 +70,7 @@ solution: { ...same keys... }
 - `ReactDOM.render` works (React 18 prints a deprecation warning, shown as a warning, not an error).
 
 ### `node` — Node / Express / EJS / APIs (simulated server in the browser)
+The database for `db:` lessons lives on the page, so data survives ▶ Run (like a real database); the **Reset database** button rebuilds it from `seed`.
 ```js
 files: { 'index.js': '...', 'views/index.ejs': '...', 'views/partials/header.ejs': '...', 'public/styles/main.css': '...', 'package.json': '...', '.env': '...' },
 solution: { ...same keys... },
@@ -85,6 +89,9 @@ autoRun: false,               // optional: don't start on open (default starts t
 ```
 - ESM (`import x from "y"`, `import.meta.url`) and CommonJS both work. `__dirname` is `/app`.
 - Modules: express, body-parser, ejs, path, url, fs, http, os, crypto, events, util, readline, axios, pg, bcrypt, md5, express-session, passport, passport-local, passport-google-oauth2 / oauth20, dotenv, morgan, cors, qr-image, qrcode, inquirer, superheroes, supervillains, lodash, cookie-parser. Anything else throws "Cannot find module".
+- Images in `public/` must be text: an SVG, or a data URI (`'public/images/logo.png': 'data:image/png;base64,...'`), which is served with its own type. Or use `https://picsum.photos/...` URLs.
+- `console.error` from the learner's code prints in red but isn't treated as a crash (the validator only fails on uncaught errors). `crypto.createHash` supports `md5` and `sha256`. `dotenv` only loads `.env` when `config()` is called (or `import "dotenv/config"`). `express-session` needs a `secret`; a `pg` client whose `password` is undefined fails to connect, and a client cannot be used after `end()` — all as in the real libraries.
+- The built-in browser follows links, forms, `form.submit()` and `location.href = "/x"`, and respects `preventDefault()`.
 - `express.static("public")`, `res.render("index.ejs", data)` (views folder, `<%- include("partials/header") %>`), `res.redirect`, `res.json`, `res.sendFile(__dirname + "/public/index.html")`, `req.body` (with body-parser/express.urlencoded/json), `req.params`, `req.query`, sessions and passport all work.
 - The built-in browser follows links and forms and keeps cookies. The Postman panel sends any method with Basic/Bearer auth, headers, form or JSON bodies.
 - `axios` reaches: your own `http://localhost:PORT` servers; the course APIs as mocks with original data — `https://secrets-api.appbrewery.com` (`/random`, `/all?page=1` Basic auth, `/filter?score=5&apiKey=…`, `/secrets/:id` Bearer, POST/PUT/PATCH/DELETE `/secrets`, POST `/register`, GET `/get-auth-token` Basic, GET `/generate-api-key`; test user `testuser` / `secret123`, apiKey `test-api-key`, bearer `test-bearer-token`), `https://bored-api.appbrewery.com` (`/random`, `/filter?type=&participants=`), `https://v2.jokeapi.dev/joke/Any`. Other hosts are fetched for real and may fail with CORS — prefer the mocks in tasks.
@@ -113,10 +120,12 @@ welcome: 'Last login: today',   // optional first line
 ```
 - Commands: pwd, ls [-a -l], cd, mkdir [-p], touch, rm [-r -f], cat, echo [> >>], open, mv, cp, clear, history, node file.js (small scripts), npm init / install, code .
 - git: init, status, add, commit -m, log [--oneline], diff, checkout (file | branch | -b), switch, branch [-d -M], merge, rm --cached, restore, remote add/-v, push [-u origin main], pull, clone <url>. `.gitignore` is honoured. Output mimics real git.
+- Wildcards (`*.txt`, `?.js`) expand like zsh; `open -a App file`, `git --version`, `node -v` work; Ctrl-A / Ctrl-E / Ctrl-U / Ctrl-K edit the line.
+- `remotes: { 'https://github.com/you/repo.git': { 'README.md': '# repo', 'index.js': '...' } }` sets what `git clone` of that URL contains (default: just a README).
 - `test` bodies get `fs` (exists, read, isDir, list, tree), `git(path?)` → `{ branch, branches, commits:[{id,msg}], staged, unstaged, untracked, remotes, pushed, index }` or null, `shell` (cwd, history, home).
 
 ### `read` — theory, tips, admin, Q&A
-No files. The main tab shows the full lecture notes. Add `quiz` where there is something to check, and `links: [{title, url, note}]` for resources the lecture points to. Keep tips/admin lessons to a blurb + a 1–2 question quiz or none.
+No files. The main tab shows the full lecture notes (after the lesson's own `notes`, if it has any). `body: 'html'` replaces the main tab with your own page (step lists, comparison tables); the lecture notes then stay on the Notes tab. Add `quiz` where there is something to check, and `links: [{title, url, note}]` for resources the lecture points to. Keep tips/admin lessons to a blurb + a 1–2 question quiz or none.
 
 ### `walkthrough` — code shown and explained (Web3 / Motoko sections)
 ```js
@@ -133,7 +142,7 @@ explore: [{ title:'Box model dissector', height:420, note:'What to try',
         <div class="stage"><div id="box" class="box">content</div></div>
         <pre class="readout" data-readout="#box"></pre>` }]
 ```
-The demo iframe has helper CSS (`.knobs`, `.stage`, `.readout`, `.box`, `.tag`, `.note`) and declarative wiring: `data-css="selector|property|unit"` on inputs/selects, `data-class="selector|class"` on checkboxes, `data-readout="selector"` on a `<pre>`. Custom logic: define `window.demoInit = ({setStyle, paint}) => {...}` in a `<script>`. Demos can load `vendor/...` scripts with relative URLs. Good demos let the learner change a value and immediately see the effect — one idea per demo, 1–3 per lesson, only where it adds something a static page can't.
+The demo iframe has helper CSS (`.knobs`, `.stage`, `.readout`, `.box`, `.tag`, `.note`) and declarative wiring: `data-css="selector|property|unit"` on inputs/selects, `data-class="selector|class"` on checkboxes, `data-readout="selector"` on a `<pre>`. Custom logic: define `window.demoInit = ({setStyle, paint}) => {...}` in a `<script>`. A demo can read the learner's current files with `parent.PG.currentFiles()` (e.g. a checklist that tests their HTML). Demo buttons may be styled with classes: the kit's default button style has zero specificity. Demos can load `vendor/...` scripts with relative URLs. Good demos let the learner change a value and immediately see the effect — one idea per demo, 1–3 per lesson, only where it adds something a static page can't.
 
 ## Writing rules
 - **Own words.** Blurbs, tasks, quiz questions, explanations and step text must be yours. Never copy sentences from the course, its transcripts, the reference repo's READMEs (they paraphrase the transcripts) or the lecture notes verbatim; restate.

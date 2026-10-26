@@ -14,7 +14,7 @@
   const { esc, attr, store, toast } = PG;
 
   function mount(lesson, host) {
-    const sh = ShellSim.create({ files: lesson.fs || { '/Users/you/Desktop': null, '/Users/you/Documents': null, '/Users/you/Downloads': null }, cwd: lesson.cwd || '/Users/you' });
+    const sh = ShellSim.create({ files: lesson.fs || { '/Users/you/Desktop': null, '/Users/you/Documents': null, '/Users/you/Downloads': null }, cwd: lesson.cwd || '/Users/you', remotes: lesson.remotes });
     sh.hooks.node = (path, code) => {
       if (!path) return 'Node REPL is not available here — run a file instead, e.g. node index.js';
       const logs = [];
@@ -95,6 +95,11 @@
         else if (names.length > 1) print(names.join('   '), 'dim');
       }
       else if (e.key === 'c' && e.ctrlKey) { input.value = ''; print('^C', 'dim'); }
+      // the line-editing shortcuts the lecture shows: start / end of line, delete back / forward
+      else if (e.key === 'a' && e.ctrlKey) { e.preventDefault(); input.setSelectionRange(0, 0); }
+      else if (e.key === 'e' && e.ctrlKey) { e.preventDefault(); input.setSelectionRange(input.value.length, input.value.length); }
+      else if (e.key === 'u' && e.ctrlKey) { e.preventDefault(); const c = input.selectionStart; input.value = input.value.slice(c); input.setSelectionRange(0, 0); }
+      else if (e.key === 'k' && e.ctrlKey) { e.preventDefault(); input.value = input.value.slice(0, input.selectionStart); }
       else if (e.key === 'l' && e.ctrlKey) { e.preventDefault(); out.innerHTML = ''; }
     };
     host.querySelector('#term').onclick = () => input.focus();
@@ -131,7 +136,7 @@
   function selftest(lesson) {
     const errors = [];
     try {
-      const sh = ShellSim.create({ files: lesson.fs || {}, cwd: lesson.cwd || '/Users/you' });
+      const sh = ShellSim.create({ files: lesson.fs || {}, cwd: lesson.cwd || '/Users/you', remotes: lesson.remotes });
       sh.hooks.node = () => '';
       (Array.isArray(lesson.solution) ? lesson.solution : []).forEach(c => { const r = sh.run(c); if (/not found|No such file|fatal:|usage:|error:/.test(r.out || '')) errors.push(`"${c}" → ${r.out.split('\n')[0]}`); });
       (lesson.checks || []).forEach(c => { try { if (!evalCheck(c, sh)) errors.push('check failed after solution: ' + c.desc); } catch (e) { errors.push('check threw: ' + c.desc + ' — ' + e.message); } });

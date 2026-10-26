@@ -127,6 +127,9 @@ button,select,input,textarea{font-family:inherit;font-size:13px;}
 .tasks ol{margin:0; padding-left:20px;}
 .tasks li{font-size:13.5px; line-height:1.65; color:var(--fg);}
 .tasks code{background:var(--bg3); padding:1px 5px; border-radius:4px; color:var(--accent2); font-size:12.5px;}
+.lesson-links{font-size:12.5px; color:var(--fg-dim); margin:-4px 0 12px;}
+.lesson-links a{color:#c3b1ff;}
+.lesson-links a:hover{text-decoration:underline;}
 .kit-error{margin:20px 26px; padding:14px; background:#3a2225; border:1px solid var(--err); border-radius:8px; color:var(--err);}
 
 /* ---------- tabs ---------- */
@@ -164,6 +167,7 @@ button,select,input,textarea{font-family:inherit;font-size:13px;}
 .link-btn{background:none; border:none; color:var(--accent); cursor:pointer; padding:0 2px; font-size:12px; text-transform:none; letter-spacing:0; font-family:ui-monospace,Menlo,monospace;}
 .link-btn:hover{text-decoration:underline;}
 .hint-inline{font-size:12px; color:var(--fg-dim);}
+.page-title{font-size:12px; color:var(--fg-dim); max-width:240px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
 .hint-inline.ok{color:var(--accent2);} .hint-inline.bad{color:var(--err);}
 .status-pill{font-size:11.5px; font-weight:700; padding:3px 9px; border-radius:20px; background:var(--bg3); color:var(--fg-dim); letter-spacing:.3px;}
 .status-pill.ok{background:#1e3b2e; color:#9ee8bd;} .status-pill.busy{background:#44381a; color:#ffd97f;}
@@ -177,10 +181,11 @@ button,select,input,textarea{font-family:inherit;font-size:13px;}
 
 .preview-shell{flex:1; display:flex; flex-direction:column; min-height:0; gap:8px;}
 .frame-wrap{
-  flex:1; background:#fff; border:1px solid var(--line); border-radius:8px; overflow:hidden;
-  display:flex; justify-content:center; min-height:0; position:relative;
+  flex:1; background:#fff; border:1px solid var(--line); border-radius:8px; overflow:auto;
+  display:flex; justify-content:flex-start; min-height:0; position:relative;
 }
-.frame-wrap iframe{border:0; width:100%; height:100%; background:#fff;}
+/* a fixed preview width (Desktop 1200, Tablet 768) keeps its size and scrolls instead of shrinking */
+.frame-wrap iframe{border:0; width:100%; height:100%; background:#fff; flex-shrink:0; margin:0 auto;}
 .frame-wrap.narrow iframe{box-shadow:0 0 0 1px var(--line);}
 .console{
   height:150px; background:#0e1116; border:1px solid var(--line); border-radius:8px;
@@ -196,6 +201,7 @@ button,select,input,textarea{font-family:inherit;font-size:13px;}
 .console .alert{color:#0b0d12; background:var(--warn); border-radius:4px; padding:3px 8px; display:inline-block; margin:2px 0; font-weight:700;}
 .console .prompt{color:var(--accent);}
 .console .meta{color:#697089; font-style:italic;}
+.console .stderr{color:var(--err);}
 .console-head{display:flex; align-items:center; gap:8px; font-size:11.5px; color:var(--fg-dim); text-transform:uppercase; letter-spacing:.6px; font-weight:700;}
 .answers{
   background:var(--bg3); border:1px solid var(--line); color:var(--fg); border-radius:6px;

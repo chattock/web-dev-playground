@@ -9,7 +9,8 @@
   const { esc, attr, makeEditor } = PG;
 
   function mountRead(lesson, host) {
-    const notesHtml = lesson.notes || PG.notesById[lesson.id] || '';
+    // the lesson's own notes followed by the full lecture notes (merged by core)
+    const notesHtml = lesson._notesHtml || lesson.notes || PG.notesById[lesson.id] || '';
     const body = lesson.body || '';
     host.innerHTML = `
       <div class="read-wrap">

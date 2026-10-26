@@ -15,10 +15,23 @@
 
   const RUNTIME = `
 (function(){
-  function send(kind, parts){ parent.postMessage({ __pg:true, kind:kind, text: parts.map(fmt).join(' ') }, '*'); }
-  function fmt(v){ if (typeof v === 'string') return v; if (v instanceof Error) return v.stack || String(v);
-    try { return JSON.stringify(v, function(k,val){ return typeof val==='function' ? '[Function]' : val; }, 1); } catch(e){ return String(v); } }
-  ['log','info','debug'].forEach(function(m){ var o = console[m].bind(console); console[m] = function(){ send('log', [].slice.call(arguments)); o.apply(null, arguments); }; });
+  function fmt(v){ return window.pgInspect ? pgInspect(v, false) : String(v); }
+  function printf(parts){
+    if (typeof parts[0] !== 'string' || !/%[sdifoOc]/.test(parts[0])) return parts;
+    var i = 1;
+    var first = parts[0].replace(/%([sdifoOc%])/g, function(m, f){
+      if (f === '%') return '%';
+      if (i >= parts.length) return m;
+      var v = parts[i++];
+      if (f === 'c') return '';
+      if (f === 'd' || f === 'i') return String(parseInt(v, 10));
+      if (f === 'f') return String(parseFloat(v));
+      return typeof v === 'string' ? v : fmt(v);
+    });
+    return [first].concat(parts.slice(i));
+  }
+  function send(kind, parts){ parent.postMessage({ __pg:true, kind:kind, text: printf(parts).map(fmt).join(' ') }, '*'); }
+  ['log','info','debug','table','dir'].forEach(function(m){ var o = console[m].bind(console); console[m] = function(){ send('log', [].slice.call(arguments)); o.apply(null, arguments); }; });
   console.warn  = (function(o){ return function(){ send('warn', [].slice.call(arguments)); o.apply(console, arguments); }; })(console.warn.bind(console));
   console.error = (function(o){ return function(){ var parts = [].slice.call(arguments); var text = String(parts[0] || ''); send(/^Warning:/.test(text) ? 'warn' : 'err', parts); o.apply(console, arguments); }; })(console.error.bind(console));
   window.alert = function(m){ send('alert', [m]); };
@@ -47,9 +60,14 @@
     Send: 'M2.01 21 23 12 2.01 3 2 10l15 2-15 2z',
     Save: 'M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z',
   };
-  function Fab(props){ var p = Object.assign({}, props); delete p.children; var cls = 'mui-fab';
+  function Fab(props){ var p = Object.assign({ type: 'button' }, props); delete p.children; var cls = 'mui-fab';
     return React.createElement('button', Object.assign({}, p, { className: cls + ' ' + (p.className||'') }), props.children); }
-  function Zoom(props){ var show = props.in !== false; return React.createElement('span', { className: 'mui-zoom ' + (show ? 'in' : 'out') }, props.children); }
+  // like MUI's Zoom: no wrapper element, the transform goes on the child itself
+  function Zoom(props){
+    var show = props.in !== false, child = React.Children.only(props.children);
+    var style = Object.assign({}, child.props.style, { transform: show ? 'scale(1)' : 'scale(0)', transition: 'transform 225ms cubic-bezier(0.4, 0, 0.2, 1)' });
+    return React.cloneElement(child, { style: style });
+  }
   var BUILTINS = {
     'react': function(){ return React; },
     'react-dom': function(){ return ReactDOM; },
@@ -96,6 +114,7 @@
     try {
       out = Babel.transform(FILES[file], { filename: file, presets: [['env', { modules: 'commonjs', targets: { chrome: '90' } }], 'react'], sourceType: 'module' }).code;
     } catch (e) { throw new Error('Syntax error in ' + file + ': ' + e.message.replace(/^unknown: /, '')); }
+    if (window.LoopGuard) out = LoopGuard.instrument(out);
     var fn = new Function('require', 'module', 'exports', 'React', out);
     fn(function(s){ return req(s, file); }, mod, mod.exports, React);
     return mod.exports;
@@ -129,8 +148,16 @@
     // the entry file is run by the module loader, so drop local script tags from the page
     bodyInner = bodyInner.replace(/<script[^>]+src=["'](?!https?:)[^"']+["'][^>]*><\/script>/gi, '');
     const css = files['styles.css'] || files['style.css'] || files['index.css'] || '';
+    // fonts and other external stylesheets the page's own <head> asks for
+    const headHtml = (html.match(/<head[^>]*>([\s\S]*?)<\/head>/i) || [, ''])[1];
+    const headExtras = (headHtml.match(/<link\b[^>]*>/gi) || []).filter(l => /\bhref=["'](https?:)?\/\//i.test(l))
+      .concat(headHtml.match(/<style\b[^>]*>[\s\S]*?<\/style>/gi) || []).join('\n');
     return `<!DOCTYPE html><html><head><meta charset="utf-8">
 <style>${BASE_CSS}</style>
+${headExtras}
+<script src="${abs('app/sandbox/loop-guard.js')}"><\/script>
+<script src="${abs('app/sandbox/inspect.js')}"><\/script>
+<script>var __pgGuard = window.LoopGuard ? new Function(LoopGuard.source + '\\nreturn __pgGuard;')() : function(){};<\/script>
 <link rel="stylesheet" href="${abs('vendor/bootstrap/bootstrap-icons.min.css')}">
 <script src="${abs('vendor/react/react.development.js')}"><\/script>
 <script src="${abs('vendor/react/react-dom.development.js')}"><\/script>

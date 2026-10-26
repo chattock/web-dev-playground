@@ -19,6 +19,9 @@ function loadLessons() {
   return lessons;
 }
 
+const TYPES = {};
+fs.readFileSync(path.join(ROOT, 'content', 'manifest.txt'), 'utf8').split('\n').forEach(line => { if (line && !line.startsWith('#')) { const [i, , , t] = line.split('|'); TYPES[Number(i)] = t; } });
+
 function main() {
   const lessons = loadLessons();
   const seen = new Set(), seenIdx = new Set();
@@ -29,7 +32,7 @@ function main() {
     if (key) { if (seenIdx.has(key)) { console.error(`lecture ${key} has two lessons (${l.id})`); process.exitCode = 1; } seenIdx.add(key); }
     const names = Object.keys(l.files || {});
     const kind = l.kind || (l.layout === 'js' || (names.length === 1 && names[0] === 'js') ? 'js' : 'build');
-    return { id: l.id, index: l.index, sub: l.sub || '', section: l.section, slug: l.slug, title: l.title, kind, minutes: l.minutes, project: !!l.project };
+    return { id: l.id, index: l.index, sub: l.sub || '', section: l.section, slug: l.slug, title: l.title, kind, minutes: l.minutes, type: (TYPES[l.index] || ''), project: !!l.project };
   }).sort((a, b) => ((a.index || 9999) - (b.index || 9999)) || a.sub.localeCompare(b.sub));
   const manifest = path.join(ROOT, 'content', 'manifest.txt');
   if (fs.existsSync(manifest)) {

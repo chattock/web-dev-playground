@@ -672,110 +672,92 @@ app.listen(port, () => {
 </body>
 </html>
 `,
-'public/styles/main.css':`body,
-h1,
-h2,
-p,
-ul,
-li,
-form,
-input,
-textarea,
-a {
+'public/styles/main.css':`body, h1, h2, p, ul, li, form, input, textarea, a {
   margin: 0;
   padding: 0;
-  border: none;
-  font-family: Arial, sans-serif;
 }
 
 body {
-  background-color: #f7f9fc;
-  color: #333;
+  font-family: Georgia, "Times New Roman", serif;
   line-height: 1.6;
+  color: #2d2a26;
+  background: #f6f4ef;
 }
 
 .container {
-  max-width: 800px;
-  margin: 40px auto;
-  background-color: #fff;
-  padding: 20px 40px;
-  border-radius: 8px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 32px 20px 60px;
 }
 
 h1 {
-  font-size: 2.5em;
   margin-bottom: 20px;
-  color: #444;
+  font-size: 2.2rem;
+  color: #1f3a5f;
 }
 
 h2 {
-  font-size: 1.5em;
-  margin-bottom: 10px;
-  color: #555;
+  margin-bottom: 6px;
+  font-size: 1.35rem;
 }
 
-p,
-input,
-textarea {
-  margin-bottom: 20px;
+p, input, textarea {
+  font-size: 1rem;
 }
 
 small {
   display: block;
-  margin-bottom: 20px;
-  color: #888;
+  margin-bottom: 10px;
+  font-family: system-ui, sans-serif;
+  font-size: 0.8rem;
+  color: #8a8174;
 }
 
-input,
-textarea {
+input, textarea {
   width: 100%;
   box-sizing: border-box;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 1em;
+  margin-bottom: 14px;
+  padding: 10px 12px;
+  font-family: inherit;
+  background: #ffffff;
+  border: 1px solid #d8d2c6;
+  border-radius: 6px;
+}
+
+input:focus, textarea:focus {
   outline: none;
-  transition: border 0.3s;
+  border-color: #1f3a5f;
 }
 
-input:focus,
-textarea:focus {
-  border-color: #007bff;
-}
-
-a,
-button {
+a, button {
   display: inline-block;
+  padding: 8px 14px;
+  font-family: system-ui, sans-serif;
+  font-size: 0.9rem;
+  color: #ffffff;
   text-decoration: none;
-  background-color: #007bff;
-  color: #fff;
-  padding: 10px;
-  font-size: 1em;
+  background: #1f3a5f;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
-  transition: background-color 0.3s;
 }
 
-a:hover,
-button:hover {
-  background-color: #0056b3;
+a:hover, button:hover {
+  background: #2f5a8f;
 }
 
 button.full-width {
-  display: block;
-  text-align: center;
   width: 100%;
+  padding: 12px;
 }
 
 ul {
-  list-style-type: none;
+  list-style: none;
 }
 
 li {
   padding: 20px 0;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #e4ded3;
 }
 
 li:last-child {
@@ -783,21 +765,21 @@ li:last-child {
 }
 
 a.delete {
-  background-color: #e74c3c;
+  margin-left: 6px;
+  background: #b23a3a;
 }
 
 a.delete:hover {
-  background-color: #c0392b;
+  background: #d14b4b;
 }
 
 #newPostBtn {
-  margin: 20px 0;
-  background-color: #2ecc71;
-  padding: 10px 15px;
+  margin-bottom: 24px;
+  background: #3c7a4a;
 }
 
 #newPostBtn:hover {
-  background-color: #27ae60;
+  background: #4d9a5e;
 }
 `},
   solution:{

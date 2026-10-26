@@ -1,37 +1,47 @@
 /* =========================================================================
    Kit: build (HTML / CSS / JS pages) and js (console-first scripts)
-   Files: index.html, style.css, script.js — any subset. The page runs in a
-   sandboxed iframe with console/alert/prompt piped to the console panel.
+   Files: index.html, style.css, script.js — any subset, plus any other files
+   a page links (more .html pages, styles.css, index.js, game.js…). The page
+   runs in an iframe with console/alert/prompt piped to the console panel.
+
+   How the files become one page:
+   - <link rel="stylesheet" href="x.css">: inlined when x.css is a lesson file.
+     A link to style(s).css that isn't a lesson file marks where the style.css
+     pane goes (so it still comes after Bootstrap); with no such link the pane
+     goes last in <head>.
+   - <script src="x.js">: inlined in place when x.js is a lesson file (moved to
+     the end of <body> when it has `defer`); other local scripts are dropped.
+     script.js is always added at the end of <body>.
+   - Links to other .html files in the lesson open that page in the preview.
+   - Every loop gets a guard (app/sandbox/loop-guard.js) so an endless loop
+     stops with an error instead of freezing the app.
    ========================================================================= */
 (function () {
   const { esc, attr, store, consolePanel, workbench } = PG;
+  const abs = p => new URL(p, location.href).href;
+  const guard = code => (window.LoopGuard ? LoopGuard.instrument(code) : code);
 
   /* Piped console, alert and prompt, plus a tiny synth standing in for the
      course's sound files (sounds/*.mp3), so the drum kit and Simon work
      without shipping audio. */
-  const SHIM = `
+  function shim() {
+    return `
 <script>
+${window.LoopGuard ? LoopGuard.source : 'var __pgGuard = function(){};'}
+var pgInspect = ${window.pgInspect ? window.pgInspect.toString() : 'function(v){ return String(v); }'};
 (function(){
   var answers = [], ai = 0;
   try { answers = (window.__PG_ANSWERS__ || []); } catch(e){}
-  function fmt(v){
-    if (typeof v === 'string') return v;
-    if (v instanceof Error) return v.stack || String(v);
-    if (v && v.nodeType === 1) return '<' + v.tagName.toLowerCase() + (v.id ? ' id="' + v.id + '"' : '') + (v.className ? ' class="' + v.className + '"' : '') + '>';
-    if (v && v.nodeType) return String(v.nodeName);
-    try { return JSON.stringify(v, function(k,val){ return typeof val==='function' ? '[Function]' : val; }, 1); }
-    catch(e){ return String(v); }
-  }
   function send(kind, parts){
-    parent.postMessage({ __pg:true, kind:kind, text: parts.map(fmt).join(' ') }, '*');
+    parent.postMessage({ __pg:true, kind:kind, text: parts.map(function(v){ return pgInspect(v, false); }).join(' ') }, '*');
   }
-  ['log','info','debug','table'].forEach(function(m){
+  ['log','info','debug','table','dir'].forEach(function(m){
     var o = console[m] ? console[m].bind(console) : function(){};
     console[m] = function(){ send('log', [].slice.call(arguments)); o.apply(null, arguments); };
   });
   console.warn  = (function(o){ return function(){ send('warn', [].slice.call(arguments)); o.apply(console, arguments); }; })(console.warn.bind(console));
   console.error = (function(o){ return function(){ send('err',  [].slice.call(arguments)); o.apply(console, arguments); }; })(console.error.bind(console));
-  window.alert = function(m){ send('alert', [m]); };
+  window.alert = function(m){ send('alert', [m === undefined ? '' : m]); };
   window.prompt = function(msg, def){
     var v = ai < answers.length ? answers[ai] : null;
     ai++;
@@ -45,6 +55,19 @@
   window.confirm = function(m){ send('alert',[m + '  [auto-confirmed: true]']); return true; };
   window.onerror = function(m, s, l){ send('err', [m + (l ? '  (line ' + l + ')' : '')]); };
   window.addEventListener('unhandledrejection', function(e){ send('err', [String(e.reason)]); });
+
+  /* ---- other pages of the lesson: <a href="about.html"> opens that file ---- */
+  window.addEventListener('click', function(e){
+    if (e.defaultPrevented) return;
+    var a = e.target && e.target.closest && e.target.closest('a[href]'); if (!a || a.target === '_blank') return;
+    var href = a.getAttribute('href');
+    if (!href || href.charAt(0) === '#' || /^[a-z][\\w+.-]*:/i.test(href) || href.indexOf('//') === 0) return;
+    var name;
+    try { name = decodeURIComponent(new URL(href, 'http://x/' + (window.__PG_PAGE__ || 'index.html')).pathname.slice(1)); } catch(err) { return; }
+    if (!name || /\\/$/.test(name)) name += 'index.html';
+    e.preventDefault();
+    parent.postMessage({ __pg:true, kind:'page', text: name }, '*');
+  });
 
   /* ---- sound shim: new Audio("sounds/tom-1.mp3").play() ---- */
   var RealAudio = window.Audio, ctx = null;
@@ -89,57 +112,108 @@
   };
 })();
 <\/script>`;
+  }
 
-  function buildDoc(files, answers, lesson) {
-    let html = files['index.html'] != null ? files['index.html']
+  function resolveRel(from, href) {
+    try { return decodeURIComponent(new URL(href, 'http://x/' + from).pathname.slice(1)); } catch (e) { return href; }
+  }
+  const isRemote = u => /^(https?:)?\/\//i.test(u) || /^data:/i.test(u);
+  const wrap = (code, isModule) => isModule ? `\n${guard(code)}\n` : `\ntry{\n${guard(code)}\n}catch(e){ console.error(e); }\n`;
+
+  function buildDoc(files, answers, lesson, page) {
+    page = page && files[page] != null ? page : 'index.html';
+    let html = files[page] != null ? files[page]
       : '<!DOCTYPE html>\n<html><head><meta charset="utf-8"></head><body>\n</body></html>';
-    const css = files['style.css'] || '';
-    const js  = files['script.js'] || '';
+    const pages = Object.keys(files).filter(n => /\.html?$/i.test(n));
 
     // strip the course footer credit if it came from the repo
     html = html.replace(/\s*<footer>Made with[^<]*<\/footer>/gi, '');
-    // local stylesheet links stand in for the CSS pane, which goes where the first
-    // such link was so it still comes after framework CSS such as Bootstrap;
-    // local script tags stand in for the JS pane
+    let needJquery = !!(lesson && lesson.jquery) || /<script[^>]+src=["'][^"']*jquery[^"']*\.js/i.test(html);
+    const needBootstrap = /<link[^>]+href=["'][^"']*bootstrap[^"']*\.css/i.test(html);
+
+    // stylesheets
     const CSS_MARK = '<!--pg-css-->';
     let marked = false;
-    html = html.replace(/<link[^>]+href=["'](?:\.\/)?(?:css\/)?(style|styles|solution|index)\.css["'][^>]*>/gi,
-      () => { if (marked) return ''; marked = true; return CSS_MARK; });
-    html = html.replace(/<script[^>]+src=["'](?:\.\/)?(?:js\/)?(script|index|main|solution)\.js["'][^>]*><\/script>/gi, '');
+    const usedCss = new Set();
+    html = html.replace(/<link\b[^>]*>/gi, tag => {
+      if (!/\brel=["']?stylesheet/i.test(tag)) return tag;
+      const m = tag.match(/\bhref=["']([^"']+)["']/i);
+      if (!m || isRemote(m[1])) return tag;
+      const name = resolveRel(page, m[1]);
+      if (files[name] != null && name !== 'style.css') { usedCss.add(name); return `<style data-file="${attr(name)}">\n${files[name]}\n</style>`; }
+      if (name === 'style.css' || /(^|\/)(style|styles|solution|index|main)\.css$/i.test(name)) {
+        if (marked) return ''; marked = true; return CSS_MARK;
+      }
+      return tag;
+    });
+    const cssPane = files['style.css'] != null ? files['style.css'] : (files['styles.css'] != null && !usedCss.has('styles.css') ? files['styles.css'] : '');
 
-    const answersJs = `<script>window.__PG_ANSWERS__=${JSON.stringify(answers || [])};<\/script>`;
+    // scripts
+    const usedJs = new Set(), deferred = [];
+    html = html.replace(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi, (whole, attrs, body) => {
+      const isModule = /\btype=["']module["']/i.test(attrs);
+      const sm = attrs.match(/\bsrc=["']([^"']+)["']/i);
+      if (!sm) {
+        if (/\btype=["']/i.test(attrs) && !/\btype=["'](text\/javascript|application\/javascript|module)["']/i.test(attrs)) return whole;   // JSON, templates…
+        return `<script${attrs}>${wrap(body, isModule)}<\/script>`;
+      }
+      const src = sm[1];
+      if (isRemote(src)) return whole;                         // CDN scripts stay
+      const name = resolveRel(page, src);
+      if (/jquery/i.test(name)) { needJquery = true; return ''; }
+      if (name === 'script.js') return '';                     // the JS pane goes at the end of <body>
+      if (files[name] != null && /\.m?js$/i.test(name)) {
+        usedJs.add(name);
+        const tag = `<script${attrs.replace(/\s*\bsrc=["'][^"']+["']/i, '').replace(/\s*\b(defer|async)\b/gi, '')}>${wrap(files[name], isModule)}<\/script>`;
+        if (/\bdefer\b/i.test(attrs)) { deferred.push(tag); return ''; }
+        return tag;
+      }
+      return '';                                               // a local script that isn't in the lesson would 404
+    });
+    const jsPane = files['script.js'] != null ? files['script.js'] : (files['index.js'] != null && !usedJs.has('index.js') ? files['index.js'] : '');
+
+    const answersJs = `<script>window.__PG_ANSWERS__=${JSON.stringify(answers || [])};window.__PG_PAGE__=${JSON.stringify(page)};window.__PG_PAGES__=${JSON.stringify(pages)};<\/script>`;
     // offline fallbacks for the CDN copies the course uses — the CDN version
     // overrides them identically when online; absolute so a <base> tag can't move them
-    const abs = p => new URL(p, location.href).href;
     let fallback = '';
-    if (/bootstrap[^"']*\.min\.css/i.test(html)) fallback += `<link rel="stylesheet" href="${abs('vendor/bootstrap/bootstrap.min.css')}">`;
-    if (/jquery[^"']*\.js/i.test(html) || lesson && lesson.jquery) fallback += `<script src="${abs('vendor/jquery/jquery.min.js')}"><\/script>`;
+    if (needBootstrap) fallback += `<link rel="stylesheet" href="${abs('vendor/bootstrap/bootstrap.min.css')}">`;
+    if (needJquery) fallback += `<script src="${abs('vendor/jquery/jquery.min.js')}"><\/script>`;
     // a lesson can pretend its page lives somewhere else, so that relative
     // paths like ./cat.png and images/dice1.png resolve against a real folder
     const baseTag = lesson && lesson.previewBase ? `<base href="${abs(lesson.previewBase)}">` : '';
+    const SHIM = shim();
     const head = baseTag + answersJs + fallback + SHIM;
-    const cssTag = css ? `\n<style>\n${css}\n</style>\n` : '';
+    const cssTag = cssPane ? `\n<style>\n${cssPane}\n</style>\n` : '';
 
-    if (/<head[^>]*>/i.test(html)) html = html.replace(/<head([^>]*)>/i, `<head$1>\n${head}`);
+    if (/<head[^>]*>/i.test(html)) html = html.replace(/<head([^>]*)>/i, (m, a) => `<head${a}>\n${head}`);
     else html = head + html;
-    // no stylesheet link in the page: the CSS goes last in the head (or straight after the shim)
     if (html.includes(CSS_MARK)) html = html.replace(CSS_MARK, () => cssTag);
     else if (/<\/head>/i.test(html)) html = html.replace(/<\/head>/i, () => cssTag + '</head>');
     else html = html.replace(SHIM, () => SHIM + cssTag);
 
-    if (js) {
-      const tag = `\n<script>\ntry{\n${js}\n}catch(e){ console.error(e); }\n<\/script>\n`;
-      if (/<\/body>/i.test(html)) html = html.replace(/<\/body>/i, tag + '</body>');
-      else html += tag;
+    const tail = deferred.join('\n') + (jsPane ? `\n<script>${wrap(jsPane)}<\/script>\n` : '');
+    if (tail) {
+      if (/<\/body>/i.test(html)) html = html.replace(/<\/body>(?![\s\S]*<\/body>)/i, () => tail + '</body>');
+      else html += tail;
     }
+    // offline fallback for Bootstrap's JavaScript: only when the CDN copy didn't load,
+    // because two copies make dropdowns open and close again straight away
     if (/bootstrap\.bundle/i.test(html) && !/vendor\/bootstrap\/bootstrap\.bundle/.test(html)) {
-      html = html.replace(/<\/body>/i, `<script src="${abs('vendor/bootstrap/bootstrap.bundle.min.js')}"><\/script></body>`);
+      const local = abs('vendor/bootstrap/bootstrap.bundle.min.js');
+      html = html.replace(/<\/body>(?![\s\S]*<\/body>)/i, () => `<script>if (!window.bootstrap) { var s = document.createElement('script'); s.src = ${JSON.stringify(local)}; document.body.appendChild(s); }<\/script></body>`);
     }
     return html;
   }
 
+  function splitAnswers(s) {
+    s = String(s || '');
+    return s.split(/[\n,]/).map(x => x.trim()).filter(x => x !== '');
+  }
+
   function mount(lesson, host) {
     const isJs = lesson.kind === 'js';
+    const pages = Object.keys(lesson.files).filter(n => /\.html?$/i.test(n));
+    let currentPage = pages.includes('index.html') ? 'index.html' : (pages[0] || 'index.html');
     const wb = workbench(host, lesson, {
       autoRun: true,
       className: isJs ? 'js-layout' : '',
@@ -153,6 +227,8 @@
               <option value="768px">Tablet 768</option>
               <option value="375px">Phone 375</option>
             </select>`}
+          ${pages.length > 1 ? `<select class="btn" id="pageSel" title="Page shown in the preview">${pages.map(p => `<option ${p === currentPage ? 'selected' : ''}>${esc(p)}</option>`).join('')}</select>` : ''}
+          <span class="page-title" id="pageTitle" title="The page's &lt;title&gt;"></span>
           <span style="flex:1"></span>
           <button class="btn ghost" id="popBtn" title="Open the preview in its own tab">↗ open</button>
         </div>
@@ -162,8 +238,8 @@
             Console
             <span style="flex:1"></span>
             <span style="text-transform:none;letter-spacing:0">Prompt answers:</span>
-            <input class="answers" id="answersBox" placeholder="one per line ⏎ or comma"
-                   value="${attr(store.getAnswers(lesson.id) || lesson.answers || '')}">
+            <input class="answers" id="answersBox" placeholder="comma-separated, e.g. Ada, 25"
+                   value="${attr(String(store.getAnswers(lesson.id) || lesson.answers || '').replace(/\n/g, ', '))}">
             <button class="btn ghost" id="clearCon">clear</button>
           </div>
           <div class="console ${isJs ? 'big' : ''}" id="console"></div>
@@ -172,31 +248,48 @@
       onRun: files => run(files),
     });
     const con = consolePanel(host.querySelector('#console'));
-    function getAnswers() {
-      const box = host.querySelector('#answersBox');
-      if (!box) return [];
-      return box.value.split(/[\n,]/).map(s => s.trim()).filter(s => s !== '');
-    }
+    const frame = host.querySelector('#frame');
+    const getAnswers = () => splitAnswers((host.querySelector('#answersBox') || {}).value);
     function run(files) {
-      const frame = host.querySelector('#frame');
-      if (!frame) return;
       con.clear();
-      frame.srcdoc = buildDoc(files || wb.readFiles(), getAnswers(), lesson);
+      frame.srcdoc = buildDoc(files || wb.readFiles(), getAnswers(), lesson, currentPage);
     }
+    frame.addEventListener('load', () => {
+      let t = '';
+      try { t = frame.contentDocument && frame.contentDocument.title; } catch (e) {}
+      const el = host.querySelector('#pageTitle');
+      if (el) el.textContent = isJs ? '' : (t ? `📄 ${t}` : (pages.length > 1 ? '' : ''));
+    });
+    const pageSel = host.querySelector('#pageSel');
+    if (pageSel) pageSel.onchange = () => { currentPage = pageSel.value; run(); };
     host.querySelector('#runBtn').onclick = () => run();
     host.querySelector('#clearCon').onclick = () => con.clear();
     host.querySelector('#answersBox').oninput = e => { store.answers(lesson.id, e.target.value); run(); };
     host.querySelector('#popBtn').onclick = () => {
       const w = window.open('', '_blank');
-      w.document.open(); w.document.write(buildDoc(wb.readFiles(), getAnswers(), lesson)); w.document.close();
+      w.document.open(); w.document.write(buildDoc(wb.readFiles(), getAnswers(), lesson, currentPage)); w.document.close();
     };
     const widthSel = host.querySelector('#widthSel');
     if (widthSel) widthSel.onchange = () => {
-      const f = host.querySelector('#frame');
-      f.style.width = widthSel.value;
-      f.parentElement.classList.toggle('narrow', widthSel.value !== '100%');
+      frame.style.width = widthSel.value;
+      frame.parentElement.classList.toggle('narrow', widthSel.value !== '100%');
     };
-    const onMsg = e => { if (e.data && e.data.__pg && e.source === (host.querySelector('#frame') || {}).contentWindow) con.row(e.data.kind, e.data.text); };
+    const onMsg = e => {
+      if (!e.data || !e.data.__pg || e.source !== frame.contentWindow) return;
+      if (e.data.kind === 'page') {
+        const name = e.data.text;
+        const files = wb.readFiles();
+        if (files[name] != null) {
+          currentPage = name;
+          if (pageSel) pageSel.value = name;
+          run(files);
+        } else {
+          con.row('warn', `The link goes to ${name}, which isn't one of this lesson's files. Only the files in the editor can be opened here.`);
+        }
+        return;
+      }
+      con.row(e.data.kind, e.data.text);
+    };
     window.addEventListener('message', onMsg);
     run();
     return () => { window.removeEventListener('message', onMsg); wb.destroy(); };
@@ -213,8 +306,7 @@
       const onMsg = e => { if (e.source === f.contentWindow && e.data && e.data.__pg && e.data.kind === 'err') errors.push(e.data.text); };
       window.addEventListener('message', onMsg);
       document.body.appendChild(f);
-      const answers = String(lesson.answers || '').split(/[\n,]/).map(s => s.trim()).filter(Boolean);
-      f.srcdoc = buildDoc(files, answers, lesson);
+      f.srcdoc = buildDoc(files, splitAnswers(lesson.answers), lesson);
       setTimeout(() => {
         window.removeEventListener('message', onMsg); f.remove();
         resolve({ ok: errors.length === 0, errors });

@@ -22,6 +22,8 @@
 })(typeof self !== 'undefined' ? self : this, function () {
 
   const ROOT = '/app';
+  const LG = typeof LoopGuard !== 'undefined' ? LoopGuard : (typeof require === 'function' ? (() => { try { return require('./loop-guard.js'); } catch (e) { return null; } })() : null);
+  const INSPECT = typeof pgInspect !== 'undefined' ? pgInspect : (typeof require === 'function' ? (() => { try { return require('./inspect.js'); } catch (e) { return null; } })() : null);
   const MIME = { html: 'text/html; charset=utf-8', htm: 'text/html; charset=utf-8', css: 'text/css; charset=utf-8', js: 'application/javascript; charset=utf-8',
     mjs: 'application/javascript; charset=utf-8', json: 'application/json; charset=utf-8', txt: 'text/plain; charset=utf-8', svg: 'image/svg+xml',
     png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg', gif: 'image/gif', ico: 'image/x-icon', ejs: 'text/html; charset=utf-8', xml: 'application/xml', md: 'text/markdown' };
@@ -93,11 +95,37 @@
     return [a, b, c, d].map(v => { let s = ''; for (let i = 0; i < 4; i++) s += ('0' + ((v >> (i * 8)) & 255).toString(16)).slice(-2); return s; }).join('');
   }
 
+  function sha256(str) {
+    const K = [0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5, 0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
+      0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc, 0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da, 0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7, 0xc6e00bf3, 0xd5a79147, 0x06ca6351, 0x14292967,
+      0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13, 0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85, 0xa2bfe8a1, 0xa81a664b, 0xc24b8b70, 0xc76c51a3, 0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070,
+      0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3, 0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2];
+    const bytes = unescape(encodeURIComponent(str)).split('').map(c => c.charCodeAt(0));
+    const l = bytes.length * 8; bytes.push(0x80); while (bytes.length % 64 !== 56) bytes.push(0);
+    for (let i = 7; i >= 0; i--) bytes.push(i >= 4 ? 0 : (l >>> (i * 8)) & 255);
+    let h0 = 0x6a09e667, h1 = 0xbb67ae85, h2 = 0x3c6ef372, h3 = 0xa54ff53a, h4 = 0x510e527f, h5 = 0x9b05688c, h6 = 0x1f83d9ab, h7 = 0x5be0cd19;
+    const w = new Array(64); const rotr = (x, n) => (x >>> n) | (x << (32 - n));
+    for (let o = 0; o < bytes.length; o += 64) {
+      for (let i = 0; i < 16; i++) w[i] = (bytes[o + i * 4] << 24) | (bytes[o + i * 4 + 1] << 16) | (bytes[o + i * 4 + 2] << 8) | bytes[o + i * 4 + 3];
+      for (let i = 16; i < 64; i++) { const s0 = rotr(w[i - 15], 7) ^ rotr(w[i - 15], 18) ^ (w[i - 15] >>> 3), s1 = rotr(w[i - 2], 17) ^ rotr(w[i - 2], 19) ^ (w[i - 2] >>> 10); w[i] = (w[i - 16] + s0 + w[i - 7] + s1) | 0; }
+      let a = h0, b = h1, c = h2, d = h3, e = h4, f = h5, g = h6, h = h7;
+      for (let i = 0; i < 64; i++) {
+        const S1 = rotr(e, 6) ^ rotr(e, 11) ^ rotr(e, 25), ch = (e & f) ^ (~e & g), t1 = (h + S1 + ch + K[i] + w[i]) | 0;
+        const S0 = rotr(a, 2) ^ rotr(a, 13) ^ rotr(a, 22), mj = (a & b) ^ (a & c) ^ (b & c), t2 = (S0 + mj) | 0;
+        h = g; g = f; f = e; e = (d + t1) | 0; d = c; c = b; b = a; a = (t1 + t2) | 0;
+      }
+      h0 = (h0 + a) | 0; h1 = (h1 + b) | 0; h2 = (h2 + c) | 0; h3 = (h3 + d) | 0; h4 = (h4 + e) | 0; h5 = (h5 + f) | 0; h6 = (h6 + g) | 0; h7 = (h7 + h) | 0;
+    }
+    return [h0, h1, h2, h3, h4, h5, h6, h7].map(x => ('00000000' + (x >>> 0).toString(16)).slice(-8)).join('');
+  }
+  function b64bin(bin) { return typeof btoa === 'function' ? btoa(bin) : Buffer.from(bin, 'binary').toString('base64'); }
+
   /* ---------------- ESM → CommonJS (good enough for course code) ---------------- */
   function transform(code) {
     code = code.replace(/^#!.*\n/, '');
     code = code.replace(/import\.meta\.url/g, '__meta.url');
-    code = code.replace(/^\s*import\s+(?:(\w+)\s*,?\s*)?(?:\{([^}]*)\}\s*,?\s*)?(?:\*\s+as\s+(\w+))?\s*(?:from\s*)?["']([^"']+)["']\s*;?/gm, (m, def, named, ns, mod) => {
+    // an import at the start of a line or straight after another statement's semicolon
+    code = code.replace(/(?<=^|;)[ \t]*import\s+(?:(\w+)\s*,?\s*)?(?:\{([^}]*)\}\s*,?\s*)?(?:\*\s+as\s+(\w+))?\s*(?:from\s*)?["']([^"']+)["']\s*;?/gm, (m, def, named, ns, mod) => {
       const out = [];
       if (def) out.push(`const ${def} = __default(require(${JSON.stringify(mod)}));`);
       if (named) out.push(`const { ${named.replace(/\s+as\s+/g, ': ')} } = require(${JSON.stringify(mod)});`);
@@ -126,6 +154,7 @@
     const sessions = {};
     const env = Object.assign({ NODE_ENV: 'development', PORT: '', HOME: '/home/you', USER: 'you', PWD: ROOT }, opts.env || {});
     const moduleCache = {};
+    const pgGuard = LG ? new Function(LG.source + '\nreturn __pgGuard;\n//# sourceURL=pg-loop-guard.js')() : function () {};
     let pgPromise = null;
 
     Object.keys(opts.files || {}).forEach(k => files.set(pjoin(ROOT, k), String(opts.files[k])));
@@ -145,6 +174,7 @@
     /* ---------------- console / process ---------------- */
     function fmt(v) {
       if (typeof v === 'string') return v;
+      if (INSPECT) return INSPECT(v, true);
       if (v instanceof Error) return (v.stack || String(v));
       if (v === undefined) return 'undefined';
       if (typeof v === 'function') return `[Function: ${v.name || 'anonymous'}]`;
@@ -152,13 +182,13 @@
     }
     const konsole = {
       log: (...a) => log('log', a.map(fmt).join(' ')), info: (...a) => log('log', a.map(fmt).join(' ')), debug: (...a) => log('log', a.map(fmt).join(' ')),
-      warn: (...a) => log('warn', a.map(fmt).join(' ')), error: (...a) => log('err', a.map(fmt).join(' ')),
+      warn: (...a) => log('warn', a.map(fmt).join(' ')), error: (...a) => log('stderr', a.map(fmt).join(' ')),
       table: (a) => log('log', fmt(a)), dir: (a) => log('log', fmt(a)), time() {}, timeEnd() {}, group() {}, groupEnd() {},
     };
     const process = {
       env, argv: ['node', ROOT + '/index.js'], platform: 'darwin', version: 'v20.0.0', versions: { node: '20.0.0' }, pid: 4242,
       cwd: () => ROOT, exit: (c) => { log('meta', `process exited with code ${c || 0}`); throw { __exit: true }; }, nextTick: (f, ...a) => Promise.resolve().then(() => f(...a)),
-      stdout: { write: s => log('log', String(s).replace(/\n$/, '')) }, stderr: { write: s => log('err', String(s).replace(/\n$/, '')) }, on() {}, hrtime: () => [0, 0], memoryUsage: () => ({ rss: 0 }),
+      stdout: { write: s => log('log', String(s).replace(/\n$/, '')) }, stderr: { write: s => log('stderr', String(s).replace(/\n$/, '')) }, on() {}, hrtime: () => [0, 0], memoryUsage: () => ({ rss: 0 }),
     };
 
     /* ---------------- http request/response objects ---------------- */
@@ -168,7 +198,7 @@
       const req = {
         method: (init.method || 'GET').toUpperCase(), url: u.pathname + u.search, originalUrl: u.pathname + u.search, path: u.pathname, baseUrl: '',
         query: parseQuery(u.search), params: {}, headers, body: undefined, cookies: parseCookies(headers.cookie), signedCookies: {},
-        ip: '::1', ips: [], hostname: u.hostname, protocol: 'http', secure: false, xhr: false, app, rawBody: init.body,
+        ip: '::1', ips: [], rawHeaders: Object.keys(headers).reduce((a, k) => a.concat(k, String(headers[k])), []), hostname: u.hostname, protocol: 'http', secure: false, xhr: false, app, rawBody: init.body,
         get: n => headers[String(n).toLowerCase()], header: n => headers[String(n).toLowerCase()],
         is: t => (headers['content-type'] || '').includes(t), accepts: () => true,
       };
@@ -207,7 +237,7 @@
         writeHead(status, headers) { res.statusCode = status; if (headers) res.set(headers); return res; },
         sendFile(p, o, cb) { if (typeof o === 'function') cb = o; const path = resolveFrom(ROOT, p.replace(/^file:\/\//, ''));
           const c = vfs.read(path); if (c == null) { const e = new Error(`ENOENT: no such file or directory, stat '${path}'`); if (cb) return cb(e); res.statusCode = 404; return res.send(`Error: ${e.message}`); }
-          res.set('content-type', MIME[extname(path).slice(1)] || 'application/octet-stream'); res.body = c; return res.end(); },
+          res.set('content-type', typeFor(path, c)); res.body = c; return res.end(); },
         render(view, locals, cb) {
           if (typeof locals === 'function') { cb = locals; locals = {}; }
           try { const html = renderView(app, view, Object.assign({}, app.locals, res.locals, locals || {})); if (cb) return cb(null, html); res.send(html); }
@@ -230,6 +260,7 @@
       return user ? `${msg}\n    at ${currentFile.replace(ROOT + '/', '')}:${user.line}:${user.col}` : msg;
     }
     let currentFile = ROOT + '/index.js';
+    function typeFor(path, content) { const m = /^data:([^;,]+)/.exec(content || ''); return m ? m[1] : (MIME[extname(path).slice(1)] || 'application/octet-stream'); }
     const STATUS = { 200: 'OK', 201: 'Created', 204: 'No Content', 301: 'Moved Permanently', 302: 'Found', 304: 'Not Modified', 400: 'Bad Request', 401: 'Unauthorized', 403: 'Forbidden', 404: 'Not Found', 405: 'Method Not Allowed', 409: 'Conflict', 500: 'Internal Server Error', 503: 'Service Unavailable' };
     function escapeHtml(s) { return String(s).replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c])); }
 
@@ -346,7 +377,7 @@
       if (req.method !== 'GET' && req.method !== 'HEAD') return next();
       let p = pjoin(dir, decodeURIComponent(req.path)); if (vfs.isDir(p) && vfs.exists(pjoin(p, 'index.html'))) p = pjoin(p, 'index.html');
       const c = vfs.read(p); if (c == null) return next();
-      res.set('content-type', MIME[extname(p).slice(1)] || 'application/octet-stream'); res.body = c; res.end(); }; };
+      res.set('content-type', typeFor(p, c)); res.body = c; res.end(); }; };
     express.urlencoded = () => function urlencodedParser(req, res, next) { if (req.body === undefined && (req.headers['content-type'] || '').includes('application/x-www-form-urlencoded')) req.body = parseQuery(req.rawBody || ''); else if (req.body === undefined) req.body = {}; next(); };
     express.json = () => function jsonParser(req, res, next) { if ((req.headers['content-type'] || '').includes('application/json') && req.rawBody) { try { req.body = JSON.parse(req.rawBody); } catch (e) { res.statusCode = 400; return res.send('Unexpected token in JSON body'); } } else if (req.body === undefined) req.body = {}; next(); };
     express.text = () => (req, res, next) => { req.body = req.rawBody || ''; next(); };
@@ -357,6 +388,7 @@
       options = options || {};
       const name = options.name || 'connect.sid';
       return function session(req, res, next) {
+        if (!options.secret) return next(new Error('secret option required for sessions'));
         let sid = req.cookies[name];
         let fresh = !sid || !sessions[sid];
         if (fresh) { sid = uid(); sessions[sid] = { cookie: Object.assign({ path: '/', httpOnly: true }, options.cookie || {}) }; }
@@ -503,6 +535,7 @@
       if (moduleCache[base]) return moduleCache[base];
       const f = BUILTINS[base];
       if (!f) {
+        if (base === 'dotenv/config') { const d = require('dotenv'); d.config(); return d; }
         if (base.startsWith('dotenv')) return BUILTINS.dotenv();
         throw new Error(`Cannot find module '${name}'\nThis playground bundles: ${Object.keys(BUILTINS).sort().join(', ')}`);
       }
@@ -520,13 +553,14 @@
       return mod.exports;
     }
     function runCode(code, file, mod) {
-      const src = fixExports(transform(code));
+      let src = fixExports(transform(code));
+      if (LG) src = LG.instrument(src);
       let fn;
-      try { fn = new Function('require', 'module', 'exports', '__filename', '__dirname', 'process', 'console', '__meta', '__default', 'Buffer', `return (async () => {\n${src}\n})();`); }
+      try { fn = new Function('require', 'module', 'exports', '__filename', '__dirname', 'process', 'console', '__meta', '__default', 'Buffer', '__pgGuard', `return (async () => {\n${src}\n})();`); }
       catch (e) { throw new SyntaxError(`${file.replace(ROOT + '/', '')}: ${e.message}`); }
       const req = n => require(n, file);
-      const out = fn(req, mod, mod.exports, file, dirname(file), process, konsole, { url: 'file://' + file }, __default, BufferShim);
-      if (out && out.catch) out.catch(e => { if (e && e.__exit) return; log('err', cleanStack(e)); });
+      const out = fn(req, mod, mod.exports, file, dirname(file), process, konsole, { url: 'file://' + file }, __default, BufferShim, pgGuard);
+      if (out && out.catch) out.catch(e => { if (e && e.__exit) return; if (e && typeof e === 'object') e.__logged = true; log('err', cleanStack(e)); });
       return out;
     }
     const BufferShim = { from: (s, enc) => ({ toString: e => e === 'base64' ? b64(String(s)) : enc === 'base64' ? (typeof atob === 'function' ? atob(String(s)) : Buffer.from(String(s), 'base64').toString()) : String(s) }) };
@@ -541,7 +575,8 @@
       'fs/promises': () => fsModule().promises,
       os: () => ({ platform: () => 'darwin', homedir: () => '/home/you', tmpdir: () => '/tmp', EOL: '\n', cpus: () => [{}], hostname: () => 'playground', type: () => 'Darwin' }),
       crypto: () => ({ randomUUID: () => 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => { const r = Math.random() * 16 | 0; return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16); }),
-        randomBytes: n => ({ toString: () => uid(n * 2) }), createHash: () => { let s = ''; const h = { update(x) { s += x; return h; }, digest: () => md5(s) }; return h; } }),
+        randomBytes: n => ({ toString: () => uid(n * 2) }), createHash: alg => { alg = String(alg || '').toLowerCase(); const fn = alg === 'md5' ? md5 : alg === 'sha256' ? sha256 : null; if (!fn) throw new Error(`Digest method not supported: ${alg} (this playground has md5 and sha256)`);
+        let s = ''; const h = { update(x) { s += x; return h; }, digest: enc => { const hex = fn(s); if (enc === 'base64') { let bin = ''; for (let i = 0; i < hex.length; i += 2) bin += String.fromCharCode(parseInt(hex.substr(i, 2), 16)); return b64bin(bin); } return hex; } }; return h; } }),
       events: () => { class EventEmitter { constructor() { this._l = {}; } on(e, f) { (this._l[e] = this._l[e] || []).push(f); return this; } once(e, f) { const w = (...a) => { this.off(e, w); f(...a); }; return this.on(e, w); } off(e, f) { this._l[e] = (this._l[e] || []).filter(x => x !== f); return this; } emit(e, ...a) { (this._l[e] || []).slice().forEach(f => f(...a)); return !!(this._l[e] || []).length; } addListener(e, f) { return this.on(e, f); } removeListener(e, f) { return this.off(e, f); } } EventEmitter.EventEmitter = EventEmitter; return EventEmitter; },
       util: () => ({ promisify: f => (...a) => new Promise((res, rej) => f(...a, (e, v) => e ? rej(e) : res(v))), inspect: fmt, format: (...a) => a.map(fmt).join(' '), inherits() {}, types: {} }),
       readline: () => ({ createInterface: () => ({ question: (q, cb) => Promise.resolve(host.input ? host.input(q) : '').then(v => cb(v)), close() {}, on() {}, prompt() {} }) }),
@@ -559,19 +594,32 @@
       'passport-local': () => ({ Strategy: LocalStrategy, default: LocalStrategy }),
       'passport-google-oauth2': () => ({ Strategy: GoogleStrategy, default: GoogleStrategy }),
       'passport-google-oauth20': () => ({ Strategy: GoogleStrategy, default: GoogleStrategy }),
-      dotenv: () => { const config = () => { const txt = vfs.read('.env') || ''; txt.split('\n').forEach(l => { const m = l.match(/^\s*([\w.-]+)\s*=\s*(.*)?\s*$/); if (m && !l.trim().startsWith('#')) { let v = (m[2] || '').trim(); if (/^(['"]).*\1$/.test(v)) v = v.slice(1, -1); if (env[m[1]] === undefined) env[m[1]] = v; } }); return { parsed: env }; }; config(); return { config, parse: () => ({}) }; },
-      morgan: () => (format) => function logger(req, res, next) { const t = Date.now(); const end = res.end; res.end = function (c) { const r = end.call(res, c); log('log', format === 'combined' ? `::1 - - [${new Date().toUTCString()}] "${req.method} ${req.originalUrl} HTTP/1.1" ${res.statusCode} ${(res.body || '').length} "-" "playground"` : `${req.method} ${req.originalUrl} ${res.statusCode} ${(res.body || '').length} - ${Date.now() - t} ms`); return r; }; next(); },
+      dotenv: () => { const config = (o) => { const file = (o && o.path) || '.env'; const txt = vfs.read(file) || ''; txt.split('\n').forEach(l => { const m = l.match(/^\s*([\w.-]+)\s*=\s*(.*)?\s*$/); if (m && !l.trim().startsWith('#')) { let v = (m[2] || '').trim(); if (/^(['"]).*\1$/.test(v)) v = v.slice(1, -1); if (env[m[1]] === undefined) env[m[1]] = v; } }); return { parsed: env }; }; const d = { config, parse: () => ({}) }; d.default = d; return d; },
+      morgan: () => (format) => function logger(req, res, next) {
+        const t = Date.now(); const end = res.end;
+        res.end = function (c) {
+          const r = end.call(res, c); const len = (res.body || '').length, ms = (Date.now() - t).toFixed(3), url = req.originalUrl, st = res.statusCode;
+          const date = new Date().toUTCString(), ua = req.headers['user-agent'] || 'playground-browser';
+          const line = format === 'dev' ? `${req.method} ${url} ${st} ${ms} ms - ${len}`
+            : format === 'tiny' ? `${req.method} ${url} ${st} ${len} - ${ms} ms`
+            : format === 'short' ? `::1 - ${req.method} ${url} HTTP/1.1 ${st} ${len} - ${ms} ms`
+            : format === 'common' ? `::1 - - [${date}] "${req.method} ${url} HTTP/1.1" ${st} ${len}`
+            : `::1 - - [${date}] "${req.method} ${url} HTTP/1.1" ${st} ${len} "-" "${ua}"`;
+          log('log', line); return r;
+        };
+        next();
+      },
       cors: () => () => (req, res, next) => { res.set('access-control-allow-origin', '*'); next(); },
       'qr-image': () => ({ image: (text, o) => ({ pipe(ws) { const svg = qrSvg(text); ws.write(svg); ws.end(); return ws; } }), imageSync: text => qrSvg(text) }),
       qrcode: () => ({ toString: (text, o, cb) => { const s = qrSvg(text); if (typeof o === 'function') cb = o; if (cb) cb(null, s); return Promise.resolve(s); }, toFile: (p, text) => { vfs.write(p, qrSvg(text)); return Promise.resolve(); } }),
-      inquirer: () => ({ prompt: async questions => { const answers = {}; for (const q of [].concat(questions)) { const v = host.input ? await host.input(q.message || q.name) : (q.default || ''); answers[q.name] = q.type === 'number' ? Number(v) : v; } return answers; }, default: null }),
-      superheroes: () => namesModule(['Captain Comet', 'The Velvet Fox', 'Nightfall', 'Doctor Aurora', 'Quicksilver Quinn', 'Iron Lantern', 'The Tidal Guard', 'Solar Sparrow', 'Granite', 'Mistral', 'Ember Knight', 'Echo Wren', 'The Sentinel of Sorrow', 'Blue Meridian', 'Thunderpaw', 'Gloaming', 'Kestrel Kid', 'Lady Luminous', 'Mantis', 'Copperhead Jack']),
-      supervillains: () => namesModule(['Baron Blackout', 'The Grey Cartographer', 'Madame Mercury', 'Doctor Dusk', 'Hexwright', 'The Hollow Clown', 'Lord Lattice', 'Static', 'Widow Winter', 'The Collector of Keys', 'Rook', 'Sulphur', 'Mister Mirror', 'Obsidian Owl', 'The Quiet Tide', 'Vantablack', 'Cinderfell', 'The Marionette', 'Nocturne', 'Glasshouse']),
+      inquirer: () => { const m = { prompt: async questions => { const answers = {}; for (const q of [].concat(questions)) { const v = host.input ? await host.input(q.message || q.name) : (q.default || ''); answers[q.name] = q.type === 'number' ? Number(v) : v; } return answers; } }; m.default = m; return m; },
+      superheroes: () => namesModule(['Captain Comet', 'The Velvet Fox', 'Nightfall', 'Doctor Aurora', 'Quicksilver Quinn', 'Iron Lantern', 'The Tidal Guard', 'Solar Sparrow', 'Granite', 'Mistral', 'Ember Knight', 'Echo Wren', 'The Sentinel of Sorrow', 'Blue Meridian', 'Thunderpaw', 'Gloaming', 'Kestrel Kid', 'Lady Luminous', 'Mantis', 'Copperhead Jack'], 'Superhero'),
+      supervillains: () => namesModule(['Baron Blackout', 'The Grey Cartographer', 'Madame Mercury', 'Doctor Dusk', 'Hexwright', 'The Hollow Clown', 'Lord Lattice', 'Static', 'Widow Winter', 'The Collector of Keys', 'Rook', 'Sulphur', 'Mister Mirror', 'Obsidian Owl', 'The Quiet Tide', 'Vantablack', 'Cinderfell', 'The Marionette', 'Nocturne', 'Glasshouse'], 'Supervillain'),
       lodash: () => ({ capitalize: s => s.charAt(0).toUpperCase() + s.slice(1).toLowerCase(), lowerCase: s => s.replace(/[-_]+/g, ' ').toLowerCase(), kebabCase: s => s.replace(/\s+/g, '-').toLowerCase(), sample: a => a[Math.floor(Math.random() * a.length)], random: (a, b) => Math.floor(Math.random() * (b - a + 1)) + a, shuffle: a => a.slice().sort(() => Math.random() - 0.5), uniq: a => [...new Set(a)], range: n => Array.from({ length: n }, (_, i) => i) }),
       nodemon: () => ({}),
     };
     BUILTINS['lodash'].default = null;
-    function namesModule(list) { const m = { all: list.slice(), random: () => list[Math.floor(Math.random() * list.length)] }; m.default = m; return m; }
+    function namesModule(list, kind) { const pick = () => list[Math.floor(Math.random() * list.length)]; const m = { all: list.slice(), random: pick }; m['random' + kind] = pick; m.default = m; return m; }
 
     function fsModule() {
       const enoent = p => { const e = new Error(`ENOENT: no such file or directory, open '${p}'`); e.code = 'ENOENT'; return e; };
@@ -618,18 +666,19 @@
       function getPg() { if (!pgPromise) pgPromise = host.pg ? Promise.resolve(host.pg()) : Promise.resolve(null); return pgPromise; }
       class Client {
         constructor(cfg) { this.cfg = cfg || {}; this._ready = false; }
-        async connect(cb) { const db = await getPg(); if (!db) { const e = new Error('No database available: a SQL-capable sandbox is needed (add db: { seed } to the lesson, and be online so Postgres can download)'); if (cb) return cb(e); throw e; } this.db = db; this._ready = true; if (cb) cb(null); }
+        async connect(cb) { if (this.cfg && typeof this.cfg === 'object' && 'password' in this.cfg && typeof this.cfg.password !== 'string') { const e = new Error('SASL: SCRAM-SERVER-FIRST-MESSAGE: client password must be a string'); if (cb) return cb(e); throw e; } const db = await getPg(); if (!db) { const e = new Error('No database available: a SQL-capable sandbox is needed (add db: { seed } to the lesson, and be online so Postgres can download)'); if (cb) return cb(e); throw e; } this.db = db; this._ready = true; if (cb) cb(null); }
         async query(text, params, cb) {
           if (typeof params === 'function') { cb = params; params = undefined; }
           if (typeof text === 'object') { params = text.values; text = text.text; }
           try {
+            if (this._ended) throw new Error(this instanceof Pool ? 'Cannot use a pool after calling end on the pool' : 'Client was closed and is not queryable');
             if (!this.db) await this.connect();
             const r = (params && params.length) ? await this.db.query(text, params) : await this.db.query(text);
             const out = { rows: r.rows || [], rowCount: r.affectedRows != null && !(r.fields && r.fields.length) ? r.affectedRows : (r.rows || []).length, fields: (r.fields || []).map(f => ({ name: f.name })), command: text.trim().split(/\s+/)[0].toUpperCase() };
             if (cb) return cb(null, out); return out;
           } catch (e) { const err = new Error(e.message); err.code = e.code; if (cb) return cb(err); throw err; }
         }
-        async end(cb) { if (cb) cb(); }
+        async end(cb) { this._ended = true; if (cb) cb(); }
         on() {}
       }
       class Pool extends Client { async connect() { await super.connect(); return Object.assign(Object.create(this), { release() {} }); } }
@@ -638,12 +687,13 @@
 
     /* ---------------- mock internet (the course's APIs, with original data) ---------------- */
     function createMockInternet() {
+      const SECRET_USERS = ['quiet_otter', 'pixelfox', 'moonbeam42', 'teacup_tiger', 'lunar_llama', 'nightowl_dev', 'velvet_wren', 'bytebard', 'sunny_sloth', 'orbit_kid', 'maple_moth', 'cobalt_crab'];
       const SECRETS = [
         [1, 'I still sleep with a nightlight on, and I am 34.', 7], [2, 'I have never actually finished a book club book.', 3], [3, 'I talk to my houseplants and I think it helps.', 2],
         [4, 'I once applauded at the end of a film in an empty cinema.', 5], [5, 'My "famous" chilli recipe comes from the back of a tin.', 6], [6, 'I secretly enjoy Mondays.', 4],
         [7, 'I have a spreadsheet ranking every pizza place in town.', 8], [8, 'I learned to code to build a better to-do list app and never finished it.', 9], [9, 'I cried at a bank advert last week.', 3],
         [10, 'I pretend to be on a call to avoid small talk in lifts.', 6], [11, 'I have re-watched the same sitcom nine times.', 5], [12, 'I cannot whistle and I have stopped trying.', 1],
-      ].map(([id, secret, score]) => ({ id, secret, score }));
+      ].map(([id, secret, score]) => ({ id, secret, emScore: score, score, username: SECRET_USERS[(id - 1) % SECRET_USERS.length], timestamp: new Date(Date.UTC(2024, 0, id, 9, 30)).toISOString() }));
       const users = { testuser: { password: 'secret123', apiKey: 'test-api-key' } };
       const tokens = { 'test-bearer-token': 'testuser' };
       const ACTIVITIES = [
@@ -679,17 +729,18 @@
           if (method === 'GET' && p === '/random') return json(200, SECRETS[Math.floor(Math.random() * SECRETS.length)]);
           if (method === 'POST' && p === '/register') { if (!data.username || !data.password) return json(400, { error: 'username and password are required' }); users[data.username] = { password: data.password, apiKey: 'key-' + uid(10) }; return json(200, { message: 'Registered', username: data.username, apiKey: users[data.username].apiKey }); }
           if (method === 'GET' && p === '/generate-api-key') return json(200, { apiKey: users.testuser.apiKey, note: 'Use ?apiKey=... on the /filter endpoint' });
-          if (method === 'GET' && p === '/get-auth-token') { const user = basicUser(headers); if (!user) return json(401, { error: 'Basic authentication failed: check username and password' }); const t = 'token-' + uid(12); tokens[t] = user; return json(200, { token: t }); }
+          if (p === '/get-auth-token' && (method === 'GET' || method === 'POST')) { const user = basicUser(headers) || (data.username && users[data.username] && users[data.username].password === data.password ? data.username : null);
+            if (!user) return json(401, { error: 'Authentication failed: send username and password (form fields or Basic auth)' }); const t = 'token-' + uid(12); tokens[t] = user; return json(200, { token: t }); }
           if (method === 'GET' && p === '/all') { if (!basicUser(headers)) return json(401, { error: 'This endpoint needs Basic authentication (username and password)' }); const page = Number(q.get('page') || 1), limit = Number(q.get('limit') || 10); return json(200, SECRETS.slice((page - 1) * limit, page * limit)); }
           if (method === 'GET' && p === '/filter') { if (!apiKeyUser(q)) return json(401, { error: 'A valid apiKey query parameter is required' }); const s = Number(q.get('score') || 0); return json(200, SECRETS.filter(x => x.score >= s)); }
           const m = p.match(/^\/secrets\/(\d+)$/);
           if (p === '/secrets' || m) {
             if (!bearerUser(headers)) return json(401, { error: 'A Bearer token is required: Authorization: Bearer <token>' });
             if (method === 'GET' && m) { const s = SECRETS.find(x => x.id === Number(m[1])); return s ? json(200, s) : json(404, { error: `No secret with id ${m[1]}` }); }
-            if (method === 'POST' && !m) { if (!data.secret) return json(400, { error: 'secret is required' }); const s = { id: nextId++, secret: data.secret, score: Number(data.score) || 0 }; SECRETS.push(s); return json(201, s); }
+            if (method === 'POST' && !m) { if (!data.secret) return json(400, { error: 'secret is required' }); const sc = Number(data.score) || 0; const s = { id: nextId++, secret: data.secret, emScore: sc, score: sc, username: bearerUser(headers), timestamp: new Date().toISOString() }; SECRETS.push(s); return json(201, s); }
             if (m) { const s = SECRETS.find(x => x.id === Number(m[1])); if (!s) return json(404, { error: `No secret with id ${m[1]}` });
-              if (method === 'PUT') { s.secret = data.secret || ''; s.score = Number(data.score) || 0; return json(200, s); }
-              if (method === 'PATCH') { if (data.secret != null) s.secret = data.secret; if (data.score != null) s.score = Number(data.score); return json(200, s); }
+              if (method === 'PUT') { s.secret = data.secret || ''; s.score = s.emScore = Number(data.score) || 0; return json(200, s); }
+              if (method === 'PATCH') { if (data.secret != null && data.secret !== '') s.secret = data.secret; if (data.score != null && data.score !== '') s.score = s.emScore = Number(data.score); return json(200, s); }
               if (method === 'DELETE') { SECRETS.splice(SECRETS.indexOf(s), 1); return json(200, { message: `Secret ${m[1]} deleted` }); } }
           }
           return json(404, { error: `Cannot ${method} ${p}` });
@@ -697,11 +748,19 @@
         'bored-api.appbrewery.com': (method, u) => {
           const p = u.pathname.replace(/\/$/, ''); const q = u.searchParams;
           if (p === '/random') return json(200, ACTIVITIES[Math.floor(Math.random() * ACTIVITIES.length)]);
+          if (p === '/activities') return json(200, ACTIVITIES);
+          const ak = p.match(/^\/activity\/(\w+)$/); if (ak) { const a = ACTIVITIES.find(x => x.key === ak[1]); return a ? json(200, a) : json(404, { error: 'No activity found with the specified key' }); }
           if (p === '/filter') { let a = ACTIVITIES; if (q.get('type')) a = a.filter(x => x.type === q.get('type')); if (q.get('participants')) a = a.filter(x => x.participants === Number(q.get('participants'))); return a.length ? json(200, a) : json(404, { error: 'No activities that match your criteria.' }); }
           return json(404, { error: 'Not found' });
         },
         'www.boredapi.com': (method, u) => hosts['bored-api.appbrewery.com'](method, u),
-        'v2.jokeapi.dev': (method, u) => { const t = u.searchParams.get('type'); const list = t ? JOKES.filter(j => j.type === t) : JOKES; const j = list[Math.floor(Math.random() * list.length)]; return json(200, Object.assign({ error: false }, j)); },
+        'v2.jokeapi.dev': (method, u) => {
+          const cm = u.pathname.match(/\/joke\/([^/]+)/); const cats = cm && cm[1] !== 'Any' ? decodeURIComponent(cm[1]).toLowerCase().split(',') : null;
+          let list = JOKES;
+          if (cats) { const f = list.filter(j => cats.includes(j.category.toLowerCase())); if (f.length) list = f; }
+          const t = u.searchParams.get('type'); if (t === 'single' || t === 'twopart') { const f = list.filter(j => j.type === t); if (f.length) list = f; }
+          return json(200, Object.assign({ error: false }, list[Math.floor(Math.random() * list.length)]));
+        },
       };
       return { has: h => !!hosts[h], handle: (method, u, headers, body) => Promise.resolve(hosts[u.hostname](method, u, headers, body)) };
     }
@@ -713,7 +772,7 @@
       if (code == null) { log('err', `Error: Cannot find module '${file.replace(ROOT + '/', '')}'`); return; }
       process.argv = ['node', file]; currentFile = file;
       try { await runCode(code, file, { exports: {} }); }
-      catch (e) { if (e && e.__exit) return; log('err', cleanStack(e)); }
+      catch (e) { if (e && (e.__exit || e.__logged)) return; log('err', cleanStack(e)); }
     }
     async function request(init) {
       const u = new URL(init.url, 'http://localhost');

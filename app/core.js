@@ -123,7 +123,7 @@ const PG = (function () {
   /* ---------------- registration ---------------- */
   function add(lesson) {
     lesson.files = mapFiles(lesson.files);
-    lesson.solution = lesson.solution ? mapFiles(lesson.solution) : null;
+    lesson.solution = lesson.solution ? (Array.isArray(lesson.solution) ? lesson.solution : mapFiles(lesson.solution)) : null;
     lesson.explore = lesson.explore || [];
     lesson.tasks = lesson.tasks || [];
     if (!lesson.kind) {
@@ -136,7 +136,7 @@ const PG = (function () {
   }
   function stubOf(l) {
     return { id: l.id, index: l.index, sub: l.sub || '', section: l.section, slug: l.slug, title: l.title, kind: l.kind,
-             minutes: l.minutes, project: !!l.project };
+             minutes: l.minutes, type: l.type || '', project: !!l.project };
   }
   function notes(id, html) { notesById[id] = html; }
   function index(list) { list.forEach(s => { if (!manifest.find(m => m.id === s.id)) manifest.push(s); }); sortManifest(); }
@@ -297,7 +297,7 @@ const PG = (function () {
             <span class="ttl">${esc(l.title)}</span>
             ${l.project ? '<span class="proj-badge">PROJECT</span>' : ''}
             <span class="kind-badge k-${l.kind || 'read'}">${(KINDS[l.kind] || KINDS.read).badge}</span>
-            <span class="mins">${l.minutes ? l.minutes + ' min' : 'article'}</span>
+            <span class="mins">${(l.type ? l.type === 'A' : !l.minutes) ? 'article' : l.minutes + ' min'}</span>
           </a>`).join('')}
         ${ls.length ? '' : '<p class="sub">No lessons in this section yet.</p>'}
       </div>
@@ -316,6 +316,9 @@ const PG = (function () {
     const prev = manifest[i - 1], next = manifest[i + 1];
     // a lesson's own short notes come first, then the full lecture notes
     const notesHtml = (lesson.notes || '') + (notesById[lesson.id] ? (lesson.notes ? '<h2>Lecture notes</h2>' : '') + notesById[lesson.id] : '');
+    lesson._notesHtml = notesHtml;
+    const stub = manifestEntry(lesson) || {};
+    const isArticle = stub.type ? stub.type === 'A' : !lesson.minutes;
     const hasQuiz = lesson.quiz && lesson.quiz.length;
     const mainTab = kit.tabLabel || 'Build';
     const udemy = udemyUrl(lesson);
@@ -327,7 +330,7 @@ const PG = (function () {
         <div class="meta-line">
           <span class="kind-badge k-${lesson.kind}">${kind.badge}</span>
           ${lesson.project ? '<span class="proj-badge">PROJECT</span>' : ''}
-          <span>${lesson.minutes ? lesson.minutes + ' min video' : 'article'}</span>
+          <span>${isArticle ? 'article' : (lesson.minutes || 0) + ' min video'}</span>
           ${udemy ? `<a class="udemy-link" href="${udemy}" target="_blank" rel="noopener">Open in Udemy ↗</a>` : ''}
         </div>
         ${lesson.blurb ? `<p class="blurb">${lesson.blurb}</p>` : ''}
@@ -336,6 +339,8 @@ const PG = (function () {
             <div class="t-title">Your task</div>
             <ol>${lesson.tasks.map(t => `<li>${t}</li>`).join('')}</ol>
           </div>` : ''}
+        ${lesson.links && lesson.links.length && lesson.kind !== 'read' ? `
+          <div class="lesson-links">Links: ${lesson.links.map(l => `<a href="${attr(l.url)}" target="_blank" rel="noopener" title="${attr(l.note || '')}">${esc(l.title || l.url)} ↗</a>`).join(' · ')}</div>` : ''}
       </div>
 
       <div class="tabs">
@@ -459,14 +464,14 @@ const PG = (function () {
   const MODES = {
     html: 'htmlmixed', htm: 'htmlmixed', ejs: 'htmlmixed', css: 'css', js: 'javascript', mjs: 'javascript',
     jsx: 'jsx', json: { name: 'javascript', json: true }, sql: 'text/x-pgsql', sh: 'shell', bash: 'shell',
-    mo: 'text/x-rustsrc', env: 'shell', txt: null, md: null, svg: 'xml', xml: 'xml', py: 'python',
+    mo: 'swift', env: 'shell', txt: null, md: null, svg: 'xml', xml: 'xml', py: 'python',
   };
   function modeFor(name) {
     const ext = (name.split('.').pop() || '').toLowerCase();
     if (name.startsWith('.env')) return 'shell';
     const m = MODES[ext];
     if (m === undefined) return null;
-    if (m === 'text/x-rustsrc' && !CodeMirror.mimeModes['text/x-rustsrc']) return 'javascript';
+    if (m === 'swift' && !CodeMirror.modes.swift) return 'javascript';
     return m;
   }
   function makeEditor(host, value, name, opts) {
@@ -588,13 +593,15 @@ const PG = (function () {
   }
 
   /* ---------------- router ---------------- */
+  let routeSeq = 0;
   async function route() {
-    const h = location.hash.replace(/^#\/?/, '');
+    const token = ++routeSeq;
+    const h = location.hash.replace(/^#\/?/, '').split('?')[0];
     const parts = h.split('/').filter(Boolean);
     document.getElementById('main').scrollTop = 0;
     if (unmount && parts.length !== 2) { try { unmount(); } catch (e) {} unmount = null; current = null; }
     if (parts.length === 0) return renderHome();
-    if (parts[0] === 'selftest') { await Promise.all(SECTIONS.map(s => loadSection(s.id))); return window.PGSelfTest ? PGSelfTest.render() : renderHome(); }
+    if (parts[0] === 'selftest') { await Promise.all(SECTIONS.map(s => loadSection(s.id))); if (token !== routeSeq) return; return window.PGSelfTest ? PGSelfTest.render() : renderHome(); }
     if (/^p\d$/.test(parts[0])) return renderPart(parts[0]);
     if (parts[0] === 'l' && parts[1]) {                       // #/l/13 → lecture 13
       const m = manifest.find(x => num(x) === parts[1]);
@@ -604,11 +611,11 @@ const PG = (function () {
     const secId = parts[0];
     if (!sectionOf(secId)) return renderHome();
     await loadSection(secId);
+    if (token !== routeSeq) return;                           // the user moved on while it loaded
     if (parts.length === 1) return renderSection(secId);
     const stub = manifest.find(x => x.section === secId && x.slug === parts[1]);
     const l = stub && lessons[stub.id];
     if (!l) return renderSection(secId);
-    if (location.hash.replace(/^#\/?/, '') !== h) return;   // user moved on while loading
     renderLesson(l);
   }
 
@@ -644,8 +651,9 @@ const PG = (function () {
   .knobs input[type=range]{width:120px;}
   .knobs .val{font-family:ui-monospace,Menlo,monospace;font-size:12px;color:#5b6382;
               min-width:46px;display:inline-block;}
-  .knobs button,.stage button{font:inherit;font-size:12.5px;padding:4px 10px;border:1px solid #cfd5e6;border-radius:6px;background:#fff;cursor:pointer;}
-  .knobs button:hover,.stage button:hover{border-color:#5b9cff;}
+  /* :where() keeps these defaults at zero specificity, so a demo's own button classes win */
+  :where(.knobs, .stage) button{font:inherit;font-size:12.5px;padding:4px 10px;border:1px solid #cfd5e6;border-radius:6px;background:#fff;cursor:pointer;}
+  :where(.knobs, .stage) button:hover{border-color:#5b9cff;}
   .stage{background:#fff;border:1px solid #dfe3ee;border-radius:10px;padding:16px;margin-bottom:12px;
          position:relative;overflow:auto;}
   .readout{background:#111827;color:#e5e9f5;border-radius:10px;padding:12px 14px;margin:0 0 12px;
@@ -725,5 +733,7 @@ const PG = (function () {
     SECTIONS, PARTS, KINDS, manifest, lessons, notesById, kits, store,
     esc, attr, toast, makeEditor, modeFor, workbench, consolePanel, loadSection, sectionOf, udemyUrl,
     get current() { return current; },
+    currentFiles() { return current ? Object.assign({}, current.files, store.getCode(current.id) || {}) : {}; },
   };
 })();
+window.PG = PG;

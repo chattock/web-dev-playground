@@ -34,6 +34,7 @@
     const repos = new Map();     // repo root path -> git state
     const history = [];
     const hooks = { node: null, npm: null };
+    const remotes = opts.remotes || {};     // url -> { file: content } used by git clone
     let clock = 1700000000000;   // deterministic "time" for commit dates
 
     function mkdirp(p) {
@@ -71,16 +72,33 @@
 
     /* ---------- argument parsing ---------- */
     function parse(line) {
-      const args = []; let cur = '', q = null, had = false;
+      const args = []; args.quoted = []; let cur = '', q = null, had = false;
       for (let i = 0; i < line.length; i++) {
         const c = line[i];
         if (q) { if (c === q) q = null; else cur += c; }
         else if (c === '"' || c === "'") { q = c; had = true; }
-        else if (/\s/.test(c)) { if (cur || had) { args.push(cur); cur = ''; had = false; } }
+        else if (/\s/.test(c)) { if (cur || had) { args.push(cur); args.quoted.push(had); cur = ''; had = false; } }
         else cur += c;
       }
-      if (cur || had) args.push(cur);
+      if (cur || had) { args.push(cur); args.quoted.push(had); }
       return args;
+    }
+    // *.txt, docs/*.md, file?.js — expanded by the shell before the command runs (unquoted only)
+    function expand(args) {
+      const out = [];
+      for (let i = 0; i < args.length; i++) {
+        const a = args[i];
+        if (args.quoted[i] || !/[*?]/.test(a) || a.startsWith('-')) { out.push(a); continue; }
+        const slash = a.lastIndexOf('/');
+        const dirPart = slash >= 0 ? a.slice(0, slash + 1) : '';
+        const pat = a.slice(slash + 1);
+        if (/[*?]/.test(dirPart)) { out.push(a); continue; }
+        const re = new RegExp('^' + pat.replace(/[.+^${}()|[\]\\]/g, '\\$&').replace(/\*/g, '.*').replace(/\?/g, '.') + '$');
+        const names = (fs.list(dirPart || '.') || []).filter(n => re.test(n) && (pat.startsWith('.') || !n.startsWith('.')));
+        if (!names.length) return { error: `zsh: no matches found: ${a}` };
+        names.forEach(n => out.push(dirPart + n));
+      }
+      return { args: out };
     }
     function flags(args) {
       const f = new Set(), rest = [];
@@ -106,18 +124,22 @@
       ls: (args) => {
         const { f, rest } = flags(args);
         const targets = rest.length ? rest : ['.'];
-        return targets.map(t => {
+        const longLine = (name, e) => `${e.type === 'dir' ? 'drwxr-xr-x' : '-rw-r--r--'}  1 ${user}  staff  ${pad(e.type === 'dir' ? 96 : (e.content || '').length, 6)} ${name}`;
+        const errors = [], fileTargets = [], dirTargets = [];
+        targets.forEach(t => { const p = resolve(t); if (!files.has(p)) errors.push(`ls: ${t}: No such file or directory`); else if (fs.isFile(p)) fileTargets.push(t); else dirTargets.push(t); });
+        const blocks = [];
+        // files named on the command line come first, on one line, then each folder's contents
+        if (fileTargets.length) blocks.push(f.has('l') ? fileTargets.map(t => longLine(t, files.get(resolve(t)))).join('\n') : fileTargets.join('   '));
+        dirTargets.forEach(t => {
           const p = resolve(t);
-          if (!files.has(p)) return `ls: ${t}: No such file or directory`;
-          if (fs.isFile(p)) return basename(p);
           let names = fs.list(p);
           if (!f.has('a')) names = names.filter(n => !n.startsWith('.'));
-          if (f.has('a')) names = ['.', '..', ...names];
-          if (f.has('l')) return names.map(n => { const e = files.get(join(p, n)) || { type: 'dir' };
-            return `${e.type === 'dir' ? 'drwxr-xr-x' : '-rw-r--r--'}  1 ${user}  staff  ${pad(e.type === 'dir' ? 96 : (e.content || '').length, 6)} ${n}`; }).join('\n');
-          const head = targets.length > 1 ? `${t}:\n` : '';
-          return head + names.map(n => fs.isDir(join(p, n)) ? n + '/' : n).join('   ');
-        }).join('\n\n');
+          else names = ['.', '..', ...names];
+          const body = f.has('l') ? names.map(n => longLine(n, files.get(join(p, n)) || { type: 'dir' })).join('\n')
+            : names.map(n => fs.isDir(join(p, n)) ? n + '/' : n).join('   ');
+          blocks.push((targets.length > 1 ? `${t}:\n` : '') + body);
+        });
+        return errors.concat(blocks.length ? [blocks.join('\n\n')] : []).join('\n');
       },
       cd: (args) => {
         const p = args[0] == null ? home : resolve(args[0]);
@@ -150,7 +172,10 @@
       },
       cat: (args) => args.length ? args.map(t => { const c = fs.read(t); return c == null ? (fs.isDir(t) ? `cat: ${t}: Is a directory` : `cat: ${t}: No such file or directory`) : c.replace(/\n$/, ''); }).join('\n') : 'usage: cat file ...',
       open: (args) => {
-        if (!args.length) return 'usage: open file-or-folder';
+        let app = null;
+        const ai = args.indexOf('-a'); if (ai >= 0) { app = args[ai + 1]; args = args.slice(0, ai).concat(args.slice(ai + 2)); }
+        if (!args.length) return app ? `(opened ${app})` : 'usage: open [-a application] file-or-folder';
+        if (app) return args.map(t => fs.exists(t) ? `(opened ${basename(resolve(t))} in ${app})` : `The file ${t} does not exist.`).join('\n');
         return args.map(t => { const p = resolve(t);
           if (!files.has(p)) return `The file ${t} does not exist.`;
           if (fs.isDir(p)) return `(opened ${display(p)} in Finder)`;
@@ -213,14 +238,33 @@
       files.forEach((v, k) => { if (v.type === 'file' && k.startsWith(pre)) { const rel = k.slice(pre.length); if (!rel.startsWith('.git/') && rel !== '.git') t[rel] = v.content; } });
       return t;
     }
+    /* .gitignore rules, as git reads them: a pattern without a slash matches a
+       file or folder name at any depth; a pattern with a slash is anchored to the
+       repo root; a trailing slash matches folders only; `!` re-includes. */
     function ignored(repo, rel) {
+      if (rel === '.git' || rel.startsWith('.git/')) return true;
       const gi = files.get(join(repo.root, '.gitignore'));
-      if (!gi) return rel.startsWith('.git/');
-      return gi.content.split('\n').map(s => s.trim()).filter(s => s && !s.startsWith('#')).some(pat => {
-        pat = pat.replace(/\/$/, '');
-        const re = new RegExp('^' + pat.replace(/[.+^${}()|[\]\\]/g, '\\$&').replace(/\*\*/g, '.*').replace(/\*/g, '[^/]*').replace(/\?/g, '.') + '(/.*)?$');
-        return re.test(rel) || rel.split('/').some((_, i, a) => re.test(a.slice(0, i + 1).join('/')));
+      if (!gi) return false;
+      const parts = rel.split('/');
+      let result = false;
+      gi.content.split('\n').map(s => s.replace(/\s+$/, '')).filter(s => s && !s.startsWith('#')).forEach(raw => {
+        let pat = raw, negate = false;
+        if (pat.startsWith('!')) { negate = true; pat = pat.slice(1); }
+        const dirOnly = pat.endsWith('/'); pat = pat.replace(/\/+$/, '');
+        const anchored = pat.includes('/'); pat = pat.replace(/^\//, '');
+        const src = pat.replace(/[.+^${}()|[\]\\]/g, '\\$&').replace(/\*\*\//g, '(?:.*/)?').replace(/\*\*/g, '.*').replace(/\*/g, '[^/]*').replace(/\?/g, '[^/]');
+        const re = new RegExp('^' + src + '$');
+        let hit = false;
+        // prefixes of the path: every folder on the way, then the file itself
+        for (let i = 1; i <= parts.length && !hit; i++) {
+          const isFile = i === parts.length;
+          if (dirOnly && isFile) continue;
+          const candidate = anchored ? parts.slice(0, i).join('/') : parts[i - 1];
+          if (re.test(candidate)) hit = true;
+        }
+        if (hit) result = !negate;
       });
+      return result;
     }
     function headTree(repo) { const c = repo.commits[repo.branches[repo.head]]; return c ? c.tree : {}; }
     function statusInfo(repo) {
@@ -248,7 +292,9 @@
         if (files.has(root)) return `fatal: destination path '${name}' already exists and is not an empty directory.`;
         mkdirp(root); mkdirp(join(root, '.git'));
         const repo = { root, head: 'main', branches: {}, commits: {}, index: {}, remotes: { origin: url }, pushed: {} };
-        const tree = { 'README.md': `# ${name}\n\nCloned from ${url}\n` };
+        // a lesson can supply what a remote contains: opts.remotes[url] = { 'README.md': '...', ... }
+        const template = remotes[url] || remotes[url.replace(/\.git$/, '')] || remotes[url + '.git'];
+        const tree = template ? Object.assign({}, template) : { 'README.md': `# ${name}\n\nCloned from ${url}\n` };
         Object.keys(tree).forEach(f => fs.write(join(root, f), tree[f]));
         const id = hash(); repo.commits[id] = { id, msg: 'Initial commit', parent: null, tree, time: clock, author: 'upstream' }; repo.branches.main = id; repo.index = Object.assign({}, tree); repo.pushed.main = id;
         repos.set(root, repo);
@@ -280,11 +326,20 @@
           return errs.join('\n');
         }
         case 'rm': {
-          const cached = args.includes('--cached'); const t = args.slice(1).filter(a => !a.startsWith('-'))[0];
-          if (!t) return 'fatal: No pathspec was given. Which files should I remove?';
-          const r = rel(t); if (r == null || !(r in repo.index)) return `fatal: pathspec '${t}' did not match any files`;
-          delete repo.index[r]; if (!cached) fs.remove(t);
-          return `rm '${r}'`;
+          const cached = args.includes('--cached'); const recursive = args.includes('-r') || args.includes('-rf') || args.includes('-fr');
+          const targets = args.slice(1).filter(a => !a.startsWith('-'));
+          if (!targets.length) return 'fatal: No pathspec was given. Which files should I remove?';
+          const out = [];
+          for (const t of targets) {
+            const r = rel(t);
+            if (r == null) return `fatal: ${t}: '${t}' is outside repository`;
+            const pre = r ? r + '/' : '';
+            const matches = Object.keys(repo.index).filter(f => f === r || (f.startsWith(pre) && (r === '' || pre)));
+            if (!matches.length) return `fatal: pathspec '${t}' did not match any files`;
+            if (!recursive && !matches.includes(r)) return `fatal: not removing '${t}' recursively without -r`;
+            matches.sort().forEach(f => { delete repo.index[f]; if (!cached) fs.remove(join(repo.root, f)); out.push(`rm '${f}'`); });
+          }
+          return out.join('\n');
         }
         case 'restore': {
           const staged = args.includes('--staged'); const t = args.slice(1).filter(a => !a.startsWith('-'))[0]; const r = rel(t || '');
@@ -308,13 +363,15 @@
           return `[${repo.head}${first ? ' (root-commit)' : ''} ${id}] ${msg}\n ${ch} file${ch === 1 ? '' : 's'} changed` + (first ? '' : '') + '\n' + s.staged.map(([k, f]) => k === 'new file' ? ` create mode 100644 ${f}` : k === 'deleted' ? ` delete mode 100644 ${f}` : '').filter(Boolean).join('\n');
         }
         case 'log': {
-          let id = repo.branches[repo.head]; if (!id) return `fatal: your current branch '${repo.head}' does not have any commits yet`;
-          const oneline = args.includes('--oneline'); const out = [];
-          while (id) { const c = repo.commits[id];
-            if (oneline) out.push(`${c.id} ${c.msg}`);
-            else out.push(`commit ${c.id}${c.id === repo.branches[repo.head] ? ` (HEAD -> ${repo.head})` : ''}\nAuthor: ${c.author} <${c.author}@example.com>\nDate:   ${new Date(c.time).toDateString()}\n\n    ${c.msg}\n`);
-            id = c.parent; }
-          return out.join('\n');
+          const tip = repo.branches[repo.head]; if (!tip) return `fatal: your current branch '${repo.head}' does not have any commits yet`;
+          const oneline = args.includes('--oneline');
+          // every commit reachable through either parent (merges included), newest first
+          const seen = new Set(), list = [], stack = [tip];
+          while (stack.length) { const id = stack.pop(); if (!id || seen.has(id) || !repo.commits[id]) continue; seen.add(id); const c = repo.commits[id]; list.push(c); stack.push(c.parent, c.parent2); }
+          list.sort((a, b) => b.time - a.time);
+          const labels = id => { const names = Object.keys(repo.branches).filter(b => repo.branches[b] === id && b !== repo.head); return id === tip ? ` (HEAD -> ${[repo.head].concat(names).join(', ')})` : names.length ? ` (${names.join(', ')})` : ''; };
+          return list.map(c => oneline ? `${c.id}${labels(c.id)} ${c.msg}`
+            : `commit ${c.id}${labels(c.id)}\n${c.parent2 ? `Merge: ${(c.parent || '').slice(0, 7)} ${c.parent2.slice(0, 7)}\n` : ''}Author: ${c.author} <${c.author}@example.com>\nDate:   ${new Date(c.time).toDateString()}\n\n    ${c.msg}\n`).join('\n');
         }
         case 'diff': {
           const work = workTree(repo); const base = args.includes('--staged') || args.includes('--cached') ? headTree(repo) : repo.index; const cmp = args.includes('--staged') || args.includes('--cached') ? repo.index : work;
@@ -332,7 +389,14 @@
         case 'branch': {
           const name = args.slice(1).filter(a => !a.startsWith('-'))[0];
           if (args.includes('-d') || args.includes('-D')) { if (!name || !(name in repo.branches)) return `error: branch '${name}' not found.`; if (name === repo.head) return `error: Cannot delete branch '${name}' checked out`; delete repo.branches[name]; return `Deleted branch ${name}.`; }
-          if (args.includes('-M') || args.includes('-m')) { if (name) { repo.branches[name] = repo.branches[repo.head]; delete repo.branches[repo.head]; repo.head = name; } return ''; }
+          if (args.includes('-M') || args.includes('-m')) {
+            // git branch -M main: rename the current branch (a no-op when it already has that name)
+            if (!name || name === repo.head) return '';
+            if (name in repo.branches && !args.includes('-M')) return `fatal: a branch named '${name}' already exists`;
+            if (repo.head in repo.branches) { repo.branches[name] = repo.branches[repo.head]; delete repo.branches[repo.head]; }
+            if (repo.head in repo.pushed) { repo.pushed[name] = repo.pushed[repo.head]; delete repo.pushed[repo.head]; }
+            repo.head = name; return '';
+          }
           if (!name) return Object.keys(repo.branches).concat(repo.branches[repo.head] ? [] : [repo.head]).filter((v, i, a) => a.indexOf(v) === i).sort().map(b => (b === repo.head ? '* ' : '  ') + b).join('\n');
           if (name in repo.branches) return `fatal: a branch named '${name}' already exists`;
           if (!repo.branches[repo.head]) return `fatal: not a valid object name: '${repo.head}'`;
@@ -392,8 +456,15 @@
       history.push(line);
       // support `a && b`
       if (line.includes('&&')) { const outs = []; for (const part of line.split('&&')) { const r = run(part.trim()); history.pop(); if (r.out) outs.push(r.out); if (r.clear || r.exit) return r; } return { out: outs.join('\n') }; }
-      const args = parse(line); const cmd = args.shift();
+      const parsed = parse(line);
+      const ex = expand(parsed);
+      if (ex.error) return { out: ex.error };
+      const args = ex.args; const cmd = args.shift();
       if (cmd === 'sudo') return run(args.join(' '));
+      if (args[0] === '--version' || (args[0] === '-v' && (cmd === 'node' || cmd === 'npm'))) {
+        const v = { git: 'git version 2.42.0', node: 'v20.11.0', npm: '10.2.4', code: '1.94.0' }[cmd];
+        if (v) return { out: v };
+      }
       const fn = commands[cmd];
       if (!fn) return { out: `zsh: command not found: ${cmd}` };
       const r = fn(args);

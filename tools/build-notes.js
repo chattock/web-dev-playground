@@ -61,7 +61,7 @@ function main() {
   const idx = path.join(ROOT, 'data', 'index.js');
   if (fs.existsSync(idx)) {
     const src = fs.readFileSync(idx, 'utf8');
-    const PG = { index: list => list.forEach(l => { if (l.index) ids[l.index] = l.id; }) };
+    const PG = { index: list => list.forEach(l => { if (l.index && !l.sub) ids[l.index] = l.id; }) };
     new Function('PG', src)(PG);
   }
   const bySection = {};

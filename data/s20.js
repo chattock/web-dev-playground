@@ -47,63 +47,63 @@ const HTML1 = simonHtml(`
 
 /* ---------------- style.css (the course's styles.css) ---------------- */
 const CSS = `body {
+  margin: 0;
+  min-height: 100vh;
   text-align: center;
-  background-color: #011f3f;
+  background: #10152a;
+  font-family: "Courier New", Courier, monospace;
+  color: #f4f1de;
 }
 
 #level-title {
-  font-family: "Press Start 2P", cursive;
-  font-size: 3rem;
-  margin: 5%;
-  color: #fef2bf;
+  margin: 0;
+  padding: 32px 12px 22px;
+  font-size: 2.2rem;
+  letter-spacing: 0.05em;
 }
 
 .container {
-  display: block;
-  width: 50%;
-  margin: auto;
+  display: inline-block;
+  padding-bottom: 30px;
+}
+
+.row {
+  display: flex;
+  justify-content: center;
+  gap: 22px;
+  margin-bottom: 22px;
 }
 
 .btn {
-  margin: 25px;
-  display: inline-block;
-  height: 200px;
-  width: 200px;
-  border: 10px solid black;
-  border-radius: 20%;
+  width: 180px;
+  height: 180px;
+  border: 8px solid #0a0e1c;
+  border-radius: 24px;
+  cursor: pointer;
+  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.35);
 }
 
+/* flashed on the body when the player makes a mistake */
 .game-over {
-  background-color: red;
-  opacity: 0.8;
+  background: #b3261e;
+  opacity: 0.85;
 }
 
-.red {
-  background-color: red;
-}
+.red { background: #e5383b; }
+.green { background: #2a9d8f; }
+.blue { background: #3a86ff; }
+.yellow { background: #ffbe0b; }
 
-.green {
-  background-color: green;
-}
-
-.blue {
-  background-color: blue;
-}
-
-.yellow {
-  background-color: yellow;
-}
-
+/* added for a moment when a button is clicked */
 .pressed {
-  box-shadow: 0 0 20px white;
-  background-color: grey;
+  background: #f8f9fa;
+  box-shadow: 0 0 24px #f8f9fa;
 }
 
-/* Playground addition: shrink the board so it fits a narrow preview pane */
-@media (max-width: 900px) {
-  #level-title { font-size: 1.5rem; line-height: 1.6; }
-  .container { width: 100%; }
-  .btn { margin: 12px; height: 120px; width: 120px; border-width: 6px; }
+/* the playground preview is narrow: shrink the board so all four buttons fit */
+@media (max-width: 480px) {
+  .row { gap: 14px; margin-bottom: 14px; }
+  .btn { width: 120px; height: 120px; }
 }
 `;
 

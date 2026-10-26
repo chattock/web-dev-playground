@@ -236,7 +236,8 @@
   /* ---------- mount ---------- */
   function mount(lesson, host) {
     const entries = lesson.run || ['index.js'];
-    let sb = null, ports = [], busy = false, running = false, runs = 0;
+    let sb = null, ports = [], running = false, runs = 0;
+    let navSeq = 0;   // each navigation (and each run) gets a number; only the latest may render
     const jar = cookieJar();
     const hist = []; let hi = -1;
     const generated = {};
@@ -328,6 +329,7 @@
 
     async function run() {
       if (sb) sb.destroy();
+      navSeq++;   // a page still loading from the previous run must not render over this one
       con.clear(); ports = []; running = false; answers = answerQueue(); runs++;
       Object.keys(generated).forEach(k => delete generated[k]); showGenerated();
       setStatus('starting…', 'busy');
@@ -382,36 +384,39 @@
     async function navigate(url, method, data, opts) {
       opts = opts || {};
       let u; try { u = new URL(url, urlBox.value); } catch (e) { pageStatus.textContent = 'Bad URL'; return; }
-      if (busy) return; busy = true;
-      try {
+      const my = ++navSeq;
+      const stale = () => my !== navSeq;
+      {
         if (u.hostname === 'accounts.google.com') { renderHtml(googlePage(u), u.href, { status: 200 }); if (!opts.noHistory) pushHist(u.href); return; }
         if (!/^(localhost|127\.0\.0\.1)$/.test(u.hostname)) { renderText(`This built-in browser only reaches your own servers on localhost.\n\n${u.href}\n\nOpen it in a real browser tab if you need the live site.`, u.href, { status: 0 }); return; }
         let headers = {}, body;
         if (method === 'GET' && data) { Object.keys(data).forEach(k => u.searchParams.set(k, data[k])); }
         else if (data) { body = new URLSearchParams(data).toString(); headers['content-type'] = 'application/x-www-form-urlencoded'; }
         let res = await send(method, u.href, headers, body), hops = 0, cur = u.href;
+        if (stale()) return;
         while (res.status >= 300 && res.status < 400 && res.headers.location && hops++ < 6) {
           cur = new URL(res.headers.location, cur).href;
           if (new URL(cur).hostname === 'accounts.google.com') { renderHtml(googlePage(new URL(cur)), cur, { status: 200 }); pushHist(cur); return; }
           res = await send('GET', cur, {}, undefined);
+          if (stale()) return;
         }
         urlBox.value = cur;
         if (!opts.noHistory) pushHist(cur);
         if (res.error) { renderText(res.error, cur, res); return; }
         if (res.hung || res.status === 0) { renderText('The request never got a response.\n\nUsually a route handler forgot to call res.send(), res.render() or next().', cur, res); return; }
         const ct = (res.headers['content-type'] || '');
-        if (ct.includes('text/html')) await renderHtml(res.body, cur, res);
+        if (ct.includes('text/html')) await renderHtml(res.body, cur, res, stale);
         else if (ct.includes('json')) renderText(pretty(res.body), cur, res);
         else if (/^data:image\//.test(res.body || '')) renderHtml(`<body style="margin:0;display:flex;justify-content:center;padding:20px"><img src="${attr(res.body)}"></body>`, cur, res);
         else if (ct.startsWith('image/svg')) renderHtml(`<body style="margin:0;display:flex;justify-content:center;padding:20px">${res.body}</body>`, cur, res);
         else renderText(res.body, cur, res);
-      } finally { busy = false; }
+      }
     }
     function pushHist(url) { hist.splice(hi + 1); hist.push(url); hi = hist.length - 1; }
     function pretty(s) { try { return JSON.stringify(JSON.parse(s), null, 2); } catch (e) { return s; } }
     function statusLine(url, res) { pageStatus.innerHTML = `<span class="code c${String(res.status)[0]}">${res.status || '—'}</span> ${esc(url)}${res.ms != null ? ` <span class="dim">${res.ms} ms</span>` : ''}`; }
     function renderText(text, url, res) { statusLine(url, res); page.style.display = 'none'; pageRaw.style.display = ''; pageRaw.textContent = text; }
-    async function renderHtml(html, url, res) {
+    async function renderHtml(html, url, res, stale) {
       statusLine(url, res);
       page.style.display = ''; pageRaw.style.display = 'none';
       const doc = new DOMParser().parseFromString(html, 'text/html');
@@ -426,6 +431,7 @@
         else if (r.status !== 200) { im.alt = im.alt || `missing image ${new URL(h).pathname}`; im.removeAttribute('src'); }
       })); });
       await Promise.all(jobs);
+      if (stale && stale()) return;
       // relative URLs in the page (links, location.href = "/x") resolve against the fake server URL
       const shim = `<base href="${attr(url)}"><script>window.__PAGE_URL__=${JSON.stringify(url)};<\/script>` + PAGE_SHIM;
       let out = '<!DOCTYPE html>' + doc.documentElement.outerHTML;

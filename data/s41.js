@@ -835,6 +835,10 @@ body {
   display: none !important;
 }
 
+span[role="img"] {
+  margin-right: 8px;
+}
+
 .window {
   position: relative;
   box-sizing: border-box;
@@ -1943,7 +1947,7 @@ PG.add({
     { title:'Four panels in App', text:'<code>App</code> just stacks the four components. Each one has its markup and a click handler that does nothing yet.', file:'src/token_assets/src/components/App.jsx', lines:B(APP_SKELETON, 'function App()') },
     { title:'What the next lectures fill in', text:'<code>Balance</code> only logs on click, and the <code>Faucet</code> and <code>Transfer</code> handlers are empty. Each gets wired to a Motoko method: <code>balanceOf</code>, <code>payOut</code> and <code>transfer</code>.', file:'src/token_assets/src/components/Balance.jsx', lines:B(BALANCE_SKELETON, 'async function handleClick') },
   ],
-  explore:[{ title:'What happens if you skip a step?', height:470, note:'Tick the commands in any order. A deploy only works while the replica is running, and the page only builds once the declarations exist.', html: DEMO_STARTUP }],
+  explore:[{ title:'What happens if you skip a step?', height:550, note:'Tick the commands in any order. A deploy only works while the replica is running, and the page only builds once the declarations exist.', html: DEMO_STARTUP }],
   quiz:[
     { q:'Why must <code>dfx deploy</code> run before <code>npm start</code>?', options:['It installs React','It generates src/declarations, which the front end imports','It opens port 8080','It downloads the skeleton'], answer:1, why:'The declarations are the generated JavaScript bridge to the canister. Without them the React build cannot resolve its imports.' },
     { q:'What is <code>dfx start</code> for?', options:['It starts the React dev server','It runs a local replica that simulates the Internet Computer','It compiles main.mo','It creates a new project'], answer:1, why:'Canisters are installed into, and called on, the local replica, so it has to keep running.' },
@@ -2044,7 +2048,7 @@ PG.add({
     { title:'One claim per principal', text:'If the caller has no entry yet, <code>put</code> gives them 10,000. Without this check, anyone could claim again after spending, and the owner calling <code>payOut</code> would have their billion overwritten by 10,000 (try it in Explore).', file:'src/token/main.mo', lines:L(M352, 'if (balances.get(msg.caller) == null)', 'return "Success"') },
     { title:'Two possible replies', text:'Both branches return <code>Text</code>, so the front end can put whichever arrives on the button.', file:'src/token/main.mo', lines:L(M352, '} else {', 'return "Already Claimed"') },
   ],
-  explore:[{ title:'Who is msg.caller?', height:470, note:'Claim from both sides, then turn the once-only check off and claim from the terminal again.', html: DEMO_CALLER_PAYOUT }],
+  explore:[{ title:'Who is msg.caller?', height:570, note:'Claim from both sides, then turn the once-only check off and claim from the terminal again.', html: DEMO_CALLER_PAYOUT }],
   quiz:[
     { q:'What does <code>shared(msg)</code> give a method?', options:['A copy of the ledger','Access to msg.caller, the principal that made the call','Permission to change state','A faster response'], answer:1, why:'msg is the incoming message; its caller field identifies who sent it.' },
     { q:'Where does <code>Debug.print</code> output appear?', options:['In the browser console','In the terminal where dfx start is running','In the dfx canister call output','Nowhere'], answer:1, why:'It is printed by the replica process, so it shows up in the dfx start terminal.' },
@@ -2092,7 +2096,7 @@ PG.add({
     { title:'Credit the recipient', text:'<code>balanceOf(to)</code> already returns 0 for someone who is not in the ledger, so a brand-new principal just works.', file:'src/token/main.mo', lines:L(M353, 'let toBalance = await balanceOf(to)', 'balances.put(to, newToBalance)') },
     { title:'Reply', text:'"Success", or "Insufficient Funds" when the guard fails. The front end shows whichever text comes back.', file:'src/token/main.mo', lines:L(M353, 'return "Success";', 'return "Insufficient Funds"', 'public shared(msg) func transfer') },
   ],
-  explore:[{ title:'msg.caller through a nested call', height:330, note:'The third button reproduces the lecture\'s experiment.', html: DEMO_CALLER_CHAIN }],
+  explore:[{ title:'msg.caller through a nested call', height:370, note:'The third button reproduces the lecture\'s experiment.', html: DEMO_CALLER_CHAIN }],
   quiz:[
     { q:'When <code>transfer</code> calls <code>payOut</code> inside the same canister, who is <code>msg.caller</code> in <code>payOut</code>?', options:['The user who called transfer','The anonymous principal','The token canister itself','The owner'], answer:2, why:'The inner call is made by the canister, so the canister is its caller. The user\'s identity does not carry through.' },
     { q:'Why write <code>let newFromBalance : Nat = fromBalance - amount</code>?', options:['To make it a query','Nat subtraction might go negative; the annotation insists on a Nat and the guard keeps it safe','To convert it to Text','It is optional decoration'], answer:1, why:'Without the annotation Motoko infers Int and warns. The if-check guarantees the result is not negative.' },
@@ -2157,7 +2161,7 @@ PG.add({
   id:'l356', index:356, udemyId:31673702, minutes:6, section:'s41', slug:'what-is-internet-identity', kind:'read',
   title:'What is the Internet Identity?',
   blurb:'Without a login every visitor reaches the canister as the same anonymous principal, so balances cannot belong to real people. <b>Internet Identity</b> is the Internet Computer\'s sign-in: no password, email or seed phrase, just a device key (fingerprint, face unlock or a security key) registered to an anchor number. The private key never leaves the device, and each app receives a different principal for the same person, so apps cannot link your accounts.',
-  explore:[{ title:'One person, a different principal per app', height:360, note:'Log in to the three apps and compare. Change the anchor to see a different person.', html: DEMO_II_PRINCIPALS }],
+  explore:[{ title:'One person, a different principal per app', height:420, note:'Log in to the three apps and compare. Change the anchor to see a different person.', html: DEMO_II_PRINCIPALS }],
   quiz:[
     { q:'What does a dapp receive when you log in with Internet Identity?', options:['Your anchor number','Your email address','A principal that is specific to that app','Your device\'s private key'], answer:2, why:'Each app gets its own pseudonymous principal; the anchor and keys stay with you.' },
     { q:'Where does the private key for a device live?', options:['On the blockchain','On the device, protected by its biometric or PIN','In the dapp\'s canister','In a password manager'], answer:1, why:'Only the public key is stored on chain. Signing happens on your device.' },

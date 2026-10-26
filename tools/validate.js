@@ -71,7 +71,7 @@ async function checkLesson(l, problems) {
       const re = /require\("([^"]+)"\)/g; let m;
       while ((m = re.exec(code))) {
         const spec = m[1];
-        if (!spec.startsWith('.') && !spec.startsWith('/')) { if (!/^(react|react-dom|react-dom\/client|@mui\/|uuid)/.test(spec)) p(`${n} imports unknown package ${spec}`); continue; }
+        if (!spec.startsWith('.') && !spec.startsWith('/')) { if (!/^(react|react-dom|react-dom\/client|uuid)$|^@mui\/(icons-material|material)(\/\w+)?$/.test(spec)) p(`${n} imports unknown package ${spec}`); continue; }
         const base = n.split('/').slice(0, -1).join('/');
         const norm = (base ? base + '/' + spec : spec).split('/').reduce((a, s) => { if (!s || s === '.') return a; if (s === '..') a.pop(); else a.push(s); return a; }, []).join('/');
         if (![norm, norm + '.jsx', norm + '.js', norm + '.json', norm + '/index.jsx', norm + '/index.js'].some(c => sol[c] != null)) p(`${n} imports ${spec} but no such file`);
